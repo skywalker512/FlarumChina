@@ -1,19 +1,19 @@
-<h2>Update Flarum</h2>
+<h2>更新 Flarum</h2>
 
-<p>Enter your database password to update Flarum. Before you proceed, you should <strong>back up your database</strong>. If you have any trouble, get help on the <a href="http://flarum.org/docs/updating" target="_blank">Flarum website</a>.</p>
+<p>输入数据库密码以更新 Flarum. 在更新前你需要<strong>备份数据库</strong>. 若你遇到麻烦可点击 <a href="http://flarum.org/docs/updating" target="_blank">Flarum 交流论坛（英文）</a>.</p>
 
 <form method="post">
   <div id="error" style="display:none"></div>
 
   <div class="FormGroup">
     <div class="FormField">
-      <label>Database Password</label>
+      <label>数据库密码</label>
       <input type="password" name="databasePassword">
     </div>
   </div>
 
   <div class="FormButtons">
-    <button type="submit">Update Flarum</button>
+    <button type="submit">点击更新</button>
   </div>
 </form>
 

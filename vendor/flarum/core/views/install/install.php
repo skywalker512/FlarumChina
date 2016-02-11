@@ -1,68 +1,68 @@
-<h2>Install Flarum</h2>
+<h2>安装 Flarum</h2>
 
-<p>Set up your forum by filling out your details below. If you have any trouble, get help on the <a href="http://flarum.org/docs/installation" target="_blank">Flarum website</a>.</p>
+<p>请在下面设置你的信息. 若你遇到麻烦可点击  <a href="http://flarum.org/docs/installation" target="_blank">Flarum 交流论坛（英文）</a>.</p>
 
 <form method="post">
   <div id="error" style="display:none"></div>
 
   <div class="FormGroup">
     <div class="FormField">
-      <label>Forum Title</label>
+      <label>论坛标题</label>
       <input name="forumTitle">
     </div>
   </div>
 
   <div class="FormGroup">
     <div class="FormField">
-      <label>MySQL Host</label>
+      <label>MySQL 数据库地址</label>
       <input name="mysqlHost" value="localhost">
     </div>
 
     <div class="FormField">
-      <label>MySQL Database</label>
+      <label>MySQL 数据库名</label>
       <input name="mysqlDatabase">
     </div>
 
     <div class="FormField">
-      <label>MySQL Username</label>
+      <label>MySQL 用户名</label>
       <input name="mysqlUsername">
     </div>
 
     <div class="FormField">
-      <label>MySQL Password</label>
+      <label>MySQL 密码</label>
       <input type="password" name="mysqlPassword">
     </div>
 
     <div class="FormField">
-      <label>Table Prefix</label>
+      <label>数据库前缀（可选）</label>
       <input type="text" name="tablePrefix">
     </div>
   </div>
 
   <div class="FormGroup">
     <div class="FormField">
-      <label>Admin Username</label>
+      <label>管理者用户名</label>
       <input name="adminUsername">
     </div>
 
     <div class="FormField">
-      <label>Admin Email</label>
+      <label>管理者Email</label>
       <input name="adminEmail">
     </div>
 
     <div class="FormField">
-      <label>Admin Password</label>
+      <label>管理者密码</label>
       <input type="password" name="adminPassword">
     </div>
 
     <div class="FormField">
-      <label>Confirm Password</label>
+      <label>重复密码</label>
       <input type="password" name="adminPasswordConfirmation">
     </div>
   </div>
 
   <div class="FormButtons">
-    <button type="submit">Install Flarum</button>
+    <button type="submit">点击安装</button>
   </div>
 </form>
 
