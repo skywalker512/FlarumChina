@@ -1,0 +1,50 @@
+flagrow-image-upload:
+    forum:
+        buttons:
+            attach: Allega
+        states:
+            loading: Caricando
+            success: Perfetto
+            error: Errore
+    admin:
+        permissions:
+            upload_images_label: Caricare immagini
+        upload_methods:
+            local: Locale
+            imgur: Imgur
+            cloudinary: Cloudinary
+        labels:
+            upload_method: Metodo di caricamento
+            preferences:
+                title: Impostazioni generali
+                max_file_size: Dimensione massima immagini (in KB)
+            resize:
+                title: Ridimensionamento dell'immagine
+                toggle: Aziona il ridimensionamento
+                max_width: Massima larghezza
+                max_height: Massima altezza
+            imgur:
+                title: Impostazioni di Imgur
+                client_id: Client-ID
+            local:
+                title: Impostazioni di caricamento locale
+                cdn_url: Indirizzo CDN (prefisso per i file)
+            cloudinary:
+                title: Impostazioni di Cloudinary
+                cloud_name: Cloud name
+                api_key: Api key
+                api_secret: Api secret
+        buttons:
+            save: Salva impostazioni
+        help_texts:
+            description: >
+                Imposta i servizi e le preferenze dell'uploader.
+            upload_method: >
+                Da qui puoi selezionare il metodo che vuoi usare
+                per caricare le tue immagini. Quando ne selezioni uno,
+                verrà mostrato il relativo pannello delle impostazioni.
+            resize: >
+                Segli se vuoi ridimensionare o meno le immagini
+                prima del loro caricamento. Puoi scelgiere l'altezza e la
+                larghezza massime, in pixel. Il ridimensionamento mantiene
+                il rapporto altezza:larghezza delle immagini.

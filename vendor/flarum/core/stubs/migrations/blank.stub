@@ -1,0 +1,18 @@
+<?php
+
+namespace {{namespace}}\Migration;
+
+use Flarum\Database\AbstractMigration;
+
+class {{name}} extends AbstractMigration
+{
+    public function up()
+    {
+        //
+    }
+
+    public function down()
+    {
+        //
+    }
+}

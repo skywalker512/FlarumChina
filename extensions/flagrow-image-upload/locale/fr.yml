@@ -1,0 +1,8 @@
+flagrow-image-upload:
+    forum:
+        buttons:
+            attach: Ajouter une image
+        states:
+            loading: Envoi
+            success: Terminé
+            error: Erreur

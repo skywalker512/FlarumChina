@@ -1,0 +1,21 @@
+lazyboywu_auth_qq:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These translations are used in the GitHub Settings modal dialog.
+    qq_settings:
+      client_id_label: Client ID
+      client_secret_label: Client Secret
+      title: QQ Settings
+
+  # Translations in this namespace are used by the forum user interface.
+  forum:
+
+    # These translations are used in the Log In modal dialog.
+    log_in:
+      with_qq_button: Log in with QQ

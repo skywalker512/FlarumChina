@@ -1,0 +1,50 @@
+import Modal from 'flarum/components/Modal';
+import Button from 'flarum/components/Button';
+import saveSettings from 'flarum/utils/saveSettings';
+
+export default class EditCustomCssModal extends Modal {
+  init() {
+    this.customLess = m.prop(app.settings.custom_less || '');
+  }
+
+  className() {
+    return 'EditCustomCssModal Modal--large';
+  }
+
+  title() {
+    return 'Edit Custom CSS';
+  }
+
+  content() {
+    return (
+      <div className="Modal-body">
+        <p>Customize your forum's appearance by adding your own LESS/CSS code to be applied on top of Flarum's default styles. <a href="http://flarum.org/docs/extend/themes/">Read the documentation</a> for more information.</p>
+
+        <div className="Form">
+          <div className="Form-group">
+            <textarea className="FormControl" rows="30" value={this.customLess()} onchange={m.withAttr('value', this.customLess)}/>
+          </div>
+
+          <div className="Form-group">
+            {Button.component({
+              className: 'Button Button--primary',
+              type: 'submit',
+              children: 'Save Changes',
+              loading: this.loading
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  onsubmit(e) {
+    e.preventDefault();
+
+    this.loading = true;
+
+    saveSettings({
+      custom_less: this.customLess()
+    }).then(() => window.location.reload());
+  }
+}

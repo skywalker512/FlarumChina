@@ -1,0 +1,50 @@
+flagrow-image-upload:
+    forum:
+        buttons:
+            attach: Attach
+        states:
+            loading: Loading
+            success: Success
+            error: Error
+    admin:
+        permissions:
+            upload_images_label: Upload images
+        upload_methods:
+            local: Local
+            imgur: Imgur
+            cloudinary: Cloudinary
+        labels:
+            upload_method: Upload method
+            preferences:
+                title: General preferences
+                max_file_size: Maximum file size (in kilobytes)
+            resize:
+                title: Image resize
+                toggle: Toggle the resize
+                max_width: Maxiumum image width
+                max_height: Maximum image height
+            imgur:
+                title: Imgur settings
+                client_id: Client-ID
+            local:
+                title: Local storage settings
+                cdn_url: Content Delivery URL (prefixes files)
+            cloudinary:
+                title: Cloudinary settings
+                cloud_name: Cloud name
+                api_key: Api key
+                api_secret: Api secret
+        buttons:
+            save: Save settings
+        help_texts:
+            description: >
+                Set up image uploading services and preferences.
+            upload_method: >
+                Here you can select the method that you want to use
+                to upload your images. When you select one the
+                relative setting card is going to be displayed.
+            resize: >
+                Choose whether you want to resize your images before
+                they get uploaded. You can choose a maxiumum width
+                and height, in pixels. The resizing process keeps the
+                aspect ratio of the images.

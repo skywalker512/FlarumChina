@@ -1,0 +1,43 @@
+flagrow-image-upload:
+    forum:
+        buttons:
+            attach: Attach
+        states:
+            loading: Laad
+            success: Succes
+            error: Fout
+    admin:
+        permissions:
+            upload_images_label: Upload plaatjes
+        upload_methods:
+            local: Lokaal
+            imgur: Imgur
+        labels:
+            upload_method: Upload methode
+            preferences:
+                title: Algemene instellingen
+                max_file_size: Maximale bestandsgrootte (in kilobytes)
+            resize:
+                title: Verkleinen
+                toggle: Schakel verkleining in
+                max_width: Maximale breedte plaatje
+                max_height: Maximale hoogte plaatje
+            imgur:
+                title: Imgur settings
+                client_id: Client-ID
+            local:
+                title: Lokale opslag instellingen
+                cdn_url: Content Delivery URL (prefixed de bestandsnaam)
+        buttons:
+            save: Opslaan
+        help_texts:
+            description: >
+                Configureer upload diensten en voorkeuren.
+            upload_method: >
+                Selecteer de upload methode. Bij het kiezen van een
+                specifieke waarde zullen meer opties getoond worden.
+            resize: >
+                Bepaal of je de plaatjes wilt verkleinen voordat
+                ze geupload worden. Je kan een een maximale hoogte
+                en breedte bepalen in pixels. Het verkleiningsproces
+                houdt rekening met de hoogte/breedte verhouding.

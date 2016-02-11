@@ -1,0 +1,34 @@
+flagrow-image-upload:
+    forum:
+        buttons:
+            attach: 选择
+        states:
+            loading: 加载
+            success: 成功
+            error: 错误
+    admin:
+        upload_methods:
+            local: 本地
+            imgur: Imgur
+        labels:
+            upload_method: 上传方式
+            resize:
+                title: 图像尺寸
+                toggle: 是否裁剪尺寸
+                max_width: 最大宽度
+                max_height: 最大高度
+            imgur:
+                title: Imgur 设置
+                client_id: Client-ID
+        buttons:
+            save: 保存
+        help_texts:
+            description: >
+                设置图像上传服务和首选项。
+            upload_method: >
+                在这里您可以选择要使用的图像上传方式。
+                当你选择一个方式后，下面会显示相应的设置项。
+            resize: >
+                在图像上传之前，是否要调整图像的大小。
+                你可以设置一个最大宽度和高度，以像素为单位。
+                在调整图像尺寸的过程中会保持原图像的长宽比。

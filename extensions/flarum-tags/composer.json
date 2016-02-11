@@ -1,0 +1,35 @@
+{
+    "name": "flarum/tags",
+    "description": "Organize discussions into a hierarchy of tags and categories.",
+    "type": "flarum-extension",
+    "keywords": ["discussion"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Toby Zerner",
+            "email": "toby.zerner@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/flarum/core/issues",
+        "source": "https://github.com/flarum/tags"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flarum\\Tags\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Tags",
+            "icon": {
+                "name": "tags",
+                "backgroundColor": "#F28326",
+                "color": "#fff"
+            }
+        }
+    }
+}

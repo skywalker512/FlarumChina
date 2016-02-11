@@ -1,0 +1,57 @@
+{
+    "name": "flarum/flarum",
+    "description": "Delightfully simple forum software.",
+    "type": "project",
+    "keywords": ["forum", "discussion"],
+    "homepage": "http://flarum.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Toby Zerner",
+            "email": "toby.zerner@gmail.com"
+        },
+        {
+            "name": "Franz Liedke",
+            "email": "franz@develophp.org"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/flarum/core/issues",
+        "source": "https://github.com/flarum/flarum",
+        "docs": "http://flarum.org/docs"
+    },
+    "require": {
+        "flarum/composer-installer": "*",
+        "flarum/core": "^0.1.0",
+        "flarum/akismet": "^0.1.0",
+        "flarum/approval": "^0.1.0",
+        "flarum/auth-facebook": "^0.1.0",
+        "flarum/auth-github": "^0.1.0",
+        "flarum/auth-twitter": "^0.1.0",
+        "flarum/bbcode": "^0.1.0",
+        "flarum/emoji": "^0.1.0",
+        "flarum/english": "^0.1.0",
+        "flarum/flags": "^0.1.0",
+        "flarum/likes": "^0.1.0",
+        "flarum/lock": "^0.1.0",
+        "flarum/markdown": "^0.1.0",
+        "flarum/mentions": "^0.1.0",
+        "flarum/pusher": "^0.1.0",
+        "flarum/sticky": "^0.1.0",
+        "flarum/subscriptions": "^0.1.0",
+        "flarum/suspend": "^0.1.0",
+        "flarum/tags": "^0.1.0",
+        "flagrow/flarum-ext-image-upload": "0.2.0-beta.2",
+        "cloudinary/cloudinary_php": "^1.3",
+        "vingle/flarum-configure-smtp": "^0.1.0@beta",
+        "s9e/flarum-ext-mediaembed": "^0.3.2",
+        "lazyboywu/flarum-ext-auth-qq": "^0.1.0"
+    },
+    "require-dev": {
+        "franzl/studio": "0.10.x@dev"
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "beta"
+}

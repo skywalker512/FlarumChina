@@ -1,0 +1,21 @@
+<?php
+
+namespace {{namespace}}\Migration;
+
+use Flarum\Database\AbstractMigration;
+use Illuminate\Database\Schema\Blueprint;
+
+class {{name}} extends AbstractMigration
+{
+    public function up()
+    {
+        $this->schema->create('{{table}}', function (Blueprint $table) {
+            $table->increments('id');
+        });
+    }
+
+    public function down()
+    {
+        $this->schema->drop('{{table}}');
+    }
+}
