@@ -23200,7 +23200,7 @@ System.register('flarum/components/LogInModal', ['flarum/components/Modal', 'fla
                 m(
                   'div',
                   { className: 'Form-group' },
-                  m('input', { className: 'FormControl', name: 'email', placeholder: extractText(app.translator.trans('core.forum.log_in.username_or_email_placeholder')),
+                  m('input', { className: 'FormControl', name: 'email', type:'text', placeholder: extractText(app.translator.trans('core.forum.log_in.username_or_email_placeholder')),
                     value: this.email(),
                     onchange: m.withAttr('value', this.email),
                     disabled: this.loading })
@@ -27897,7 +27897,7 @@ System.register('flarum/components/SignUpModal', ['flarum/components/Modal', 'fl
               m(
                 'div',
                 { className: 'Form-group' },
-                m('input', { className: 'FormControl', name: 'username', placeholder: extractText(app.translator.trans('core.forum.sign_up.username_placeholder')),
+                m('input', { className: 'FormControl', name: 'username', type: 'text', placeholder: extractText(app.translator.trans('core.forum.sign_up.username_placeholder')),
                   value: this.username(),
                   onchange: m.withAttr('value', this.username),
                   disabled: this.loading })
@@ -29914,7 +29914,7 @@ System.register('flarum/initializers/routes', ['flarum/components/IndexPage', 'f
          */
         app.route.discussion = function (discussion, near) {
           return app.route(near && near !== 1 ? 'discussion.near' : 'discussion', {
-            id: discussion.id() + '-' + discussion.slug(),
+            id: discussion.id(),
             near: near && near !== 1 ? near : undefined
           });
         };
