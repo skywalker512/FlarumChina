@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <path fill="#ffde00" d="m0,-1l0.58779,1.80902l-1.53885,-1.11804l1.90212,0l-1.53885,1.11804l0.58779,-1.80902z" id="s"/>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="22" width="22" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <rect x="-0.42328" y="-0.43791" id="svg_1" fill="#de2910" height="21.058202" width="20.543763"/>
+  <use x="0.035273" y="0.529101" id="svg_2" transform="translate(5, 5) scale(3)" xlink:href="#s"/>
+  <use id="svg_3" x="10.10582" y="3.587302" transform="rotate(23.0362, 10.1058, 3.5873)" xlink:href="#s"/>
+  <use id="svg_4" x="12.10582" y="5.587302" transform="rotate(45.8699, 12.1058, 5.5873)" xlink:href="#s"/>
+  <use id="svg_5" x="12.10582" y="8.587302" transform="rotate(69.9454, 12.1058, 8.5873)" xlink:href="#s"/>
+  <use id="svg_6" x="10.10582" y="10.587302" transform="rotate(20.6598, 10.1058, 10.5873)" xlink:href="#s"/>
+ </g>
+</svg>

@@ -1,0 +1,37 @@
+flarum-sticky:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These translations are used in the Permissions page of the admin interface.
+    permissions:
+      sticky_discussions_label: 置顶话题
+
+  # Translations in this namespace are used by the forum user interface.
+  forum:
+
+    # These translations are displayed as tooltips for discussion badges.
+    badge:
+      sticky_tooltip: => flarum-sticky.ref.sticky
+
+    # These translations are used by the discussion control buttons.
+    discussion_controls:
+      sticky_button: 置顶话题
+      unsticky_button: 取消置顶
+
+    # These translations are displayed between posts in the post stream.
+    post_stream:
+      discussion_stickied_text: "{username} 置顶了话题"
+      discussion_unstickied_text: "{username} 取消置顶话题"
+
+  ##
+  # REUSED STRINGS - These keys should not be used directly in code!
+  ##
+
+  # Translations in this namespace are referenced by two or more unique keys.
+  ref:
+    sticky: 置顶

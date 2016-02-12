@@ -1,0 +1,60 @@
+flarum-flags:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These translations are used in the Permissions page of the admin interface.
+    permissions:
+      flag_posts_label: 发起报告
+      view_flags_label: 查看报告
+
+    # These translations are used in the Flags Settings modal dialog.
+    settings:
+      guidelines_url_label: 社区规则 URL
+      title: 报告设置
+
+  # Translations in this namespace are used by the forum user interface.
+  forum:
+
+    # These translations are used by the Flag Post modal dialog.
+    flag_post:
+      confirmation_message: 谢谢你的提醒，我们很快会处理。
+      dismiss_button: => core.ref.okay
+      reason_inappropriate_label: 不恰当的言辞
+      reason_inappropriate_text: "内容的言辞不恰当 或违反了<a>社区规则</a>"
+      reason_off_topic_label: "主题分类不当"
+      reason_off_topic_text: 内容与主题分类不一致 应当移动到其它地方
+      reason_other_label: 其它原因
+      reason_spam_label: 无意义的内容
+      reason_spam_text: 这些内容没有太多的意义
+      submit_button: => flarum-flags.ref.flag_post
+      title: => flarum-flags.ref.flag_post
+
+    # These translations are used by the Flagged Posts dropdown, a.k.a. "the flag".
+    flagged_posts:
+      empty_text: 没有新报告
+      title: => flarum-flags.ref.flagged_posts
+      tooltip: => flarum-flags.ref.flagged_posts
+
+    # These translations are used by the frame displayed around flagged posts.
+    post:
+      dismiss_flag_tooltip: 忽略报告
+      flagged_by_text: "由 {username} 报告"
+      flagged_by_with_reason_text: "{username} 报告了 {reason}"
+
+    # These translations are used by the post control buttons.
+    post_controls:
+      flag_button: 报告
+
+  ##
+  # REUSED STRINGS - These keys should not be used directly in code!
+  ##
+
+  # Translations in this namespace are referenced by two or more unique keys.
+  ref:
+    flag_post: 报告
+    flagged_posts: 内容报告

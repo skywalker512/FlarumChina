@@ -1,0 +1,37 @@
+flarum-likes:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These translations are used in the Permissions page of the admin interface.
+    permissions:
+      like_posts_label: 喜欢内容
+
+  # Translations in this namespace are used by the forum user interface.
+  forum:
+
+    # These translations are used by the Notifications dropdown, a.k.a. "the bell".
+    notifications:
+      others_text: => core.ref.some_others
+      post_liked_text: "{username} 喜欢了你的内容"  # Can be pluralized to agree with the number of users!
+
+    # These translations are displayed beneath individual posts.
+    post:
+      like_link: 喜欢
+      liked_by_self_text: "{users} 喜欢了"  # Can be pluralized to agree with the number of users!
+      liked_by_text: "{users} 喜欢了|{users} 喜欢了"
+      others_link: => core.ref.some_others
+      unlike_link: 取消喜欢
+      you_text: => core.ref.you
+
+    # These translations are used by the Users Who Like This modal dialog.
+    post_likes:
+      title: 喜欢它的用户
+
+    # These translations are used in the Settings page.
+    settings:
+      notify_post_liked_label: 有人喜欢我的内容

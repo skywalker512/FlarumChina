@@ -1,0 +1,69 @@
+validation:
+  accepted: ":attribute 必须选择接受"
+  active_url: "此 :attribute 不是有效的URL地址"
+  after: ":attribute 只能是 :date 后的日期"
+  alpha: ":attribute 只能是字母"
+  alpha_dash: ":attribute 只能有字母、数字或连字符"
+  alpha_num: ":attribute 只能是字母或数字"
+  array: ":attribute 只能是一个数字"
+  before: ":attribute 只能是 :date 前的日期"
+  between:
+    numeric: ":attribute 只能在 :min 与 :max 之间"
+    file: ":attribute 只能在 :minKB 至 :maxKB内"
+    string: ":attribute 只能在 :min 至 :max 个字符内"
+    array: ":attribute 只能在 :min 至 :max 个内"
+  boolean: ":attribute 只能选择 true 或 false"
+  confirmed: ":attribute 不匹配"
+  date: ":attribute 不是有效的日期"
+  date_format: ":attribute 与格式 :other 不匹配"
+  different: ":attribute 与 :other 不一致"
+  digits: ":attribute 只能是 :digits 位数"
+  digits_between: ":attribute 只能是 :min 至 :max 位数"
+  email: ":attribute 必须是有效的"
+  exists: "选择的 :attribute 无效"
+  filled: "不可以缺少:attribute"
+  image: ":attribute 只能是图像"
+  in: "选择的 :attribute 无效"
+  integer: ":attribute 只能是一个整数"
+  ip: ":attribute 必须是有效的IP地址"
+  json: ":attribute 必须是有效的 JSON 字符串"
+  max:
+    numeric: ":attribute 不能超过 :max."
+    file: ":attribute 不能大于 :maxKB"
+    string: ":attribute 不能超过 :max 个字符"
+    array: ":attribute 不能超过 :max 个"
+  mimes: ":attribute 文件类型必须是 :values"
+  min:
+    numeric: ":attribute 至少是 :min."
+    file: ":attribute 至少有 :minKB"
+    string: ":attribute 至少有 :min 个字符"
+    array: ":attribute 至少有 :min 个"
+  not_in: "选择的 :attribute 无效"
+  numeric: ":attribute 只能是一个数字"
+  regex: ":attribute 格式无效"
+  required: "没有:attribute"
+  required_if: "当 :other 为 :value 时 :attribute 必须完整"
+  required_unless: ":attribute 必须存在，除非 :other 为 :values"
+  required_with: "当 :values 存在时 :attribute 必须完整"
+  required_with_all: "当 :values 存在时 :attribute 必须完整"
+  required_without: "当 :values 不存在时 :attribute 必须完整"
+  required_without_all: "当没有一个 :values 存在时 :attribute 必须完整"
+  same: ":attribute 与 :other 必须匹配"
+  size:
+    numeric: ":attribute 只能有 :size."
+    file: ":attribute 只能有 :sizeKB"
+    string: ":attribute 只能有 :size 个字符"
+    array: ":attribute 只能有 :size 个"
+  string: ":attribute 必须是一个字符串"
+  timezone: ":attribute 必须是有效的"
+  unique: ":attribute 已经存在"
+  url: ":attribute 格式无效"
+
+  attributes:
+    username: 用户名
+    password: 密码
+    email: 邮箱
+    title: 标题
+    content: 内容
+    name_singular: 单数名称
+    name_plural: 复数名称

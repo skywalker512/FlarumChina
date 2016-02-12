@@ -1,0 +1,53 @@
+flarum-subscriptions:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the forum user interface.
+  forum:
+
+    # These translations are displayed as tooltips for discussion badges.
+    badge:
+      following_tooltip: => flarum-subscriptions.ref.following
+      ignoring_tooltip: => flarum-subscriptions.ref.ignoring
+
+    # These translations are used by the discussion control buttons.
+    discussion_controls:
+      follow_button: => flarum-subscriptions.ref.follow
+      unfollow_button: 取消关注
+      unignore_button: 取消忽视
+
+    # These translations are used on the index page, peripheral to the discussion list.
+    index:
+      following_link: => flarum-subscriptions.ref.following
+
+    # These translations are used by the Notifications dropdown, a.k.a. "the bell".
+    notifications:
+      new_post_text: "{username} 回复了你关注的内容"
+
+    # These translations are used in the Settings page.
+    settings:
+      notify_new_post_label: 关注的话题被回复
+
+    # These translations are used in the subscription menu displayed to the right of the post stream.
+    sub_controls:
+      follow_button: => flarum-subscriptions.ref.follow
+      following_button: => flarum-subscriptions.ref.following
+      following_text: 当有人回复此话题时提醒我
+      ignoring_button: => flarum-subscriptions.ref.ignoring
+      ignoring_text: 不接收任何提醒并隐藏话题
+      not_following_button: 常规
+      not_following_text: "仅在有人@提到我时提醒我"
+      notify_email_tooltip: 有新回复时发送邮件
+      notify_alert_tooltip: 有新回复时通知提醒
+
+  ##
+  # REUSED STRINGS - These keys should not be used directly in code!
+  ##
+
+  # Translations in this namespace are referenced by two or more unique keys.
+  ref:
+    follow: 关注
+    following: 关注
+    ignoring: 忽视

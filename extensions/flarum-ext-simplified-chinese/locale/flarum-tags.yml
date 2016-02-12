@@ -1,0 +1,101 @@
+flarum-tags:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These translations are used in the Basics page.
+    basics:
+      tags_label: => flarum-tags.ref.tags
+
+    # These translations are used in the Edit Tag modal dialog.
+    edit_tag:
+      color_label: 颜色
+      delete_tag_button: 删除分类
+      delete_tag_confirmation: "你确定删除这个分类吗？删除后该分类中的话题不会被删除。"
+      description_label: 描述
+      hide_label: 首页所有话题中隐藏
+      name_label: => flarum-tags.ref.name
+      name_placeholder: => flarum-tags.ref.name
+      slug_label: 内链
+      submit_button: => core.ref.save_changes
+      title: => flarum-tags.ref.create_tag
+
+    # These translations are used in the navigation bar.
+    nav:
+      tags_button: => flarum-tags.ref.tags
+      tags_text: 管理站点的节点与标签列表。
+
+    # These translations are used in the Permissions page of the admin interface.
+    permissions:
+      allow_edit_tags_label: 允许修改分类
+      restrict_by_tag_heading: 单个分类
+      tag_discussions_label: 修改分类
+
+    # These translations are used in the Tag Settings modal dialog.
+    tag_settings:
+      range_separator_text: " 至 "
+      required_primary_heading: 必选节点数量
+      required_primary_text: 设定应用于话题中的节点数量范围（最小值与最大值）
+      required_secondary_heading: 必选标签数量
+      required_secondary_text: 设定应用于话题中的标签数量范围（最小值与最大值）
+      title: 设定范围
+
+    # These translations are used in the Tags page.
+    tags:
+      about_tags_text: 节点与标签用于话题的分类。节点类似于传统论坛的版块，它们可以有两个结构层次。标签没有结构层次，常作为微型话题分类的关键词。
+      create_tag_button: => flarum-tags.ref.create_tag
+      primary_heading: 节点
+      secondary_heading: 标签
+      settings_button: 设定范围
+
+  # Translations in this namespace are used by the forum user interface.
+  forum:
+
+    # These translations are used by the Choose Tags modal dialog.
+    choose_tags:
+      choose_primary_placeholder: "选择 1 个节点|最多选择 {count} 个节点"
+      choose_secondary_placeholder: "选择 1 个标签|最多选择 {count} 个标签"
+      edit_title: "修改分类 {title}"
+      submit_button: => core.ref.okay
+      title: 选择分类
+
+    # These translations are used by the composer when starting a discussion.
+    composer_discussion:
+      choose_tags_link: 选择分类
+
+    # These translations are used by the discussion control buttons.
+    discussion_controls:
+      edit_tags_button: 修改分类
+
+    # These translations are used on the index page, peripheral to the discussion list.
+    index:
+      more_link: 更多...
+      tags_link: => flarum-tags.ref.tags
+      untagged_link: 移除分类
+
+    # These translations are displayed between posts in the post stream.
+    post_stream:
+      added_tags_text: "{username} 添加到 {tagsAdded}"
+      added_and_removed_tags_text: "{username} 添加到 {tagsAdded} 并从 {tagsRemoved} 移除"
+      removed_tags_text: "{username} 从 {tagsRemoved} 移除"
+      tags_text: "{tags} 分类|{tags} 分类"
+
+  # Translations in this namespace are used by the forum and admin interfaces.
+  lib:
+
+    # This translation displayed in place of the name of a tag that's been deleted.
+    deleted_tag_text: 已删除
+
+  ##
+  # REUSED STRINGS - These keys should not be used directly in code!
+  ##
+
+  # Translations in this namespace are referenced by two or more unique keys.
+  ref:
+    create_tag: 创建分类
+    name: 名称
+    tags: 分类
