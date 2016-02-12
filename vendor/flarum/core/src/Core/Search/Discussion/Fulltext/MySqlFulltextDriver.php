@@ -20,12 +20,9 @@ class MySqlFulltextDriver implements DriverInterface
     public function match($string)
     {
         $discussionIds = Post::where('type', 'comment')
-            ->whereRaw('MATCH (`content`) AGAINST (? IN BOOLEAN MODE)', [$string])
-            ->orderByRaw('MATCH (`content`) AGAINST (?) DESC', [$string])
+            ->where('content', 'like', "%$string%")
             ->lists('discussion_id', 'id');
-
         $relevantPostIds = [];
-
         foreach ($discussionIds as $postId => $discussionId) {
             $relevantPostIds[$discussionId][] = $postId;
         }
