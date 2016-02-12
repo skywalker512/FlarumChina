@@ -17,6 +17,40 @@ function subscribe(Dispatcher $events)
 		ConfigureFormatter::class,
 		function (ConfigureFormatter $event)
 		{
+            $event->configurator->MediaEmbed->add(
+            'music163',
+            [
+                'host'    => 'music.163.com',
+                'extract' => "!music\\.163\\.com/#/song\\?id=(?'id'[-0-9A-Z_a-z]+)!",
+                'iframe'  => [
+                    'width'  => 330,
+                    'height' => 86,
+                    'src'    => 'http://music.163.com/outchain/player?type=2&id={@id}&auto=0&height=66'
+                ]
+            ]
+            );
+            $event->configurator->MediaEmbed->add(
+            'ku6',
+            [
+                'host'    => 'ku6.com',
+                'extract' => "!ku6\\.com/show/(?'id'[\\w\\.\\-]+)\\.html!",
+                'flash'  => [
+                    'width'  => 480,
+                    'height' => 400,
+                    'flashvars' => "from=ku6",
+                    'src'    => 'http://player.ku6.com/refer/{@id}/v.swf&auto=0'
+                ]
+            ]
+            );
+            $event->configurator->MediaEmbed->add(
+				'tucao',
+				[
+					'host'    => 'tucao.tv',
+					'extract' => "!tucao\\.tv/play/h(?'id'[-0-9A-Z_a-z]+)!",
+					'iframe'  => ['src' => 'http://www.tucao.tv/mini/{@id}.swf']
+				]
+			);
+			$event->configurator->Autoimage;
 			(new MediaPack)->configure($event->configurator);
 		}
 	);
