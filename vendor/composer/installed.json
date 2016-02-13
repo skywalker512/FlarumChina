@@ -4985,5 +4985,57 @@
             "Authentication",
             "qq"
         ]
+    },
+    {
+        "name": "flagrow/flarum-ext-guardian",
+        "version": "0.1.3-beta.3",
+        "version_normalized": "0.1.3.0-beta3",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/flagrow/flarum-ext-guardian.git",
+            "reference": "5e85f9bd42e2c3bb488208bb48ca102c04d50b9c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/flagrow/flarum-ext-guardian/zipball/5e85f9bd42e2c3bb488208bb48ca102c04d50b9c",
+            "reference": "5e85f9bd42e2c3bb488208bb48ca102c04d50b9c",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.3"
+        },
+        "time": "2015-12-16 13:55:48",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Guardian",
+                "icon": {
+                    "name": "user-secret",
+                    "backgroundColor": "#74000E",
+                    "color": "#BE1E31"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Hyn\\Guardian\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Daniël Klabbers",
+                "email": "daniel+flarum@klabbers.email",
+                "homepage": "http://hyn.io"
+            }
+        ],
+        "description": "Adds additional security to Flarum",
+        "keywords": [
+            "security"
+        ]
     }
 ]
