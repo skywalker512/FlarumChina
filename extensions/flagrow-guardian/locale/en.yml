@@ -1,0 +1,18 @@
+hyn-guardian:
+  package_name: "Guardian"
+  package_description: "View users and their inter-relations."
+  generic:
+    never: never
+  admin:
+    nav:
+      guardian_button: => hyn-guardian.package_name
+      guardian_text: => hyn-guardian.package_description
+    grid:
+      user:
+        joined_at: Joined
+        last_seen_at: Last online
+        badges: Badges
+        activated: Active
+        details: Details
+        states:
+          never_visited: => hyn-guardian.generic.never
