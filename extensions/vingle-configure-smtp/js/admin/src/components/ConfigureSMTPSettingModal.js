@@ -11,6 +11,14 @@ export default class ConfigureSMTPSettingModal extends SettingsModal {
 
   form() {
     return [ < div className = "Form-group" >
+      < label > Mail Driver < /label> < input className = "FormControl"
+      bidi = {
+        this.setting('mail_driver')
+      }
+      />
+      smtp < /div>,
+      
+      < div className = "Form-group" >
       < label > Mail Encryption < /label> < input className = "FormControl"
       bidi = {
         this.setting('mail_encryption')
@@ -43,7 +51,7 @@ export default class ConfigureSMTPSettingModal extends SettingsModal {
         this.setting('mail_username')
       }
       />
-      smtp@ flarum.org < /div>,
+      smtp@flarum.org < /div>,
 
       < div className = "Form-group" >
       < label > Mail Password < /label> < input type = "password" className = "FormControl"

@@ -34,6 +34,21 @@ System.register('vingle/configure/smtp/components/ConfigureSMTPSettingModal', ['
               m(
                 'label',
                 null,
+                ' Mail Driver '
+              ),
+              ' ',
+              m('input', { className: 'FormControl',
+                bidi: this.setting('mail_driver')
+              }),
+              'null '
+            ),
+            
+                m(
+              'div',
+              { className: 'Form-group' },
+              m(
+                'label',
+                null,
                 ' Mail Encryption '
               ),
               ' ',
@@ -41,7 +56,10 @@ System.register('vingle/configure/smtp/components/ConfigureSMTPSettingModal', ['
                 bidi: this.setting('mail_encryption')
               }),
               'null '
-            ), m(
+            ), 
+            
+            
+              m(
               'div',
               { className: 'Form-group' },
               m(
