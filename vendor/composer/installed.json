@@ -5037,5 +5037,62 @@
         "keywords": [
             "security"
         ]
+    },
+    {
+        "name": "davis/flarum-ext-socialprofile",
+        "version": "0.1.3",
+        "version_normalized": "0.1.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/dav-is/flarum-socialprofile.git",
+            "reference": "ca403887aa7da1cfec8de465203ffe4f9cda9a53"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/dav-is/flarum-socialprofile/zipball/ca403887aa7da1cfec8de465203ffe4f9cda9a53",
+            "reference": "ca403887aa7da1cfec8de465203ffe4f9cda9a53",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.4"
+        },
+        "time": "2016-02-07 06:59:25",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Social Profile",
+                "icon": {
+                    "image": "icon.jpg",
+                    "backgroundColor": "#000",
+                    "backgroundSize": "100%",
+                    "backgroundRepeat": "no-repeat",
+                    "backgroundPosition": "center"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Davis\\SocialProfile\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Connor Davis",
+                "email": "cdavis@produes.co"
+            }
+        ],
+        "description": "Allows addition of Social Media buttons to profile",
+        "keywords": [
+            "customization",
+            "davis",
+            "flarum",
+            "profile",
+            "social"
+        ]
     }
 ]

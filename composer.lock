@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0490a3350405a3d95d7b4756054b6c87",
-    "content-hash": "b6415a88ccdaecbfc548d3777acafd17",
+    "hash": "f77d58e158233aca7d18067a52ce3a10",
+    "content-hash": "18873726f60d9dd90cd23a91cd2bfa2d",
     "packages": [
         {
             "name": "cloudinary/cloudinary_php",
@@ -114,6 +114,61 @@
                 "utils"
             ],
             "time": "2015-07-23 00:54:12"
+        },
+        {
+            "name": "davis/flarum-ext-socialprofile",
+            "version": "0.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dav-is/flarum-socialprofile.git",
+                "reference": "ca403887aa7da1cfec8de465203ffe4f9cda9a53"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dav-is/flarum-socialprofile/zipball/ca403887aa7da1cfec8de465203ffe4f9cda9a53",
+                "reference": "ca403887aa7da1cfec8de465203ffe4f9cda9a53",
+                "shasum": ""
+            },
+            "require": {
+                "flarum/core": "^0.1.0-beta.4"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "flarum-extension": {
+                    "title": "Social Profile",
+                    "icon": {
+                        "image": "icon.jpg",
+                        "backgroundColor": "#000",
+                        "backgroundSize": "100%",
+                        "backgroundRepeat": "no-repeat",
+                        "backgroundPosition": "center"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Davis\\SocialProfile\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Connor Davis",
+                    "email": "cdavis@produes.co"
+                }
+            ],
+            "description": "Allows addition of Social Media buttons to profile",
+            "keywords": [
+                "customization",
+                "davis",
+                "flarum",
+                "profile",
+                "social"
+            ],
+            "time": "2016-02-07 06:59:25"
         },
         {
             "name": "dflydev/fig-cookies",
