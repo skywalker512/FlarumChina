@@ -1,0 +1,18 @@
+hyn-guardian:
+  package_name: "保卫者"
+  package_description: "查看用户和他们之间的关系"
+  generic:
+    never: never
+  admin:
+    nav:
+      guardian_button: => hyn-guardian.package_name
+      guardian_text: => hyn-guardian.package_description
+    grid:
+      user:
+        joined_at: 加入时间
+        last_seen_at: 最后登陆
+        badges: 用户组
+        activated: 活动性
+        details: 详情
+        states:
+          never_visited: => hyn-guardian.generic.never
