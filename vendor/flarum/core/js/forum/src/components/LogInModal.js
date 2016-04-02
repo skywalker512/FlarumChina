@@ -49,15 +49,13 @@ export default class LogInModal extends Modal {
         <div className="Form Form--centered">
           <div className="Form-group">
             <input className="FormControl" name="email" type="text" placeholder={extractText(app.translator.trans('core.forum.log_in.username_or_email_placeholder'))}
-              value={this.email()}
-              onchange={m.withAttr('value', this.email)}
+              bidi={this.email}
               disabled={this.loading} />
           </div>
 
           <div className="Form-group">
             <input className="FormControl" name="password" type="password" placeholder={extractText(app.translator.trans('core.forum.log_in.password_placeholder'))}
-              value={this.password()}
-              onchange={m.withAttr('value', this.password)}
+              bidi={this.password}
               disabled={this.loading} />
           </div>
 
@@ -124,18 +122,15 @@ export default class LogInModal extends Modal {
     const email = this.email();
     const password = this.password();
 
-    app.session.login(email, password, {errorHandler: this.onerror.bind(this)})
-      .catch(this.loaded.bind(this));
+    app.session.login(email, password, {errorHandler: this.onerror.bind(this)}).then(
+      () => window.location.reload(),
+      this.loaded.bind(this)
+    );
   }
 
   onerror(error) {
     if (error.status === 401) {
-      if (error.response.emailConfirmationRequired) {
-        error.alert.props.children = app.translator.trans('core.forum.log_in.confirmation_required_message', {email: error.response.emailConfirmationRequired});
-        delete error.alert.props.type;
-      } else {
-        error.alert.props.children = app.translator.trans('core.forum.log_in.invalid_login_message');
-      }
+      error.alert.props.children = app.translator.trans('core.forum.log_in.invalid_login_message');
     }
 
     super.onerror(error);

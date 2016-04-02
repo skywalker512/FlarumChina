@@ -7,11 +7,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Flarum\Core\Search\Discussion\Fulltext;
-
 use Flarum\Core\Post;
-
 class MySqlFulltextDriver implements DriverInterface
 {
     /**
@@ -26,7 +23,6 @@ class MySqlFulltextDriver implements DriverInterface
         foreach ($discussionIds as $postId => $discussionId) {
             $relevantPostIds[$discussionId][] = $postId;
         }
-
         return $relevantPostIds;
     }
 }

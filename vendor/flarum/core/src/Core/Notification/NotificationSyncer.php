@@ -10,11 +10,11 @@
 
 namespace Flarum\Core\Notification;
 
+use Carbon\Carbon;
 use Flarum\Core\Notification;
 use Flarum\Core\Repository\NotificationRepository;
-use Flarum\Event\NotificationWillBeSent;
 use Flarum\Core\User;
-use Carbon\Carbon;
+use Flarum\Event\NotificationWillBeSent;
 
 /**
  * The Notification Syncer commits notification blueprints to the database, and
@@ -85,6 +85,10 @@ class NotificationSyncer
         // it isn't marked as deleted. If they don't, we will want to create a
         // new record for them.
         foreach ($users as $user) {
+            if (! ($user instanceof User)) {
+                continue;
+            }
+
             $existing = $toDelete->first(function ($i, $notification) use ($user) {
                 return $notification->user_id === $user->id;
             });

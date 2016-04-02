@@ -31,7 +31,10 @@ class ModelNotFoundExceptionHandler implements ExceptionHandlerInterface
     public function handle(Exception $e)
     {
         $status = 404;
-        $error = [];
+        $error = [
+            'status' => (string) $status,
+            'code' => 'resource_not_found'
+        ];
 
         return new ResponseBag($status, [$error]);
     }

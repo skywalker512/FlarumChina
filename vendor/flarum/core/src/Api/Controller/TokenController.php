@@ -10,10 +10,9 @@
 
 namespace Flarum\Api\Controller;
 
-use Flarum\Api\Command\GenerateAccessToken;
 use Flarum\Core\Exception\PermissionDeniedException;
 use Flarum\Core\Repository\UserRepository;
-use Flarum\Event\UserEmailChangeWasRequested;
+use Flarum\Http\AccessToken;
 use Flarum\Http\Controller\ControllerInterface;
 use Illuminate\Contracts\Bus\Dispatcher as BusDispatcher;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
@@ -58,6 +57,7 @@ class TokenController implements ControllerInterface
 
         $identification = array_get($body, 'identification');
         $password = array_get($body, 'password');
+        $lifetime = array_get($body, 'lifetime', 3600);
 
         $user = $this->users->findByIdentification($identification);
 
@@ -65,15 +65,8 @@ class TokenController implements ControllerInterface
             throw new PermissionDeniedException;
         }
 
-        if (! $user->is_activated) {
-            $this->events->fire(new UserEmailChangeWasRequested($user, $user->email));
-
-            return new JsonResponse(['emailConfirmationRequired' => $user->email], 401);
-        }
-
-        $token = $this->bus->dispatch(
-            new GenerateAccessToken($user->id)
-        );
+        $token = AccessToken::generate($user->id, $lifetime);
+        $token->save();
 
         return new JsonResponse([
             'token' => $token->id,

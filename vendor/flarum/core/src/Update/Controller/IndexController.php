@@ -11,8 +11,8 @@
 namespace Flarum\Update\Controller;
 
 use Flarum\Http\Controller\AbstractHtmlController;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Illuminate\Contracts\View\Factory;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class IndexController extends AbstractHtmlController
 {
@@ -31,10 +31,9 @@ class IndexController extends AbstractHtmlController
 
     /**
      * @param Request $request
-     * @param array $routeParams
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function render(Request $request, array $routeParams = [])
+    public function render(Request $request)
     {
         $view = $this->view->make('flarum.update::app')->with('title', 'Update Flarum');
 

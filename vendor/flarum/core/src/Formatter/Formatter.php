@@ -10,13 +10,13 @@
 
 namespace Flarum\Formatter;
 
+use Flarum\Event\ConfigureFormatter;
+use Flarum\Event\ConfigureFormatterParser;
+use Flarum\Event\ConfigureFormatterRenderer;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Unparser;
-use Flarum\Event\ConfigureFormatter;
-use Flarum\Event\ConfigureFormatterParser;
-use Flarum\Event\ConfigureFormatterRenderer;
 
 class Formatter
 {
@@ -58,6 +58,8 @@ class Formatter
     {
         $parser = $this->getParser($context);
 
+        $this->events->fire(new ConfigureFormatterParser($parser, $context, $text));
+
         return $parser->parse($text);
     }
 
@@ -71,6 +73,8 @@ class Formatter
     public function render($xml, $context = null)
     {
         $renderer = $this->getRenderer($context);
+
+        $this->events->fire(new ConfigureFormatterRenderer($renderer, $context, $xml));
 
         return $renderer->render($xml);
     }
@@ -142,7 +146,7 @@ class Formatter
      */
     protected function getComponent($name)
     {
-        $cacheKey = 'flarum.formatter.' . $name;
+        $cacheKey = 'flarum.formatter.'.$name;
 
         return $this->cache->rememberForever($cacheKey, function () use ($name) {
             return $this->getConfigurator()->finalize()[$name];
@@ -161,8 +165,6 @@ class Formatter
 
         $parser->registeredVars['context'] = $context;
 
-        $this->events->fire(new ConfigureFormatterParser($parser, $context));
-
         return $parser;
     }
 
@@ -180,11 +182,7 @@ class Formatter
             }
         });
 
-        $renderer = $this->getComponent('renderer');
-
-        $this->events->fire(new ConfigureFormatterRenderer($renderer, $context));
-
-        return $renderer;
+        return $this->getComponent('renderer');
     }
 
     /**

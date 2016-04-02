@@ -11,6 +11,7 @@
 namespace Flarum\Event;
 
 use Flarum\Core\User;
+use Flarum\Http\AccessToken;
 
 class UserLoggedIn
 {
@@ -18,7 +19,7 @@ class UserLoggedIn
 
     public $token;
 
-    public function __construct(User $user, $token)
+    public function __construct(User $user, AccessToken $token)
     {
         $this->user = $user;
         $this->token = $token;

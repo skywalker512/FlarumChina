@@ -55,6 +55,10 @@ class CoreServiceProvider extends AbstractServiceProvider
         $this->app->when('Flarum\Core\Command\DeleteAvatarHandler')
             ->needs('League\Flysystem\FilesystemInterface')
             ->give($avatarsFilesystem);
+
+        $this->app->when('Flarum\Core\Command\RegisterUserHandler')
+            ->needs('League\Flysystem\FilesystemInterface')
+            ->give($avatarsFilesystem);
     }
 
     /**
@@ -69,13 +73,25 @@ class CoreServiceProvider extends AbstractServiceProvider
         });
 
         $this->app->make('flarum.gate')->before(function (User $actor, $ability, $model = null) {
+            // Fire an event so that core and extension policies can hook into
+            // this permission query and explicitly grant or deny the
+            // permission.
+            $allowed = $this->app->make('events')->until(
+                new GetPermission($actor, $ability, $model ? [$model] : [])
+            );
+
+            if (! is_null($allowed)) {
+                return $allowed;
+            }
+
+            // If no policy covered this permission query, we will only grant
+            // the permission if the actor's groups have it. Otherwise, we will
+            // not allow the user to perform this action.
             if ($actor->isAdmin() || (! $model && $actor->hasPermission($ability))) {
                 return true;
             }
 
-            return $this->app->make('events')->until(
-                new GetPermission($actor, $ability, [$model])
-            );
+            return false;
         });
 
         $this->registerPostTypes();
@@ -91,7 +107,6 @@ class CoreServiceProvider extends AbstractServiceProvider
         $events->subscribe('Flarum\Core\Listener\UserMetadataUpdater');
         $events->subscribe('Flarum\Core\Listener\EmailConfirmationMailer');
         $events->subscribe('Flarum\Core\Listener\DiscussionRenamedNotifier');
-        $events->subscribe('Flarum\Core\Listener\FloodController');
 
         $events->subscribe('Flarum\Core\Access\DiscussionPolicy');
         $events->subscribe('Flarum\Core\Access\GroupPolicy');

@@ -1,0 +1,47 @@
+{
+    "name": "flagrow/flarum-ext-image-upload",
+    "description": "Image uploader for Flarum forum messages.",
+    "keywords": ["upload", "flarum", "flagrow", "image", "imgur"],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matteo Pompili",
+            "email": "matpompili@gmail.com"
+        },
+        {
+            "name": "Daniël Klabbers",
+            "email": "daniel+flarum@klabbers.email",
+            "homepage": "http://hyn.io"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/flagrow/flarum-ext-image-upload/issues",
+        "source": "https://github.com/flagrow/flarum-ext-image-upload"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.5",
+        "flarum/flarum-ext-markdown": "^0.1.0-beta.3"
+    },
+    "suggest": {
+        "cloudinary/cloudinary_php": "Allows uploading images to cloudinary."
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Image Upload",
+            "icon": {
+                "name": "upload",
+                "backgroundColor": "#000",
+                "color": "#87d37c"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "0.3.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Flagrow\\ImageUpload\\": "src/"
+        }
+    }
+}

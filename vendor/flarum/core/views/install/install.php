@@ -66,28 +66,23 @@
   </div>
 </form>
 
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
 <script>
 $(function() {
   $('form :input:first').select();
-
   $('form').on('submit', function(e) {
     e.preventDefault();
-
     var $button = $(this).find('button')
       .text('Please Wait...')
       .prop('disabled', true);
-
     $.post('', $(this).serialize())
       .done(function() {
         window.location.reload();
       })
       .fail(function(data) {
         $('#error').show().text('Something went wrong:\n\n' + data.responseText);
-
         $button.prop('disabled', false).text('Install Flarum');
       });
-
     return false;
   });
 });

@@ -11,46 +11,46 @@
 namespace Flarum\Forum\Controller;
 
 use Flarum\Api\Client;
-use Flarum\Api\AccessToken;
 use Flarum\Http\Controller\ControllerInterface;
-use Flarum\Api\Command\GenerateAccessToken;
+use Flarum\Http\Rememberer;
+use Flarum\Http\SessionAuthenticator;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Zend\Diactoros\Response\EmptyResponse;
 use Zend\Diactoros\Response\JsonResponse;
-use Illuminate\Contracts\Bus\Dispatcher;
-use DateTime;
 
 class RegisterController implements ControllerInterface
 {
-    use WriteRememberCookieTrait;
-
-    /**
-     * @var Dispatcher
-     */
-    protected $bus;
-
     /**
      * @var Client
      */
     protected $api;
 
     /**
-     * @param Dispatcher $bus
-     * @param Client $api
+     * @var SessionAuthenticator
      */
-    public function __construct(Dispatcher $bus, Client $api)
+    protected $authenticator;
+
+    /**
+     * @var Rememberer
+     */
+    protected $rememberer;
+
+    /**
+     * @param Client $api
+     * @param SessionAuthenticator $authenticator
+     * @param Rememberer $rememberer
+     */
+    public function __construct(Client $api, SessionAuthenticator $authenticator, Rememberer $rememberer)
     {
-        $this->bus = $bus;
         $this->api = $api;
+        $this->authenticator = $authenticator;
+        $this->rememberer = $rememberer;
     }
 
     /**
      * @param Request $request
-     * @param array $routeParams
-     *
      * @return JsonResponse
      */
-    public function handle(Request $request, array $routeParams = [])
+    public function handle(Request $request)
     {
         $controller = 'Flarum\Api\Controller\CreateUserController';
         $actor = $request->getAttribute('actor');
@@ -59,21 +59,14 @@ class RegisterController implements ControllerInterface
         $response = $this->api->send($controller, $actor, [], $body);
 
         $body = json_decode($response->getBody());
-        $statusCode = $response->getStatusCode();
 
-        $response = new JsonResponse($body, $statusCode);
+        if (isset($body->data)) {
+            $userId = $body->data->id;
 
-        if (! empty($body->data->attributes->isActivated)) {
-            $token = $this->bus->dispatch(new GenerateAccessToken($body->data->id));
+            $session = $request->getAttribute('session');
+            $this->authenticator->logIn($session, $userId);
 
-            // Extend the token's expiry to 2 weeks so that we can set a
-            // remember cookie
-            AccessToken::where('id', $token->id)->update(['expires_at' => new DateTime('+2 weeks')]);
-
-            return $this->withRememberCookie(
-                $response,
-                $token->id
-            );
+            $response = $this->rememberer->rememberUser($response, $userId);
         }
 
         return $response;

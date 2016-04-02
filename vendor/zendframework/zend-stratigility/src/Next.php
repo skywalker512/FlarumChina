@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @see       http://github.com/zendframework/zend-stratigility for the canonical source repository
- * @copyright Copyright (c) 2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2015-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   https://github.com/zendframework/zend-stratigility/blob/master/LICENSE.md New BSD License
  */
 
@@ -161,11 +161,11 @@ class Next
      */
     private function getBorder($path, $route)
     {
-        $border = (strlen($path) > strlen($route))
-            ? $path[strlen($route)]
-            : '';
-        $border = ($route === '/') ? '/' : $border;
-        return $border;
+        if ($route === '/') {
+            return '/';
+        }
+        $routeLength = strlen($route);
+        return (strlen($path) > $routeLength) ? $path[$routeLength] : '';
     }
 
     /**

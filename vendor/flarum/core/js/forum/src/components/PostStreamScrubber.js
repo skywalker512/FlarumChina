@@ -39,16 +39,6 @@ export default class PostStreamScrubber extends Component {
      */
     this.description = '';
 
-    /**
-     * The integer index of the last item that is visible in the viewport. This
-     * is displayed on the scrubber (i.e. X of 100 posts).
-     *
-     * @return {Integer}
-     */
-    this.visibleIndex = computed('index', 'visible', 'count', function(index, visible, count) {
-      return Math.min(count, Math.ceil(Math.max(0, index) + visible));
-    });
-
     // When the post stream begins loading posts at a certain index, we want our
     // scrubber scrollbar to jump to that position.
     this.props.stream.on('unpaused', this.handlers.streamWasUnpaused = this.streamWasUnpaused.bind(this));
@@ -68,10 +58,10 @@ export default class PostStreamScrubber extends Component {
     const retain = this.subtree.retain();
     const count = this.count();
     const unreadCount = this.props.stream.discussion.unreadCount();
-    const unreadPercent = Math.min(count - this.index, unreadCount) / count;
+    const unreadPercent = count ? Math.min(count - this.index, unreadCount) / count : 0;
 
     const viewing = app.translator.transChoice('core.forum.post_scrubber.viewing_text', count, {
-      index: <span className="Scrubber-index">{retain || formatNumber(this.visibleIndex())}</span>,
+      index: <span className="Scrubber-index">{retain || formatNumber(Math.ceil(this.index + this.visible))}</span>,
       count: <span className="Scrubber-count">{formatNumber(count)}</span>
     });
 
@@ -200,6 +190,7 @@ export default class PostStreamScrubber extends Component {
     const marginTop = stream.getMarginTop();
     const viewportTop = scrollTop + marginTop;
     const viewportHeight = $(window).height() - marginTop;
+    const viewportBottom = viewportTop + viewportHeight;
 
     // Before looping through all of the posts, we reset the scrollbar
     // properties to a 'default' state. These values reflect what would be
@@ -219,32 +210,28 @@ export default class PostStreamScrubber extends Component {
       const height = $this.outerHeight(true);
 
       // If this item is above the top of the viewport, skip to the next
-      // post. If it's below the bottom of the viewport, break out of the
+      // one. If it's below the bottom of the viewport, break out of the
       // loop.
       if (top + height < viewportTop) {
-        visible = (top + height - viewportTop) / height;
-        index = parseFloat($this.data('index')) + 1 - visible;
         return true;
       }
       if (top > viewportTop + viewportHeight) {
         return false;
       }
 
-      // If the bottom half of this item is visible at the top of the
-      // viewport, then set the start of the visible proportion as our index.
-      if (top <= viewportTop && top + height > viewportTop) {
-        visible = (top + height - viewportTop) / height;
-        index = parseFloat($this.data('index')) + 1 - visible;
-      //
-      // If the top half of this item is visible at the bottom of the
-      // viewport, then add the visible proportion to the visible
-      // counter.
-      } else if (top + height >= viewportTop + viewportHeight) {
-        visible += (viewportTop + viewportHeight - top) / height;
-      //
-      // If the whole item is visible in the viewport, then increment the
-      // visible counter.
-      } else visible++;
+      // Work out how many pixels of this item are visible inside the viewport.
+      // Then add the proportion of this item's total height to the index.
+      const visibleTop = Math.max(0, viewportTop - top);
+      const visibleBottom = Math.min(height, viewportTop + viewportHeight - top);
+      const visiblePost = visibleBottom - visibleTop;
+
+      if (top <= viewportTop) {
+        index = parseFloat($this.data('index')) + visibleTop / height;
+      }
+
+      if (visiblePost > 0) {
+        visible += visiblePost / height;
+      }
 
       // If this item has a time associated with it, then set the
       // scrollbar's current period to a formatted version of this time.
@@ -328,7 +315,7 @@ export default class PostStreamScrubber extends Component {
     const visible = this.visible || 1;
 
     const $scrubber = this.$();
-    $scrubber.find('.Scrubber-index').text(formatNumber(this.visibleIndex()));
+    $scrubber.find('.Scrubber-index').text(formatNumber(Math.ceil(index + visible)));
     $scrubber.find('.Scrubber-description').text(this.description);
     $scrubber.toggleClass('disabled', this.disabled());
 

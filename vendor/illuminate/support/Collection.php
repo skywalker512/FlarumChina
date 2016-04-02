@@ -243,7 +243,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     public function first(callable $callback = null, $default = null)
     {
         if (is_null($callback)) {
-            return count($this->items) > 0 ? reset($this->items) : null;
+            return count($this->items) > 0 ? reset($this->items) : value($default);
         }
 
         return Arr::first($this->items, $callback, $default);
@@ -586,7 +586,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     }
 
     /**
-     * Pulls an item from the collection.
+     * Get and remove an item from the collection.
      *
      * @param  mixed  $key
      * @param  mixed  $default

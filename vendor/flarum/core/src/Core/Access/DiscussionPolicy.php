@@ -69,7 +69,7 @@ class DiscussionPolicy extends AbstractPolicy
      */
     public function find(User $actor, Builder $query)
     {
-        if (! $actor->hasPermission('viewDiscussions')) {
+        if ($actor->cannot('viewDiscussions')) {
             $query->whereRaw('FALSE');
         } elseif (! $actor->hasPermission('discussion.hide')) {
             $query->where(function ($query) use ($actor) {
@@ -109,6 +109,8 @@ class DiscussionPolicy extends AbstractPolicy
      */
     public function delete(User $actor, Discussion $discussion)
     {
-        return $this->rename($actor, $discussion);
+        if ($discussion->start_user_id == $actor->id && $discussion->participants_count <= 1) {
+            return true;
+        }
     }
 }

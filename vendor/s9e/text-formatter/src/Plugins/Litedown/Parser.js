@@ -688,7 +688,7 @@ function matchBlockLevelMarkup()
 				tagPos = matchPos + ignoreLen;
 				tagLen = lfPos - tagPos;
 
-				if (codeTag && m[5].charAt(0) === codeFence)
+				if (codeTag && m[5] === codeFence)
 				{
 					endTag = addEndTag('CODE', tagPos, tagLen);
 					endTag.pairWith(codeTag);
@@ -705,7 +705,7 @@ function matchBlockLevelMarkup()
 				{
 					// Create code block
 					codeTag   = addStartTag('CODE', tagPos, tagLen);
-					codeFence = m[5].charAt(0);
+					codeFence = m[5].replace(/[^`~]+/, '');
 					codeTag.setAttribute('quoteDepth', quoteDepth);
 
 					// Ignore the next character, which should be a newline
@@ -720,7 +720,7 @@ function matchBlockLevelMarkup()
 				}
 			}
 		}
-		else if (m[3] && !listsCnt)
+		else if (m[3] && !listsCnt && text.charAt(matchPos + matchLen) !== "\x17")
 		{
 			// Horizontal rule
 			addSelfClosingTag('HR', matchPos + ignoreLen, matchLen - ignoreLen);
@@ -739,9 +739,6 @@ function matchBlockLevelMarkup()
 				setextLines[lfPos].endTagPos,
 				setextLines[lfPos].endTagLen
 			);
-
-			// Overwrite the LF to prevent forced line breaks from matching
-			overwrite(lfPos, 1);
 
 			// Mark the end of the Setext line
 			markBoundary(setextLines[lfPos].endTagPos + setextLines[lfPos].endTagLen);
@@ -897,7 +894,7 @@ function matchLinks()
 		return;
 	}
 
-	var m, regexp = /\[([^\x17]*?(?=] ?\()|[^\x17\]]*)](?: ?\[([^\x17\]]+)\]| ?\(([^\x17 ()]+(?:\([^\x17 ()]+\)[^\x17 ()]*)*[^\x17 )]*)( *(?:"[^\x17"]*"|\'[^\x17\']*\'|[^\x17\)]*))?\))?/g;
+	var m, regexp = /\[([^\x17]*?(?=]\()|[^\x17\]]*)](?: ?\[([^\x17\]]+)\]|\(([^\x17 ()]+(?:\([^\x17 ()]+\)[^\x17 ()]*)*[^\x17 )]*)( *(?:"[^\x17"]*"|\'[^\x17\']*\'|[^\x17\)]*))?\))?/g;
 	while (m = regexp.exec(text))
 	{
 		var matchPos    = m['index'],

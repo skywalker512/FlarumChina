@@ -4,6 +4,13 @@ import Button from 'flarum/components/Button';
 import icon from 'flarum/helpers/icon';
 import extractText from 'flarum/utils/extractText';
 
+function minimizeComposerIfFullScreen(e) {
+  if (app.composer.isFullScreen()) {
+    app.composer.minimize();
+    e.stopPropagation();
+  }
+}
+
 /**
  * The `ReplyComposer` component displays the composer content for replying to a
  * discussion.
@@ -17,7 +24,9 @@ export default class ReplyComposer extends ComposerBody {
   init() {
     super.init();
 
-    this.editor.props.preview = () => {
+    this.editor.props.preview = e => {
+      minimizeComposerIfFullScreen(e);
+
       m.route(app.route.discussion(this.props.discussion, 'reply'));
     };
   }
@@ -34,10 +43,16 @@ export default class ReplyComposer extends ComposerBody {
     const items = super.headerItems();
     const discussion = this.props.discussion;
 
+    const routeAndMinimize = function(element, isInitialized) {
+      if (isInitialized) return;
+      $(element).on('click', minimizeComposerIfFullScreen);
+      m.route.apply(this, arguments);
+    };
+
     items.add('title', (
       <h3>
         {icon('reply')} {' '}
-        <a href={app.route.discussion(discussion)} config={m.route}>{discussion.title()}</a>
+        <a href={app.route.discussion(discussion)} config={routeAndMinimize}>{discussion.title()}</a>
       </h3>
     ));
 

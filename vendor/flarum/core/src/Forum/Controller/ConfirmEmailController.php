@@ -11,10 +11,10 @@
 namespace Flarum\Forum\Controller;
 
 use Flarum\Core\Command\ConfirmEmail;
-use Flarum\Api\Command\GenerateAccessToken;
 use Flarum\Core\Exception\InvalidConfirmationTokenException;
 use Flarum\Foundation\Application;
 use Flarum\Http\Controller\ControllerInterface;
+use Flarum\Http\SessionAuthenticator;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -22,8 +22,6 @@ use Zend\Diactoros\Response\RedirectResponse;
 
 class ConfirmEmailController implements ControllerInterface
 {
-    use WriteRememberCookieTrait;
-
     /**
      * @var Dispatcher
      */
@@ -35,13 +33,20 @@ class ConfirmEmailController implements ControllerInterface
     protected $app;
 
     /**
+     * @var SessionAuthenticator
+     */
+    protected $authenticator;
+
+    /**
      * @param Dispatcher $bus
      * @param Application $app
+     * @param SessionAuthenticator $authenticator
      */
-    public function __construct(Dispatcher $bus, Application $app)
+    public function __construct(Dispatcher $bus, Application $app, SessionAuthenticator $authenticator)
     {
         $this->bus = $bus;
         $this->app = $app;
+        $this->authenticator = $authenticator;
     }
 
     /**
@@ -60,13 +65,9 @@ class ConfirmEmailController implements ControllerInterface
             return new HtmlResponse('Invalid confirmation token');
         }
 
-        $token = $this->bus->dispatch(
-            new GenerateAccessToken($user->id)
-        );
+        $session = $request->getAttribute('session');
+        $this->authenticator->logIn($session, $user->id);
 
-        return $this->withRememberCookie(
-            new RedirectResponse($this->app->url()),
-            $token->id
-        );
+        return new RedirectResponse($this->app->url());
     }
 }

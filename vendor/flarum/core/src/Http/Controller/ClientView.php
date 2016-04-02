@@ -13,9 +13,9 @@ namespace Flarum\Http\Controller;
 use Flarum\Api\Client;
 use Flarum\Asset\AssetManager;
 use Flarum\Core\User;
+use Flarum\Locale\JsCompiler;
 use Illuminate\Contracts\Support\Renderable;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Flarum\Locale\JsCompiler;
 
 /**
  * This class represents a view which boots up Flarum's client.
@@ -127,6 +127,8 @@ class ClientView implements Renderable
         $this->assets = $assets;
         $this->layout = $layout;
         $this->localeJs = $localeJs;
+
+        $this->addHeadString('<link rel="stylesheet" href="//fonts.css.network/css?family=Open+Sans:400italic,700italic,400,700,600">', 'font');
     }
 
     /**
@@ -164,9 +166,13 @@ class ClientView implements Renderable
      *
      * @param string $string
      */
-    public function addHeadString($string)
+    public function addHeadString($string, $name = null)
     {
-        $this->headStrings[] = $string;
+        if ($name) {
+            $this->headStrings[$name] = $string;
+        } else {
+            $this->headStrings[] = $string;
+        }
     }
 
     /**
@@ -249,7 +255,7 @@ class ClientView implements Renderable
 
         $noJs = array_get($this->request->getQueryParams(), 'nojs');
 
-        $view->title = ($this->title ? $this->title . ' - ' : '') . $forum->data->attributes->title;
+        $view->title = ($this->title ? $this->title.' - ' : '').$forum->data->attributes->title;
         $view->forum = $forum->data;
         $view->layout = app('view')->file($this->layout, [
             'forum' => $forum->data,
@@ -339,9 +345,27 @@ class ClientView implements Renderable
      */
     protected function getSession()
     {
+        $session = $this->request->getAttribute('session');
+
         return [
             'userId' => $this->actor->id,
-            'token' => array_get($this->request->getCookieParams(), 'flarum_remember'),
+            'csrfToken' => $session->get('csrf_token')
         ];
+    }
+
+    /**
+     * @return User
+     */
+    public function getActor()
+    {
+        return $this->actor;
+    }
+
+    /**
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 }

@@ -31,7 +31,10 @@ class PermissionDeniedExceptionHandler implements ExceptionHandlerInterface
     public function handle(Exception $e)
     {
         $status = 401;
-        $error = [];
+        $error = [
+            'status' => (string) $status,
+            'code' => 'permission_denied'
+        ];
 
         return new ResponseBag($status, [$error]);
     }

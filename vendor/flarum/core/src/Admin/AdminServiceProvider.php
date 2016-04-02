@@ -10,14 +10,12 @@
 
 namespace Flarum\Admin;
 
-use Flarum\Event\SettingWasSet;
 use Flarum\Event\ExtensionWasDisabled;
 use Flarum\Event\ExtensionWasEnabled;
-use Flarum\Http\RouteCollection;
+use Flarum\Event\SettingWasSet;
 use Flarum\Foundation\AbstractServiceProvider;
 use Flarum\Http\GenerateRouteHandlerTrait;
-use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\RedirectResponse;
+use Flarum\Http\RouteCollection;
 
 class AdminServiceProvider extends AbstractServiceProvider
 {
@@ -33,7 +31,7 @@ class AdminServiceProvider extends AbstractServiceProvider
         });
 
         $this->app->singleton('flarum.admin.routes', function () {
-            return $this->getRoutes();
+            return new RouteCollection;
         });
     }
 
@@ -42,20 +40,22 @@ class AdminServiceProvider extends AbstractServiceProvider
      */
     public function boot()
     {
+        $this->populateRoutes($this->app->make('flarum.admin.routes'));
+
+        $this->loadViewsFrom(__DIR__.'/../../views', 'flarum.admin');
+
         $this->flushAssetsWhenThemeChanged();
 
         $this->flushAssetsWhenExtensionsChanged();
     }
 
     /**
-     * Register the admin client routes.
+     * Populate the forum client routes.
      *
-     * @return RouteCollection
+     * @param RouteCollection $routes
      */
-    protected function getRoutes()
+    protected function populateRoutes(RouteCollection $routes)
     {
-        $routes = new RouteCollection;
-
         $toController = $this->getHandlerGenerator($this->app);
 
         $routes->get(
@@ -63,8 +63,6 @@ class AdminServiceProvider extends AbstractServiceProvider
             'index',
             $toController('Flarum\Admin\Controller\ClientController')
         );
-
-        return $routes;
     }
 
     protected function flushAssetsWhenThemeChanged()

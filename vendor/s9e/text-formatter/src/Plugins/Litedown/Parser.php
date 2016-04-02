@@ -373,7 +373,7 @@ class Parser extends ParserBase
 				{
 					$tagPos = $matchPos + $ignoreLen;
 					$tagLen = $lfPos - $tagPos;
-					if (isset($codeTag) && $m[5][0][0] === $codeFence)
+					if (isset($codeTag) && $m[5][0] === $codeFence)
 					{
 						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen);
 						$endTag->pairWith($codeTag);
@@ -386,7 +386,7 @@ class Parser extends ParserBase
 					elseif (!isset($codeTag))
 					{
 						$codeTag   = $this->parser->addStartTag('CODE', $tagPos, $tagLen);
-						$codeFence = $m[5][0][0];
+						$codeFence = \substr($m[5][0], 0, \strspn($m[5][0], '`~'));
 						$codeTag->setAttribute('quoteDepth', $quoteDepth);
 						$this->parser->addIgnoreTag($tagPos + $tagLen, 1);
 						$lang = \trim(\trim($m[5][0], '`~'));
@@ -395,7 +395,7 @@ class Parser extends ParserBase
 					}
 				}
 			}
-			elseif (!empty($m[3][0]) && !$listsCnt)
+			elseif (!empty($m[3][0]) && !$listsCnt && $this->text[$matchPos + $matchLen] !== "\x17")
 			{
 				$this->parser->addSelfClosingTag('HR', $matchPos + $ignoreLen, $matchLen - $ignoreLen);
 				$breakParagraph = \true;
@@ -410,7 +410,6 @@ class Parser extends ParserBase
 					$setextLines[$lfPos]['endTagPos'],
 					$setextLines[$lfPos]['endTagLen']
 				);
-				$this->overwrite($lfPos, 1);
 				$this->markBoundary($setextLines[$lfPos]['endTagPos'] + $setextLines[$lfPos]['endTagLen']);
 			}
 			if ($breakParagraph)
@@ -518,7 +517,7 @@ class Parser extends ParserBase
 		if ($pos === \false)
 			return;
 		\preg_match_all(
-			'/\\[([^\\x17]*?(?=] ?\\()|[^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]| ?\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\))?/',
+			'/\\[([^\\x17]*?(?=]\\()|[^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]|\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\))?/',
 			$this->text,
 			$matches,
 			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,

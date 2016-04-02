@@ -10,25 +10,22 @@
 
 namespace Flarum\Install\Console;
 
+use Exception;
 use Flarum\Console\Command\AbstractCommand;
-use Flarum\Core\Exception\ValidationException;
-use Flarum\Database\AbstractModel;
-use Flarum\Core\User;
 use Flarum\Core\Group;
 use Flarum\Core\Permission;
+use Flarum\Core\User;
+use Flarum\Database\AbstractModel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\Factory;
 use PDO;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Output\OutputInterface;
-use Exception;
 
 class InstallCommand extends AbstractCommand
 {
+    const MOD_GROUP_ID = 4;
+
     /**
      * @var DataProviderInterface
      */
@@ -60,17 +57,23 @@ class InstallCommand extends AbstractCommand
     {
         $this
             ->setName('install')
-            ->setDescription("Run Flarum's installation migration and seeds.")
+            ->setDescription("Run Flarum's installation migration and seeds")
             ->addOption(
                 'defaults',
                 'd',
                 InputOption::VALUE_NONE,
                 'Create default settings and user'
+            )
+            ->addOption(
+                'file',
+                'f',
+                InputOption::VALUE_REQUIRED,
+                'Use external configuration file in YAML format'
             );
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function fire()
     {
@@ -99,6 +102,8 @@ class InstallCommand extends AbstractCommand
         if ($this->dataSource === null) {
             if ($this->input->getOption('defaults')) {
                 $this->dataSource = new DefaultsDataProvider();
+            } elseif ($this->input->getOption('file')) {
+                $this->dataSource = new FileDataProvider($this->input);
             } else {
                 $this->dataSource = new UserDataProvider($this->input, $this->output, $this->getHelperSet()->get('question'));
             }
@@ -120,8 +125,8 @@ class InstallCommand extends AbstractCommand
                 [
                     'driver' => 'required|in:mysql',
                     'host' => 'required',
-                    'database' => 'required|alpha_dash',
-                    'username' => 'required|alpha_dash',
+                    'database' => 'required|string',
+                    'username' => 'required|string',
                     'prefix' => 'alpha_dash|max:10'
                 ]
             );
@@ -152,15 +157,15 @@ class InstallCommand extends AbstractCommand
 
             $this->storeConfiguration();
 
+            $resolver = $this->application->make('Illuminate\Database\ConnectionResolverInterface');
+            AbstractModel::setConnectionResolver($resolver);
+            AbstractModel::setEventDispatcher($this->application->make('events'));
+
             $this->runMigrations();
 
             $this->writeSettings();
 
             $this->application->register('Flarum\Core\CoreServiceProvider');
-
-            $resolver = $this->application->make('Illuminate\Database\ConnectionResolverInterface');
-            AbstractModel::setConnectionResolver($resolver);
-            AbstractModel::setEventDispatcher($this->application->make('events'));
 
             $this->seedGroups();
             $this->seedPermissions();
@@ -229,7 +234,7 @@ class InstallCommand extends AbstractCommand
         $migrator = $this->application->make('Flarum\Database\Migrator');
         $migrator->getRepository()->createRepository();
 
-        $migrator->run(__DIR__ . '/../../../migrations');
+        $migrator->run(__DIR__.'/../../../migrations');
 
         foreach ($migrator->getNotes() as $note) {
             $this->info($note);
@@ -254,18 +259,19 @@ class InstallCommand extends AbstractCommand
         Group::unguard();
 
         $groups = [
-            ['Admin', 'Admins', '#B72A2A', 'wrench'],
-            ['Guest', 'Guests', null, null],
-            ['Member', 'Members', null, null],
-            ['Mod', 'Mods', '#80349E', 'bolt']
+            [Group::ADMINISTRATOR_ID, 'Admin', 'Admins', '#B72A2A', 'wrench'],
+            [Group::GUEST_ID, 'Guest', 'Guests', null, null],
+            [Group::MEMBER_ID, 'Member', 'Members', null, null],
+            [static::MOD_GROUP_ID, 'Mod', 'Mods', '#80349E', 'bolt']
         ];
 
         foreach ($groups as $group) {
             Group::create([
-                'name_singular' => $group[0],
-                'name_plural' => $group[1],
-                'color' => $group[2],
-                'icon' => $group[3]
+                'id' => $group[0],
+                'name_singular' => $group[1],
+                'name_plural' => $group[2],
+                'color' => $group[3],
+                'icon' => $group[4],
             ]);
         }
     }
@@ -274,17 +280,17 @@ class InstallCommand extends AbstractCommand
     {
         $permissions = [
             // Guests can view the forum
-            [2, 'viewDiscussions'],
+            [Group::GUEST_ID, 'viewDiscussions'],
 
             // Members can create and reply to discussions
-            [3, 'startDiscussion'],
-            [3, 'discussion.reply'],
+            [Group::MEMBER_ID, 'startDiscussion'],
+            [Group::MEMBER_ID, 'discussion.reply'],
 
             // Moderators can edit + delete stuff
-            [4, 'discussion.delete'],
-            [4, 'discussion.deletePosts'],
-            [4, 'discussion.editPosts'],
-            [4, 'discussion.rename'],
+            [static::MOD_GROUP_ID, 'discussion.delete'],
+            [static::MOD_GROUP_ID, 'discussion.deletePosts'],
+            [static::MOD_GROUP_ID, 'discussion.editPosts'],
+            [static::MOD_GROUP_ID, 'discussion.rename'],
         ];
 
         foreach ($permissions as &$permission) {
@@ -316,7 +322,7 @@ class InstallCommand extends AbstractCommand
         $user->is_activated = 1;
         $user->save();
 
-        $user->groups()->sync([1]);
+        $user->groups()->sync([Group::ADMINISTRATOR_ID]);
     }
 
     protected function enableBundledExtensions()
@@ -333,7 +339,7 @@ class InstallCommand extends AbstractCommand
             'flarum-pusher',
         ];
 
-        foreach ($extensions->getInfo() as $name => $extension) {
+        foreach ($extensions->getExtensions() as $name => $extension) {
             if (in_array($name, $disabled)) {
                 continue;
             }
@@ -383,7 +389,7 @@ class InstallCommand extends AbstractCommand
             $this->info($error['message']);
 
             if (isset($error['detail'])) {
-                $this->output->writeln('<comment>' . $error['detail'] . '</comment>');
+                $this->output->writeln('<comment>'.$error['detail'].'</comment>');
             }
         }
     }

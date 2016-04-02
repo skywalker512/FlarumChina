@@ -92,11 +92,13 @@ class Facebook extends AbstractProvider
     {
         $fields = implode(',', [
             'id', 'name', 'first_name', 'last_name',
-            'email', 'hometown', 'bio', 'picture.type(large){url}',
-            'cover{source}', 'gender', 'locale', 'link',
+            'email', 'hometown', 'bio', 'picture.type(large){url,is_silhouette}',
+            'cover{source}', 'gender', 'locale', 'link', 'timezone'
         ]);
+        $appSecretProof = AppSecretProof::create($this->clientSecret, $token->getToken());
 
-        return $this->getBaseGraphUrl().$this->graphApiVersion.'/me?fields='.$fields.'&access_token='.$token;
+        return $this->getBaseGraphUrl().$this->graphApiVersion.'/me?fields='.$fields
+                        .'&access_token='.$token.'&appsecret_proof='.$appSecretProof;
     }
 
     public function getAccessToken($grant = 'authorization_code', array $params = [])

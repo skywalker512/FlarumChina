@@ -1,20 +1,116 @@
 (function (global) {
   var babelHelpers = global.babelHelpers = {};
+  babelHelpers.typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+  };
 
-  babelHelpers.inherits = function (subClass, superClass) {
-    if (typeof superClass !== "function" && superClass !== null) {
-      throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  babelHelpers.jsx = function () {
+    var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7;
+    return function createRawReactElement(type, props, key, children) {
+      var defaultProps = type && type.defaultProps;
+      var childrenLength = arguments.length - 3;
+
+      if (!props && childrenLength !== 0) {
+        props = {};
+      }
+
+      if (props && defaultProps) {
+        for (var propName in defaultProps) {
+          if (props[propName] === void 0) {
+            props[propName] = defaultProps[propName];
+          }
+        }
+      } else if (!props) {
+        props = defaultProps || {};
+      }
+
+      if (childrenLength === 1) {
+        props.children = children;
+      } else if (childrenLength > 1) {
+        var childArray = Array(childrenLength);
+
+        for (var i = 0; i < childrenLength; i++) {
+          childArray[i] = arguments[i + 3];
+        }
+
+        props.children = childArray;
+      }
+
+      return {
+        $$typeof: REACT_ELEMENT_TYPE,
+        type: type,
+        key: key === undefined ? null : '' + key,
+        ref: null,
+        props: props,
+        _owner: null
+      };
+    };
+  }();
+
+  babelHelpers.asyncToGenerator = function (fn) {
+    return function () {
+      var gen = fn.apply(this, arguments);
+      return new Promise(function (resolve, reject) {
+        function step(key, arg) {
+          try {
+            var info = gen[key](arg);
+            var value = info.value;
+          } catch (error) {
+            reject(error);
+            return;
+          }
+
+          if (info.done) {
+            resolve(value);
+          } else {
+            return Promise.resolve(value).then(function (value) {
+              return step("next", value);
+            }, function (err) {
+              return step("throw", err);
+            });
+          }
+        }
+
+        return step("next");
+      });
+    };
+  };
+
+  babelHelpers.classCallCheck = function (instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  };
+
+  babelHelpers.createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
     }
 
-    subClass.prototype = Object.create(superClass && superClass.prototype, {
-      constructor: {
-        value: subClass,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+
+  babelHelpers.defineEnumerableProperties = function (obj, descs) {
+    for (var key in descs) {
+      var desc = descs[key];
+      desc.configurable = desc.enumerable = true;
+      if ("value" in desc) desc.writable = true;
+      Object.defineProperty(obj, key, desc);
+    }
+
+    return obj;
   };
 
   babelHelpers.defaults = function (obj, defaults) {
@@ -32,209 +128,6 @@
     return obj;
   };
 
-  babelHelpers.createClass = (function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  })();
-
-  babelHelpers.createDecoratedClass = (function () {
-    function defineProperties(target, descriptors, initializers) {
-      for (var i = 0; i < descriptors.length; i++) {
-        var descriptor = descriptors[i];
-        var decorators = descriptor.decorators;
-        var key = descriptor.key;
-        delete descriptor.key;
-        delete descriptor.decorators;
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor || descriptor.initializer) descriptor.writable = true;
-
-        if (decorators) {
-          for (var f = 0; f < decorators.length; f++) {
-            var decorator = decorators[f];
-
-            if (typeof decorator === "function") {
-              descriptor = decorator(target, key, descriptor) || descriptor;
-            } else {
-              throw new TypeError("The decorator for method " + descriptor.key + " is of the invalid type " + typeof decorator);
-            }
-          }
-
-          if (descriptor.initializer !== undefined) {
-            initializers[key] = descriptor;
-            continue;
-          }
-        }
-
-        Object.defineProperty(target, key, descriptor);
-      }
-    }
-
-    return function (Constructor, protoProps, staticProps, protoInitializers, staticInitializers) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps, protoInitializers);
-      if (staticProps) defineProperties(Constructor, staticProps, staticInitializers);
-      return Constructor;
-    };
-  })();
-
-  babelHelpers.createDecoratedObject = function (descriptors) {
-    var target = {};
-
-    for (var i = 0; i < descriptors.length; i++) {
-      var descriptor = descriptors[i];
-      var decorators = descriptor.decorators;
-      var key = descriptor.key;
-      delete descriptor.key;
-      delete descriptor.decorators;
-      descriptor.enumerable = true;
-      descriptor.configurable = true;
-      if ("value" in descriptor || descriptor.initializer) descriptor.writable = true;
-
-      if (decorators) {
-        for (var f = 0; f < decorators.length; f++) {
-          var decorator = decorators[f];
-
-          if (typeof decorator === "function") {
-            descriptor = decorator(target, key, descriptor) || descriptor;
-          } else {
-            throw new TypeError("The decorator for method " + descriptor.key + " is of the invalid type " + typeof decorator);
-          }
-        }
-      }
-
-      if (descriptor.initializer) {
-        descriptor.value = descriptor.initializer.call(target);
-      }
-
-      Object.defineProperty(target, key, descriptor);
-    }
-
-    return target;
-  };
-
-  babelHelpers.defineDecoratedPropertyDescriptor = function (target, key, descriptors) {
-    var _descriptor = descriptors[key];
-    if (!_descriptor) return;
-    var descriptor = {};
-
-    for (var _key in _descriptor) descriptor[_key] = _descriptor[_key];
-
-    descriptor.value = descriptor.initializer ? descriptor.initializer.call(target) : undefined;
-    Object.defineProperty(target, key, descriptor);
-  };
-
-  babelHelpers.taggedTemplateLiteral = function (strings, raw) {
-    return Object.freeze(Object.defineProperties(strings, {
-      raw: {
-        value: Object.freeze(raw)
-      }
-    }));
-  };
-
-  babelHelpers.taggedTemplateLiteralLoose = function (strings, raw) {
-    strings.raw = raw;
-    return strings;
-  };
-
-  babelHelpers.toArray = function (arr) {
-    return Array.isArray(arr) ? arr : Array.from(arr);
-  };
-
-  babelHelpers.toConsumableArray = function (arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-      return arr2;
-    } else {
-      return Array.from(arr);
-    }
-  };
-
-  babelHelpers.slicedToArray = (function () {
-    function sliceIterator(arr, i) {
-      var _arr = [];
-      var _n = true;
-      var _d = false;
-      var _e = undefined;
-
-      try {
-        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-          _arr.push(_s.value);
-
-          if (i && _arr.length === i) break;
-        }
-      } catch (err) {
-        _d = true;
-        _e = err;
-      } finally {
-        try {
-          if (!_n && _i["return"]) _i["return"]();
-        } finally {
-          if (_d) throw _e;
-        }
-      }
-
-      return _arr;
-    }
-
-    return function (arr, i) {
-      if (Array.isArray(arr)) {
-        return arr;
-      } else if (Symbol.iterator in Object(arr)) {
-        return sliceIterator(arr, i);
-      } else {
-        throw new TypeError("Invalid attempt to destructure non-iterable instance");
-      }
-    };
-  })();
-
-  babelHelpers.slicedToArrayLoose = function (arr, i) {
-    if (Array.isArray(arr)) {
-      return arr;
-    } else if (Symbol.iterator in Object(arr)) {
-      var _arr = [];
-
-      for (var _iterator = arr[Symbol.iterator](), _step; !(_step = _iterator.next()).done;) {
-        _arr.push(_step.value);
-
-        if (i && _arr.length === i) break;
-      }
-
-      return _arr;
-    } else {
-      throw new TypeError("Invalid attempt to destructure non-iterable instance");
-    }
-  };
-
-  babelHelpers.objectWithoutProperties = function (obj, keys) {
-    var target = {};
-
-    for (var i in obj) {
-      if (keys.indexOf(i) >= 0) continue;
-      if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
-      target[i] = obj[i];
-    }
-
-    return target;
-  };
-
-  babelHelpers.hasOwn = Object.prototype.hasOwnProperty;
-  babelHelpers.slice = Array.prototype.slice;
-  babelHelpers.bind = Function.prototype.bind;
-
   babelHelpers.defineProperty = function (obj, key, value) {
     if (key in obj) {
       Object.defineProperty(obj, key, {
@@ -250,68 +143,7 @@
     return obj;
   };
 
-  babelHelpers.asyncToGenerator = function (fn) {
-    return function () {
-      var gen = fn.apply(this, arguments);
-      return new Promise(function (resolve, reject) {
-        var callNext = step.bind(null, "next");
-        var callThrow = step.bind(null, "throw");
-
-        function step(key, arg) {
-          try {
-            var info = gen[key](arg);
-            var value = info.value;
-          } catch (error) {
-            reject(error);
-            return;
-          }
-
-          if (info.done) {
-            resolve(value);
-          } else {
-            Promise.resolve(value).then(callNext, callThrow);
-          }
-        }
-
-        callNext();
-      });
-    };
-  };
-
-  babelHelpers.interopExportWildcard = function (obj, defaults) {
-    var newObj = defaults({}, obj);
-    delete newObj["default"];
-    return newObj;
-  };
-
-  babelHelpers.interopRequireWildcard = function (obj) {
-    if (obj && obj.__esModule) {
-      return obj;
-    } else {
-      var newObj = {};
-
-      if (obj != null) {
-        for (var key in obj) {
-          if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
-        }
-      }
-
-      newObj["default"] = obj;
-      return newObj;
-    }
-  };
-
-  babelHelpers.interopRequireDefault = function (obj) {
-    return obj && obj.__esModule ? obj : {
-      "default": obj
-    };
-  };
-
-  babelHelpers._typeof = function (obj) {
-    return obj && obj.constructor === Symbol ? "symbol" : typeof obj;
-  };
-
-  babelHelpers._extends = Object.assign || function (target) {
+  babelHelpers.extends = Object.assign || function (target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
 
@@ -350,6 +182,85 @@
     }
   };
 
+  babelHelpers.inherits = function (subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+    }
+
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  };
+
+  babelHelpers.instanceof = function (left, right) {
+    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
+      return right[Symbol.hasInstance](left);
+    } else {
+      return left instanceof right;
+    }
+  };
+
+  babelHelpers.interopRequireDefault = function (obj) {
+    return obj && obj.__esModule ? obj : {
+      default: obj
+    };
+  };
+
+  babelHelpers.interopRequireWildcard = function (obj) {
+    if (obj && obj.__esModule) {
+      return obj;
+    } else {
+      var newObj = {};
+
+      if (obj != null) {
+        for (var key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+        }
+      }
+
+      newObj.default = obj;
+      return newObj;
+    }
+  };
+
+  babelHelpers.newArrowCheck = function (innerThis, boundThis) {
+    if (innerThis !== boundThis) {
+      throw new TypeError("Cannot instantiate an arrow function");
+    }
+  };
+
+  babelHelpers.objectDestructuringEmpty = function (obj) {
+    if (obj == null) throw new TypeError("Cannot destructure undefined");
+  };
+
+  babelHelpers.objectWithoutProperties = function (obj, keys) {
+    var target = {};
+
+    for (var i in obj) {
+      if (keys.indexOf(i) >= 0) continue;
+      if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+      target[i] = obj[i];
+    }
+
+    return target;
+  };
+
+  babelHelpers.possibleConstructorReturn = function (self, call) {
+    if (!self) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return call && (typeof call === "object" || typeof call === "function") ? call : self;
+  };
+
+  babelHelpers.selfGlobal = typeof global === "undefined" ? self : global;
+
   babelHelpers.set = function set(object, property, value, receiver) {
     var desc = Object.getOwnPropertyDescriptor(object, property);
 
@@ -372,60 +283,99 @@
     return value;
   };
 
-  babelHelpers.newArrowCheck = function (innerThis, boundThis) {
-    if (innerThis !== boundThis) {
-      throw new TypeError("Cannot instantiate an arrow function");
+  babelHelpers.slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  babelHelpers.slicedToArrayLoose = function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      var _arr = [];
+
+      for (var _iterator = arr[Symbol.iterator](), _step; !(_step = _iterator.next()).done;) {
+        _arr.push(_step.value);
+
+        if (i && _arr.length === i) break;
+      }
+
+      return _arr;
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
     }
   };
 
-  babelHelpers.classCallCheck = function (instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
+  babelHelpers.taggedTemplateLiteral = function (strings, raw) {
+    return Object.freeze(Object.defineProperties(strings, {
+      raw: {
+        value: Object.freeze(raw)
+      }
+    }));
   };
 
-  babelHelpers.objectDestructuringEmpty = function (obj) {
-    if (obj == null) throw new TypeError("Cannot destructure undefined");
+  babelHelpers.taggedTemplateLiteralLoose = function (strings, raw) {
+    strings.raw = raw;
+    return strings;
+  };
+
+  babelHelpers.temporalRef = function (val, name, undef) {
+    if (val === undef) {
+      throw new ReferenceError(name + " is not defined - temporal dead zone");
+    } else {
+      return val;
+    }
   };
 
   babelHelpers.temporalUndefined = {};
 
-  babelHelpers.temporalAssertDefined = function (val, name, undef) {
-    if (val === undef) {
-      throw new ReferenceError(name + " is not defined - temporal dead zone");
-    }
-
-    return true;
+  babelHelpers.toArray = function (arr) {
+    return Array.isArray(arr) ? arr : Array.from(arr);
   };
 
-  babelHelpers.selfGlobal = typeof global === "undefined" ? self : global;
-  babelHelpers.typeofReactElement = typeof Symbol === "function" && Symbol["for"] && Symbol["for"]("react.element") || 60103;
+  babelHelpers.toConsumableArray = function (arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
 
-  babelHelpers.defaultProps = function (defaultProps, props) {
-    if (defaultProps) {
-      for (var propName in defaultProps) {
-        if (typeof props[propName] === "undefined") {
-          props[propName] = defaultProps[propName];
-        }
-      }
-    }
-
-    return props;
-  };
-
-  babelHelpers._instanceof = function (left, right) {
-    if (right != null && right[Symbol.hasInstance]) {
-      return right[Symbol.hasInstance](left);
+      return arr2;
     } else {
-      return left instanceof right;
+      return Array.from(arr);
     }
   };
-
-  babelHelpers.interopRequire = function (obj) {
-    return obj && obj.__esModule ? obj["default"] : obj;
-  };
-})(typeof global === "undefined" ? self : global);
-;
+})(typeof global === "undefined" ? self : global);;
 (function(exports) {
 
 'use strict';
@@ -607,42 +557,83 @@ exports.System = System;
 
 })(window);
 ;
-var m = (function app(window, undefined) {
-	"use strict";
-  	var VERSION = "v0.2.1";
+;(function (global, factory) { // eslint-disable-line
+	"use strict"
+	/* eslint-disable no-undef */
+	var m = factory(global)
+	if (typeof module === "object" && module != null && module.exports) {
+		module.exports = m
+	} else if (typeof define === "function" && define.amd) {
+		define(function () { return m })
+	} else {
+		global.m = m
+	}
+	/* eslint-enable no-undef */
+})(typeof window !== "undefined" ? window : {}, function (global, undefined) { // eslint-disable-line
+	"use strict"
+
+	m.version = function () {
+		return "v0.2.3"
+	}
+
+	var hasOwn = {}.hasOwnProperty
+	var type = {}.toString
+
 	function isFunction(object) {
-		return typeof object === "function";
+		return typeof object === "function"
 	}
+
 	function isObject(object) {
-		return type.call(object) === "[object Object]";
+		return type.call(object) === "[object Object]"
 	}
+
 	function isString(object) {
-		return type.call(object) === "[object String]";
+		return type.call(object) === "[object String]"
 	}
+
 	var isArray = Array.isArray || function (object) {
-		return type.call(object) === "[object Array]";
-	};
-	var type = {}.toString;
-	var parser = /(?:(^|#|\.)([^#\.\[\]]+))|(\[.+?\])/g, attrParser = /\[(.+?)(?:=("|'|)(.*?)\2)?\]/;
-	var voidElements = /^(AREA|BASE|BR|COL|COMMAND|EMBED|HR|IMG|INPUT|KEYGEN|LINK|META|PARAM|SOURCE|TRACK|WBR)$/;
-	var noop = function () {};
+		return type.call(object) === "[object Array]"
+	}
+
+	function noop() {}
+
+	var voidElements = {
+		AREA: 1,
+		BASE: 1,
+		BR: 1,
+		COL: 1,
+		COMMAND: 1,
+		EMBED: 1,
+		HR: 1,
+		IMG: 1,
+		INPUT: 1,
+		KEYGEN: 1,
+		LINK: 1,
+		META: 1,
+		PARAM: 1,
+		SOURCE: 1,
+		TRACK: 1,
+		WBR: 1
+	}
 
 	// caching commonly used variables
-	var $document, $location, $requestAnimationFrame, $cancelAnimationFrame;
+	var $document, $location, $requestAnimationFrame, $cancelAnimationFrame
 
 	// self invoking function needed because of the way mocks work
-	function initialize(window) {
-		$document = window.document;
-		$location = window.location;
-		$cancelAnimationFrame = window.cancelAnimationFrame || window.clearTimeout;
-		$requestAnimationFrame = window.requestAnimationFrame || window.setTimeout;
+	function initialize(mock) {
+		$document = mock.document
+		$location = mock.location
+		$cancelAnimationFrame = mock.cancelAnimationFrame || mock.clearTimeout
+		$requestAnimationFrame = mock.requestAnimationFrame || mock.setTimeout
 	}
 
-	initialize(window);
+	// testing API
+	m.deps = function (mock) {
+		initialize(global = mock || window)
+		return global
+	}
 
-	m.version = function() {
-		return VERSION;
-	};
+	m.deps(global)
 
 	/**
 	 * @typedef {String} Tag
@@ -650,98 +641,146 @@ var m = (function app(window, undefined) {
 	 * Which describes a DOM node
 	 */
 
+	function parseTagAttrs(cell, tag) {
+		var classes = []
+		var parser = /(?:(^|#|\.)([^#\.\[\]]+))|(\[.+?\])/g
+		var match
+
+		while ((match = parser.exec(tag))) {
+			if (match[1] === "" && match[2]) {
+				cell.tag = match[2]
+			} else if (match[1] === "#") {
+				cell.attrs.id = match[2]
+			} else if (match[1] === ".") {
+				classes.push(match[2])
+			} else if (match[3][0] === "[") {
+				var pair = /\[(.+?)(?:=("|'|)(.*?)\2)?\]/.exec(match[3])
+				cell.attrs[pair[1]] = pair[3] || (pair[2] ? "" : true)
+			}
+		}
+
+		return classes
+	}
+
+	function getVirtualChildren(args, hasAttrs) {
+		var children = hasAttrs ? args.slice(1) : args
+
+		if (children.length === 1 && isArray(children[0])) {
+			return children[0]
+		} else {
+			return children
+		}
+	}
+
+	function assignAttrs(target, attrs, classes) {
+		var classAttr = "class" in attrs ? "class" : "className"
+
+		for (var attrName in attrs) {
+			if (hasOwn.call(attrs, attrName)) {
+				if (attrName === classAttr &&
+						attrs[attrName] != null &&
+						attrs[attrName] !== "") {
+					classes.push(attrs[attrName])
+					// create key in correct iteration order
+					target[attrName] = ""
+				} else {
+					target[attrName] = attrs[attrName]
+				}
+			}
+		}
+
+		if (classes.length) target[classAttr] = classes.join(" ")
+	}
+
 	/**
 	 *
 	 * @param {Tag} The DOM node tag
 	 * @param {Object=[]} optional key-value pairs to be mapped to DOM attrs
-	 * @param {...mNode=[]} Zero or more Mithril child nodes. Can be an array, or splat (optional)
-	 *
+	 * @param {...mNode=[]} Zero or more Mithril child nodes. Can be an array,
+	 *                      or splat (optional)
 	 */
 	function m(tag, pairs) {
-		for (var args = [], i = 1; i < arguments.length; i++) {
-			args[i - 1] = arguments[i];
-		}
-		if (isObject(tag)) return parameterize(tag, args);
-		var hasAttrs = pairs != null && isObject(pairs) && !("tag" in pairs || "view" in pairs || "subtree" in pairs);
-		var attrs = hasAttrs ? pairs : {};
-		var classAttrName = "class" in attrs ? "class" : "className";
-		var cell = {tag: "div", attrs: {}};
-		var match, classes = [];
-		if (!isString(tag)) throw new Error("selector in m(selector, attrs, children) should be a string");
-		while ((match = parser.exec(tag)) != null) {
-			if (match[1] === "" && match[2]) cell.tag = match[2];
-			else if (match[1] === "#") cell.attrs.id = match[2];
-			else if (match[1] === ".") classes.push(match[2]);
-			else if (match[3][0] === "[") {
-				var pair = attrParser.exec(match[3]);
-				cell.attrs[pair[1]] = pair[3] || (pair[2] ? "" :true);
-			}
+		var args = [].slice.call(arguments, 1)
+
+		if (isObject(tag)) return parameterize(tag, args)
+
+		if (!isString(tag)) {
+			throw new Error("selector in m(selector, attrs, children) should " +
+				"be a string")
 		}
 
-		var children = hasAttrs ? args.slice(1) : args;
-		if (children.length === 1 && isArray(children[0])) {
-			cell.children = children[0];
-		}
-		else {
-			cell.children = children;
+		var hasAttrs = pairs != null && isObject(pairs) &&
+			!("tag" in pairs || "view" in pairs || "subtree" in pairs)
+
+		var attrs = hasAttrs ? pairs : {}
+		var cell = {
+			tag: "div",
+			attrs: {},
+			children: getVirtualChildren(args, hasAttrs)
 		}
 
-		for (var attrName in attrs) {
-			if (attrs.hasOwnProperty(attrName)) {
-				if (attrName === classAttrName && attrs[attrName] != null && attrs[attrName] !== "") {
-					classes.push(attrs[attrName]);
-					cell.attrs[attrName] = ""; //create key in correct iteration order
-				}
-				else cell.attrs[attrName] = attrs[attrName];
-			}
-		}
-		if (classes.length) cell.attrs[classAttrName] = classes.join(" ");
-
-		return cell;
+		assignAttrs(cell.attrs, attrs, parseTagAttrs(cell, tag))
+		return cell
 	}
+
 	function forEach(list, f) {
-		for (var i = 0; i < list.length && !f(list[i], i++);) {}
+		for (var i = 0; i < list.length && !f(list[i], i++);) {
+			// function called in condition
+		}
 	}
+
 	function forKeys(list, f) {
 		forEach(list, function (attrs, i) {
-			return (attrs = attrs && attrs.attrs) && attrs.key != null && f(attrs, i);
-		});
+			return (attrs = attrs && attrs.attrs) &&
+				attrs.key != null &&
+				f(attrs, i)
+		})
 	}
 	// This function was causing deopts in Chrome.
 	function dataToString(data) {
-		//data.toString() might throw or return null if data is the return value of Console.log in Firefox (behavior depends on version)
+		// data.toString() might throw or return null if data is the return
+		// value of Console.log in some versions of Firefox (behavior depends on
+		// version)
 		try {
-			if (data == null || data.toString() == null) return "";
+			if (data != null && data.toString() != null) return data
 		} catch (e) {
-			return "";
+			// silently ignore errors
 		}
-		return data;
+		return ""
 	}
+
 	// This function was causing deopts in Chrome.
 	function injectTextNode(parentElement, first, index, data) {
 		try {
-			insertNode(parentElement, first, index);
-			first.nodeValue = data;
-		} catch (e) {} //IE erroneously throws error when appending an empty text node after a null
+			insertNode(parentElement, first, index)
+			first.nodeValue = data
+		} catch (e) {
+			// IE erroneously throws error when appending an empty text node
+			// after a null
+		}
 	}
 
 	function flatten(list) {
-		//recursively flatten array
+		// recursively flatten array
 		for (var i = 0; i < list.length; i++) {
 			if (isArray(list[i])) {
-				list = list.concat.apply([], list);
-				//check current index again and flatten until there are no more nested arrays at that index
-				i--;
+				list = list.concat.apply([], list)
+				// check current index again and flatten until there are no more
+				// nested arrays at that index
+				i--
 			}
 		}
-		return list;
+		return list
 	}
 
 	function insertNode(parentElement, node, index) {
-		parentElement.insertBefore(node, parentElement.childNodes[index] || null);
+		parentElement.insertBefore(node,
+			parentElement.childNodes[index] || null)
 	}
 
-	var DELETION = 1, INSERTION = 2, MOVE = 3;
+	var DELETION = 1
+	var INSERTION = 2
+	var MOVE = 3
 
 	function handleKeysDiffer(data, existing, cached, parentElement) {
 		forKeys(data, function (key, i) {
@@ -749,1278 +788,1916 @@ var m = (function app(window, undefined) {
 				action: MOVE,
 				index: i,
 				from: existing[key].index,
-				element: cached.nodes[existing[key].index] || $document.createElement("div")
-			} : {action: INSERTION, index: i};
-		});
-		var actions = [];
-		for (var prop in existing) actions.push(existing[prop]);
-		var changes = actions.sort(sortChanges), newCached = new Array(cached.length);
-		newCached.nodes = cached.nodes.slice();
+				element: cached.nodes[existing[key].index] ||
+					$document.createElement("div")
+			} : {action: INSERTION, index: i}
+		})
+
+		var actions = []
+		for (var prop in existing) if (hasOwn.call(existing, prop)) {
+			actions.push(existing[prop])
+		}
+
+		var changes = actions.sort(sortChanges)
+		var newCached = new Array(cached.length)
+
+		newCached.nodes = cached.nodes.slice()
 
 		forEach(changes, function (change) {
-			var index = change.index;
+			var index = change.index
 			if (change.action === DELETION) {
-				clear(cached[index].nodes, cached[index]);
-				newCached.splice(index, 1);
+				clear(cached[index].nodes, cached[index])
+				newCached.splice(index, 1)
 			}
 			if (change.action === INSERTION) {
-				var dummy = $document.createElement("div");
-				dummy.key = data[index].attrs.key;
-				insertNode(parentElement, dummy, index);
+				var dummy = $document.createElement("div")
+				dummy.key = data[index].attrs.key
+				insertNode(parentElement, dummy, index)
 				newCached.splice(index, 0, {
 					attrs: {key: data[index].attrs.key},
 					nodes: [dummy]
-				});
-				newCached.nodes[index] = dummy;
+				})
+				newCached.nodes[index] = dummy
 			}
 
 			if (change.action === MOVE) {
-				var changeElement = change.element;
-				var maybeChanged = parentElement.childNodes[index];
+				var changeElement = change.element
+				var maybeChanged = parentElement.childNodes[index]
 				if (maybeChanged !== changeElement && changeElement !== null) {
-					parentElement.insertBefore(changeElement, maybeChanged || null);
+					parentElement.insertBefore(changeElement,
+						maybeChanged || null)
 				}
-				newCached[index] = cached[change.from];
-				newCached.nodes[index] = changeElement;
+				newCached[index] = cached[change.from]
+				newCached.nodes[index] = changeElement
 			}
-		});
+		})
 
-		return newCached;
+		return newCached
 	}
 
 	function diffKeys(data, cached, existing, parentElement) {
-		var keysDiffer = data.length !== cached.length;
+		var keysDiffer = data.length !== cached.length
+
 		if (!keysDiffer) {
 			forKeys(data, function (attrs, i) {
-				var cachedCell = cached[i];
-				return keysDiffer = cachedCell && cachedCell.attrs && cachedCell.attrs.key !== attrs.key;
-			});
+				var cachedCell = cached[i]
+				return keysDiffer = cachedCell &&
+					cachedCell.attrs &&
+					cachedCell.attrs.key !== attrs.key
+			})
 		}
 
-		return keysDiffer ? handleKeysDiffer(data, existing, cached, parentElement) : cached;
+		if (keysDiffer) {
+			return handleKeysDiffer(data, existing, cached, parentElement)
+		} else {
+			return cached
+		}
 	}
 
 	function diffArray(data, cached, nodes) {
-		//diff the array itself
+		// diff the array itself
 
-		//update the list of DOM nodes by collecting the nodes from each item
+		// update the list of DOM nodes by collecting the nodes from each item
 		forEach(data, function (_, i) {
-			if (cached[i] != null) nodes.push.apply(nodes, cached[i].nodes);
+			if (cached[i] != null) nodes.push.apply(nodes, cached[i].nodes)
 		})
-		//remove items from the end of the array if the new array is shorter than the old one. if errors ever happen here, the issue is most likely
-		//a bug in the construction of the `cached` data structure somewhere earlier in the program
+		// remove items from the end of the array if the new array is shorter
+		// than the old one. if errors ever happen here, the issue is most
+		// likely a bug in the construction of the `cached` data structure
+		// somewhere earlier in the program
 		forEach(cached.nodes, function (node, i) {
-			if (node.parentNode != null && nodes.indexOf(node) < 0) clear([node], [cached[i]]);
+			if (node.parentNode != null && nodes.indexOf(node) < 0) {
+				clear([node], [cached[i]])
+			}
 		})
-		if (data.length < cached.length) cached.length = data.length;
-		cached.nodes = nodes;
+
+		if (data.length < cached.length) cached.length = data.length
+		cached.nodes = nodes
 	}
 
 	function buildArrayKeys(data) {
-		var guid = 0;
+		var guid = 0
 		forKeys(data, function () {
 			forEach(data, function (attrs) {
-				if ((attrs = attrs && attrs.attrs) && attrs.key == null) attrs.key = "__mithril__" + guid++;
+				if ((attrs = attrs && attrs.attrs) && attrs.key == null) {
+					attrs.key = "__mithril__" + guid++
+				}
 			})
-			return 1;
-		});
+			return 1
+		})
+	}
+
+	function isDifferentEnough(data, cached, dataAttrKeys) {
+		if (data.tag !== cached.tag) return true
+
+		if (dataAttrKeys.sort().join() !==
+				Object.keys(cached.attrs).sort().join()) {
+			return true
+		}
+
+		if (data.attrs.id !== cached.attrs.id) {
+			return true
+		}
+
+		if (data.attrs.key !== cached.attrs.key) {
+			return true
+		}
+
+		if (m.redraw.strategy() === "all") {
+			return !cached.configContext || cached.configContext.retain !== true
+		}
+
+		if (m.redraw.strategy() === "diff") {
+			return cached.configContext && cached.configContext.retain === false
+		}
+
+		return false
 	}
 
 	function maybeRecreateObject(data, cached, dataAttrKeys) {
-		//if an element is different enough from the one in cache, recreate it
-		if (data.tag !== cached.tag ||
-				dataAttrKeys.sort().join() !== Object.keys(cached.attrs).sort().join() ||
-				data.attrs.id !== cached.attrs.id ||
-				data.attrs.key !== cached.attrs.key ||
-				(m.redraw.strategy() === "all" && (!cached.configContext || cached.configContext.retain !== true)) ||
-				(m.redraw.strategy() === "diff" && cached.configContext && cached.configContext.retain === false)) {
-			if (cached.nodes.length) clear(cached.nodes);
-			if (cached.configContext && isFunction(cached.configContext.onunload)) cached.configContext.onunload();
+		// if an element is different enough from the one in cache, recreate it
+		if (isDifferentEnough(data, cached, dataAttrKeys)) {
+			if (cached.nodes.length) clear(cached.nodes)
+
+			if (cached.configContext &&
+					isFunction(cached.configContext.onunload)) {
+				cached.configContext.onunload()
+			}
+
 			if (cached.controllers) {
 				forEach(cached.controllers, function (controller) {
-					if (controller.unload) controller.onunload({preventDefault: noop});
+					if (controller.onunload) controller.onunload({preventDefault: noop});
 				});
 			}
 		}
 	}
 
 	function getObjectNamespace(data, namespace) {
-		return data.attrs.xmlns ? data.attrs.xmlns :
-			data.tag === "svg" ? "http://www.w3.org/2000/svg" :
-			data.tag === "math" ? "http://www.w3.org/1998/Math/MathML" :
-			namespace;
+		if (data.attrs.xmlns) return data.attrs.xmlns
+		if (data.tag === "svg") return "http://www.w3.org/2000/svg"
+		if (data.tag === "math") return "http://www.w3.org/1998/Math/MathML"
+		return namespace
+	}
+
+	var pendingRequests = 0
+	m.startComputation = function () { pendingRequests++ }
+	m.endComputation = function () {
+		if (pendingRequests > 1) {
+			pendingRequests--
+		} else {
+			pendingRequests = 0
+			m.redraw()
+		}
 	}
 
 	function unloadCachedControllers(cached, views, controllers) {
 		if (controllers.length) {
-			cached.views = views;
-			cached.controllers = controllers;
+			cached.views = views
+			cached.controllers = controllers
 			forEach(controllers, function (controller) {
-				if (controller.onunload && controller.onunload.$old) controller.onunload = controller.onunload.$old;
-				if (pendingRequests && controller.onunload) {
-					var onunload = controller.onunload;
-					controller.onunload = noop;
-					controller.onunload.$old = onunload;
+				if (controller.onunload && controller.onunload.$old) {
+					controller.onunload = controller.onunload.$old
 				}
-			});
+
+				if (pendingRequests && controller.onunload) {
+					var onunload = controller.onunload
+					controller.onunload = noop
+					controller.onunload.$old = onunload
+				}
+			})
 		}
 	}
 
 	function scheduleConfigsToBeCalled(configs, data, node, isNew, cached) {
-		//schedule configs to be called. They are called after `build`
-		//finishes running
+		// schedule configs to be called. They are called after `build` finishes
+		// running
 		if (isFunction(data.attrs.config)) {
-			var context = cached.configContext = cached.configContext || {};
+			var context = cached.configContext = cached.configContext || {}
 
-			//bind
-			configs.push(function() {
-				return data.attrs.config.call(data, node, !isNew, context, cached);
-			});
+			// bind
+			configs.push(function () {
+				return data.attrs.config.call(data, node, !isNew, context,
+					cached)
+			})
 		}
 	}
 
-	function buildUpdatedNode(cached, data, editable, hasKeys, namespace, views, configs, controllers) {
-		var node = cached.nodes[0];
-		if (hasKeys) setAttributes(node, data.tag, data.attrs, cached.attrs, namespace);
-		cached.children = build(node, data.tag, undefined, undefined, data.children, cached.children, false, 0, data.attrs.contenteditable ? node : editable, namespace, configs);
-		cached.nodes.intact = true;
+	function buildUpdatedNode(
+		cached,
+		data,
+		editable,
+		hasKeys,
+		namespace,
+		views,
+		configs,
+		controllers
+	) {
+		var node = cached.nodes[0]
 
-		if (controllers.length) {
-			cached.views = views;
-			cached.controllers = controllers;
+		if (hasKeys) {
+			setAttributes(node, data.tag, data.attrs, cached.attrs, namespace)
 		}
 
-		return node;
+		cached.children = build(
+			node,
+			data.tag,
+			undefined,
+			undefined,
+			data.children,
+			cached.children,
+			false,
+			0,
+			data.attrs.contenteditable ? node : editable,
+			namespace,
+			configs
+		)
+
+		cached.nodes.intact = true
+
+		if (controllers.length) {
+			cached.views = views
+			cached.controllers = controllers
+		}
+
+		return node
 	}
 
 	function handleNonexistentNodes(data, parentElement, index) {
-		var nodes;
+		var nodes
 		if (data.$trusted) {
-			nodes = injectHTML(parentElement, index, data);
-		}
-		else {
-			nodes = [$document.createTextNode(data)];
-			if (!parentElement.nodeName.match(voidElements)) insertNode(parentElement, nodes[0], index);
+			nodes = injectHTML(parentElement, index, data)
+		} else {
+			nodes = [$document.createTextNode(data)]
+			if (!(parentElement.nodeName in voidElements)) {
+				insertNode(parentElement, nodes[0], index)
+			}
 		}
 
-		var cached = typeof data === "string" || typeof data === "number" || typeof data === "boolean" ? new data.constructor(data) : data;
-		cached.nodes = nodes;
-		return cached;
+		var cached
+
+		if (typeof data === "string" ||
+				typeof data === "number" ||
+				typeof data === "boolean") {
+			cached = new data.constructor(data)
+		} else {
+			cached = data
+		}
+
+		cached.nodes = nodes
+		return cached
 	}
 
-	function reattachNodes(data, cached, parentElement, editable, index, parentTag) {
-		var nodes = cached.nodes;
+	function reattachNodes(
+		data,
+		cached,
+		parentElement,
+		editable,
+		index,
+		parentTag
+	) {
+		var nodes = cached.nodes
 		if (!editable || editable !== $document.activeElement) {
 			if (data.$trusted) {
-				clear(nodes, cached);
-				nodes = injectHTML(parentElement, index, data);
-			}
-			//corner case: replacing the nodeValue of a text node that is a child of a textarea/contenteditable doesn't work
-			//we need to update the value property of the parent textarea or the innerHTML of the contenteditable element instead
-			else if (parentTag === "textarea") {
-				parentElement.value = data;
-			}
-			else if (editable) {
-				editable.innerHTML = data;
-			}
-			else {
-				//was a trusted string
-				if (nodes[0].nodeType === 1 || nodes.length > 1) {
-					clear(cached.nodes, cached);
-					nodes = [$document.createTextNode(data)];
+				clear(nodes, cached)
+				nodes = injectHTML(parentElement, index, data)
+			} else if (parentTag === "textarea") {
+				// <textarea> uses `value` instead of `nodeValue`.
+				parentElement.value = data
+			} else if (editable) {
+				// contenteditable nodes use `innerHTML` instead of `nodeValue`.
+				editable.innerHTML = data
+			} else {
+				// was a trusted string
+				if (nodes[0].nodeType === 1 || nodes.length > 1 ||
+						(nodes[0].nodeValue.trim &&
+							!nodes[0].nodeValue.trim())) {
+					clear(cached.nodes, cached)
+					nodes = [$document.createTextNode(data)]
 				}
-				injectTextNode(parentElement, nodes[0], index, data);
+
+				injectTextNode(parentElement, nodes[0], index, data)
 			}
 		}
-		cached = new data.constructor(data);
-		cached.nodes = nodes;
-		return cached;
+		cached = new data.constructor(data)
+		cached.nodes = nodes
+		return cached
 	}
 
-	function handleText(cached, data, index, parentElement, shouldReattach, editable, parentTag) {
-		//handle text nodes
-		return cached.nodes.length === 0 ? handleNonexistentNodes(data, parentElement, index) :
-			cached.valueOf() !== data.valueOf() || shouldReattach === true ?
-				reattachNodes(data, cached, parentElement, editable, index, parentTag) :
-			(cached.nodes.intact = true, cached);
+	function handleTextNode(
+		cached,
+		data,
+		index,
+		parentElement,
+		shouldReattach,
+		editable,
+		parentTag
+	) {
+		if (!cached.nodes.length) {
+			return handleNonexistentNodes(data, parentElement, index)
+		} else if (cached.valueOf() !== data.valueOf() || shouldReattach) {
+			return reattachNodes(data, cached, parentElement, editable, index,
+				parentTag)
+		} else {
+			return (cached.nodes.intact = true, cached)
+		}
 	}
 
 	function getSubArrayCount(item) {
 		if (item.$trusted) {
-			//fix offset of next element if item was a trusted string w/ more than one html element
-			//the first clause in the regexp matches elements
-			//the second clause (after the pipe) matches text nodes
-			var match = item.match(/<[^\/]|\>\s*[^<]/g);
-			if (match != null) return match.length;
+			// fix offset of next element if item was a trusted string w/ more
+			// than one html element
+			// the first clause in the regexp matches elements
+			// the second clause (after the pipe) matches text nodes
+			var match = item.match(/<[^\/]|\>\s*[^<]/g)
+			if (match != null) return match.length
+		} else if (isArray(item)) {
+			return item.length
 		}
-		else if (isArray(item)) {
-			return item.length;
-		}
-		return 1;
+		return 1
 	}
 
-	function buildArray(data, cached, parentElement, index, parentTag, shouldReattach, editable, namespace, configs) {
-		data = flatten(data);
-		var nodes = [], intact = cached.length === data.length, subArrayCount = 0;
+	function buildArray(
+		data,
+		cached,
+		parentElement,
+		index,
+		parentTag,
+		shouldReattach,
+		editable,
+		namespace,
+		configs
+	) {
+		data = flatten(data)
+		var nodes = []
+		var intact = cached.length === data.length
+		var subArrayCount = 0
 
-		//keys algorithm: sort elements without recreating them if keys are present
-		//1) create a map of all existing keys, and mark all for deletion
-		//2) add new keys to map and mark them for addition
-		//3) if key exists in new list, change action from deletion to a move
-		//4) for each key, handle its corresponding action as marked in previous steps
-		var existing = {}, shouldMaintainIdentities = false;
+		// keys algorithm: sort elements without recreating them if keys are
+		// present
+		//
+		// 1) create a map of all existing keys, and mark all for deletion
+		// 2) add new keys to map and mark them for addition
+		// 3) if key exists in new list, change action from deletion to a move
+		// 4) for each key, handle its corresponding action as marked in
+		//    previous steps
+
+		var existing = {}
+		var shouldMaintainIdentities = false
+
 		forKeys(cached, function (attrs, i) {
-			shouldMaintainIdentities = true;
-			existing[cached[i].attrs.key] = {action: DELETION, index: i};
-		});
+			shouldMaintainIdentities = true
+			existing[cached[i].attrs.key] = {action: DELETION, index: i}
+		})
 
-		buildArrayKeys(data);
-		if (shouldMaintainIdentities) cached = diffKeys(data, cached, existing, parentElement);
-		//end key algorithm
+		buildArrayKeys(data)
+		if (shouldMaintainIdentities) {
+			cached = diffKeys(data, cached, existing, parentElement)
+		}
+		// end key algorithm
 
-		var cacheCount = 0;
-		//faster explicitly written
+		var cacheCount = 0
+		// faster explicitly written
 		for (var i = 0, len = data.length; i < len; i++) {
-			//diff each item in the array
-			var item = build(parentElement, parentTag, cached, index, data[i], cached[cacheCount], shouldReattach, index + subArrayCount || subArrayCount, editable, namespace, configs);
+			// diff each item in the array
+			var item = build(
+				parentElement,
+				parentTag,
+				cached,
+				index,
+				data[i],
+				cached[cacheCount],
+				shouldReattach,
+				index + subArrayCount || subArrayCount,
+				editable,
+				namespace,
+				configs)
 
 			if (item !== undefined) {
-				intact = intact && item.nodes.intact;
-				subArrayCount += getSubArrayCount(item);
-				cached[cacheCount++] = item;
+				intact = intact && item.nodes.intact
+				subArrayCount += getSubArrayCount(item)
+				cached[cacheCount++] = item
 			}
 		}
 
-		if (!intact) diffArray(data, cached, nodes);
+		if (!intact) diffArray(data, cached, nodes)
 		return cached
 	}
 
 	function makeCache(data, cached, index, parentIndex, parentCache) {
 		if (cached != null) {
-			if (type.call(cached) === type.call(data)) return cached;
+			if (type.call(cached) === type.call(data)) return cached
 
 			if (parentCache && parentCache.nodes) {
-				var offset = index - parentIndex, end = offset + (isArray(data) ? data : cached.nodes).length;
-				clear(parentCache.nodes.slice(offset, end), parentCache.slice(offset, end));
+				var offset = index - parentIndex
+				var end = offset + (isArray(data) ? data : cached.nodes).length
+				clear(
+					parentCache.nodes.slice(offset, end),
+					parentCache.slice(offset, end))
 			} else if (cached.nodes) {
-				clear(cached.nodes, cached);
+				clear(cached.nodes, cached)
 			}
 		}
 
-		cached = new data.constructor();
-		//if constructor creates a virtual dom element, use a blank object
-		//as the base cached node instead of copying the virtual el (#277)
-		if (cached.tag) cached = {};
-		cached.nodes = [];
-		return cached;
+		cached = new data.constructor()
+		// if constructor creates a virtual dom element, use a blank object as
+		// the base cached node instead of copying the virtual el (#277)
+		if (cached.tag) cached = {}
+		cached.nodes = []
+		return cached
 	}
 
 	function constructNode(data, namespace) {
-		return namespace === undefined ?
-			data.attrs.is ? $document.createElement(data.tag, data.attrs.is) : $document.createElement(data.tag) :
-			data.attrs.is ? $document.createElementNS(namespace, data.tag, data.attrs.is) : $document.createElementNS(namespace, data.tag);
+		if (data.attrs.is) {
+			if (namespace == null) {
+				return $document.createElement(data.tag, data.attrs.is)
+			} else {
+				return $document.createElementNS(namespace, data.tag,
+					data.attrs.is)
+			}
+		} else if (namespace == null) {
+			return $document.createElement(data.tag)
+		} else {
+			return $document.createElementNS(namespace, data.tag)
+		}
 	}
 
 	function constructAttrs(data, node, namespace, hasKeys) {
-		return hasKeys ? setAttributes(node, data.tag, data.attrs, {}, namespace) : data.attrs;
+		if (hasKeys) {
+			return setAttributes(node, data.tag, data.attrs, {}, namespace)
+		} else {
+			return data.attrs
+		}
 	}
 
-	function constructChildren(data, node, cached, editable, namespace, configs) {
-		return data.children != null && data.children.length > 0 ?
-			build(node, data.tag, undefined, undefined, data.children, cached.children, true, 0, data.attrs.contenteditable ? node : editable, namespace, configs) :
-			data.children;
+	function constructChildren(
+		data,
+		node,
+		cached,
+		editable,
+		namespace,
+		configs
+	) {
+		if (data.children != null && data.children.length > 0) {
+			return build(
+				node,
+				data.tag,
+				undefined,
+				undefined,
+				data.children,
+				cached.children,
+				true,
+				0,
+				data.attrs.contenteditable ? node : editable,
+				namespace,
+				configs)
+		} else {
+			return data.children
+		}
 	}
 
-	function reconstructCached(data, attrs, children, node, namespace, views, controllers) {
-		var cached = {tag: data.tag, attrs: attrs, children: children, nodes: [node]};
-		unloadCachedControllers(cached, views, controllers);
-		if (cached.children && !cached.children.nodes) cached.children.nodes = [];
-		//edge case: setting value on <select> doesn't work before children exist, so set it again after children have been created
-		if (data.tag === "select" && "value" in data.attrs) setAttributes(node, data.tag, {value: data.attrs.value}, {}, namespace);
+	function reconstructCached(
+		data,
+		attrs,
+		children,
+		node,
+		namespace,
+		views,
+		controllers
+	) {
+		var cached = {
+			tag: data.tag,
+			attrs: attrs,
+			children: children,
+			nodes: [node]
+		}
+
+		unloadCachedControllers(cached, views, controllers)
+
+		if (cached.children && !cached.children.nodes) {
+			cached.children.nodes = []
+		}
+
+		// edge case: setting value on <select> doesn't work before children
+		// exist, so set it again after children have been created
+		if (data.tag === "select" && "value" in data.attrs) {
+			setAttributes(node, data.tag, {value: data.attrs.value}, {},
+				namespace)
+		}
+
 		return cached
 	}
 
 	function getController(views, view, cachedControllers, controller) {
-		var controllerIndex = m.redraw.strategy() === "diff" && views ? views.indexOf(view) : -1;
-		return controllerIndex > -1 ? cachedControllers[controllerIndex] :
-			typeof controller === "function" ? new controller() : {};
+		var controllerIndex
+
+		if (m.redraw.strategy() === "diff" && views) {
+			controllerIndex = views.indexOf(view)
+		} else {
+			controllerIndex = -1
+		}
+
+		if (controllerIndex > -1) {
+			return cachedControllers[controllerIndex]
+		} else if (isFunction(controller)) {
+			return new controller()
+		} else {
+			return {}
+		}
 	}
+
+	var unloaders = []
 
 	function updateLists(views, controllers, view, controller) {
-		if (controller.onunload != null) unloaders.push({controller: controller, handler: controller.onunload});
-		views.push(view);
-		controllers.push(controller);
+		if (controller.onunload != null && unloaders.map(function(u) {return u.handler}).indexOf(controller.onunload) < 0) {
+			unloaders.push({
+				controller: controller,
+				handler: controller.onunload
+			})
+		}
+
+		views.push(view)
+		controllers.push(controller)
 	}
 
+	var forcing = false
 	function checkView(data, view, cached, cachedControllers, controllers, views) {
-		var controller = getController(cached.views, view, cachedControllers, data.controller);
-		//Faster to coerce to number and check for NaN
-		var key = +(data && data.attrs && data.attrs.key);
-		data = pendingRequests === 0 || forcing || cachedControllers && cachedControllers.indexOf(controller) > -1 ? data.view(controller) : {tag: "placeholder"};
-		if (data.subtree === "retain") return cached;
-		if (key === key) (data.attrs = data.attrs || {}).key = key;
-		updateLists(views, controllers, view, controller);
-		return data;
+		var controller = getController(cached.views, view, cachedControllers, data.controller)
+		var key = data && data.attrs && data.attrs.key
+		data = pendingRequests === 0 || forcing || cachedControllers && cachedControllers.indexOf(controller) > -1 ? data.view(controller) : {tag: "placeholder"}
+		if (data.subtree === "retain") return data;
+		data.attrs = data.attrs || {}
+		data.attrs.key = key
+		updateLists(views, controllers, view, controller)
+		return data
 	}
 
 	function markViews(data, cached, views, controllers) {
-		var cachedControllers = cached && cached.controllers;
-		while (data.view != null) data = checkView(data, data.view.$original || data.view, cached, cachedControllers, controllers, views);
-		return data;
+		var cachedControllers = cached && cached.controllers
+
+		while (data.view != null) {
+			data = checkView(
+				data,
+				data.view.$original || data.view,
+				cached,
+				cachedControllers,
+				controllers,
+				views)
+		}
+
+		return data
 	}
 
-	function buildObject(data, cached, editable, parentElement, index, shouldReattach, namespace, configs) {
-		var views = [], controllers = [];
-		data = markViews(data, cached, views, controllers);
-		if (!data.tag && controllers.length) throw new Error("Component template must return a virtual element, not an array, string, etc.");
-		data.attrs = data.attrs || {};
-		cached.attrs = cached.attrs || {};
-		var dataAttrKeys = Object.keys(data.attrs);
-		var hasKeys = dataAttrKeys.length > ("key" in data.attrs ? 1 : 0);
-		maybeRecreateObject(data, cached, dataAttrKeys);
-		if (!isString(data.tag)) return;
-		var isNew = cached.nodes.length === 0;
-		namespace = getObjectNamespace(data, namespace);
-		var node;
+	function buildObject( // eslint-disable-line max-statements
+		data,
+		cached,
+		editable,
+		parentElement,
+		index,
+		shouldReattach,
+		namespace,
+		configs
+	) {
+		var views = []
+		var controllers = []
+
+		data = markViews(data, cached, views, controllers)
+
+		if (data.subtree === "retain") return cached
+
+		if (!data.tag && controllers.length) {
+			throw new Error("Component template must return a virtual " +
+				"element, not an array, string, etc.")
+		}
+
+		data.attrs = data.attrs || {}
+		cached.attrs = cached.attrs || {}
+
+		var dataAttrKeys = Object.keys(data.attrs)
+		var hasKeys = dataAttrKeys.length > ("key" in data.attrs ? 1 : 0)
+
+		maybeRecreateObject(data, cached, dataAttrKeys)
+
+		if (!isString(data.tag)) return
+
+		var isNew = cached.nodes.length === 0
+
+		namespace = getObjectNamespace(data, namespace)
+
+		var node
 		if (isNew) {
-			node = constructNode(data, namespace);
-			//set attributes first, then create children
+			node = constructNode(data, namespace)
+			// set attributes first, then create children
 			var attrs = constructAttrs(data, node, namespace, hasKeys)
-			var children = constructChildren(data, node, cached, editable, namespace, configs);
-			cached = reconstructCached(data, attrs, children, node, namespace, views, controllers);
+
+			var children = constructChildren(data, node, cached, editable,
+				namespace, configs)
+
+			cached = reconstructCached(
+				data,
+				attrs,
+				children,
+				node,
+				namespace,
+				views,
+				controllers)
+		} else {
+			node = buildUpdatedNode(
+				cached,
+				data,
+				editable,
+				hasKeys,
+				namespace,
+				views,
+				configs,
+				controllers)
 		}
-		else {
-			node = buildUpdatedNode(cached, data, editable, hasKeys, namespace, views, configs, controllers);
+
+		if (isNew || shouldReattach === true && node != null) {
+			insertNode(parentElement, node, index)
 		}
-		if (isNew || shouldReattach === true && node != null) insertNode(parentElement, node, index);
-		//schedule configs to be called. They are called after `build`
-		//finishes running
-		scheduleConfigsToBeCalled(configs, data, node, isNew, cached);
+
+		// The configs are called after `build` finishes running
+		scheduleConfigsToBeCalled(configs, data, node, isNew, cached)
+
 		return cached
 	}
 
-	function build(parentElement, parentTag, parentCache, parentIndex, data, cached, shouldReattach, index, editable, namespace, configs) {
-		//`build` is a recursive function that manages creation/diffing/removal
-		//of DOM elements based on comparison between `data` and `cached`
-		//the diff algorithm can be summarized as this:
-		//1 - compare `data` and `cached`
-		//2 - if they are different, copy `data` to `cached` and update the DOM
-		//    based on what the difference is
-		//3 - recursively apply this algorithm for every array and for the
-		//    children of every virtual element
+	function build(
+		parentElement,
+		parentTag,
+		parentCache,
+		parentIndex,
+		data,
+		cached,
+		shouldReattach,
+		index,
+		editable,
+		namespace,
+		configs
+	) {
+		/*
+		 * `build` is a recursive function that manages creation/diffing/removal
+		 * of DOM elements based on comparison between `data` and `cached` the
+		 * diff algorithm can be summarized as this:
+		 *
+		 * 1 - compare `data` and `cached`
+		 * 2 - if they are different, copy `data` to `cached` and update the DOM
+		 *     based on what the difference is
+		 * 3 - recursively apply this algorithm for every array and for the
+		 *     children of every virtual element
+		 *
+		 * The `cached` data structure is essentially the same as the previous
+		 * redraw's `data` data structure, with a few additions:
+		 * - `cached` always has a property called `nodes`, which is a list of
+		 *    DOM elements that correspond to the data represented by the
+		 *    respective virtual element
+		 * - in order to support attaching `nodes` as a property of `cached`,
+		 *    `cached` is *always* a non-primitive object, i.e. if the data was
+		 *    a string, then cached is a String instance. If data was `null` or
+		 *    `undefined`, cached is `new String("")`
+		 * - `cached also has a `configContext` property, which is the state
+		 *    storage object exposed by config(element, isInitialized, context)
+		 * - when `cached` is an Object, it represents a virtual element; when
+		 *    it's an Array, it represents a list of elements; when it's a
+		 *    String, Number or Boolean, it represents a text node
+		 *
+		 * `parentElement` is a DOM element used for W3C DOM API calls
+		 * `parentTag` is only used for handling a corner case for textarea
+		 * values
+		 * `parentCache` is used to remove nodes in some multi-node cases
+		 * `parentIndex` and `index` are used to figure out the offset of nodes.
+		 * They're artifacts from before arrays started being flattened and are
+		 * likely refactorable
+		 * `data` and `cached` are, respectively, the new and old nodes being
+		 * diffed
+		 * `shouldReattach` is a flag indicating whether a parent node was
+		 * recreated (if so, and if this node is reused, then this node must
+		 * reattach itself to the new parent)
+		 * `editable` is a flag that indicates whether an ancestor is
+		 * contenteditable
+		 * `namespace` indicates the closest HTML namespace as it cascades down
+		 * from an ancestor
+		 * `configs` is a list of config functions to run after the topmost
+		 * `build` call finishes running
+		 *
+		 * there's logic that relies on the assumption that null and undefined
+		 * data are equivalent to empty strings
+		 * - this prevents lifecycle surprises from procedural helpers that mix
+		 *   implicit and explicit return statements (e.g.
+		 *   function foo() {if (cond) return m("div")}
+		 * - it simplifies diffing code
+		 */
+		data = dataToString(data)
+		if (data.subtree === "retain") return cached
+		cached = makeCache(data, cached, index, parentIndex, parentCache)
 
-		//the `cached` data structure is essentially the same as the previous
-		//redraw's `data` data structure, with a few additions:
-		//- `cached` always has a property called `nodes`, which is a list of
-		//   DOM elements that correspond to the data represented by the
-		//   respective virtual element
-		//- in order to support attaching `nodes` as a property of `cached`,
-		//   `cached` is *always* a non-primitive object, i.e. if the data was
-		//   a string, then cached is a String instance. If data was `null` or
-		//   `undefined`, cached is `new String("")`
-		//- `cached also has a `configContext` property, which is the state
-		//   storage object exposed by config(element, isInitialized, context)
-		//- when `cached` is an Object, it represents a virtual element; when
-		//   it's an Array, it represents a list of elements; when it's a
-		//   String, Number or Boolean, it represents a text node
-
-		//`parentElement` is a DOM element used for W3C DOM API calls
-		//`parentTag` is only used for handling a corner case for textarea
-		//values
-		//`parentCache` is used to remove nodes in some multi-node cases
-		//`parentIndex` and `index` are used to figure out the offset of nodes.
-		//They're artifacts from before arrays started being flattened and are
-		//likely refactorable
-		//`data` and `cached` are, respectively, the new and old nodes being
-		//diffed
-		//`shouldReattach` is a flag indicating whether a parent node was
-		//recreated (if so, and if this node is reused, then this node must
-		//reattach itself to the new parent)
-		//`editable` is a flag that indicates whether an ancestor is
-		//contenteditable
-		//`namespace` indicates the closest HTML namespace as it cascades down
-		//from an ancestor
-		//`configs` is a list of config functions to run after the topmost
-		//`build` call finishes running
-
-		//there's logic that relies on the assumption that null and undefined
-		//data are equivalent to empty strings
-		//- this prevents lifecycle surprises from procedural helpers that mix
-		//  implicit and explicit return statements (e.g.
-		//  function foo() {if (cond) return m("div")}
-		//- it simplifies diffing code
-		data = dataToString(data);
-		if (data.subtree === "retain") return cached;
-		cached = makeCache(data, cached, index, parentIndex, parentCache);
-		return isArray(data) ? buildArray(data, cached, parentElement, index, parentTag, shouldReattach, editable, namespace, configs) :
-			data != null && isObject(data) ? buildObject(data, cached, editable, parentElement, index, shouldReattach, namespace, configs) :
-			!isFunction(data) ? handleText(cached, data, index, parentElement, shouldReattach, editable, parentTag) :
-			cached;
+		if (isArray(data)) {
+			return buildArray(
+				data,
+				cached,
+				parentElement,
+				index,
+				parentTag,
+				shouldReattach,
+				editable,
+				namespace,
+				configs)
+		} else if (data != null && isObject(data)) {
+			return buildObject(
+				data,
+				cached,
+				editable,
+				parentElement,
+				index,
+				shouldReattach,
+				namespace,
+				configs)
+		} else if (!isFunction(data)) {
+			return handleTextNode(
+				cached,
+				data,
+				index,
+				parentElement,
+				shouldReattach,
+				editable,
+				parentTag)
+		} else {
+			return cached
+		}
 	}
-	function sortChanges(a, b) { return a.action - b.action || a.index - b.index; }
-	function setAttributes(node, tag, dataAttrs, cachedAttrs, namespace) {
-		for (var attrName in dataAttrs) {
-			var dataAttr = dataAttrs[attrName];
-			var cachedAttr = cachedAttrs[attrName];
-			if (!(attrName in cachedAttrs) || (cachedAttr !== dataAttr)) {
-				cachedAttrs[attrName] = dataAttr;
-				try {
-					//`config` isn't a real attributes, so ignore it
-					if (attrName === "config" || attrName === "key") continue;
-					//hook event handlers to the auto-redrawing system
-					else if (isFunction(dataAttr) && attrName.slice(0, 2) === "on") {
-						node[attrName] = autoredraw(dataAttr, node);
-					}
-					//handle `style: {...}`
-					else if (attrName === "style" && dataAttr != null && isObject(dataAttr)) {
-						for (var rule in dataAttr) {
-							if (cachedAttr == null || cachedAttr[rule] !== dataAttr[rule]) node.style[rule] = dataAttr[rule];
-						}
-						for (var rule in cachedAttr) {
-							if (!(rule in dataAttr)) node.style[rule] = "";
-						}
-					}
-					//handle SVG
-					else if (namespace != null) {
-						if (attrName === "href") node.setAttributeNS("http://www.w3.org/1999/xlink", "href", dataAttr);
-						else node.setAttribute(attrName === "className" ? "class" : attrName, dataAttr);
-					}
-					//handle cases that are properties (but ignore cases where we should use setAttribute instead)
-					//- list and form are typically used as strings, but are DOM element references in js
-					//- when using CSS selectors (e.g. `m("[style='']")`), style is used as a string, but it's an object in js
-					else if (attrName in node && attrName !== "list" && attrName !== "style" && attrName !== "form" && attrName !== "type" && attrName !== "width" && attrName !== "height") {
-						//#348 don't set the value if not needed otherwise cursor placement breaks in Chrome
-						if (tag !== "input" || node[attrName] !== dataAttr) node[attrName] = dataAttr;
-					}
-					else node.setAttribute(attrName, dataAttr);
-				}
-				catch (e) {
-					//swallow IE's invalid argument errors to mimic HTML's fallback-to-doing-nothing-on-invalid-attributes behavior
-					if (e.message.indexOf("Invalid argument") < 0) throw e;
-				}
-			}
-			//#348 dataAttr may not be a string, so use loose comparison (double equal) instead of strict (triple equal)
-			else if (attrName === "value" && tag === "input" && node.value != dataAttr) {
-				node.value = dataAttr;
+
+	function sortChanges(a, b) {
+		return a.action - b.action || a.index - b.index
+	}
+
+	function copyStyleAttrs(node, dataAttr, cachedAttr) {
+		for (var rule in dataAttr) if (hasOwn.call(dataAttr, rule)) {
+			if (cachedAttr == null || cachedAttr[rule] !== dataAttr[rule]) {
+				node.style[rule] = dataAttr[rule]
 			}
 		}
-		return cachedAttrs;
+
+		for (rule in cachedAttr) if (hasOwn.call(cachedAttr, rule)) {
+			if (!hasOwn.call(dataAttr, rule)) node.style[rule] = ""
+		}
 	}
+
+	var shouldUseSetAttribute = {
+		list: 1,
+		style: 1,
+		form: 1,
+		type: 1,
+		width: 1,
+		height: 1
+	}
+
+	function setSingleAttr(
+		node,
+		attrName,
+		dataAttr,
+		cachedAttr,
+		tag,
+		namespace
+	) {
+		if (attrName === "config" || attrName === "key") {
+			// `config` isn't a real attribute, so ignore it
+			return true
+		} else if (isFunction(dataAttr) && attrName.slice(0, 2) === "on") {
+			// hook event handlers to the auto-redrawing system
+			node[attrName] = autoredraw(dataAttr, node)
+		} else if (attrName === "style" && dataAttr != null &&
+				isObject(dataAttr)) {
+			// handle `style: {...}`
+			copyStyleAttrs(node, dataAttr, cachedAttr)
+		} else if (namespace != null) {
+			// handle SVG
+			if (attrName === "href") {
+				node.setAttributeNS("http://www.w3.org/1999/xlink",
+					"href", dataAttr)
+			} else {
+				node.setAttribute(
+					attrName === "className" ? "class" : attrName,
+					dataAttr)
+			}
+		} else if (attrName in node && !shouldUseSetAttribute[attrName]) {
+			// handle cases that are properties (but ignore cases where we
+			// should use setAttribute instead)
+			//
+			// - list and form are typically used as strings, but are DOM
+			//   element references in js
+			//
+			// - when using CSS selectors (e.g. `m("[style='']")`), style is
+			//   used as a string, but it's an object in js
+			//
+			// #348 don't set the value if not needed - otherwise, cursor
+			// placement breaks in Chrome
+			try {
+				if (tag !== "input" || node[attrName] !== dataAttr) {
+					node[attrName] = dataAttr
+				}
+			} catch (e) {
+				node.setAttribute(attrName, dataAttr)
+			}
+		}
+		else node.setAttribute(attrName, dataAttr)
+	}
+
+	function trySetAttr(
+		node,
+		attrName,
+		dataAttr,
+		cachedAttr,
+		cachedAttrs,
+		tag,
+		namespace
+	) {
+		if (!(attrName in cachedAttrs) || (cachedAttr !== dataAttr)) {
+			cachedAttrs[attrName] = dataAttr
+			try {
+				return setSingleAttr(
+					node,
+					attrName,
+					dataAttr,
+					cachedAttr,
+					tag,
+					namespace)
+			} catch (e) {
+				// swallow IE's invalid argument errors to mimic HTML's
+				// fallback-to-doing-nothing-on-invalid-attributes behavior
+				if (e.message.indexOf("Invalid argument") < 0) throw e
+			}
+		} else if (attrName === "value" && tag === "input" &&
+				node.value !== dataAttr) {
+			// #348 dataAttr may not be a string, so use loose comparison
+			node.value = dataAttr
+		}
+	}
+
+	function setAttributes(node, tag, dataAttrs, cachedAttrs, namespace) {
+		for (var attrName in dataAttrs) if (hasOwn.call(dataAttrs, attrName)) {
+			if (trySetAttr(
+					node,
+					attrName,
+					dataAttrs[attrName],
+					cachedAttrs[attrName],
+					cachedAttrs,
+					tag,
+					namespace)) {
+				continue
+			}
+		}
+		return cachedAttrs
+	}
+
 	function clear(nodes, cached) {
 		for (var i = nodes.length - 1; i > -1; i--) {
 			if (nodes[i] && nodes[i].parentNode) {
-				try { nodes[i].parentNode.removeChild(nodes[i]); }
-				catch (e) {} //ignore if this fails due to order of events (see http://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node)
-				cached = [].concat(cached);
-				if (cached[i]) unload(cached[i]);
+				try {
+					nodes[i].parentNode.removeChild(nodes[i])
+				} catch (e) {
+					/* eslint-disable max-len */
+					// ignore if this fails due to order of events (see
+					// http://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node)
+					/* eslint-enable max-len */
+				}
+				cached = [].concat(cached)
+				if (cached[i]) unload(cached[i])
 			}
 		}
-		//release memory if nodes is an array. This check should fail if nodes is a NodeList (see loop above)
-		if (nodes.length) nodes.length = 0;
+		// release memory if nodes is an array. This check should fail if nodes
+		// is a NodeList (see loop above)
+		if (nodes.length) {
+			nodes.length = 0
+		}
 	}
+
 	function unload(cached) {
 		if (cached.configContext && isFunction(cached.configContext.onunload)) {
-			cached.configContext.onunload();
-			cached.configContext.onunload = null;
+			cached.configContext.onunload()
+			cached.configContext.onunload = null
 		}
 		if (cached.controllers) {
 			forEach(cached.controllers, function (controller) {
-				if (isFunction(controller.onunload)) controller.onunload({preventDefault: noop});
-			});
+				if (isFunction(controller.onunload)) {
+					controller.onunload({preventDefault: noop})
+				}
+			})
 		}
 		if (cached.children) {
-			if (isArray(cached.children)) forEach(cached.children, unload);
-			else if (cached.children.tag) unload(cached.children);
+			if (isArray(cached.children)) forEach(cached.children, unload)
+			else if (cached.children.tag) unload(cached.children)
 		}
 	}
 
-	var insertAdjacentBeforeEnd = (function () {
-		var rangeStrategy = function (parentElement, data) {
-			parentElement.appendChild($document.createRange().createContextualFragment(data));
-		};
-		var insertAdjacentStrategy = function (parentElement, data) {
-			parentElement.insertAdjacentHTML("beforeend", data);
-		};
-
+	function appendTextFragment(parentElement, data) {
 		try {
-			$document.createRange().createContextualFragment('x');
-			return rangeStrategy;
+			parentElement.appendChild(
+				$document.createRange().createContextualFragment(data))
 		} catch (e) {
-			return insertAdjacentStrategy;
+			parentElement.insertAdjacentHTML("beforeend", data)
 		}
-	})();
+	}
 
 	function injectHTML(parentElement, index, data) {
-		var nextSibling = parentElement.childNodes[index];
+		var nextSibling = parentElement.childNodes[index]
 		if (nextSibling) {
-			var isElement = nextSibling.nodeType !== 1;
-			var placeholder = $document.createElement("span");
+			var isElement = nextSibling.nodeType !== 1
+			var placeholder = $document.createElement("span")
 			if (isElement) {
-				parentElement.insertBefore(placeholder, nextSibling || null);
-				placeholder.insertAdjacentHTML("beforebegin", data);
-				parentElement.removeChild(placeholder);
+				parentElement.insertBefore(placeholder, nextSibling || null)
+				placeholder.insertAdjacentHTML("beforebegin", data)
+				parentElement.removeChild(placeholder)
+			} else {
+				nextSibling.insertAdjacentHTML("beforebegin", data)
 			}
-			else nextSibling.insertAdjacentHTML("beforebegin", data);
+		} else {
+			appendTextFragment(parentElement, data)
 		}
-		else insertAdjacentBeforeEnd(parentElement, data);
 
-		var nodes = [];
+		var nodes = []
+
 		while (parentElement.childNodes[index] !== nextSibling) {
-			nodes.push(parentElement.childNodes[index]);
-			index++;
+			nodes.push(parentElement.childNodes[index])
+			index++
 		}
-		return nodes;
+
+		return nodes
 	}
+
 	function autoredraw(callback, object) {
-		return function(e) {
-			e = e || event;
-			m.redraw.strategy("diff");
-			m.startComputation();
-			try { return callback.call(object, e); }
-			finally {
-				endFirstComputation();
+		return function (e) {
+			e = e || event
+			m.redraw.strategy("diff")
+			m.startComputation()
+			try {
+				return callback.call(object, e)
+			} finally {
+				endFirstComputation()
 			}
-		};
+		}
 	}
 
-	var html;
+	var html
 	var documentNode = {
-		appendChild: function(node) {
-			if (html === undefined) html = $document.createElement("html");
-			if ($document.documentElement && $document.documentElement !== node) {
-				$document.replaceChild(node, $document.documentElement);
+		appendChild: function (node) {
+			if (html === undefined) html = $document.createElement("html")
+			if ($document.documentElement &&
+					$document.documentElement !== node) {
+				$document.replaceChild(node, $document.documentElement)
+			} else {
+				$document.appendChild(node)
 			}
-			else $document.appendChild(node);
-			this.childNodes = $document.childNodes;
+
+			this.childNodes = $document.childNodes
 		},
-		insertBefore: function(node) {
-			this.appendChild(node);
+
+		insertBefore: function (node) {
+			this.appendChild(node)
 		},
+
 		childNodes: []
-	};
-	var nodeCache = [], cellCache = {};
-	m.render = function(root, cell, forceRecreation) {
-		var configs = [];
-		if (!root) throw new Error("Ensure the DOM element being passed to m.route/m.mount/m.render is not undefined.");
-		var id = getCellCacheKey(root);
-		var isDocumentRoot = root === $document;
-		var node = isDocumentRoot || root === $document.documentElement ? documentNode : root;
-		if (isDocumentRoot && cell.tag !== "html") cell = {tag: "html", attrs: {}, children: cell};
-		if (cellCache[id] === undefined) clear(node.childNodes);
-		if (forceRecreation === true) reset(root);
-		cellCache[id] = build(node, null, undefined, undefined, cell, cellCache[id], false, 0, null, undefined, configs);
-		forEach(configs, function (config) { config(); });
-	};
-	function getCellCacheKey(element) {
-		var index = nodeCache.indexOf(element);
-		return index < 0 ? nodeCache.push(element) - 1 : index;
 	}
 
-	m.trust = function(value) {
-		value = new String(value);
-		value.$trusted = true;
-		return value;
-	};
+	var nodeCache = []
+	var cellCache = {}
+
+	m.render = function (root, cell, forceRecreation) {
+		if (!root) {
+			throw new Error("Ensure the DOM element being passed to " +
+				"m.route/m.mount/m.render is not undefined.")
+		}
+		var configs = []
+		var id = getCellCacheKey(root)
+		var isDocumentRoot = root === $document
+		var node
+
+		if (isDocumentRoot || root === $document.documentElement) {
+			node = documentNode
+		} else {
+			node = root
+		}
+
+		if (isDocumentRoot && cell.tag !== "html") {
+			cell = {tag: "html", attrs: {}, children: cell}
+		}
+
+		if (cellCache[id] === undefined) clear(node.childNodes)
+		if (forceRecreation === true) reset(root)
+
+		cellCache[id] = build(
+			node,
+			null,
+			undefined,
+			undefined,
+			cell,
+			cellCache[id],
+			false,
+			0,
+			null,
+			undefined,
+			configs)
+
+		forEach(configs, function (config) { config() })
+	}
+
+	function getCellCacheKey(element) {
+		var index = nodeCache.indexOf(element)
+		return index < 0 ? nodeCache.push(element) - 1 : index
+	}
+
+	m.trust = function (value) {
+		value = new String(value) // eslint-disable-line no-new-wrappers
+		value.$trusted = true
+		return value
+	}
 
 	function gettersetter(store) {
-		var prop = function() {
-			if (arguments.length) store = arguments[0];
-			return store;
-		};
+		function prop() {
+			if (arguments.length) store = arguments[0]
+			return store
+		}
 
-		prop.toJSON = function() {
-			return store;
-		};
+		prop.toJSON = function () {
+			return store
+		}
 
-		return prop;
+		return prop
 	}
 
 	m.prop = function (store) {
-		//note: using non-strict equality check here because we're checking if store is null OR undefined
-		if ((store != null && isObject(store) || isFunction(store)) && isFunction(store.then)) {
-			return propify(store);
+		if ((store != null && isObject(store) || isFunction(store)) &&
+				isFunction(store.then)) {
+			return propify(store)
 		}
 
-		return gettersetter(store);
-	};
-
-	var roots = [], components = [], controllers = [], lastRedrawId = null, lastRedrawCallTime = 0, computePreRedrawHook = null, computePostRedrawHook = null, topComponent, unloaders = [];
-	var FRAME_BUDGET = 16; //60 frames per second = 1 call per 16 ms
-	function parameterize(component, args) {
-		var controller = function() {
-			return (component.controller || noop).apply(this, args) || this;
-		};
-		if (component.controller) controller.prototype = component.controller.prototype;
-		var view = function(ctrl) {
-			var currentArgs = arguments.length > 1 ? args.concat([].slice.call(arguments, 1)) : args;
-			return component.view.apply(component, currentArgs ? [ctrl].concat(currentArgs) : [ctrl]);
-		};
-		view.$original = component.view;
-		var output = {controller: controller, view: view};
-		if (args[0] && args[0].key != null) output.attrs = {key: args[0].key};
-		return output;
+		return gettersetter(store)
 	}
-	m.component = function(component) {
-		for (var args = [], i = 1; i < arguments.length; i++) args.push(arguments[i]);
-		return parameterize(component, args);
-	};
-	m.mount = m.module = function(root, component) {
-		if (!root) throw new Error("Please ensure the DOM element exists before rendering a template into it.");
-		var index = roots.indexOf(root);
-		if (index < 0) index = roots.length;
 
-		var isPrevented = false;
-		var event = {preventDefault: function() {
-			isPrevented = true;
-			computePreRedrawHook = computePostRedrawHook = null;
-		}};
+	var roots = []
+	var components = []
+	var controllers = []
+	var lastRedrawId = null
+	var lastRedrawCallTime = 0
+	var computePreRedrawHook = null
+	var computePostRedrawHook = null
+	var topComponent
+	var FRAME_BUDGET = 16 // 60 frames per second = 1 call per 16 ms
+
+	function parameterize(component, args) {
+		function controller() {
+			/* eslint-disable no-invalid-this */
+			return (component.controller || noop).apply(this, args) || this
+			/* eslint-enable no-invalid-this */
+		}
+
+		if (component.controller) {
+			controller.prototype = component.controller.prototype
+		}
+
+		function view(ctrl) {
+			var currentArgs = [ctrl].concat(args)
+			for (var i = 1; i < arguments.length; i++) {
+				currentArgs.push(arguments[i])
+			}
+
+			return component.view.apply(component, currentArgs)
+		}
+
+		view.$original = component.view
+		var output = {controller: controller, view: view}
+		if (args[0] && args[0].key != null) output.attrs = {key: args[0].key}
+		return output
+	}
+
+	m.component = function (component) {
+		var args = [].slice.call(arguments, 1)
+
+		return parameterize(component, args)
+	}
+
+	function checkPrevented(component, root, index, isPrevented) {
+		if (!isPrevented) {
+			m.redraw.strategy("all")
+			m.startComputation()
+			roots[index] = root
+			var currentComponent
+
+			if (component) {
+				currentComponent = topComponent = component
+			} else {
+				currentComponent = topComponent = component = {controller: noop}
+			}
+
+			var controller = new (component.controller || noop)()
+
+			// controllers may call m.mount recursively (via m.route redirects,
+			// for example)
+			// this conditional ensures only the last recursive m.mount call is
+			// applied
+			if (currentComponent === topComponent) {
+				controllers[index] = controller
+				components[index] = component
+			}
+			endFirstComputation()
+			if (component === null) {
+				removeRootElement(root, index)
+			}
+			return controllers[index]
+		} else if (component == null) {
+			removeRootElement(root, index)
+		}
+	}
+
+	m.mount = m.module = function (root, component) {
+		if (!root) {
+			throw new Error("Please ensure the DOM element exists before " +
+				"rendering a template into it.")
+		}
+
+		var index = roots.indexOf(root)
+		if (index < 0) index = roots.length
+
+		var isPrevented = false
+		var event = {
+			preventDefault: function () {
+				isPrevented = true
+				computePreRedrawHook = computePostRedrawHook = null
+			}
+		}
 
 		forEach(unloaders, function (unloader) {
-			unloader.handler.call(unloader.controller, event);
-			unloader.controller.onunload = null;
-		});
+			unloader.handler.call(unloader.controller, event)
+			unloader.controller.onunload = null
+		})
 
 		if (isPrevented) {
 			forEach(unloaders, function (unloader) {
-				unloader.controller.onunload = unloader.handler;
-			});
+				unloader.controller.onunload = unloader.handler
+			})
+		} else {
+			unloaders = []
 		}
-		else unloaders = [];
 
 		if (controllers[index] && isFunction(controllers[index].onunload)) {
-			controllers[index].onunload(event);
+			controllers[index].onunload(event)
 		}
 
-		var isNullComponent = component === null;
-
-		if (!isPrevented) {
-			m.redraw.strategy("all");
-			m.startComputation();
-			roots[index] = root;
-			var currentComponent = component ? (topComponent = component) : (topComponent = component = {controller: noop});
-			var controller = new (component.controller || noop)();
-			//controllers may call m.mount recursively (via m.route redirects, for example)
-			//this conditional ensures only the last recursive m.mount call is applied
-			if (currentComponent === topComponent) {
-				controllers[index] = controller;
-				components[index] = component;
-			}
-			endFirstComputation();
-			if (isNullComponent) {
-				removeRootElement(root, index);
-			}
-			return controllers[index];
-		}
-		if (isNullComponent) {
-			removeRootElement(root, index);
-		}
-	};
+		return checkPrevented(component, root, index, isPrevented)
+	}
 
 	function removeRootElement(root, index) {
-		roots.splice(index, 1);
-		controllers.splice(index, 1);
-		components.splice(index, 1);
-		reset(root);
-		nodeCache.splice(getCellCacheKey(root), 1);
+		roots.splice(index, 1)
+		controllers.splice(index, 1)
+		components.splice(index, 1)
+		reset(root)
+		nodeCache.splice(getCellCacheKey(root), 1)
 	}
 
-	var redrawing = false, forcing = false;
-	m.redraw = function(force) {
-		if (redrawing) return;
-		redrawing = true;
-		if (force) forcing = true;
+	var redrawing = false
+	m.redraw = function (force) {
+		if (redrawing) return
+		redrawing = true
+		if (force) forcing = true
+
 		try {
-			//lastRedrawId is a positive number if a second redraw is requested before the next animation frame
-			//lastRedrawID is null if it's the first redraw and not an event handler
+			// lastRedrawId is a positive number if a second redraw is requested
+			// before the next animation frame
+			// lastRedrawID is null if it's the first redraw and not an event
+			// handler
 			if (lastRedrawId && !force) {
-				//when setTimeout: only reschedule redraw if time between now and previous redraw is bigger than a frame, otherwise keep currently scheduled timeout
-				//when rAF: always reschedule redraw
-				if ($requestAnimationFrame === window.requestAnimationFrame || new Date - lastRedrawCallTime > FRAME_BUDGET) {
-					if (lastRedrawId > 0) $cancelAnimationFrame(lastRedrawId);
-					lastRedrawId = $requestAnimationFrame(redraw, FRAME_BUDGET);
+				// when setTimeout: only reschedule redraw if time between now
+				// and previous redraw is bigger than a frame, otherwise keep
+				// currently scheduled timeout
+				// when rAF: always reschedule redraw
+				if ($requestAnimationFrame === global.requestAnimationFrame ||
+						new Date() - lastRedrawCallTime > FRAME_BUDGET) {
+					if (lastRedrawId > 0) $cancelAnimationFrame(lastRedrawId)
+					lastRedrawId = $requestAnimationFrame(redraw, FRAME_BUDGET)
 				}
+			} else {
+				redraw()
+				lastRedrawId = $requestAnimationFrame(function () {
+					lastRedrawId = null
+				}, FRAME_BUDGET)
 			}
-			else {
-				redraw();
-				lastRedrawId = $requestAnimationFrame(function() { lastRedrawId = null; }, FRAME_BUDGET);
-			}
+		} finally {
+			redrawing = forcing = false
 		}
-		finally {
-			redrawing = forcing = false;
-		}
-	};
-	m.redraw.strategy = m.prop();
+	}
+
+	m.redraw.strategy = m.prop()
 	function redraw() {
 		if (computePreRedrawHook) {
-			computePreRedrawHook();
-			computePreRedrawHook = null;
+			computePreRedrawHook()
+			computePreRedrawHook = null
 		}
 		forEach(roots, function (root, i) {
-			var component = components[i];
+			var component = components[i]
 			if (controllers[i]) {
-				var args = [controllers[i]];
-				m.render(root, component.view ? component.view(controllers[i], args) : "");
+				var args = [controllers[i]]
+				m.render(root,
+					component.view ? component.view(controllers[i], args) : "")
 			}
-		});
-		//after rendering within a routed context, we need to scroll back to the top, and fetch the document title for history.pushState
+		})
+		// after rendering within a routed context, we need to scroll back to
+		// the top, and fetch the document title for history.pushState
 		if (computePostRedrawHook) {
-			computePostRedrawHook();
-			computePostRedrawHook = null;
+			computePostRedrawHook()
+			computePostRedrawHook = null
 		}
-		lastRedrawId = null;
-		lastRedrawCallTime = new Date;
-		m.redraw.strategy("diff");
-	}
-
-	var pendingRequests = 0;
-	m.startComputation = function() { pendingRequests++; };
-	m.endComputation = function() {
-		if (pendingRequests > 1) pendingRequests--;
-		else {
-			pendingRequests = 0;
-			m.redraw();
-		}
+		lastRedrawId = null
+		lastRedrawCallTime = new Date()
+		m.redraw.strategy("diff")
 	}
 
 	function endFirstComputation() {
 		if (m.redraw.strategy() === "none") {
-			pendingRequests--;
-			m.redraw.strategy("diff");
+			pendingRequests--
+			m.redraw.strategy("diff")
+		} else {
+			m.endComputation()
 		}
-		else m.endComputation();
 	}
 
-	m.withAttr = function(prop, withAttrCallback, callbackThis) {
-		return function(e) {
-			e = e || event;
-			var currentTarget = e.currentTarget || this;
-			var _this = callbackThis || this;
-			withAttrCallback.call(_this, prop in currentTarget ? currentTarget[prop] : currentTarget.getAttribute(prop));
-		};
-	};
+	m.withAttr = function (prop, withAttrCallback, callbackThis) {
+		return function (e) {
+			e = e || event
+			/* eslint-disable no-invalid-this */
+			var currentTarget = e.currentTarget || this
+			var _this = callbackThis || this
+			/* eslint-enable no-invalid-this */
+			var target = prop in currentTarget ?
+				currentTarget[prop] :
+				currentTarget.getAttribute(prop)
+			withAttrCallback.call(_this, target)
+		}
+	}
 
-	//routing
-	var modes = {pathname: "", hash: "#", search: "?"};
-	var redirect = noop, routeParams, currentRoute, isDefaultRoute = false;
-	m.route = function(root, arg1, arg2, vdom) {
-		//m.route()
-		if (arguments.length === 0) return currentRoute;
-		//m.route(el, defaultRoute, routes)
-		else if (arguments.length === 3 && isString(arg1)) {
-			redirect = function(source) {
-				var path = currentRoute = normalizeRoute(source);
+	// routing
+	var modes = {pathname: "", hash: "#", search: "?"}
+	var redirect = noop
+	var isDefaultRoute = false
+	var routeParams, currentRoute
+
+	m.route = function (root, arg1, arg2, vdom) { // eslint-disable-line
+		// m.route()
+		if (arguments.length === 0) return currentRoute
+		// m.route(el, defaultRoute, routes)
+		if (arguments.length === 3 && isString(arg1)) {
+			redirect = function (source) {
+				var path = currentRoute = normalizeRoute(source)
 				if (!routeByValue(root, arg2, path)) {
-					if (isDefaultRoute) throw new Error("Ensure the default route matches one of the routes defined in m.route");
-					isDefaultRoute = true;
-					m.route(arg1, true);
-					isDefaultRoute = false;
+					if (isDefaultRoute) {
+						throw new Error("Ensure the default route matches " +
+							"one of the routes defined in m.route")
+					}
+
+					isDefaultRoute = true
+					m.route(arg1, true)
+					isDefaultRoute = false
 				}
-			};
-			var listener = m.route.mode === "hash" ? "onhashchange" : "onpopstate";
-			window[listener] = function() {
-				var path = $location[m.route.mode];
-				if (m.route.mode === "pathname") path += $location.search;
-				if (currentRoute !== normalizeRoute(path)) redirect(path);
-			};
+			}
 
-			computePreRedrawHook = setScroll;
-			window[listener]();
+			var listener = m.route.mode === "hash" ?
+				"onhashchange" :
+				"onpopstate"
+
+			global[listener] = function () {
+				var path = $location[m.route.mode]
+				if (m.route.mode === "pathname") path += $location.search
+				if (currentRoute !== normalizeRoute(path)) redirect(path)
+			}
+
+			computePreRedrawHook = setScroll
+			global[listener]()
+
+			return
 		}
-		//config: m.route
-		else if (root.addEventListener || root.attachEvent) {
-			root.href = (m.route.mode !== 'pathname' ? $location.pathname : '') + modes[m.route.mode] + vdom.attrs.href;
+
+		// config: m.route
+		if (root.addEventListener || root.attachEvent) {
+			var base = m.route.mode !== "pathname" ? $location.pathname : ""
+			root.href = base + modes[m.route.mode] + vdom.attrs.href
 			if (root.addEventListener) {
-				root.removeEventListener("click", routeUnobtrusive);
-				root.addEventListener("click", routeUnobtrusive);
+				root.removeEventListener("click", routeUnobtrusive)
+				root.addEventListener("click", routeUnobtrusive)
+			} else {
+				root.detachEvent("onclick", routeUnobtrusive)
+				root.attachEvent("onclick", routeUnobtrusive)
 			}
-			else {
-				root.detachEvent("onclick", routeUnobtrusive);
-				root.attachEvent("onclick", routeUnobtrusive);
-			}
-		}
-		//m.route(route, params, shouldReplaceHistoryEntry)
-		else if (isString(root)) {
-			var oldRoute = currentRoute;
-			currentRoute = root;
-			var args = arg1 || {};
-			var queryIndex = currentRoute.indexOf("?");
-			var params = queryIndex > -1 ? parseQueryString(currentRoute.slice(queryIndex + 1)) : {};
-			for (var i in args) params[i] = args[i];
-			var querystring = buildQueryString(params);
-			var currentPath = queryIndex > -1 ? currentRoute.slice(0, queryIndex) : currentRoute;
-			if (querystring) currentRoute = currentPath + (currentPath.indexOf("?") === -1 ? "?" : "&") + querystring;
 
-			var shouldReplaceHistoryEntry = (arguments.length === 3 ? arg2 : arg1) === true || oldRoute === root;
+			return
+		}
+		// m.route(route, params, shouldReplaceHistoryEntry)
+		if (isString(root)) {
+			var oldRoute = currentRoute
+			currentRoute = root
 
-			if (window.history.pushState) {
-				computePreRedrawHook = setScroll;
-				computePostRedrawHook = function() {
-					window.history[shouldReplaceHistoryEntry ? "replaceState" : "pushState"](null, $document.title, modes[m.route.mode] + currentRoute);
-				};
-				redirect(modes[m.route.mode] + currentRoute);
+			var args = arg1 || {}
+			var queryIndex = currentRoute.indexOf("?")
+			var params
+
+			if (queryIndex > -1) {
+				params = parseQueryString(currentRoute.slice(queryIndex + 1))
+			} else {
+				params = {}
 			}
-			else {
-				$location[m.route.mode] = currentRoute;
-				redirect(modes[m.route.mode] + currentRoute);
+
+			for (var i in args) if (hasOwn.call(args, i)) {
+				params[i] = args[i]
+			}
+
+			var querystring = buildQueryString(params)
+			var currentPath
+
+			if (queryIndex > -1) {
+				currentPath = currentRoute.slice(0, queryIndex)
+			} else {
+				currentPath = currentRoute
+			}
+
+			if (querystring) {
+				currentRoute = currentPath +
+					(currentPath.indexOf("?") === -1 ? "?" : "&") +
+					querystring
+			}
+
+			var replaceHistory =
+				(arguments.length === 3 ? arg2 : arg1) === true ||
+				oldRoute === root
+
+			if (global.history.pushState) {
+				var method = replaceHistory ? "replaceState" : "pushState"
+				computePreRedrawHook = setScroll
+				computePostRedrawHook = function () {
+					global.history[method](null, $document.title,
+						modes[m.route.mode] + currentRoute)
+				}
+				redirect(modes[m.route.mode] + currentRoute)
+			} else {
+				$location[m.route.mode] = currentRoute
+				redirect(modes[m.route.mode] + currentRoute)
 			}
 		}
-	};
-	m.route.param = function(key) {
-		if (!routeParams) throw new Error("You must call m.route(element, defaultRoute, routes) before calling m.route.param()");
-		if( !key ){
-			return routeParams;
-		}
-		return routeParams[key];
-	};
-	m.route.mode = "search";
-	function normalizeRoute(route) {
-		return route.slice(modes[m.route.mode].length);
 	}
-	function routeByValue(root, router, path) {
-		routeParams = {};
 
-		var queryStart = path.indexOf("?");
+	m.route.param = function (key) {
+		if (!routeParams) {
+			throw new Error("You must call m.route(element, defaultRoute, " +
+				"routes) before calling m.route.param()")
+		}
+
+		if (!key) {
+			return routeParams
+		}
+
+		return routeParams[key]
+	}
+
+	m.route.mode = "search"
+
+	function normalizeRoute(route) {
+		return route.slice(modes[m.route.mode].length)
+	}
+
+	function routeByValue(root, router, path) {
+		routeParams = {}
+
+		var queryStart = path.indexOf("?")
 		if (queryStart !== -1) {
-			routeParams = parseQueryString(path.substr(queryStart + 1, path.length));
-			path = path.substr(0, queryStart);
+			routeParams = parseQueryString(
+				path.substr(queryStart + 1, path.length))
+			path = path.substr(0, queryStart)
 		}
 
 		// Get all routes and check if there's
 		// an exact match for the current path
-		var keys = Object.keys(router);
-		var index = keys.indexOf(path);
-		if(index !== -1){
-			m.mount(root, router[keys [index]]);
-			return true;
+		var keys = Object.keys(router)
+		var index = keys.indexOf(path)
+
+		if (index !== -1){
+			m.mount(root, router[keys [index]])
+			return true
 		}
 
-		for (var route in router) {
+		for (var route in router) if (hasOwn.call(router, route)) {
 			if (route === path) {
-				m.mount(root, router[route]);
-				return true;
+				m.mount(root, router[route])
+				return true
 			}
 
-			var matcher = new RegExp("^" + route.replace(/:[^\/]+?\.{3}/g, "(.*?)").replace(/:[^\/]+/g, "([^\\/]+)") + "\/?$");
+			var matcher = new RegExp("^" + route
+				.replace(/:[^\/]+?\.{3}/g, "(.*?)")
+				.replace(/:[^\/]+/g, "([^\\/]+)") + "\/?$")
 
 			if (matcher.test(path)) {
-				path.replace(matcher, function() {
-					var keys = route.match(/:[^\/]+/g) || [];
-					var values = [].slice.call(arguments, 1, -2);
+				/* eslint-disable no-loop-func */
+				path.replace(matcher, function () {
+					var keys = route.match(/:[^\/]+/g) || []
+					var values = [].slice.call(arguments, 1, -2)
 					forEach(keys, function (key, i) {
-						routeParams[key.replace(/:|\./g, "")] = decodeURIComponent(values[i]);
+						routeParams[key.replace(/:|\./g, "")] =
+							decodeURIComponent(values[i])
 					})
-					m.mount(root, router[route]);
-				});
-				return true;
+					m.mount(root, router[route])
+				})
+				/* eslint-enable no-loop-func */
+				return true
 			}
 		}
 	}
+
 	function routeUnobtrusive(e) {
-		e = e || event;
+		e = e || event
+		if (e.ctrlKey || e.metaKey || e.shiftKey || e.which === 2) return
 
-		if (e.ctrlKey || e.metaKey || e.which === 2) return;
+		if (e.preventDefault) {
+			e.preventDefault()
+		} else {
+			e.returnValue = false
+		}
 
-		if (e.preventDefault) e.preventDefault();
-		else e.returnValue = false;
+		var currentTarget = e.currentTarget || e.srcElement
+		var args
 
-		var currentTarget = e.currentTarget || e.srcElement;
-		var args = m.route.mode === "pathname" && currentTarget.search ? parseQueryString(currentTarget.search.slice(1)) : {};
-		while (currentTarget && currentTarget.nodeName.toUpperCase() !== "A") currentTarget = currentTarget.parentNode;
-		m.route(currentTarget[m.route.mode].slice(modes[m.route.mode].length), args);
+		if (m.route.mode === "pathname" && currentTarget.search) {
+			args = parseQueryString(currentTarget.search.slice(1))
+		} else {
+			args = {}
+		}
+
+		while (currentTarget && !/a/i.test(currentTarget.nodeName)) {
+			currentTarget = currentTarget.parentNode
+		}
+
+		// clear pendingRequests because we want an immediate route change
+		pendingRequests = 0
+		m.route(currentTarget[m.route.mode]
+			.slice(modes[m.route.mode].length), args)
 	}
+
 	function setScroll() {
-		if (m.route.mode !== "hash" && $location.hash) $location.hash = $location.hash;
-		else window.scrollTo(0, 0);
+		if (m.route.mode !== "hash" && $location.hash) {
+			$location.hash = $location.hash
+		} else {
+			global.scrollTo(0, 0)
+		}
 	}
+
 	function buildQueryString(object, prefix) {
-		var duplicates = {};
-		var str = [];
-		for (var prop in object) {
-			var key = prefix ? prefix + "[" + prop + "]" : prop;
-			var value = object[prop];
+		var duplicates = {}
+		var str = []
+
+		for (var prop in object) if (hasOwn.call(object, prop)) {
+			var key = prefix ? prefix + "[" + prop + "]" : prop
+			var value = object[prop]
 
 			if (value === null) {
-				str.push(encodeURIComponent(key));
+				str.push(encodeURIComponent(key))
 			} else if (isObject(value)) {
-				str.push(buildQueryString(value, key));
+				str.push(buildQueryString(value, key))
 			} else if (isArray(value)) {
-				var keys = [];
-				duplicates[key] = duplicates[key] || {};
+				var keys = []
+				duplicates[key] = duplicates[key] || {}
+				/* eslint-disable no-loop-func */
 				forEach(value, function (item) {
+					/* eslint-enable no-loop-func */
 					if (!duplicates[key][item]) {
-						duplicates[key][item] = true;
-						keys.push(encodeURIComponent(key) + "=" + encodeURIComponent(item));
+						duplicates[key][item] = true
+						keys.push(encodeURIComponent(key) + "=" +
+							encodeURIComponent(item))
 					}
-				});
-				str.push(keys.join("&"));
+				})
+				str.push(keys.join("&"))
 			} else if (value !== undefined) {
-				str.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+				str.push(encodeURIComponent(key) + "=" +
+					encodeURIComponent(value))
 			}
 		}
-		return str.join("&");
+		return str.join("&")
 	}
+
 	function parseQueryString(str) {
-		if (str === "" || str == null) return {};
-		if (str.charAt(0) === "?") str = str.slice(1);
+		if (str === "" || str == null) return {}
+		if (str.charAt(0) === "?") str = str.slice(1)
 
-		var pairs = str.split("&"), params = {};
+		var pairs = str.split("&")
+		var params = {}
+
 		forEach(pairs, function (string) {
-			var pair = string.split("=");
-			var key = decodeURIComponent(pair[0]);
-			var value = pair.length === 2 ? decodeURIComponent(pair[1]) : null;
+			var pair = string.split("=")
+			var key = decodeURIComponent(pair[0])
+			var value = pair.length === 2 ? decodeURIComponent(pair[1]) : null
 			if (params[key] != null) {
-				if (!isArray(params[key])) params[key] = [params[key]];
-				params[key].push(value);
+				if (!isArray(params[key])) params[key] = [params[key]]
+				params[key].push(value)
 			}
-			else params[key] = value;
-		});
+			else params[key] = value
+		})
 
-		return params;
+		return params
 	}
-	m.route.buildQueryString = buildQueryString;
-	m.route.parseQueryString = parseQueryString;
+
+	m.route.buildQueryString = buildQueryString
+	m.route.parseQueryString = parseQueryString
 
 	function reset(root) {
-		var cacheKey = getCellCacheKey(root);
-		clear(root.childNodes, cellCache[cacheKey]);
-		cellCache[cacheKey] = undefined;
+		var cacheKey = getCellCacheKey(root)
+		clear(root.childNodes, cellCache[cacheKey])
+		cellCache[cacheKey] = undefined
 	}
 
 	m.deferred = function () {
-		var deferred = new Deferred();
-		deferred.promise = propify(deferred.promise);
-		return deferred;
-	};
-	function propify(promise, initialValue) {
-		var prop = m.prop(initialValue);
-		promise.then(prop);
-		prop.then = function(resolve, reject) {
-			return propify(promise.then(resolve, reject), initialValue);
-		};
-		prop["catch"] = prop.then.bind(null, null);
-		prop["finally"] = function(callback) {
-			var _callback = function() {return m.deferred().resolve(callback()).promise;};
-			return prop.then(function(value) {
-				return propify(_callback().then(function() {return value;}), initialValue);
-			}, function(reason) {
-				return propify(_callback().then(function() {throw new Error(reason);}), initialValue);
-			});
-		};
-		return prop;
+		var deferred = new Deferred()
+		deferred.promise = propify(deferred.promise)
+		return deferred
 	}
-	//Promiz.mithril.js | Zolmeister | MIT
-	//a modified version of Promiz.js, which does not conform to Promises/A+ for two reasons:
-	//1) `then` callbacks are called synchronously (because setTimeout is too slow, and the setImmediate polyfill is too big
-	//2) throwing subclasses of Error cause the error to be bubbled up instead of triggering rejection (because the spec does not account for the important use case of default browser error handling, i.e. message w/ line number)
-	function Deferred(successCallback, failureCallback) {
-		var RESOLVING = 1, REJECTING = 2, RESOLVED = 3, REJECTED = 4;
-		var self = this, state = 0, promiseValue = 0, next = [];
 
-		self.promise = {};
-
-		self.resolve = function(value) {
-			if (!state) {
-				promiseValue = value;
-				state = RESOLVING;
-
-				fire();
-			}
-			return this;
-		};
-
-		self.reject = function(value) {
-			if (!state) {
-				promiseValue = value;
-				state = REJECTING;
-
-				fire();
-			}
-			return this;
-		};
-
-		self.promise.then = function(successCallback, failureCallback) {
-			var deferred = new Deferred(successCallback, failureCallback)
-			if (state === RESOLVED) {
-				deferred.resolve(promiseValue);
-			}
-			else if (state === REJECTED) {
-				deferred.reject(promiseValue);
-			}
-			else {
-				next.push(deferred);
-			}
-			return deferred.promise
-		};
-
-		function finish(type) {
-			state = type || REJECTED;
-			next.map(function(deferred) {
-				state === RESOLVED ? deferred.resolve(promiseValue) : deferred.reject(promiseValue);
-			});
+	function propify(promise, initialValue) {
+		var prop = m.prop(initialValue)
+		promise.then(prop)
+		prop.then = function (resolve, reject) {
+			return propify(promise.then(resolve, reject), initialValue)
 		}
 
-		function thennable(then, successCallback, failureCallback, notThennableCallback) {
-			if (((promiseValue != null && isObject(promiseValue)) || isFunction(promiseValue)) && isFunction(then)) {
+		prop.catch = prop.then.bind(null, null)
+		return prop
+	}
+	// Promiz.mithril.js | Zolmeister | MIT
+	// a modified version of Promiz.js, which does not conform to Promises/A+
+	// for two reasons:
+	//
+	// 1) `then` callbacks are called synchronously (because setTimeout is too
+	//    slow, and the setImmediate polyfill is too big
+	//
+	// 2) throwing subclasses of Error cause the error to be bubbled up instead
+	//    of triggering rejection (because the spec does not account for the
+	//    important use case of default browser error handling, i.e. message w/
+	//    line number)
+
+	var RESOLVING = 1
+	var REJECTING = 2
+	var RESOLVED = 3
+	var REJECTED = 4
+
+	function Deferred(onSuccess, onFailure) {
+		var self = this
+		var state = 0
+		var promiseValue = 0
+		var next = []
+
+		self.promise = {}
+
+		self.resolve = function (value) {
+			if (!state) {
+				promiseValue = value
+				state = RESOLVING
+
+				fire()
+			}
+
+			return self
+		}
+
+		self.reject = function (value) {
+			if (!state) {
+				promiseValue = value
+				state = REJECTING
+
+				fire()
+			}
+
+			return self
+		}
+
+		self.promise.then = function (onSuccess, onFailure) {
+			var deferred = new Deferred(onSuccess, onFailure)
+
+			if (state === RESOLVED) {
+				deferred.resolve(promiseValue)
+			} else if (state === REJECTED) {
+				deferred.reject(promiseValue)
+			} else {
+				next.push(deferred)
+			}
+
+			return deferred.promise
+		}
+
+		function finish(type) {
+			state = type || REJECTED
+			next.map(function (deferred) {
+				if (state === RESOLVED) {
+					deferred.resolve(promiseValue)
+				} else {
+					deferred.reject(promiseValue)
+				}
+			})
+		}
+
+		function thennable(then, success, failure, notThennable) {
+			if (((promiseValue != null && isObject(promiseValue)) ||
+					isFunction(promiseValue)) && isFunction(then)) {
 				try {
 					// count protects against abuse calls from spec checker
-					var count = 0;
-					then.call(promiseValue, function(value) {
-						if (count++) return;
-						promiseValue = value;
-						successCallback();
+					var count = 0
+					then.call(promiseValue, function (value) {
+						if (count++) return
+						promiseValue = value
+						success()
 					}, function (value) {
-						if (count++) return;
-						promiseValue = value;
-						failureCallback();
-					});
-				}
-				catch (e) {
-					m.deferred.onerror(e);
-					promiseValue = e;
-					failureCallback();
+						if (count++) return
+						promiseValue = value
+						failure()
+					})
+				} catch (e) {
+					m.deferred.onerror(e)
+					promiseValue = e
+					failure()
 				}
 			} else {
-				notThennableCallback();
+				notThennable()
 			}
 		}
 
 		function fire() {
 			// check if it's a thenable
-			var then;
+			var then
 			try {
-				then = promiseValue && promiseValue.then;
-			}
-			catch (e) {
-				m.deferred.onerror(e);
-				promiseValue = e;
-				state = REJECTING;
-				return fire();
+				then = promiseValue && promiseValue.then
+			} catch (e) {
+				m.deferred.onerror(e)
+				promiseValue = e
+				state = REJECTING
+				return fire()
 			}
 
-			thennable(then, function() {
-				state = RESOLVING;
-				fire();
-			}, function() {
-				state = REJECTING;
-				fire();
-			}, function() {
+			if (state === REJECTING) {
+				m.deferred.onerror(promiseValue)
+			}
+
+			thennable(then, function () {
+				state = RESOLVING
+				fire()
+			}, function () {
+				state = REJECTING
+				fire()
+			}, function () {
 				try {
-					if (state === RESOLVING && isFunction(successCallback)) {
-						promiseValue = successCallback(promiseValue);
+					if (state === RESOLVING && isFunction(onSuccess)) {
+						promiseValue = onSuccess(promiseValue)
+					} else if (state === REJECTING && isFunction(onFailure)) {
+						promiseValue = onFailure(promiseValue)
+						state = RESOLVING
 					}
-					else if (state === REJECTING && isFunction(failureCallback)) {
-						promiseValue = failureCallback(promiseValue);
-						state = RESOLVING;
-					}
-				}
-				catch (e) {
-					m.deferred.onerror(e);
-					promiseValue = e;
-					return finish();
+				} catch (e) {
+					m.deferred.onerror(e)
+					promiseValue = e
+					return finish()
 				}
 
 				if (promiseValue === self) {
-					promiseValue = TypeError();
-					finish();
+					promiseValue = TypeError()
+					finish()
 				} else {
 					thennable(then, function () {
-						finish(RESOLVED);
+						finish(RESOLVED)
 					}, finish, function () {
-						finish(state === RESOLVING && RESOLVED);
-					});
+						finish(state === RESOLVING && RESOLVED)
+					})
 				}
-			});
+			})
 		}
 	}
-	m.deferred.onerror = function(e) {
-		if (type.call(e) === "[object Error]" && !e.constructor.toString().match(/ Error/)) {
-			pendingRequests = 0;
-			throw e;
-		}
-	};
 
-	m.sync = function(args) {
-		var method = "resolve";
+	m.deferred.onerror = function (e) {
+		if (type.call(e) === "[object Error]" &&
+				!/ Error/.test(e.constructor.toString())) {
+			pendingRequests = 0
+			throw e
+		}
+	}
+
+	m.sync = function (args) {
+		var deferred = m.deferred()
+		var outstanding = args.length
+		var results = new Array(outstanding)
+		var method = "resolve"
 
 		function synchronizer(pos, resolved) {
-			return function(value) {
-				results[pos] = value;
-				if (!resolved) method = "reject";
+			return function (value) {
+				results[pos] = value
+				if (!resolved) method = "reject"
 				if (--outstanding === 0) {
-					deferred.promise(results);
-					deferred[method](results);
+					deferred.promise(results)
+					deferred[method](results)
 				}
-				return value;
-			};
+				return value
+			}
 		}
 
-		var deferred = m.deferred();
-		var outstanding = args.length;
-		var results = new Array(outstanding);
 		if (args.length > 0) {
 			forEach(args, function (arg, i) {
-				arg.then(synchronizer(i, true), synchronizer(i, false));
-			});
+				arg.then(synchronizer(i, true), synchronizer(i, false))
+			})
+		} else {
+			deferred.resolve([])
 		}
-		else deferred.resolve([]);
 
-		return deferred.promise;
-	};
-	function identity(value) { return value; }
+		return deferred.promise
+	}
+
+	function identity(value) { return value }
+
+	function handleJsonp(options) {
+		var callbackKey = "mithril_callback_" +
+			new Date().getTime() + "_" +
+			(Math.round(Math.random() * 1e16)).toString(36)
+
+		var script = $document.createElement("script")
+
+		global[callbackKey] = function (resp) {
+			script.parentNode.removeChild(script)
+			options.onload({
+				type: "load",
+				target: {
+					responseText: resp
+				}
+			})
+			global[callbackKey] = undefined
+		}
+
+		script.onerror = function () {
+			script.parentNode.removeChild(script)
+
+			options.onerror({
+				type: "error",
+				target: {
+					status: 500,
+					responseText: JSON.stringify({
+						error: "Error making jsonp request"
+					})
+				}
+			})
+			global[callbackKey] = undefined
+
+			return false
+		}
+
+		script.onload = function () {
+			return false
+		}
+
+		script.src = options.url +
+			(options.url.indexOf("?") > 0 ? "&" : "?") +
+			(options.callbackKey ? options.callbackKey : "callback") +
+			"=" + callbackKey +
+			"&" + buildQueryString(options.data || {})
+
+		$document.body.appendChild(script)
+	}
+
+	function createXhr(options) {
+		var xhr = new global.XMLHttpRequest()
+		xhr.open(options.method, options.url, true, options.user,
+			options.password)
+
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState === 4) {
+				if (xhr.status >= 200 && xhr.status < 300) {
+					options.onload({type: "load", target: xhr})
+				} else {
+					options.onerror({type: "error", target: xhr})
+				}
+			}
+		}
+
+		if (options.serialize === JSON.stringify &&
+				options.data &&
+				options.method !== "GET") {
+			xhr.setRequestHeader("Content-Type",
+				"application/json; charset=utf-8")
+		}
+
+		if (options.deserialize === JSON.parse) {
+			xhr.setRequestHeader("Accept", "application/json, text/*")
+		}
+
+		if (isFunction(options.config)) {
+			var maybeXhr = options.config(xhr, options)
+			if (maybeXhr != null) xhr = maybeXhr
+		}
+
+		var data = options.method === "GET" || !options.data ? "" : options.data
+
+		if (data && !isString(data) && data.constructor !== global.FormData) {
+			throw new Error("Request data should be either be a string or " +
+				"FormData. Check the `serialize` option in `m.request`")
+		}
+
+		xhr.send(data)
+		return xhr
+	}
 
 	function ajax(options) {
 		if (options.dataType && options.dataType.toLowerCase() === "jsonp") {
-			var callbackKey = "mithril_callback_" + new Date().getTime() + "_" + (Math.round(Math.random() * 1e16)).toString(36)
-			var script = $document.createElement("script");
-
-			window[callbackKey] = function(resp) {
-				script.parentNode.removeChild(script);
-				options.onload({
-					type: "load",
-					target: {
-						responseText: resp
-					}
-				});
-				window[callbackKey] = undefined;
-			};
-
-			script.onerror = function() {
-				script.parentNode.removeChild(script);
-
-				options.onerror({
-					type: "error",
-					target: {
-						status: 500,
-						responseText: JSON.stringify({
-							error: "Error making jsonp request"
-						})
-					}
-				});
-				window[callbackKey] = undefined;
-
-				return false;
-			}
-
-			script.onload = function() {
-				return false;
-			};
-
-			script.src = options.url
-				+ (options.url.indexOf("?") > 0 ? "&" : "?")
-				+ (options.callbackKey ? options.callbackKey : "callback")
-				+ "=" + callbackKey
-				+ "&" + buildQueryString(options.data || {});
-			$document.body.appendChild(script);
-		}
-		else {
-			var xhr = new window.XMLHttpRequest();
-			xhr.open(options.method, options.url, true, options.user, options.password);
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState === 4) {
-					if (xhr.status >= 200 && xhr.status < 300) options.onload({type: "load", target: xhr});
-					else options.onerror({type: "error", target: xhr});
-				}
-			};
-			if (options.serialize === JSON.stringify && options.data && options.method !== "GET") {
-				xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-			}
-			if (options.deserialize === JSON.parse) {
-				xhr.setRequestHeader("Accept", "application/json, text/*");
-			}
-			if (isFunction(options.config)) {
-				var maybeXhr = options.config(xhr, options);
-				if (maybeXhr != null) xhr = maybeXhr;
-			}
-
-			var data = options.method === "GET" || !options.data ? "" : options.data;
-			if (data && (!isString(data) && data.constructor !== window.FormData)) {
-				throw new Error("Request data should be either be a string or FormData. Check the `serialize` option in `m.request`");
-			}
-			xhr.send(data);
-			return xhr;
+			return handleJsonp(options)
+		} else {
+			return createXhr(options)
 		}
 	}
 
-	function bindData(xhrOptions, data, serialize) {
-		if (xhrOptions.method === "GET" && xhrOptions.dataType !== "jsonp") {
-			var prefix = xhrOptions.url.indexOf("?") < 0 ? "?" : "&";
-			var querystring = buildQueryString(data);
-			xhrOptions.url = xhrOptions.url + (querystring ? prefix + querystring : "");
+	function bindData(options, data, serialize) {
+		if (options.method === "GET" && options.dataType !== "jsonp") {
+			var prefix = options.url.indexOf("?") < 0 ? "?" : "&"
+			var querystring = buildQueryString(data)
+			options.url += (querystring ? prefix + querystring : "")
+		} else {
+			options.data = serialize(data)
 		}
-		else xhrOptions.data = serialize(data);
-		return xhrOptions;
 	}
 
 	function parameterizeUrl(url, data) {
-		var tokens = url.match(/:[a-z]\w+/gi);
-		if (tokens && data) {
-			forEach(tokens, function (token) {
-				var key = token.slice(1);
-				url = url.replace(token, data[key]);
-				delete data[key];
-			});
+		if (data) {
+			url = url.replace(/:[a-z]\w+/gi, function(token){
+				var key = token.slice(1)
+				var value = data[key]
+				delete data[key]
+				return value
+			})
 		}
-		return url;
+		return url
 	}
 
-	m.request = function(xhrOptions) {
-		if (xhrOptions.background !== true) m.startComputation();
-		var deferred = new Deferred();
-		var isJSONP = xhrOptions.dataType && xhrOptions.dataType.toLowerCase() === "jsonp"
-		var serialize = xhrOptions.serialize = isJSONP ? identity : xhrOptions.serialize || JSON.stringify;
-		var deserialize = xhrOptions.deserialize = isJSONP ? identity : xhrOptions.deserialize || JSON.parse;
-		var extract = isJSONP ? function(jsonp) { return jsonp.responseText } : xhrOptions.extract || function(xhr) {
-			if (xhr.responseText.length === 0 && deserialize === JSON.parse) {
-				return null
-			} else {
-				return xhr.responseText
-			}
-		};
-		xhrOptions.method = (xhrOptions.method || "GET").toUpperCase();
-		xhrOptions.url = parameterizeUrl(xhrOptions.url, xhrOptions.data);
-		xhrOptions = bindData(xhrOptions, xhrOptions.data, serialize);
-		xhrOptions.onload = xhrOptions.onerror = function(e) {
-			try {
-				e = e || event;
-				var unwrap = (e.type === "load" ? xhrOptions.unwrapSuccess : xhrOptions.unwrapError) || identity;
-				var response = unwrap(deserialize(extract(e.target, xhrOptions)), e.target);
-				if (e.type === "load") {
-					if (isArray(response) && xhrOptions.type) {
-						forEach(response, function (res, i) {
-							response[i] = new xhrOptions.type(res);
-						});
-					} else if (xhrOptions.type) {
-						response = new xhrOptions.type(response);
-					}
+	m.request = function (options) {
+		if (options.background !== true) m.startComputation()
+		var deferred = new Deferred()
+		var isJSONP = options.dataType &&
+			options.dataType.toLowerCase() === "jsonp"
+
+		var serialize, deserialize, extract
+
+		if (isJSONP) {
+			serialize = options.serialize =
+			deserialize = options.deserialize = identity
+
+			extract = function (jsonp) { return jsonp.responseText }
+		} else {
+			serialize = options.serialize = options.serialize || JSON.stringify
+
+			deserialize = options.deserialize =
+				options.deserialize || JSON.parse
+			extract = options.extract || function (xhr) {
+				if (xhr.responseText.length || deserialize !== JSON.parse) {
+					return xhr.responseText
+				} else {
+					return null
 				}
-
-				deferred[e.type === "load" ? "resolve" : "reject"](response);
-			} catch (e) {
-				m.deferred.onerror(e);
-				deferred.reject(e);
 			}
-
-			if (xhrOptions.background !== true) m.endComputation()
 		}
 
-		ajax(xhrOptions);
-		deferred.promise = propify(deferred.promise, xhrOptions.initialValue);
-		return deferred.promise;
-	};
+		options.method = (options.method || "GET").toUpperCase()
+		options.url = parameterizeUrl(options.url, options.data)
+		bindData(options, options.data, serialize)
+		options.onload = options.onerror = function (ev) {
+			try {
+				ev = ev || event
+				var response = deserialize(extract(ev.target, options))
+				if (ev.type === "load") {
+					if (options.unwrapSuccess) {
+						response = options.unwrapSuccess(response, ev.target)
+					}
 
-	//testing API
-	m.deps = function(mock) {
-		initialize(window = mock || window);
-		return window;
-	};
-	//for internal testing only, do not use `m.deps.factory`
-	m.deps.factory = app;
+					if (isArray(response) && options.type) {
+						forEach(response, function (res, i) {
+							response[i] = new options.type(res)
+						})
+					} else if (options.type) {
+						response = new options.type(response)
+					}
 
-	return m;
-})(typeof window !== "undefined" ? window : {});
+					deferred.resolve(response)
+				} else {
+					if (options.unwrapError) {
+						response = options.unwrapError(response, ev.target)
+					}
 
-if (typeof module === "object" && module != null && module.exports) module.exports = m;
-else if (typeof define === "function" && define.amd) define(function() { return m });
+					deferred.reject(response)
+				}
+			} catch (e) {
+				deferred.reject(e)
+			} finally {
+				if (options.background !== true) m.endComputation()
+			}
+		}
+
+		ajax(options)
+		deferred.promise = propify(deferred.promise, options.initialValue)
+		return deferred.promise
+	}
+
+	return m
+})
 ;
 ( function _package( factory ){
 	if( typeof define === 'function' && define.amd ){
@@ -14244,7 +14921,7 @@ return jQuery;
 }).call(this);
 ;
 /* ========================================================================
- * Bootstrap: affix.js v3.3.5
+ * Bootstrap: affix.js v3.3.6
  * http://getbootstrap.com/javascript/#affix
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -14273,7 +14950,7 @@ return jQuery;
     this.checkPosition()
   }
 
-  Affix.VERSION  = '3.3.5'
+  Affix.VERSION  = '3.3.6'
 
   Affix.RESET    = 'affix affix-top affix-bottom'
 
@@ -14407,7 +15084,7 @@ return jQuery;
 }(jQuery);
 ;
 /* ========================================================================
- * Bootstrap: dropdown.js v3.3.5
+ * Bootstrap: dropdown.js v3.3.6
  * http://getbootstrap.com/javascript/#dropdowns
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -14427,7 +15104,7 @@ return jQuery;
     $(element).on('click.bs.dropdown', this.toggle)
   }
 
-  Dropdown.VERSION = '3.3.5'
+  Dropdown.VERSION = '3.3.6'
 
   function getParent($this) {
     var selector = $this.attr('data-target')
@@ -14459,7 +15136,7 @@ return jQuery;
       if (e.isDefaultPrevented()) return
 
       $this.attr('aria-expanded', 'false')
-      $parent.removeClass('open').trigger('hidden.bs.dropdown', relatedTarget)
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
     })
   }
 
@@ -14493,7 +15170,7 @@ return jQuery;
 
       $parent
         .toggleClass('open')
-        .trigger('shown.bs.dropdown', relatedTarget)
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
     }
 
     return false
@@ -14573,7 +15250,7 @@ return jQuery;
 }(jQuery);
 ;
 /* ========================================================================
- * Bootstrap: modal.js v3.3.5
+ * Bootstrap: modal.js v3.3.6
  * http://getbootstrap.com/javascript/#modals
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -14607,7 +15284,7 @@ return jQuery;
     }
   }
 
-  Modal.VERSION  = '3.3.5'
+  Modal.VERSION  = '3.3.6'
 
   Modal.TRANSITION_DURATION = 300
   Modal.BACKDROP_TRANSITION_DURATION = 150
@@ -14911,7 +15588,7 @@ return jQuery;
 }(jQuery);
 ;
 /* ========================================================================
- * Bootstrap: tooltip.js v3.3.5
+ * Bootstrap: tooltip.js v3.3.6
  * http://getbootstrap.com/javascript/#tooltip
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ========================================================================
@@ -14938,7 +15615,7 @@ return jQuery;
     this.init('tooltip', element, options)
   }
 
-  Tooltip.VERSION  = '3.3.5'
+  Tooltip.VERSION  = '3.3.6'
 
   Tooltip.TRANSITION_DURATION = 150
 
@@ -15426,7 +16103,7 @@ return jQuery;
 }(jQuery);
 ;
 /* ========================================================================
- * Bootstrap: transition.js v3.3.5
+ * Bootstrap: transition.js v3.3.6
  * http://getbootstrap.com/javascript/#transitions
  * ========================================================================
  * Copyright 2011-2015 Twitter, Inc.
@@ -15904,24 +16581,25 @@ $('#el').spin('flower', 'red');
 
 }));
 ;
-System.register('flarum/app', ['flarum/App', 'flarum/initializers/store', 'flarum/initializers/preload', 'flarum/initializers/routes', 'flarum/initializers/boot'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/app', ['flarum/App', 'flarum/initializers/store', 'flarum/initializers/preload', 'flarum/initializers/routes', 'flarum/initializers/boot'], function (_export, _context) {
   var App, store, preload, routes, boot, app;
   return {
     setters: [function (_flarumApp) {
-      App = _flarumApp['default'];
+      App = _flarumApp.default;
     }, function (_flarumInitializersStore) {
-      store = _flarumInitializersStore['default'];
+      store = _flarumInitializersStore.default;
     }, function (_flarumInitializersPreload) {
-      preload = _flarumInitializersPreload['default'];
+      preload = _flarumInitializersPreload.default;
     }, function (_flarumInitializersRoutes) {
-      routes = _flarumInitializersRoutes['default'];
+      routes = _flarumInitializersRoutes.default;
     }, function (_flarumInitializersBoot) {
-      boot = _flarumInitializersBoot['default'];
+      boot = _flarumInitializersBoot.default;
     }],
     execute: function () {
       app = new App();
+
 
       app.initializers.add('store', store);
       app.initializers.add('routes', routes);
@@ -15935,37 +16613,34 @@ System.register('flarum/app', ['flarum/App', 'flarum/initializers/store', 'flaru
     }
   };
 });;
-System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert', 'flarum/components/Button', 'flarum/components/RequestErrorModal', 'flarum/Translator', 'flarum/utils/extract', 'flarum/utils/patchMithril', 'flarum/utils/RequestError', 'flarum/extend'], function (_export) {
+'use strict';
 
-  /**
-   * The `App` class provides a container for an application, as well as various
-   * utilities for the rest of the app to use.
-   */
-  'use strict';
-
-  var ItemList, Alert, Button, RequestErrorModal, Translator, extract, patchMithril, RequestError, extend, App;
+System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert', 'flarum/components/Button', 'flarum/components/RequestErrorModal', 'flarum/components/ConfirmPasswordModal', 'flarum/Translator', 'flarum/utils/extract', 'flarum/utils/patchMithril', 'flarum/utils/RequestError', 'flarum/extend'], function (_export, _context) {
+  var ItemList, Alert, Button, RequestErrorModal, ConfirmPasswordModal, Translator, extract, patchMithril, RequestError, extend, App;
   return {
     setters: [function (_flarumUtilsItemList) {
-      ItemList = _flarumUtilsItemList['default'];
+      ItemList = _flarumUtilsItemList.default;
     }, function (_flarumComponentsAlert) {
-      Alert = _flarumComponentsAlert['default'];
+      Alert = _flarumComponentsAlert.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumComponentsRequestErrorModal) {
-      RequestErrorModal = _flarumComponentsRequestErrorModal['default'];
+      RequestErrorModal = _flarumComponentsRequestErrorModal.default;
+    }, function (_flarumComponentsConfirmPasswordModal) {
+      ConfirmPasswordModal = _flarumComponentsConfirmPasswordModal.default;
     }, function (_flarumTranslator) {
-      Translator = _flarumTranslator['default'];
+      Translator = _flarumTranslator.default;
     }, function (_flarumUtilsExtract) {
-      extract = _flarumUtilsExtract['default'];
+      extract = _flarumUtilsExtract.default;
     }, function (_flarumUtilsPatchMithril) {
-      patchMithril = _flarumUtilsPatchMithril['default'];
+      patchMithril = _flarumUtilsPatchMithril.default;
     }, function (_flarumUtilsRequestError) {
-      RequestError = _flarumUtilsRequestError['default'];
+      RequestError = _flarumUtilsRequestError.default;
     }, function (_flarumExtend) {
       extend = _flarumExtend.extend;
     }],
     execute: function () {
-      App = (function () {
+      App = function () {
         function App() {
           babelHelpers.classCallCheck(this, App);
 
@@ -16079,6 +16754,8 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
          *
          * @public
          */
+
+
         babelHelpers.createClass(App, [{
           key: 'boot',
           value: function boot() {
@@ -16090,13 +16767,6 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
               return initializer(_this);
             });
           }
-
-          /**
-           * Get the API response document that has been preloaded into the application.
-           *
-           * @return {Object|null}
-           * @public
-           */
         }, {
           key: 'preloadedDocument',
           value: function preloadedDocument() {
@@ -16109,25 +16779,12 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
 
             return null;
           }
-
-          /**
-           * Set the <title> of the page.
-           *
-           * @param {String} title
-           * @public
-           */
         }, {
           key: 'setTitle',
           value: function setTitle(title) {
             this.title = title;
             this.updateTitle();
           }
-
-          /**
-           * Set a number to display in the <title> of the page.
-           *
-           * @param {Integer} count
-           */
         }, {
           key: 'setTitleCount',
           value: function setTitleCount(count) {
@@ -16139,35 +16796,31 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
           value: function updateTitle() {
             document.title = (this.titleCount ? '(' + this.titleCount + ') ' : '') + (this.title ? this.title + ' - ' : '') + this.forum.attribute('title');
           }
-
-          /**
-           * Make an AJAX request, handling any low-level errors that may occur.
-           *
-           * @see https://lhorie.github.io/mithril/mithril.request.html
-           * @param {Object} options
-           * @return {Promise}
-           * @public
-           */
         }, {
           key: 'request',
-          value: function request(options) {
+          value: function request(originalOptions) {
             var _this2 = this;
+
+            var options = babelHelpers.extends({}, originalOptions);
 
             // Set some default options if they haven't been overridden. We want to
             // authenticate all requests with the session token. We also want all
             // requests to run asynchronously in the background, so that they don't
             // prevent redraws from occurring.
-            options.config = options.config || this.session.authorize.bind(this.session);
             options.background = options.background || true;
 
+            extend(options, 'config', function (result, xhr) {
+              return xhr.setRequestHeader('X-CSRF-Token', _this2.session.csrfToken);
+            });
+
             // If the method is something like PATCH or DELETE, which not all servers
-            // support, then we'll send it as a POST request with a the intended method
-            // specified in the X-Fake-Http-Method header.
+            // and clients support, then we'll send it as a POST request with the
+            // intended method specified in the X-HTTP-Method-Override header.
             if (options.method !== 'GET' && options.method !== 'POST') {
               (function () {
                 var method = options.method;
                 extend(options, 'config', function (result, xhr) {
-                  return xhr.setRequestHeader('X-Fake-Http-Method', method);
+                  return xhr.setRequestHeader('X-HTTP-Method-Override', method);
                 });
                 options.method = 'POST';
               })();
@@ -16189,18 +16842,23 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
             // awry.
             var original = options.extract;
             options.extract = function (xhr) {
-              var responseText = undefined;
+              var responseText = void 0;
 
               if (original) {
                 responseText = original(xhr.responseText);
               } else {
-                responseText = xhr.responseText.length > 0 ? xhr.responseText : null;
+                responseText = xhr.responseText || null;
               }
 
               var status = xhr.status;
 
               if (status < 200 || status > 299) {
                 throw new RequestError(status, responseText, options, xhr);
+              }
+
+              if (xhr.getResponseHeader) {
+                var csrfToken = xhr.getResponseHeader('X-CSRF-Token');
+                if (csrfToken) app.session.csrfToken = csrfToken;
               }
 
               try {
@@ -16214,10 +16872,14 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
 
             // Now make the request. If it's a failure, inspect the error that was
             // returned and show an alert containing its contents.
-            return m.request(options).then(null, function (error) {
+            var deferred = m.deferred();
+
+            m.request(options).then(function (response) {
+              return deferred.resolve(response);
+            }, function (error) {
               _this2.requestError = error;
 
-              var children = undefined;
+              var children = void 0;
 
               switch (error.status) {
                 case 422:
@@ -16262,14 +16924,11 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
                 _this2.alerts.show(error.alert);
               }
 
-              throw error;
+              deferred.reject(error);
             });
-          }
 
-          /**
-           * @param {RequestError} error
-           * @private
-           */
+            return deferred.promise;
+          }
         }, {
           key: 'showDebug',
           value: function showDebug(error) {
@@ -16277,15 +16936,6 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
 
             this.modal.show(new RequestErrorModal({ error: error }));
           }
-
-          /**
-           * Construct a URL to the route with the given name.
-           *
-           * @param {String} name
-           * @param {Object} params
-           * @return {String}
-           * @public
-           */
         }, {
           key: 'route',
           value: function route(name) {
@@ -16301,50 +16951,20 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
           }
         }]);
         return App;
-      })();
+      }();
 
       _export('default', App);
     }
   };
 });;
-System.register('flarum/Component', [], function (_export) {
-  /*
-   * This file is part of Flarum.
-   *
-   * (c) Toby Zerner <toby.zerner@gmail.com>
-   *
-   * For the full copyright and license information, please view the LICENSE
-   * file that was distributed with this source code.
-   */
+'use strict';
 
-  /**
-   * The `Component` class defines a user interface 'building block'. A component
-   * can generate a virtual DOM to be rendered on each redraw.
-   *
-   * An instance's virtual DOM can be retrieved directly using the {@link
-   * Component#render} method.
-   *
-   * @example
-   * this.myComponentInstance = new MyComponent({foo: 'bar'});
-   * return m('div', this.myComponentInstance.render());
-   *
-   * Alternatively, components can be nested, letting Mithril take care of
-   * instance persistence. For this, the static {@link Component.component} method
-   * can be used.
-   *
-   * @example
-   * return m('div', MyComponent.component({foo: 'bar'));
-   *
-   * @see https://lhorie.github.io/mithril/mithril.component.html
-   * @abstract
-   */
-  'use strict';
-
+System.register('flarum/Component', [], function (_export, _context) {
   var Component;
   return {
     setters: [],
     execute: function () {
-      Component = (function () {
+      Component = function () {
         /**
          * @param {Object} props
          * @param {Array|Object} children
@@ -16375,6 +16995,14 @@ System.register('flarum/Component', [], function (_export) {
            */
           this.element = null;
 
+          /**
+           * Whether or not to retain the component's subtree on redraw.
+           *
+           * @type {boolean}
+           * @public
+           */
+          this.retain = false;
+
           this.init();
         }
 
@@ -16383,42 +17011,20 @@ System.register('flarum/Component', [], function (_export) {
          *
          * @protected
          */
+
+
         babelHelpers.createClass(Component, [{
           key: 'init',
           value: function init() {}
-
-          /**
-           * Called when the component is destroyed, i.e. after a redraw where it is no
-           * longer a part of the view.
-           *
-           * @see https://lhorie.github.io/mithril/mithril.component.html#unloading-components
-           * @param {Object} e
-           * @public
-           */
         }, {
           key: 'onunload',
           value: function onunload() {}
-
-          /**
-           * Get the renderable virtual DOM that represents the component's view.
-           *
-           * This should NOT be overridden by subclasses. Subclasses wishing to define
-           * their virtual DOM should override Component#view instead.
-           *
-           * @example
-           * this.myComponentInstance = new MyComponent({foo: 'bar'});
-           * return m('div', this.myComponentInstance.render());
-           *
-           * @returns {Object}
-           * @final
-           * @public
-           */
         }, {
           key: 'render',
           value: function render() {
             var _this = this;
 
-            var vdom = this.view();
+            var vdom = this.retain ? { subtree: 'retain' } : this.view();
 
             // Override the root element's config attribute with our own function, which
             // will set the component instance's element property to the root DOM
@@ -16439,24 +17045,9 @@ System.register('flarum/Component', [], function (_export) {
 
             return vdom;
           }
-
-          /**
-           * Returns a jQuery object for this component's element. If you pass in a
-           * selector string, this method will return a jQuery object, using the current
-           * element as its buffer.
-           *
-           * For example, calling `component.$('li')` will return a jQuery object
-           * containing all of the `li` elements inside the DOM element of this
-           * component.
-           *
-           * @param {String} [selector] a jQuery-compatible selector string
-           * @returns {jQuery} the jQuery object for the DOM node
-           * @final
-           * @public
-           */
         }, {
           key: '$',
-          value: (function (_$) {
+          value: function (_$) {
             function $(_x) {
               return _$.apply(this, arguments);
             }
@@ -16466,59 +17057,26 @@ System.register('flarum/Component', [], function (_export) {
             };
 
             return $;
-          })(function (selector) {
+          }(function (selector) {
             var $element = $(this.element);
 
             return selector ? $element.find(selector) : $element;
           })
-
-          /**
-           * Called after the component's root element is redrawn. This hook can be used
-           * to perform any actions on the DOM, both on the initial draw and any
-           * subsequent redraws. See Mithril's documentation for more information.
-           *
-           * @see https://lhorie.github.io/mithril/mithril.html#the-config-attribute
-           * @param {Boolean} isInitialized
-           * @param {Object} context
-           * @param {Object} vdom
-           * @public
-           */
         }, {
           key: 'config',
           value: function config() {}
-
-          /**
-           * Get the virtual DOM that represents the component's view.
-           *
-           * @return {Object} The virtual DOM
-           * @protected
-           */
         }, {
           key: 'view',
           value: function view() {
             throw new Error('Component#view must be implemented by subclass');
           }
-
-          /**
-           * Get a Mithril component object for this component, preloaded with props.
-           *
-           * @see https://lhorie.github.io/mithril/mithril.component.html
-           * @param {Object} [props] Properties to set on the component
-           * @param children
-           * @return {Object} The Mithril component object
-           * @property {function} controller
-           * @property {function} view
-           * @property {Object} component The class of this component
-           * @property {Object} props The props that were passed to the component
-           * @public
-           */
         }], [{
           key: 'component',
           value: function component() {
             var props = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
             var children = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-            var componentProps = babelHelpers._extends({}, props);
+            var componentProps = babelHelpers.extends({}, props);
 
             if (children) componentProps.children = children;
 
@@ -16556,48 +17114,32 @@ System.register('flarum/Component', [], function (_export) {
 
             return output;
           }
-
-          /**
-           * Initialize the component's props.
-           *
-           * @param {Object} props
-           * @public
-           */
         }, {
           key: 'initProps',
           value: function initProps(props) {}
         }]);
         return Component;
-      })();
+      }();
 
       _export('default', Component);
     }
   };
 });;
-System.register('flarum/components/AddExtensionModal', ['flarum/components/Modal'], function (_export) {
-  /*
-   * This file is part of Flarum.
-   *
-   * (c) Toby Zerner <toby.zerner@gmail.com>
-   *
-   * For the full copyright and license information, please view the LICENSE
-   * file that was distributed with this source code.
-   */
+'use strict';
 
-  'use strict';
-
+System.register('flarum/components/AddExtensionModal', ['flarum/components/Modal'], function (_export, _context) {
   var Modal, AddExtensionModal;
   return {
     setters: [function (_flarumComponentsModal) {
-      Modal = _flarumComponentsModal['default'];
+      Modal = _flarumComponentsModal.default;
     }],
     execute: function () {
-      AddExtensionModal = (function (_Modal) {
+      AddExtensionModal = function (_Modal) {
         babelHelpers.inherits(AddExtensionModal, _Modal);
 
         function AddExtensionModal() {
           babelHelpers.classCallCheck(this, AddExtensionModal);
-          babelHelpers.get(Object.getPrototypeOf(AddExtensionModal.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(AddExtensionModal).apply(this, arguments));
         }
 
         babelHelpers.createClass(AddExtensionModal, [{
@@ -16619,64 +17161,43 @@ System.register('flarum/components/AddExtensionModal', ['flarum/components/Modal
               m(
                 'p',
                 null,
-                'One day in the not-too-distant future, this dialog will allow you to add an extension to your forum with ease. We\'re building an ecosystem as we speak!'
+                app.translator.trans('core.admin.add_extension.temporary_text')
               ),
               m(
                 'p',
                 null,
-                'In the meantime, if you manage to get your hands on a new extension, simply drop it in your forum\'s ',
-                m(
-                  'code',
-                  null,
-                  'extensions'
-                ),
-                ' directory.'
+                app.translator.trans('core.admin.add_extension.install_text', { a: m('a', { href: 'https://discuss.flarum.org/t/extensions', target: '_blank' }) })
               ),
               m(
                 'p',
                 null,
-                'If you\'re a developer, you can ',
-                m(
-                  'a',
-                  { href: 'http://flarum.org/docs/extend' },
-                  'read the docs'
-                ),
-                ' and have a go at building your own.'
+                app.translator.trans('core.admin.add_extension.developer_text', { a: m('a', { href: 'http://flarum.org/docs/extend', target: '_blank' }) })
               )
             );
           }
         }]);
         return AddExtensionModal;
-      })(Modal);
+      }(Modal);
 
       _export('default', AddExtensionModal);
     }
   };
 });;
-System.register("flarum/components/AdminLinkButton", ["flarum/components/LinkButton"], function (_export) {
-  /*
-   * This file is part of Flarum.
-   *
-   * (c) Toby Zerner <toby.zerner@gmail.com>
-   *
-   * For the full copyright and license information, please view the LICENSE
-   * file that was distributed with this source code.
-   */
+"use strict";
 
-  "use strict";
-
+System.register("flarum/components/AdminLinkButton", ["flarum/components/LinkButton"], function (_export, _context) {
   var LinkButton, AdminLinkButton;
   return {
     setters: [function (_flarumComponentsLinkButton) {
-      LinkButton = _flarumComponentsLinkButton["default"];
+      LinkButton = _flarumComponentsLinkButton.default;
     }],
     execute: function () {
-      AdminLinkButton = (function (_LinkButton) {
+      AdminLinkButton = function (_LinkButton) {
         babelHelpers.inherits(AdminLinkButton, _LinkButton);
 
         function AdminLinkButton() {
           babelHelpers.classCallCheck(this, AdminLinkButton);
-          babelHelpers.get(Object.getPrototypeOf(AdminLinkButton.prototype), "constructor", this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(AdminLinkButton).apply(this, arguments));
         }
 
         babelHelpers.createClass(AdminLinkButton, [{
@@ -16694,42 +17215,33 @@ System.register("flarum/components/AdminLinkButton", ["flarum/components/LinkBut
           }
         }]);
         return AdminLinkButton;
-      })(LinkButton);
+      }(LinkButton);
 
       _export("default", AdminLinkButton);
     }
   };
 });;
-System.register('flarum/components/AdminNav', ['flarum/Component', 'flarum/components/AdminLinkButton', 'flarum/components/SelectDropdown', 'flarum/utils/ItemList'], function (_export) {
-  /*
-   * This file is part of Flarum.
-   *
-   * (c) Toby Zerner <toby.zerner@gmail.com>
-   *
-   * For the full copyright and license information, please view the LICENSE
-   * file that was distributed with this source code.
-   */
+'use strict';
 
-  'use strict';
-
+System.register('flarum/components/AdminNav', ['flarum/Component', 'flarum/components/AdminLinkButton', 'flarum/components/SelectDropdown', 'flarum/utils/ItemList'], function (_export, _context) {
   var Component, AdminLinkButton, SelectDropdown, ItemList, AdminNav;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumComponentsAdminLinkButton) {
-      AdminLinkButton = _flarumComponentsAdminLinkButton['default'];
+      AdminLinkButton = _flarumComponentsAdminLinkButton.default;
     }, function (_flarumComponentsSelectDropdown) {
-      SelectDropdown = _flarumComponentsSelectDropdown['default'];
+      SelectDropdown = _flarumComponentsSelectDropdown.default;
     }, function (_flarumUtilsItemList) {
-      ItemList = _flarumUtilsItemList['default'];
+      ItemList = _flarumUtilsItemList.default;
     }],
     execute: function () {
-      AdminNav = (function (_Component) {
+      AdminNav = function (_Component) {
         babelHelpers.inherits(AdminNav, _Component);
 
         function AdminNav() {
           babelHelpers.classCallCheck(this, AdminNav);
-          babelHelpers.get(Object.getPrototypeOf(AdminNav.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(AdminNav).apply(this, arguments));
         }
 
         babelHelpers.createClass(AdminNav, [{
@@ -16741,12 +17253,6 @@ System.register('flarum/components/AdminNav', ['flarum/Component', 'flarum/compo
               children: this.items().toArray()
             });
           }
-
-          /**
-           * Build an item list of links to show in the admin navigation.
-           *
-           * @return {ItemList}
-           */
         }, {
           key: 'items',
           value: function items() {
@@ -16791,54 +17297,39 @@ System.register('flarum/components/AdminNav', ['flarum/Component', 'flarum/compo
           }
         }]);
         return AdminNav;
-      })(Component);
+      }(Component);
 
       _export('default', AdminNav);
     }
   };
 });;
-System.register('flarum/components/Alert', ['flarum/Component', 'flarum/components/Button', 'flarum/helpers/listItems', 'flarum/utils/extract'], function (_export) {
+'use strict';
 
-  /**
-   * The `Alert` component represents an alert box, which contains a message,
-   * some controls, and may be dismissible.
-   *
-   * The alert may have the following special props:
-   *
-   * - `type` The type of alert this is. Will be used to give the alert a class
-   *   name of `Alert--{type}`.
-   * - `controls` An array of controls to show in the alert.
-   * - `dismissible` Whether or not the alert can be dismissed.
-   * - `ondismiss` A callback to run when the alert is dismissed.
-   *
-   * All other props will be assigned as attributes on the alert element.
-   */
-  'use strict';
-
+System.register('flarum/components/Alert', ['flarum/Component', 'flarum/components/Button', 'flarum/helpers/listItems', 'flarum/utils/extract'], function (_export, _context) {
   var Component, Button, listItems, extract, Alert;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumHelpersListItems) {
-      listItems = _flarumHelpersListItems['default'];
+      listItems = _flarumHelpersListItems.default;
     }, function (_flarumUtilsExtract) {
-      extract = _flarumUtilsExtract['default'];
+      extract = _flarumUtilsExtract.default;
     }],
     execute: function () {
-      Alert = (function (_Component) {
+      Alert = function (_Component) {
         babelHelpers.inherits(Alert, _Component);
 
         function Alert() {
           babelHelpers.classCallCheck(this, Alert);
-          babelHelpers.get(Object.getPrototypeOf(Alert.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Alert).apply(this, arguments));
         }
 
         babelHelpers.createClass(Alert, [{
           key: 'view',
           value: function view() {
-            var attrs = babelHelpers._extends({}, this.props);
+            var attrs = babelHelpers.extends({}, this.props);
 
             var type = extract(attrs, 'type');
             attrs.className = 'Alert Alert--' + type + ' ' + (attrs.className || '');
@@ -16877,34 +17368,29 @@ System.register('flarum/components/Alert', ['flarum/Component', 'flarum/componen
           }
         }]);
         return Alert;
-      })(Component);
+      }(Component);
 
       _export('default', Alert);
     }
   };
 });;
-System.register('flarum/components/AlertManager', ['flarum/Component', 'flarum/components/Alert'], function (_export) {
+'use strict';
 
-  /**
-   * The `AlertManager` component provides an area in which `Alert` components can
-   * be shown and dismissed.
-   */
-  'use strict';
-
+System.register('flarum/components/AlertManager', ['flarum/Component', 'flarum/components/Alert'], function (_export, _context) {
   var Component, Alert, AlertManager;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumComponentsAlert) {
-      Alert = _flarumComponentsAlert['default'];
+      Alert = _flarumComponentsAlert.default;
     }],
     execute: function () {
-      AlertManager = (function (_Component) {
+      AlertManager = function (_Component) {
         babelHelpers.inherits(AlertManager, _Component);
 
         function AlertManager() {
           babelHelpers.classCallCheck(this, AlertManager);
-          babelHelpers.get(Object.getPrototypeOf(AlertManager.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(AlertManager).apply(this, arguments));
         }
 
         babelHelpers.createClass(AlertManager, [{
@@ -16933,13 +17419,6 @@ System.register('flarum/components/AlertManager', ['flarum/Component', 'flarum/c
               })
             );
           }
-
-          /**
-           * Show an Alert in the alerts area.
-           *
-           * @param {Alert} component
-           * @public
-           */
         }, {
           key: 'show',
           value: function show(component) {
@@ -16952,13 +17431,6 @@ System.register('flarum/components/AlertManager', ['flarum/Component', 'flarum/c
             this.components.push(component);
             m.redraw();
           }
-
-          /**
-           * Dismiss an alert.
-           *
-           * @param {Alert} component
-           * @public
-           */
         }, {
           key: 'dismiss',
           value: function dismiss(component) {
@@ -16969,12 +17441,6 @@ System.register('flarum/components/AlertManager', ['flarum/Component', 'flarum/c
               m.redraw();
             }
           }
-
-          /**
-           * Clear all alerts.
-           *
-           * @public
-           */
         }, {
           key: 'clear',
           value: function clear() {
@@ -16983,40 +17449,42 @@ System.register('flarum/components/AlertManager', ['flarum/Component', 'flarum/c
           }
         }]);
         return AlertManager;
-      })(Component);
+      }(Component);
 
       _export('default', AlertManager);
     }
   };
 });;
-System.register('flarum/components/AppearancePage', ['flarum/Component', 'flarum/components/Button', 'flarum/components/Switch', 'flarum/components/EditCustomCssModal', 'flarum/utils/saveSettings'], function (_export) {
-  'use strict';
+'use strict';
 
-  var Component, Button, Switch, EditCustomCssModal, saveSettings, AppearancePage;
+System.register('flarum/components/AppearancePage', ['flarum/components/Page', 'flarum/components/Button', 'flarum/components/Switch', 'flarum/components/EditCustomCssModal', 'flarum/utils/saveSettings'], function (_export, _context) {
+  var Page, Button, Switch, EditCustomCssModal, saveSettings, AppearancePage;
   return {
-    setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+    setters: [function (_flarumComponentsPage) {
+      Page = _flarumComponentsPage.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumComponentsSwitch) {
-      Switch = _flarumComponentsSwitch['default'];
+      Switch = _flarumComponentsSwitch.default;
     }, function (_flarumComponentsEditCustomCssModal) {
-      EditCustomCssModal = _flarumComponentsEditCustomCssModal['default'];
+      EditCustomCssModal = _flarumComponentsEditCustomCssModal.default;
     }, function (_flarumUtilsSaveSettings) {
-      saveSettings = _flarumUtilsSaveSettings['default'];
+      saveSettings = _flarumUtilsSaveSettings.default;
     }],
     execute: function () {
-      AppearancePage = (function (_Component) {
-        babelHelpers.inherits(AppearancePage, _Component);
+      AppearancePage = function (_Page) {
+        babelHelpers.inherits(AppearancePage, _Page);
 
         function AppearancePage() {
           babelHelpers.classCallCheck(this, AppearancePage);
-          babelHelpers.get(Object.getPrototypeOf(AppearancePage.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(AppearancePage).apply(this, arguments));
         }
 
         babelHelpers.createClass(AppearancePage, [{
           key: 'init',
           value: function init() {
+            babelHelpers.get(Object.getPrototypeOf(AppearancePage.prototype), 'init', this).call(this);
+
             this.primaryColor = m.prop(app.settings.theme_primary_color);
             this.secondaryColor = m.prop(app.settings.theme_secondary_color);
             this.darkMode = m.prop(app.settings.theme_dark_mode === '1');
@@ -17120,61 +17588,42 @@ System.register('flarum/components/AppearancePage', ['flarum/Component', 'flarum
           }
         }]);
         return AppearancePage;
-      })(Component);
+      }(Page);
 
       _export('default', AppearancePage);
     }
   };
 });;
-System.register('flarum/components/Badge', ['flarum/Component', 'flarum/helpers/icon', 'flarum/utils/extract'], function (_export) {
+'use strict';
 
-  /**
-   * The `Badge` component represents a user/discussion badge, indicating some
-   * status (e.g. a discussion is stickied, a user is an admin).
-   *
-   * A badge may have the following special props:
-   *
-   * - `type` The type of badge this is. This will be used to give the badge a
-   *   class name of `Badge--{type}`.
-   * - `icon` The name of an icon to show inside the badge.
-   * - `label`
-   *
-   * All other props will be assigned as attributes on the badge element.
-   */
-  'use strict';
-
+System.register('flarum/components/Badge', ['flarum/Component', 'flarum/helpers/icon', 'flarum/utils/extract'], function (_export, _context) {
   var Component, icon, extract, Badge;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon['default'];
+      icon = _flarumHelpersIcon.default;
     }, function (_flarumUtilsExtract) {
-      extract = _flarumUtilsExtract['default'];
+      extract = _flarumUtilsExtract.default;
     }],
     execute: function () {
-      Badge = (function (_Component) {
+      Badge = function (_Component) {
         babelHelpers.inherits(Badge, _Component);
 
         function Badge() {
           babelHelpers.classCallCheck(this, Badge);
-          babelHelpers.get(Object.getPrototypeOf(Badge.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Badge).apply(this, arguments));
         }
 
         babelHelpers.createClass(Badge, [{
           key: 'view',
           value: function view() {
-            var attrs = babelHelpers._extends({}, this.props);
+            var attrs = babelHelpers.extends({}, this.props);
             var type = extract(attrs, 'type');
             var iconName = extract(attrs, 'icon');
 
             attrs.className = 'Badge ' + (type ? 'Badge--' + type : '') + ' ' + (attrs.className || '');
             attrs.title = extract(attrs, 'label') || '';
-
-            // Give the badge a unique key so that when badges are displayed together,
-            // and then one is added/removed, Mithril will correctly redraw the series
-            // of badges.
-            attrs.key = attrs.type;
 
             return m(
               'span',
@@ -17191,45 +17640,47 @@ System.register('flarum/components/Badge', ['flarum/Component', 'flarum/helpers/
           }
         }]);
         return Badge;
-      })(Component);
+      }(Component);
 
       _export('default', Badge);
     }
   };
 });;
-System.register('flarum/components/BasicsPage', ['flarum/Component', 'flarum/components/FieldSet', 'flarum/components/Select', 'flarum/components/Button', 'flarum/components/Alert', 'flarum/utils/saveSettings', 'flarum/utils/ItemList'], function (_export) {
-  'use strict';
+'use strict';
 
-  var Component, FieldSet, Select, Button, Alert, saveSettings, ItemList, BasicsPage;
+System.register('flarum/components/BasicsPage', ['flarum/components/Page', 'flarum/components/FieldSet', 'flarum/components/Select', 'flarum/components/Button', 'flarum/components/Alert', 'flarum/utils/saveSettings', 'flarum/utils/ItemList'], function (_export, _context) {
+  var Page, FieldSet, Select, Button, Alert, saveSettings, ItemList, BasicsPage;
   return {
-    setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+    setters: [function (_flarumComponentsPage) {
+      Page = _flarumComponentsPage.default;
     }, function (_flarumComponentsFieldSet) {
-      FieldSet = _flarumComponentsFieldSet['default'];
+      FieldSet = _flarumComponentsFieldSet.default;
     }, function (_flarumComponentsSelect) {
-      Select = _flarumComponentsSelect['default'];
+      Select = _flarumComponentsSelect.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumComponentsAlert) {
-      Alert = _flarumComponentsAlert['default'];
+      Alert = _flarumComponentsAlert.default;
     }, function (_flarumUtilsSaveSettings) {
-      saveSettings = _flarumUtilsSaveSettings['default'];
+      saveSettings = _flarumUtilsSaveSettings.default;
     }, function (_flarumUtilsItemList) {
-      ItemList = _flarumUtilsItemList['default'];
+      ItemList = _flarumUtilsItemList.default;
     }],
     execute: function () {
-      BasicsPage = (function (_Component) {
-        babelHelpers.inherits(BasicsPage, _Component);
+      BasicsPage = function (_Page) {
+        babelHelpers.inherits(BasicsPage, _Page);
 
         function BasicsPage() {
           babelHelpers.classCallCheck(this, BasicsPage);
-          babelHelpers.get(Object.getPrototypeOf(BasicsPage.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(BasicsPage).apply(this, arguments));
         }
 
         babelHelpers.createClass(BasicsPage, [{
           key: 'init',
           value: function init() {
-            var _this = this;
+            var _this2 = this;
+
+            babelHelpers.get(Object.getPrototypeOf(BasicsPage.prototype), 'init', this).call(this);
 
             this.loading = false;
 
@@ -17238,7 +17689,7 @@ System.register('flarum/components/BasicsPage', ['flarum/Component', 'flarum/com
 
             var settings = app.settings;
             this.fields.forEach(function (key) {
-              return _this.values[key] = m.prop(settings[key]);
+              return _this2.values[key] = m.prop(settings[key]);
             });
 
             this.localeOptions = {};
@@ -17250,7 +17701,7 @@ System.register('flarum/components/BasicsPage', ['flarum/Component', 'flarum/com
         }, {
           key: 'view',
           value: function view() {
-            var _this2 = this;
+            var _this3 = this;
 
             return m(
               'div',
@@ -17293,7 +17744,7 @@ System.register('flarum/components/BasicsPage', ['flarum/Component', 'flarum/com
                       return m(
                         'label',
                         { className: 'checkbox' },
-                        m('input', { type: 'radio', name: 'homePage', value: path, checked: _this2.values.default_route() === path, onclick: m.withAttr('value', _this2.values.default_route) }),
+                        m('input', { type: 'radio', name: 'homePage', value: path, checked: _this3.values.default_route() === path, onclick: m.withAttr('value', _this3.values.default_route) }),
                         label
                       );
                     })]
@@ -17326,20 +17777,12 @@ System.register('flarum/components/BasicsPage', ['flarum/Component', 'flarum/com
         }, {
           key: 'changed',
           value: function changed() {
-            var _this3 = this;
+            var _this4 = this;
 
             return this.fields.some(function (key) {
-              return _this3.values[key]() !== app.settings[key];
+              return _this4.values[key]() !== app.settings[key];
             });
           }
-
-          /**
-           * Build a list of options for the default homepage. Each option must be an
-           * object with `path` and `label` properties.
-           *
-           * @return {ItemList}
-           * @public
-           */
         }, {
           key: 'homePageItems',
           value: function homePageItems() {
@@ -17355,7 +17798,7 @@ System.register('flarum/components/BasicsPage', ['flarum/Component', 'flarum/com
         }, {
           key: 'onsubmit',
           value: function onsubmit(e) {
-            var _this4 = this;
+            var _this5 = this;
 
             e.preventDefault();
 
@@ -17367,68 +17810,51 @@ System.register('flarum/components/BasicsPage', ['flarum/Component', 'flarum/com
             var settings = {};
 
             this.fields.forEach(function (key) {
-              return settings[key] = _this4.values[key]();
+              return settings[key] = _this5.values[key]();
             });
 
             saveSettings(settings).then(function () {
-              app.alerts.show(_this4.successAlert = new Alert({ type: 'success', children: app.translator.trans('core.admin.basics.saved_message') }));
-            })['finally'](function () {
-              _this4.loading = false;
+              app.alerts.show(_this5.successAlert = new Alert({ type: 'success', children: app.translator.trans('core.admin.basics.saved_message') }));
+            }).catch(function () {}).then(function () {
+              _this5.loading = false;
               m.redraw();
             });
           }
         }]);
         return BasicsPage;
-      })(Component);
+      }(Page);
 
       _export('default', BasicsPage);
     }
   };
 });;
-System.register('flarum/components/Button', ['flarum/Component', 'flarum/helpers/icon', 'flarum/utils/extract', 'flarum/components/LoadingIndicator'], function (_export) {
+'use strict';
 
-  /**
-   * The `Button` component defines an element which, when clicked, performs an
-   * action. The button may have the following special props:
-   *
-   * - `icon` The name of the icon class. If specified, the button will be given a
-   *   'has-icon' class name.
-   * - `disabled` Whether or not the button is disabled. If truthy, the button
-   *   will be given a 'disabled' class name, and any `onclick` handler will be
-   *   removed.
-   * - `loading` Whether or not the button should be in a disabled loading state.
-   *
-   * All other props will be assigned as attributes on the button element.
-   *
-   * Note that a Button has no default class names. This is because a Button can
-   * be used to represent any generic clickable control, like a menu item.
-   */
-  'use strict';
-
+System.register('flarum/components/Button', ['flarum/Component', 'flarum/helpers/icon', 'flarum/utils/extract', 'flarum/components/LoadingIndicator'], function (_export, _context) {
   var Component, icon, extract, LoadingIndicator, Button;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon['default'];
+      icon = _flarumHelpersIcon.default;
     }, function (_flarumUtilsExtract) {
-      extract = _flarumUtilsExtract['default'];
+      extract = _flarumUtilsExtract.default;
     }, function (_flarumComponentsLoadingIndicator) {
-      LoadingIndicator = _flarumComponentsLoadingIndicator['default'];
+      LoadingIndicator = _flarumComponentsLoadingIndicator.default;
     }],
     execute: function () {
-      Button = (function (_Component) {
+      Button = function (_Component) {
         babelHelpers.inherits(Button, _Component);
 
         function Button() {
           babelHelpers.classCallCheck(this, Button);
-          babelHelpers.get(Object.getPrototypeOf(Button.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Button).apply(this, arguments));
         }
 
         babelHelpers.createClass(Button, [{
           key: 'view',
           value: function view() {
-            var attrs = babelHelpers._extends({}, this.props);
+            var attrs = babelHelpers.extends({}, this.props);
 
             delete attrs.children;
 
@@ -17450,13 +17876,6 @@ System.register('flarum/components/Button', ['flarum/Component', 'flarum/helpers
               this.getButtonContent()
             );
           }
-
-          /**
-           * Get the template for the button's content.
-           *
-           * @return {*}
-           * @protected
-           */
         }, {
           key: 'getButtonContent',
           value: function getButtonContent() {
@@ -17470,43 +17889,31 @@ System.register('flarum/components/Button', ['flarum/Component', 'flarum/helpers
           }
         }]);
         return Button;
-      })(Component);
+      }(Component);
 
       _export('default', Button);
     }
   };
 });;
-System.register('flarum/components/Checkbox', ['flarum/Component', 'flarum/components/LoadingIndicator', 'flarum/helpers/icon'], function (_export) {
+'use strict';
 
-  /**
-   * The `Checkbox` component defines a checkbox input.
-   *
-   * ### Props
-   *
-   * - `state` Whether or not the checkbox is checked.
-   * - `className` The class name for the root element.
-   * - `disabled` Whether or not the checkbox is disabled.
-   * - `onchange` A callback to run when the checkbox is checked/unchecked.
-   * - `children` A text label to display next to the checkbox.
-   */
-  'use strict';
-
+System.register('flarum/components/Checkbox', ['flarum/Component', 'flarum/components/LoadingIndicator', 'flarum/helpers/icon'], function (_export, _context) {
   var Component, LoadingIndicator, icon, Checkbox;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumComponentsLoadingIndicator) {
-      LoadingIndicator = _flarumComponentsLoadingIndicator['default'];
+      LoadingIndicator = _flarumComponentsLoadingIndicator.default;
     }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon['default'];
+      icon = _flarumHelpersIcon.default;
     }],
     execute: function () {
-      Checkbox = (function (_Component) {
+      Checkbox = function (_Component) {
         babelHelpers.inherits(Checkbox, _Component);
 
         function Checkbox() {
           babelHelpers.classCallCheck(this, Checkbox);
-          babelHelpers.get(Object.getPrototypeOf(Checkbox.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Checkbox).apply(this, arguments));
         }
 
         babelHelpers.createClass(Checkbox, [{
@@ -17542,25 +17949,11 @@ System.register('flarum/components/Checkbox', ['flarum/Component', 'flarum/compo
               this.props.children
             );
           }
-
-          /**
-           * Get the template for the checkbox's display (tick/cross icon).
-           *
-           * @return {*}
-           * @protected
-           */
         }, {
           key: 'getDisplay',
           value: function getDisplay() {
             return this.loading ? LoadingIndicator.component({ size: 'tiny' }) : icon(this.props.state ? 'check' : 'times');
           }
-
-          /**
-           * Run a callback when the state of the checkbox is changed.
-           *
-           * @param {Boolean} checked
-           * @protected
-           */
         }, {
           key: 'onchange',
           value: function onchange(checked) {
@@ -17568,27 +17961,27 @@ System.register('flarum/components/Checkbox', ['flarum/Component', 'flarum/compo
           }
         }]);
         return Checkbox;
-      })(Component);
+      }(Component);
 
       _export('default', Checkbox);
     }
   };
 });;
-System.register("flarum/components/DashboardPage", ["flarum/Component"], function (_export) {
-  "use strict";
+"use strict";
 
-  var Component, DashboardPage;
+System.register("flarum/components/DashboardPage", ["flarum/components/Page"], function (_export, _context) {
+  var Page, DashboardPage;
   return {
-    setters: [function (_flarumComponent) {
-      Component = _flarumComponent["default"];
+    setters: [function (_flarumComponentsPage) {
+      Page = _flarumComponentsPage.default;
     }],
     execute: function () {
-      DashboardPage = (function (_Component) {
-        babelHelpers.inherits(DashboardPage, _Component);
+      DashboardPage = function (_Page) {
+        babelHelpers.inherits(DashboardPage, _Page);
 
         function DashboardPage() {
           babelHelpers.classCallCheck(this, DashboardPage);
-          babelHelpers.get(Object.getPrototypeOf(DashboardPage.prototype), "constructor", this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(DashboardPage).apply(this, arguments));
         }
 
         babelHelpers.createClass(DashboardPage, [{
@@ -17603,7 +17996,7 @@ System.register("flarum/components/DashboardPage", ["flarum/Component"], functio
                 m(
                   "h2",
                   null,
-                  "Welcome to Flarum Beta"
+                  app.translator.trans('core.admin.dashboard.welcome_text')
                 ),
                 m(
                   "p",
@@ -17653,48 +18046,31 @@ System.register("flarum/components/DashboardPage", ["flarum/Component"], functio
           }
         }]);
         return DashboardPage;
-      })(Component);
+      }(Page);
 
       _export("default", DashboardPage);
     }
   };
 });;
-System.register('flarum/components/Dropdown', ['flarum/Component', 'flarum/helpers/icon', 'flarum/helpers/listItems'], function (_export) {
+'use strict';
 
-  /**
-   * The `Dropdown` component displays a button which, when clicked, shows a
-   * dropdown menu beneath it.
-   *
-   * ### Props
-   *
-   * - `buttonClassName` A class name to apply to the dropdown toggle button.
-   * - `menuClassName` A class name to apply to the dropdown menu.
-   * - `icon` The name of an icon to show in the dropdown toggle button.
-   * - `caretIcon` The name of an icon to show on the right of the button.
-   * - `label` The label of the dropdown toggle button. Defaults to 'Controls'.
-   * - `onhide`
-   * - `onshow`
-   *
-   * The children will be displayed as a list inside of the dropdown menu.
-   */
-  'use strict';
-
+System.register('flarum/components/Dropdown', ['flarum/Component', 'flarum/helpers/icon', 'flarum/helpers/listItems'], function (_export, _context) {
   var Component, icon, listItems, Dropdown;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon['default'];
+      icon = _flarumHelpersIcon.default;
     }, function (_flarumHelpersListItems) {
-      listItems = _flarumHelpersListItems['default'];
+      listItems = _flarumHelpersListItems.default;
     }],
     execute: function () {
-      Dropdown = (function (_Component) {
+      Dropdown = function (_Component) {
         babelHelpers.inherits(Dropdown, _Component);
 
         function Dropdown() {
           babelHelpers.classCallCheck(this, Dropdown);
-          babelHelpers.get(Object.getPrototypeOf(Dropdown.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Dropdown).apply(this, arguments));
         }
 
         babelHelpers.createClass(Dropdown, [{
@@ -17712,7 +18088,7 @@ System.register('flarum/components/Dropdown', ['flarum/Component', 'flarum/helpe
         }, {
           key: 'config',
           value: function config(isInitialized) {
-            var _this = this;
+            var _this2 = this;
 
             if (isInitialized) return;
 
@@ -17720,30 +18096,27 @@ System.register('flarum/components/Dropdown', ['flarum/Component', 'flarum/helpe
             // bottom of the viewport. If it does, we will apply class to make it show
             // above the toggle button instead of below it.
             this.$().on('shown.bs.dropdown', function () {
-              var $menu = _this.$('.Dropdown-menu').removeClass('Dropdown-menu--top');
+              var $menu = _this2.$('.Dropdown-menu');
+              var isRight = $menu.hasClass('Dropdown-menu--right');
+              $menu.removeClass('Dropdown-menu--top Dropdown-menu--right');
 
               $menu.toggleClass('Dropdown-menu--top', $menu.offset().top + $menu.height() > $(window).scrollTop() + $(window).height());
 
-              if (_this.props.onshow) {
-                _this.props.onshow();
+              $menu.toggleClass('Dropdown-menu--right', isRight || $menu.offset().left + $menu.width() > $(window).scrollLeft() + $(window).width());
+
+              if (_this2.props.onshow) {
+                _this2.props.onshow();
                 m.redraw();
               }
             });
 
             this.$().on('hidden.bs.dropdown', function () {
-              if (_this.props.onhide) {
-                _this.props.onhide();
+              if (_this2.props.onhide) {
+                _this2.props.onhide();
                 m.redraw();
               }
             });
           }
-
-          /**
-           * Get the template for the button.
-           *
-           * @return {*}
-           * @protected
-           */
         }, {
           key: 'getButton',
           value: function getButton() {
@@ -17756,13 +18129,6 @@ System.register('flarum/components/Dropdown', ['flarum/Component', 'flarum/helpe
               this.getButtonContent()
             );
           }
-
-          /**
-           * Get the template for the button's content.
-           *
-           * @return {*}
-           * @protected
-           */
         }, {
           key: 'getButtonContent',
           value: function getButtonContent() {
@@ -17794,31 +18160,31 @@ System.register('flarum/components/Dropdown', ['flarum/Component', 'flarum/helpe
           }
         }]);
         return Dropdown;
-      })(Component);
+      }(Component);
 
       _export('default', Dropdown);
     }
   };
 });;
-System.register('flarum/components/EditCustomCssModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/utils/saveSettings'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/components/EditCustomCssModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/utils/saveSettings'], function (_export, _context) {
   var Modal, Button, saveSettings, EditCustomCssModal;
   return {
     setters: [function (_flarumComponentsModal) {
-      Modal = _flarumComponentsModal['default'];
+      Modal = _flarumComponentsModal.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumUtilsSaveSettings) {
-      saveSettings = _flarumUtilsSaveSettings['default'];
+      saveSettings = _flarumUtilsSaveSettings.default;
     }],
     execute: function () {
-      EditCustomCssModal = (function (_Modal) {
+      EditCustomCssModal = function (_Modal) {
         babelHelpers.inherits(EditCustomCssModal, _Modal);
 
         function EditCustomCssModal() {
           babelHelpers.classCallCheck(this, EditCustomCssModal);
-          babelHelpers.get(Object.getPrototypeOf(EditCustomCssModal.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(EditCustomCssModal).apply(this, arguments));
         }
 
         babelHelpers.createClass(EditCustomCssModal, [{
@@ -17834,7 +18200,7 @@ System.register('flarum/components/EditCustomCssModal', ['flarum/components/Moda
         }, {
           key: 'title',
           value: function title() {
-            return 'Edit Custom CSS';
+            return app.translator.trans('core.admin.edit_css.title');
           }
         }, {
           key: 'content',
@@ -17845,13 +18211,7 @@ System.register('flarum/components/EditCustomCssModal', ['flarum/components/Moda
               m(
                 'p',
                 null,
-                'Customize your forum\'s appearance by adding your own LESS/CSS code to be applied on top of Flarum\'s default styles. ',
-                m(
-                  'a',
-                  { href: 'http://flarum.org/docs/extend/themes/' },
-                  'Read the documentation'
-                ),
-                ' for more information.'
+                app.translator.trans('core.admin.edit_css.customize_text', { a: m('a', { href: 'https://github.com/flarum/core/tree/master/less', target: '_blank' }) })
               ),
               m(
                 'div',
@@ -17867,7 +18227,7 @@ System.register('flarum/components/EditCustomCssModal', ['flarum/components/Moda
                   Button.component({
                     className: 'Button Button--primary',
                     type: 'submit',
-                    children: 'Save Changes',
+                    children: app.translator.trans('core.admin.edit_css.submit_button'),
                     loading: this.loading
                   })
                 )
@@ -17889,38 +18249,33 @@ System.register('flarum/components/EditCustomCssModal', ['flarum/components/Moda
           }
         }]);
         return EditCustomCssModal;
-      })(Modal);
+      }(Modal);
 
       _export('default', EditCustomCssModal);
     }
   };
 });;
-System.register('flarum/components/EditGroupModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/components/Badge', 'flarum/models/Group'], function (_export) {
+'use strict';
 
-  /**
-   * The `EditGroupModal` component shows a modal dialog which allows the user
-   * to create or edit a group.
-   */
-  'use strict';
-
+System.register('flarum/components/EditGroupModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/components/Badge', 'flarum/models/Group'], function (_export, _context) {
   var Modal, Button, Badge, Group, EditGroupModal;
   return {
     setters: [function (_flarumComponentsModal) {
-      Modal = _flarumComponentsModal['default'];
+      Modal = _flarumComponentsModal.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumComponentsBadge) {
-      Badge = _flarumComponentsBadge['default'];
+      Badge = _flarumComponentsBadge.default;
     }, function (_flarumModelsGroup) {
-      Group = _flarumModelsGroup['default'];
+      Group = _flarumModelsGroup.default;
     }],
     execute: function () {
-      EditGroupModal = (function (_Modal) {
+      EditGroupModal = function (_Modal) {
         babelHelpers.inherits(EditGroupModal, _Modal);
 
         function EditGroupModal() {
           babelHelpers.classCallCheck(this, EditGroupModal);
-          babelHelpers.get(Object.getPrototypeOf(EditGroupModal.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(EditGroupModal).apply(this, arguments));
         }
 
         babelHelpers.createClass(EditGroupModal, [{
@@ -18016,7 +18371,7 @@ System.register('flarum/components/EditGroupModal', ['flarum/components/Modal', 
         }, {
           key: 'onsubmit',
           value: function onsubmit(e) {
-            var _this = this;
+            var _this2 = this;
 
             e.preventDefault();
 
@@ -18027,8 +18382,8 @@ System.register('flarum/components/EditGroupModal', ['flarum/components/Modal', 
               namePlural: this.namePlural(),
               color: this.color(),
               icon: this.icon()
-            }, { errorHandler: this.onerror.bind(this) }).then(this.hide.bind(this))['catch'](function () {
-              _this.loading = false;
+            }, { errorHandler: this.onerror.bind(this) }).then(this.hide.bind(this)).catch(function () {
+              _this2.loading = false;
               m.redraw();
             });
           }
@@ -18036,7 +18391,7 @@ System.register('flarum/components/EditGroupModal', ['flarum/components/Modal', 
           key: 'deleteGroup',
           value: function deleteGroup() {
             if (confirm(app.translator.trans('core.admin.edit_group.delete_confirmation'))) {
-              this.group['delete']().then(function () {
+              this.group.delete().then(function () {
                 return m.redraw();
               });
               this.hide();
@@ -18044,55 +18399,51 @@ System.register('flarum/components/EditGroupModal', ['flarum/components/Modal', 
           }
         }]);
         return EditGroupModal;
-      })(Modal);
+      }(Modal);
 
       _export('default', EditGroupModal);
     }
   };
 });;
-System.register('flarum/components/ExtensionsPage', ['flarum/Component', 'flarum/components/LinkButton', 'flarum/components/Button', 'flarum/components/Dropdown', 'flarum/components/Separator', 'flarum/components/AddExtensionModal', 'flarum/components/LoadingModal', 'flarum/utils/ItemList', 'flarum/helpers/icon', 'flarum/helpers/listItems'], function (_export) {
-  'use strict';
+'use strict';
 
-  var Component, LinkButton, Button, Dropdown, Separator, AddExtensionModal, LoadingModal, ItemList, icon, listItems, ExtensionsPage;
+System.register('flarum/components/ExtensionsPage', ['flarum/components/Page', 'flarum/components/LinkButton', 'flarum/components/Button', 'flarum/components/Dropdown', 'flarum/components/Separator', 'flarum/components/AddExtensionModal', 'flarum/components/LoadingModal', 'flarum/utils/ItemList', 'flarum/helpers/icon', 'flarum/helpers/listItems'], function (_export, _context) {
+  var Page, LinkButton, Button, Dropdown, Separator, AddExtensionModal, LoadingModal, ItemList, icon, listItems, ExtensionsPage;
   return {
-    setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+    setters: [function (_flarumComponentsPage) {
+      Page = _flarumComponentsPage.default;
     }, function (_flarumComponentsLinkButton) {
-      LinkButton = _flarumComponentsLinkButton['default'];
+      LinkButton = _flarumComponentsLinkButton.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumComponentsDropdown) {
-      Dropdown = _flarumComponentsDropdown['default'];
+      Dropdown = _flarumComponentsDropdown.default;
     }, function (_flarumComponentsSeparator) {
-      Separator = _flarumComponentsSeparator['default'];
+      Separator = _flarumComponentsSeparator.default;
     }, function (_flarumComponentsAddExtensionModal) {
-      AddExtensionModal = _flarumComponentsAddExtensionModal['default'];
+      AddExtensionModal = _flarumComponentsAddExtensionModal.default;
     }, function (_flarumComponentsLoadingModal) {
-      LoadingModal = _flarumComponentsLoadingModal['default'];
+      LoadingModal = _flarumComponentsLoadingModal.default;
     }, function (_flarumUtilsItemList) {
-      ItemList = _flarumUtilsItemList['default'];
+      ItemList = _flarumUtilsItemList.default;
     }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon['default'];
+      icon = _flarumHelpersIcon.default;
     }, function (_flarumHelpersListItems) {
-      listItems = _flarumHelpersListItems['default'];
+      listItems = _flarumHelpersListItems.default;
     }],
     execute: function () {
-      ExtensionsPage = (function (_Component) {
-        babelHelpers.inherits(ExtensionsPage, _Component);
+      ExtensionsPage = function (_Page) {
+        babelHelpers.inherits(ExtensionsPage, _Page);
 
         function ExtensionsPage() {
           babelHelpers.classCallCheck(this, ExtensionsPage);
-          babelHelpers.get(Object.getPrototypeOf(ExtensionsPage.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(ExtensionsPage).apply(this, arguments));
         }
 
         babelHelpers.createClass(ExtensionsPage, [{
           key: 'view',
           value: function view() {
-            var _this = this;
-
-            var extensions = Object.keys(app.extensions).map(function (id) {
-              return app.extensions[id];
-            });
+            var _this2 = this;
 
             return m(
               'div',
@@ -18122,21 +18473,20 @@ System.register('flarum/components/ExtensionsPage', ['flarum/Component', 'flarum
                   m(
                     'ul',
                     { className: 'ExtensionList' },
-                    extensions.sort(function (a, b) {
-                      return a.extra['flarum-extension'].title.localeCompare(b.extra['flarum-extension'].title);
-                    }).map(function (extension) {
-                      var controls = _this.controlItems(extension.id).toArray();
+                    Object.keys(app.extensions).map(function (id) {
+                      var extension = app.extensions[id];
+                      var controls = _this2.controlItems(extension.id).toArray();
 
                       return m(
                         'li',
-                        { className: 'ExtensionListItem ' + (!_this.isEnabled(extension.id) ? 'disabled' : '') },
+                        { className: 'ExtensionListItem ' + (!_this2.isEnabled(extension.id) ? 'disabled' : '') },
                         m(
                           'div',
                           { className: 'ExtensionListItem-content' },
                           m(
                             'span',
-                            { className: 'ExtensionListItem-icon ExtensionIcon', style: extension.extra['flarum-extension'].icon },
-                            extension.extra['flarum-extension'].icon ? icon(extension.extra['flarum-extension'].icon.name) : ''
+                            { className: 'ExtensionListItem-icon ExtensionIcon', style: extension.icon },
+                            extension.icon ? icon(extension.icon.name) : ''
                           ),
                           controls.length ? m(
                             Dropdown,
@@ -18150,7 +18500,7 @@ System.register('flarum/components/ExtensionsPage', ['flarum/Component', 'flarum
                           m(
                             'label',
                             { className: 'ExtensionListItem-title' },
-                            m('input', { type: 'checkbox', checked: _this.isEnabled(extension.id), onclick: _this.toggle.bind(_this, extension.id) }),
+                            m('input', { type: 'checkbox', checked: _this2.isEnabled(extension.id), onclick: _this2.toggle.bind(_this2, extension.id) }),
                             ' ',
                             ' ',
                             extension.extra['flarum-extension'].title
@@ -18226,39 +18576,29 @@ System.register('flarum/components/ExtensionsPage', ['flarum/Component', 'flarum
           }
         }]);
         return ExtensionsPage;
-      })(Component);
+      }(Page);
 
       _export('default', ExtensionsPage);
     }
   };
 });;
-System.register('flarum/components/FieldSet', ['flarum/Component', 'flarum/helpers/listItems'], function (_export) {
+'use strict';
 
-  /**
-   * The `FieldSet` component defines a collection of fields, displayed in a list
-   * underneath a title. Accepted properties are:
-   *
-   * - `className` The class name for the fieldset.
-   * - `label` The title of this group of fields.
-   *
-   * The children should be an array of items to show in the fieldset.
-   */
-  'use strict';
-
+System.register('flarum/components/FieldSet', ['flarum/Component', 'flarum/helpers/listItems'], function (_export, _context) {
   var Component, listItems, FieldSet;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumHelpersListItems) {
-      listItems = _flarumHelpersListItems['default'];
+      listItems = _flarumHelpersListItems.default;
     }],
     execute: function () {
-      FieldSet = (function (_Component) {
+      FieldSet = function (_Component) {
         babelHelpers.inherits(FieldSet, _Component);
 
         function FieldSet() {
           babelHelpers.classCallCheck(this, FieldSet);
-          babelHelpers.get(Object.getPrototypeOf(FieldSet.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(FieldSet).apply(this, arguments));
         }
 
         babelHelpers.createClass(FieldSet, [{
@@ -18281,27 +18621,27 @@ System.register('flarum/components/FieldSet', ['flarum/Component', 'flarum/helpe
           }
         }]);
         return FieldSet;
-      })(Component);
+      }(Component);
 
       _export('default', FieldSet);
     }
   };
 });;
-System.register('flarum/components/GroupBadge', ['flarum/components/Badge'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/components/GroupBadge', ['flarum/components/Badge'], function (_export, _context) {
   var Badge, GroupBadge;
   return {
     setters: [function (_flarumComponentsBadge) {
-      Badge = _flarumComponentsBadge['default'];
+      Badge = _flarumComponentsBadge.default;
     }],
     execute: function () {
-      GroupBadge = (function (_Badge) {
+      GroupBadge = function (_Badge) {
         babelHelpers.inherits(GroupBadge, _Badge);
 
         function GroupBadge() {
           babelHelpers.classCallCheck(this, GroupBadge);
-          babelHelpers.get(Object.getPrototypeOf(GroupBadge.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(GroupBadge).apply(this, arguments));
         }
 
         babelHelpers.createClass(GroupBadge, null, [{
@@ -18320,36 +18660,31 @@ System.register('flarum/components/GroupBadge', ['flarum/components/Badge'], fun
           }
         }]);
         return GroupBadge;
-      })(Badge);
+      }(Badge);
 
       _export('default', GroupBadge);
     }
   };
 });;
-System.register('flarum/components/HeaderPrimary', ['flarum/Component', 'flarum/utils/ItemList', 'flarum/helpers/listItems'], function (_export) {
+'use strict';
 
-  /**
-   * The `HeaderPrimary` component displays primary header controls. On the
-   * default skin, these are shown just to the right of the forum title.
-   */
-  'use strict';
-
+System.register('flarum/components/HeaderPrimary', ['flarum/Component', 'flarum/utils/ItemList', 'flarum/helpers/listItems'], function (_export, _context) {
   var Component, ItemList, listItems, HeaderPrimary;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumUtilsItemList) {
-      ItemList = _flarumUtilsItemList['default'];
+      ItemList = _flarumUtilsItemList.default;
     }, function (_flarumHelpersListItems) {
-      listItems = _flarumHelpersListItems['default'];
+      listItems = _flarumHelpersListItems.default;
     }],
     execute: function () {
-      HeaderPrimary = (function (_Component) {
+      HeaderPrimary = function (_Component) {
         babelHelpers.inherits(HeaderPrimary, _Component);
 
         function HeaderPrimary() {
           babelHelpers.classCallCheck(this, HeaderPrimary);
-          babelHelpers.get(Object.getPrototypeOf(HeaderPrimary.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(HeaderPrimary).apply(this, arguments));
         }
 
         babelHelpers.createClass(HeaderPrimary, [{
@@ -18361,12 +18696,6 @@ System.register('flarum/components/HeaderPrimary', ['flarum/Component', 'flarum/
               listItems(this.items().toArray())
             );
           }
-
-          /**
-           * Build an item list for the controls.
-           *
-           * @return {ItemList}
-           */
         }, {
           key: 'items',
           value: function items() {
@@ -18374,37 +18703,33 @@ System.register('flarum/components/HeaderPrimary', ['flarum/Component', 'flarum/
           }
         }]);
         return HeaderPrimary;
-      })(Component);
+      }(Component);
 
       _export('default', HeaderPrimary);
     }
   };
 });;
-System.register('flarum/components/HeaderSecondary', ['flarum/Component', 'flarum/components/SessionDropdown', 'flarum/utils/ItemList', 'flarum/helpers/listItems'], function (_export) {
+'use strict';
 
-  /**
-   * The `HeaderSecondary` component displays secondary header controls.
-   */
-  'use strict';
-
+System.register('flarum/components/HeaderSecondary', ['flarum/Component', 'flarum/components/SessionDropdown', 'flarum/utils/ItemList', 'flarum/helpers/listItems'], function (_export, _context) {
   var Component, SessionDropdown, ItemList, listItems, HeaderSecondary;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumComponentsSessionDropdown) {
-      SessionDropdown = _flarumComponentsSessionDropdown['default'];
+      SessionDropdown = _flarumComponentsSessionDropdown.default;
     }, function (_flarumUtilsItemList) {
-      ItemList = _flarumUtilsItemList['default'];
+      ItemList = _flarumUtilsItemList.default;
     }, function (_flarumHelpersListItems) {
-      listItems = _flarumHelpersListItems['default'];
+      listItems = _flarumHelpersListItems.default;
     }],
     execute: function () {
-      HeaderSecondary = (function (_Component) {
+      HeaderSecondary = function (_Component) {
         babelHelpers.inherits(HeaderSecondary, _Component);
 
         function HeaderSecondary() {
           babelHelpers.classCallCheck(this, HeaderSecondary);
-          babelHelpers.get(Object.getPrototypeOf(HeaderSecondary.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(HeaderSecondary).apply(this, arguments));
         }
 
         babelHelpers.createClass(HeaderSecondary, [{
@@ -18416,12 +18741,6 @@ System.register('flarum/components/HeaderSecondary', ['flarum/Component', 'flaru
               listItems(this.items().toArray())
             );
           }
-
-          /**
-           * Build an item list for the controls.
-           *
-           * @return {ItemList}
-           */
         }, {
           key: 'items',
           value: function items() {
@@ -18433,40 +18752,27 @@ System.register('flarum/components/HeaderSecondary', ['flarum/Component', 'flaru
           }
         }]);
         return HeaderSecondary;
-      })(Component);
+      }(Component);
 
       _export('default', HeaderSecondary);
     }
   };
 });;
-System.register('flarum/components/LinkButton', ['flarum/components/Button'], function (_export) {
+'use strict';
 
-  /**
-   * The `LinkButton` component defines a `Button` which links to a route.
-   *
-   * ### Props
-   *
-   * All of the props accepted by `Button`, plus:
-   *
-   * - `active` Whether or not the page that this button links to is currently
-   *   active.
-   * - `href` The URL to link to. If the current URL `m.route()` matches this,
-   *   the `active` prop will automatically be set to true.
-   */
-  'use strict';
-
+System.register('flarum/components/LinkButton', ['flarum/components/Button'], function (_export, _context) {
   var Button, LinkButton;
   return {
     setters: [function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }],
     execute: function () {
-      LinkButton = (function (_Button) {
+      LinkButton = function (_Button) {
         babelHelpers.inherits(LinkButton, _Button);
 
         function LinkButton() {
           babelHelpers.classCallCheck(this, LinkButton);
-          babelHelpers.get(Object.getPrototypeOf(LinkButton.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(LinkButton).apply(this, arguments));
         }
 
         babelHelpers.createClass(LinkButton, [{
@@ -18478,13 +18784,6 @@ System.register('flarum/components/LinkButton', ['flarum/components/Button'], fu
 
             return vdom;
           }
-
-          /**
-           * Determine whether a component with the given props is 'active'.
-           *
-           * @param {Object} props
-           * @return {Boolean}
-           */
         }], [{
           key: 'initProps',
           value: function initProps(props) {
@@ -18498,42 +18797,33 @@ System.register('flarum/components/LinkButton', ['flarum/components/Button'], fu
           }
         }]);
         return LinkButton;
-      })(Button);
+      }(Button);
 
       _export('default', LinkButton);
     }
   };
 });;
-System.register('flarum/components/LoadingIndicator', ['flarum/Component'], function (_export) {
+'use strict';
 
-  /**
-   * The `LoadingIndicator` component displays a loading spinner with spin.js. It
-   * may have the following special props:
-   *
-   * - `size` The spin.js size preset to use. Defaults to 'small'.
-   *
-   * All other props will be assigned as attributes on the element.
-   */
-  'use strict';
-
+System.register('flarum/components/LoadingIndicator', ['flarum/Component'], function (_export, _context) {
   var Component, LoadingIndicator;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }],
     execute: function () {
-      LoadingIndicator = (function (_Component) {
+      LoadingIndicator = function (_Component) {
         babelHelpers.inherits(LoadingIndicator, _Component);
 
         function LoadingIndicator() {
           babelHelpers.classCallCheck(this, LoadingIndicator);
-          babelHelpers.get(Object.getPrototypeOf(LoadingIndicator.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(LoadingIndicator).apply(this, arguments));
         }
 
         babelHelpers.createClass(LoadingIndicator, [{
           key: 'view',
           value: function view() {
-            var attrs = babelHelpers._extends({}, this.props);
+            var attrs = babelHelpers.extends({}, this.props);
 
             attrs.className = 'LoadingIndicator ' + (attrs.className || '');
             delete attrs.size;
@@ -18554,27 +18844,27 @@ System.register('flarum/components/LoadingIndicator', ['flarum/Component'], func
           }
         }]);
         return LoadingIndicator;
-      })(Component);
+      }(Component);
 
       _export('default', LoadingIndicator);
     }
   };
 });;
-System.register('flarum/components/LoadingModal', ['flarum/components/Modal'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/components/LoadingModal', ['flarum/components/Modal'], function (_export, _context) {
   var Modal, LoadingModal;
   return {
     setters: [function (_flarumComponentsModal) {
-      Modal = _flarumComponentsModal['default'];
+      Modal = _flarumComponentsModal.default;
     }],
     execute: function () {
-      LoadingModal = (function (_Modal) {
+      LoadingModal = function (_Modal) {
         babelHelpers.inherits(LoadingModal, _Modal);
 
         function LoadingModal() {
           babelHelpers.classCallCheck(this, LoadingModal);
-          babelHelpers.get(Object.getPrototypeOf(LoadingModal.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(LoadingModal).apply(this, arguments));
         }
 
         babelHelpers.createClass(LoadingModal, [{
@@ -18599,38 +18889,31 @@ System.register('flarum/components/LoadingModal', ['flarum/components/Modal'], f
           }
         }]);
         return LoadingModal;
-      })(Modal);
+      }(Modal);
 
       _export('default', LoadingModal);
     }
   };
 });;
-System.register('flarum/components/Modal', ['flarum/Component', 'flarum/components/Alert', 'flarum/components/Button'], function (_export) {
+'use strict';
 
-  /**
-   * The `Modal` component displays a modal dialog, wrapped in a form. Subclasses
-   * should implement the `className`, `title`, and `content` methods.
-   *
-   * @abstract
-   */
-  'use strict';
-
+System.register('flarum/components/Modal', ['flarum/Component', 'flarum/components/Alert', 'flarum/components/Button'], function (_export, _context) {
   var Component, Alert, Button, Modal;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumComponentsAlert) {
-      Alert = _flarumComponentsAlert['default'];
+      Alert = _flarumComponentsAlert.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }],
     execute: function () {
-      Modal = (function (_Component) {
+      Modal = function (_Component) {
         babelHelpers.inherits(Modal, _Component);
 
         function Modal() {
           babelHelpers.classCallCheck(this, Modal);
-          babelHelpers.get(Object.getPrototypeOf(Modal.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Modal).apply(this, arguments));
         }
 
         babelHelpers.createClass(Modal, [{
@@ -18687,91 +18970,42 @@ System.register('flarum/components/Modal', ['flarum/Component', 'flarum/componen
               )
             );
           }
-
-          /**
-           * Determine whether or not the modal should be dismissible via an 'x' button.
-           *
-           * @return {Boolean}
-           */
         }, {
           key: 'isDismissible',
           value: function isDismissible() {
             return true;
           }
-
-          /**
-           * Get the class name to apply to the modal.
-           *
-           * @return {String}
-           * @abstract
-           */
         }, {
           key: 'className',
           value: function className() {}
-
-          /**
-           * Get the title of the modal dialog.
-           *
-           * @return {String}
-           * @abstract
-           */
         }, {
           key: 'title',
           value: function title() {}
-
-          /**
-           * Get the content of the modal.
-           *
-           * @return {VirtualElement}
-           * @abstract
-           */
         }, {
           key: 'content',
           value: function content() {}
-
-          /**
-           * Handle the modal form's submit event.
-           *
-           * @param {Event} e
-           */
         }, {
           key: 'onsubmit',
           value: function onsubmit() {}
-
-          /**
-           * Focus on the first input when the modal is ready to be used.
-           */
         }, {
           key: 'onready',
           value: function onready() {
-            this.$('form :input:first').focus().select();
+            this.$('form').find('input, select, textarea').first().focus().select();
           }
-
-          /**
-           * Hide the modal.
-           */
+        }, {
+          key: 'onhide',
+          value: function onhide() {}
         }, {
           key: 'hide',
           value: function hide() {
             app.modal.close();
           }
-
-          /**
-           * Stop loading.
-           */
         }, {
           key: 'loaded',
           value: function loaded() {
             this.loading = false;
             m.redraw();
           }
-
-          /**
-           * Show an alert describing an error returned from the API, and give focus to
-           * the first relevant field.
-           *
-           * @param {RequestError} error
-           */
         }, {
           key: 'onerror',
           value: function onerror(error) {
@@ -18787,35 +19021,29 @@ System.register('flarum/components/Modal', ['flarum/Component', 'flarum/componen
           }
         }]);
         return Modal;
-      })(Component);
+      }(Component);
 
       _export('default', Modal);
     }
   };
 });;
-System.register('flarum/components/ModalManager', ['flarum/Component', 'flarum/components/Modal'], function (_export) {
+'use strict';
 
-  /**
-   * The `ModalManager` component manages a modal dialog. Only one modal dialog
-   * can be shown at once; loading a new component into the ModalManager will
-   * overwrite the previous one.
-   */
-  'use strict';
-
+System.register('flarum/components/ModalManager', ['flarum/Component', 'flarum/components/Modal'], function (_export, _context) {
   var Component, Modal, ModalManager;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumComponentsModal) {
-      Modal = _flarumComponentsModal['default'];
+      Modal = _flarumComponentsModal.default;
     }],
     execute: function () {
-      ModalManager = (function (_Component) {
+      ModalManager = function (_Component) {
         babelHelpers.inherits(ModalManager, _Component);
 
         function ModalManager() {
           babelHelpers.classCallCheck(this, ModalManager);
-          babelHelpers.get(Object.getPrototypeOf(ModalManager.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(ModalManager).apply(this, arguments));
         }
 
         babelHelpers.createClass(ModalManager, [{
@@ -18842,13 +19070,6 @@ System.register('flarum/components/ModalManager', ['flarum/Component', 'flarum/c
 
             this.$().on('hidden.bs.modal', this.clear.bind(this)).on('shown.bs.modal', this.onready.bind(this));
           }
-
-          /**
-           * Show a modal dialog.
-           *
-           * @param {Modal} component
-           * @public
-           */
         }, {
           key: 'show',
           value: function show(component) {
@@ -18861,21 +19082,17 @@ System.register('flarum/components/ModalManager', ['flarum/Component', 'flarum/c
             this.showing = true;
             this.component = component;
 
+            app.current.retain = true;
+
             m.redraw(true);
 
             this.$().modal({ backdrop: this.component.isDismissible() ? true : 'static' }).modal('show');
             this.onready();
           }
-
-          /**
-           * Close the modal dialog.
-           *
-           * @public
-           */
         }, {
           key: 'close',
           value: function close() {
-            var _this = this;
+            var _this2 = this;
 
             if (!this.showing) return;
 
@@ -18885,29 +19102,23 @@ System.register('flarum/components/ModalManager', ['flarum/Component', 'flarum/c
             // bit to give the `show` method the opportunity to prevent this from going
             // ahead.
             this.hideTimeout = setTimeout(function () {
-              _this.$().modal('hide');
-              _this.showing = false;
+              _this2.$().modal('hide');
+              _this2.showing = false;
             });
           }
-
-          /**
-           * Clear content from the modal area.
-           *
-           * @protected
-           */
         }, {
           key: 'clear',
           value: function clear() {
+            if (this.component) {
+              this.component.onhide();
+            }
+
             this.component = null;
+
+            app.current.retain = false;
 
             m.lazyRedraw();
           }
-
-          /**
-           * When the modal dialog is ready to be used, tell it!
-           *
-           * @protected
-           */
         }, {
           key: 'onready',
           value: function onready() {
@@ -18917,47 +19128,31 @@ System.register('flarum/components/ModalManager', ['flarum/Component', 'flarum/c
           }
         }]);
         return ModalManager;
-      })(Component);
+      }(Component);
 
       _export('default', ModalManager);
     }
   };
 });;
-System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/components/Button', 'flarum/components/LinkButton'], function (_export) {
+'use strict';
 
-  /**
-   * The `Navigation` component displays a set of navigation buttons. Typically
-   * this is just a back button which pops the app's History. If the user is on
-   * the root page and there is no history to pop, then in some instances it may
-   * show a button that toggles the app's drawer.
-   *
-   * If the app has a pane, it will also include a 'pin' button which toggles the
-   * pinned state of the pane.
-   *
-   * Accepts the following props:
-   *
-   * - `className` The name of a class to set on the root element.
-   * - `drawer` Whether or not to show a button to toggle the app's drawer if
-   *   there is no more history to pop.
-   */
-  'use strict';
-
+System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/components/Button', 'flarum/components/LinkButton'], function (_export, _context) {
   var Component, Button, LinkButton, Navigation;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumComponentsLinkButton) {
-      LinkButton = _flarumComponentsLinkButton['default'];
+      LinkButton = _flarumComponentsLinkButton.default;
     }],
     execute: function () {
-      Navigation = (function (_Component) {
+      Navigation = function (_Component) {
         babelHelpers.inherits(Navigation, _Component);
 
         function Navigation() {
           babelHelpers.classCallCheck(this, Navigation);
-          babelHelpers.get(Object.getPrototypeOf(Navigation.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Navigation).apply(this, arguments));
         }
 
         babelHelpers.createClass(Navigation, [{
@@ -18966,6 +19161,7 @@ System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/com
             var _app = app;
             var history = _app.history;
             var pane = _app.pane;
+
 
             return m(
               'div',
@@ -18983,13 +19179,6 @@ System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/com
             // to be retained across route changes.
             context.retain = true;
           }
-
-          /**
-           * Get the back button.
-           *
-           * @return {Object}
-           * @protected
-           */
         }, {
           key: 'getBackButton',
           value: function getBackButton() {
@@ -19011,18 +19200,12 @@ System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/com
               }
             });
           }
-
-          /**
-           * Get the pane pinned toggle button.
-           *
-           * @return {Object|String}
-           * @protected
-           */
         }, {
           key: 'getPaneButton',
           value: function getPaneButton() {
             var _app3 = app;
             var pane = _app3.pane;
+
 
             if (!pane || !pane.active) return '';
 
@@ -19032,13 +19215,6 @@ System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/com
               icon: 'thumb-tack'
             });
           }
-
-          /**
-           * Get the drawer toggle button.
-           *
-           * @return {Object|String}
-           * @protected
-           */
         }, {
           key: 'getDrawerButton',
           value: function getDrawerButton() {
@@ -19060,16 +19236,72 @@ System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/com
           }
         }]);
         return Navigation;
-      })(Component);
+      }(Component);
 
       _export('default', Navigation);
     }
   };
 });;
-System.register('flarum/components/PermissionDropdown', ['flarum/components/Dropdown', 'flarum/components/Button', 'flarum/components/Separator', 'flarum/models/Group', 'flarum/components/GroupBadge'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/components/Page', ['flarum/Component'], function (_export, _context) {
+  var Component, Page;
+  return {
+    setters: [function (_flarumComponent) {
+      Component = _flarumComponent.default;
+    }],
+    execute: function () {
+      Page = function (_Component) {
+        babelHelpers.inherits(Page, _Component);
+
+        function Page() {
+          babelHelpers.classCallCheck(this, Page);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Page).apply(this, arguments));
+        }
+
+        babelHelpers.createClass(Page, [{
+          key: 'init',
+          value: function init() {
+            app.previous = app.current;
+            app.current = this;
+
+            app.modal.close();
+
+            /**
+             * A class name to apply to the body while the route is active.
+             *
+             * @type {String}
+             */
+            this.bodyClass = '';
+          }
+        }, {
+          key: 'config',
+          value: function config(isInitialized, context) {
+            var _this2 = this;
+
+            if (isInitialized) return;
+
+            if (this.bodyClass) {
+              $('#app').addClass(this.bodyClass);
+
+              context.onunload = function () {
+                return $('#app').removeClass(_this2.bodyClass);
+              };
+            }
+          }
+        }]);
+        return Page;
+      }(Component);
+
+      _export('default', Page);
+    }
+  };
+});;
+'use strict';
+
+System.register('flarum/components/PermissionDropdown', ['flarum/components/Dropdown', 'flarum/components/Button', 'flarum/components/Separator', 'flarum/models/Group', 'flarum/components/GroupBadge'], function (_export, _context) {
   var Dropdown, Button, Separator, Group, GroupBadge, PermissionDropdown;
+
 
   function badgeForId(id) {
     var group = app.store.getById('groups', id);
@@ -19079,29 +19311,29 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
 
   return {
     setters: [function (_flarumComponentsDropdown) {
-      Dropdown = _flarumComponentsDropdown['default'];
+      Dropdown = _flarumComponentsDropdown.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumComponentsSeparator) {
-      Separator = _flarumComponentsSeparator['default'];
+      Separator = _flarumComponentsSeparator.default;
     }, function (_flarumModelsGroup) {
-      Group = _flarumModelsGroup['default'];
+      Group = _flarumModelsGroup.default;
     }, function (_flarumComponentsGroupBadge) {
-      GroupBadge = _flarumComponentsGroupBadge['default'];
+      GroupBadge = _flarumComponentsGroupBadge.default;
     }],
     execute: function () {
-      PermissionDropdown = (function (_Dropdown) {
+      PermissionDropdown = function (_Dropdown) {
         babelHelpers.inherits(PermissionDropdown, _Dropdown);
 
         function PermissionDropdown() {
           babelHelpers.classCallCheck(this, PermissionDropdown);
-          babelHelpers.get(Object.getPrototypeOf(PermissionDropdown.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(PermissionDropdown).apply(this, arguments));
         }
 
         babelHelpers.createClass(PermissionDropdown, [{
           key: 'view',
           value: function view() {
-            var _this = this;
+            var _this2 = this;
 
             this.props.children = [];
 
@@ -19123,7 +19355,7 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
                 children: app.translator.trans('core.admin.permissions_controls.everyone_button'),
                 icon: everyone ? 'check' : true,
                 onclick: function onclick() {
-                  return _this.save([Group.GUEST_ID]);
+                  return _this2.save([Group.GUEST_ID]);
                 }
               }));
             }
@@ -19132,7 +19364,7 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
               children: app.translator.trans('core.admin.permissions_controls.members_button'),
               icon: members ? 'check' : true,
               onclick: function onclick() {
-                return _this.save([Group.MEMBER_ID]);
+                return _this2.save([Group.MEMBER_ID]);
               }
             }), Separator.component(), Button.component({
               children: [GroupBadge.component({ group: adminGroup, label: null }), ' ', adminGroup.namePlural()],
@@ -19140,7 +19372,7 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
               disabled: !everyone && !members,
               onclick: function onclick(e) {
                 if (e.shiftKey) e.stopPropagation();
-                _this.save([]);
+                _this2.save([]);
               }
             }));
 
@@ -19152,7 +19384,7 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
                 icon: groupIds.indexOf(group.id()) !== -1 ? 'check' : true,
                 onclick: function onclick(e) {
                   if (e.shiftKey) e.stopPropagation();
-                  _this.toggle(group.id());
+                  _this2.toggle(group.id());
                 }
               });
             }));
@@ -19202,37 +19434,37 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
           }
         }]);
         return PermissionDropdown;
-      })(Dropdown);
+      }(Dropdown);
 
       _export('default', PermissionDropdown);
     }
   };
 });;
-System.register('flarum/components/PermissionGrid', ['flarum/Component', 'flarum/components/PermissionDropdown', 'flarum/components/SettingDropdown', 'flarum/components/Button', 'flarum/utils/ItemList', 'flarum/helpers/icon'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/components/PermissionGrid', ['flarum/Component', 'flarum/components/PermissionDropdown', 'flarum/components/SettingDropdown', 'flarum/components/Button', 'flarum/utils/ItemList', 'flarum/helpers/icon'], function (_export, _context) {
   var Component, PermissionDropdown, SettingDropdown, Button, ItemList, icon, PermissionGrid;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumComponentsPermissionDropdown) {
-      PermissionDropdown = _flarumComponentsPermissionDropdown['default'];
+      PermissionDropdown = _flarumComponentsPermissionDropdown.default;
     }, function (_flarumComponentsSettingDropdown) {
-      SettingDropdown = _flarumComponentsSettingDropdown['default'];
+      SettingDropdown = _flarumComponentsSettingDropdown.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumUtilsItemList) {
-      ItemList = _flarumUtilsItemList['default'];
+      ItemList = _flarumUtilsItemList.default;
     }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon['default'];
+      icon = _flarumHelpersIcon.default;
     }],
     execute: function () {
-      PermissionGrid = (function (_Component) {
+      PermissionGrid = function (_Component) {
         babelHelpers.inherits(PermissionGrid, _Component);
 
         function PermissionGrid() {
           babelHelpers.classCallCheck(this, PermissionGrid);
-          babelHelpers.get(Object.getPrototypeOf(PermissionGrid.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(PermissionGrid).apply(this, arguments));
         }
 
         babelHelpers.createClass(PermissionGrid, [{
@@ -19487,37 +19719,37 @@ System.register('flarum/components/PermissionGrid', ['flarum/Component', 'flarum
           }
         }]);
         return PermissionGrid;
-      })(Component);
+      }(Component);
 
       _export('default', PermissionGrid);
     }
   };
 });;
-System.register('flarum/components/PermissionsPage', ['flarum/Component', 'flarum/components/GroupBadge', 'flarum/components/EditGroupModal', 'flarum/models/Group', 'flarum/helpers/icon', 'flarum/components/PermissionGrid'], function (_export) {
-  'use strict';
+'use strict';
 
-  var Component, GroupBadge, EditGroupModal, Group, icon, PermissionGrid, PermissionsPage;
+System.register('flarum/components/PermissionsPage', ['flarum/components/Page', 'flarum/components/GroupBadge', 'flarum/components/EditGroupModal', 'flarum/models/Group', 'flarum/helpers/icon', 'flarum/components/PermissionGrid'], function (_export, _context) {
+  var Page, GroupBadge, EditGroupModal, Group, icon, PermissionGrid, PermissionsPage;
   return {
-    setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+    setters: [function (_flarumComponentsPage) {
+      Page = _flarumComponentsPage.default;
     }, function (_flarumComponentsGroupBadge) {
-      GroupBadge = _flarumComponentsGroupBadge['default'];
+      GroupBadge = _flarumComponentsGroupBadge.default;
     }, function (_flarumComponentsEditGroupModal) {
-      EditGroupModal = _flarumComponentsEditGroupModal['default'];
+      EditGroupModal = _flarumComponentsEditGroupModal.default;
     }, function (_flarumModelsGroup) {
-      Group = _flarumModelsGroup['default'];
+      Group = _flarumModelsGroup.default;
     }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon['default'];
+      icon = _flarumHelpersIcon.default;
     }, function (_flarumComponentsPermissionGrid) {
-      PermissionGrid = _flarumComponentsPermissionGrid['default'];
+      PermissionGrid = _flarumComponentsPermissionGrid.default;
     }],
     execute: function () {
-      PermissionsPage = (function (_Component) {
-        babelHelpers.inherits(PermissionsPage, _Component);
+      PermissionsPage = function (_Page) {
+        babelHelpers.inherits(PermissionsPage, _Page);
 
         function PermissionsPage() {
           babelHelpers.classCallCheck(this, PermissionsPage);
-          babelHelpers.get(Object.getPrototypeOf(PermissionsPage.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(PermissionsPage).apply(this, arguments));
         }
 
         babelHelpers.createClass(PermissionsPage, [{
@@ -19537,7 +19769,7 @@ System.register('flarum/components/PermissionsPage', ['flarum/Component', 'flaru
                   }).map(function (group) {
                     return m(
                       'button',
-                      { className: 'Button Group', onclick: function () {
+                      { className: 'Button Group', onclick: function onclick() {
                           return app.modal.show(new EditGroupModal({ group: group }));
                         } },
                       GroupBadge.component({
@@ -19554,7 +19786,7 @@ System.register('flarum/components/PermissionsPage', ['flarum/Component', 'flaru
                   }),
                   m(
                     'button',
-                    { className: 'Button Group Group--add', onclick: function () {
+                    { className: 'Button Group Group--add', onclick: function onclick() {
                         return app.modal.show(new EditGroupModal());
                       } },
                     icon('plus', { className: 'Group-icon' }),
@@ -19579,36 +19811,27 @@ System.register('flarum/components/PermissionsPage', ['flarum/Component', 'flaru
           }
         }]);
         return PermissionsPage;
-      })(Component);
+      }(Page);
 
       _export('default', PermissionsPage);
     }
   };
 });;
-System.register("flarum/components/Placeholder", ["flarum/Component"], function (_export) {
+"use strict";
 
-  /**
-   * The `Placeholder` component displays a muted text with some call to action,
-   * usually used as an empty state.
-   *
-   * ### Props
-   *
-   * - `text`
-   */
-  "use strict";
-
+System.register("flarum/components/Placeholder", ["flarum/Component"], function (_export, _context) {
   var Component, Placeholder;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent["default"];
+      Component = _flarumComponent.default;
     }],
     execute: function () {
-      Placeholder = (function (_Component) {
+      Placeholder = function (_Component) {
         babelHelpers.inherits(Placeholder, _Component);
 
         function Placeholder() {
           babelHelpers.classCallCheck(this, Placeholder);
-          babelHelpers.get(Object.getPrototypeOf(Placeholder.prototype), "constructor", this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Placeholder).apply(this, arguments));
         }
 
         babelHelpers.createClass(Placeholder, [{
@@ -19626,27 +19849,27 @@ System.register("flarum/components/Placeholder", ["flarum/Component"], function 
           }
         }]);
         return Placeholder;
-      })(Component);
+      }(Component);
 
       _export("default", Placeholder);
     }
   };
 });;
-System.register('flarum/components/RequestErrorModal', ['flarum/components/Modal'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/components/RequestErrorModal', ['flarum/components/Modal'], function (_export, _context) {
   var Modal, RequestErrorModal;
   return {
     setters: [function (_flarumComponentsModal) {
-      Modal = _flarumComponentsModal['default'];
+      Modal = _flarumComponentsModal.default;
     }],
     execute: function () {
-      RequestErrorModal = (function (_Modal) {
+      RequestErrorModal = function (_Modal) {
         babelHelpers.inherits(RequestErrorModal, _Modal);
 
         function RequestErrorModal() {
           babelHelpers.classCallCheck(this, RequestErrorModal);
-          babelHelpers.get(Object.getPrototypeOf(RequestErrorModal.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(RequestErrorModal).apply(this, arguments));
         }
 
         babelHelpers.createClass(RequestErrorModal, [{
@@ -19662,7 +19885,7 @@ System.register('flarum/components/RequestErrorModal', ['flarum/components/Modal
         }, {
           key: 'content',
           value: function content() {
-            var responseText = undefined;
+            var responseText = void 0;
 
             try {
               responseText = JSON.stringify(JSON.parse(this.props.error.responseText), null, 2);
@@ -19687,38 +19910,29 @@ System.register('flarum/components/RequestErrorModal', ['flarum/components/Modal
           }
         }]);
         return RequestErrorModal;
-      })(Modal);
+      }(Modal);
 
       _export('default', RequestErrorModal);
     }
   };
 });;
-System.register('flarum/components/Select', ['flarum/Component', 'flarum/helpers/icon'], function (_export) {
+'use strict';
 
-  /**
-   * The `Select` component displays a <select> input, surrounded with some extra
-   * elements for styling. It accepts the following props:
-   *
-   * - `options` A map of option values to labels.
-   * - `onchange` A callback to run when the selected value is changed.
-   * - `value` The value of the selected option.
-   */
-  'use strict';
-
+System.register('flarum/components/Select', ['flarum/Component', 'flarum/helpers/icon'], function (_export, _context) {
   var Component, icon, Select;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent['default'];
+      Component = _flarumComponent.default;
     }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon['default'];
+      icon = _flarumHelpersIcon.default;
     }],
     execute: function () {
-      Select = (function (_Component) {
+      Select = function (_Component) {
         babelHelpers.inherits(Select, _Component);
 
         function Select() {
           babelHelpers.classCallCheck(this, Select);
-          babelHelpers.get(Object.getPrototypeOf(Select.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Select).apply(this, arguments));
         }
 
         babelHelpers.createClass(Select, [{
@@ -19728,6 +19942,7 @@ System.register('flarum/components/Select', ['flarum/Component', 'flarum/helpers
             var options = _props.options;
             var onchange = _props.onchange;
             var value = _props.value;
+
 
             return m(
               'span',
@@ -19748,40 +19963,29 @@ System.register('flarum/components/Select', ['flarum/Component', 'flarum/helpers
           }
         }]);
         return Select;
-      })(Component);
+      }(Component);
 
       _export('default', Select);
     }
   };
 });;
-System.register('flarum/components/SelectDropdown', ['flarum/components/Dropdown', 'flarum/helpers/icon'], function (_export) {
+'use strict';
 
-  /**
-   * The `SelectDropdown` component is the same as a `Dropdown`, except the toggle
-   * button's label is set as the label of the first child which has a truthy
-   * `active` prop.
-   *
-   * ### Props
-   *
-   * - `caretIcon`
-   * - `defaultLabel`
-   */
-  'use strict';
-
+System.register('flarum/components/SelectDropdown', ['flarum/components/Dropdown', 'flarum/helpers/icon'], function (_export, _context) {
   var Dropdown, icon, SelectDropdown;
   return {
     setters: [function (_flarumComponentsDropdown) {
-      Dropdown = _flarumComponentsDropdown['default'];
+      Dropdown = _flarumComponentsDropdown.default;
     }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon['default'];
+      icon = _flarumHelpersIcon.default;
     }],
     execute: function () {
-      SelectDropdown = (function (_Dropdown) {
+      SelectDropdown = function (_Dropdown) {
         babelHelpers.inherits(SelectDropdown, _Dropdown);
 
         function SelectDropdown() {
           babelHelpers.classCallCheck(this, SelectDropdown);
-          babelHelpers.get(Object.getPrototypeOf(SelectDropdown.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(SelectDropdown).apply(this, arguments));
         }
 
         babelHelpers.createClass(SelectDropdown, [{
@@ -19811,31 +20015,27 @@ System.register('flarum/components/SelectDropdown', ['flarum/components/Dropdown
           }
         }]);
         return SelectDropdown;
-      })(Dropdown);
+      }(Dropdown);
 
       _export('default', SelectDropdown);
     }
   };
 });;
-System.register("flarum/components/Separator", ["flarum/Component"], function (_export) {
+"use strict";
 
-  /**
-   * The `Separator` component defines a menu separator item.
-   */
-  "use strict";
-
+System.register("flarum/components/Separator", ["flarum/Component"], function (_export, _context) {
   var Component, Separator;
   return {
     setters: [function (_flarumComponent) {
-      Component = _flarumComponent["default"];
+      Component = _flarumComponent.default;
     }],
     execute: function () {
-      Separator = (function (_Component) {
+      Separator = function (_Component) {
         babelHelpers.inherits(Separator, _Component);
 
         function Separator() {
           babelHelpers.classCallCheck(this, Separator);
-          babelHelpers.get(Object.getPrototypeOf(Separator.prototype), "constructor", this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Separator).apply(this, arguments));
         }
 
         babelHelpers.createClass(Separator, [{
@@ -19845,7 +20045,7 @@ System.register("flarum/components/Separator", ["flarum/Component"], function (_
           }
         }]);
         return Separator;
-      })(Component);
+      }(Component);
 
       Separator.isListItem = true;
 
@@ -19853,34 +20053,29 @@ System.register("flarum/components/Separator", ["flarum/Component"], function (_
     }
   };
 });;
-System.register('flarum/components/SessionDropdown', ['flarum/helpers/avatar', 'flarum/helpers/username', 'flarum/components/Dropdown', 'flarum/components/Button', 'flarum/utils/ItemList'], function (_export) {
+'use strict';
 
-  /**
-   * The `SessionDropdown` component shows a button with the current user's
-   * avatar/name, with a dropdown of session controls.
-   */
-  'use strict';
-
+System.register('flarum/components/SessionDropdown', ['flarum/helpers/avatar', 'flarum/helpers/username', 'flarum/components/Dropdown', 'flarum/components/Button', 'flarum/utils/ItemList'], function (_export, _context) {
   var avatar, username, Dropdown, Button, ItemList, SessionDropdown;
   return {
     setters: [function (_flarumHelpersAvatar) {
-      avatar = _flarumHelpersAvatar['default'];
+      avatar = _flarumHelpersAvatar.default;
     }, function (_flarumHelpersUsername) {
-      username = _flarumHelpersUsername['default'];
+      username = _flarumHelpersUsername.default;
     }, function (_flarumComponentsDropdown) {
-      Dropdown = _flarumComponentsDropdown['default'];
+      Dropdown = _flarumComponentsDropdown.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumUtilsItemList) {
-      ItemList = _flarumUtilsItemList['default'];
+      ItemList = _flarumUtilsItemList.default;
     }],
     execute: function () {
-      SessionDropdown = (function (_Dropdown) {
+      SessionDropdown = function (_Dropdown) {
         babelHelpers.inherits(SessionDropdown, _Dropdown);
 
         function SessionDropdown() {
           babelHelpers.classCallCheck(this, SessionDropdown);
-          babelHelpers.get(Object.getPrototypeOf(SessionDropdown.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(SessionDropdown).apply(this, arguments));
         }
 
         babelHelpers.createClass(SessionDropdown, [{
@@ -19901,12 +20096,6 @@ System.register('flarum/components/SessionDropdown', ['flarum/helpers/avatar', '
               username(user)
             )];
           }
-
-          /**
-           * Build an item list for the contents of the dropdown menu.
-           *
-           * @return {ItemList}
-           */
         }, {
           key: 'items',
           value: function items() {
@@ -19931,37 +20120,37 @@ System.register('flarum/components/SessionDropdown', ['flarum/helpers/avatar', '
           }
         }]);
         return SessionDropdown;
-      })(Dropdown);
+      }(Dropdown);
 
       _export('default', SessionDropdown);
     }
   };
 });;
-System.register('flarum/components/SettingDropdown', ['flarum/components/SelectDropdown', 'flarum/components/Button', 'flarum/utils/saveSettings'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/components/SettingDropdown', ['flarum/components/SelectDropdown', 'flarum/components/Button', 'flarum/utils/saveSettings'], function (_export, _context) {
   var SelectDropdown, Button, saveSettings, SettingDropdown;
   return {
     setters: [function (_flarumComponentsSelectDropdown) {
-      SelectDropdown = _flarumComponentsSelectDropdown['default'];
+      SelectDropdown = _flarumComponentsSelectDropdown.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumUtilsSaveSettings) {
-      saveSettings = _flarumUtilsSaveSettings['default'];
+      saveSettings = _flarumUtilsSaveSettings.default;
     }],
     execute: function () {
-      SettingDropdown = (function (_SelectDropdown) {
+      SettingDropdown = function (_SelectDropdown) {
         babelHelpers.inherits(SettingDropdown, _SelectDropdown);
 
         function SettingDropdown() {
           babelHelpers.classCallCheck(this, SettingDropdown);
-          babelHelpers.get(Object.getPrototypeOf(SettingDropdown.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(SettingDropdown).apply(this, arguments));
         }
 
         babelHelpers.createClass(SettingDropdown, null, [{
           key: 'initProps',
           value: function initProps(props) {
-            var _this = this;
+            var _this2 = this;
 
             babelHelpers.get(Object.getPrototypeOf(SettingDropdown), 'initProps', this).call(this, props);
 
@@ -19979,38 +20168,38 @@ System.register('flarum/components/SettingDropdown', ['flarum/components/SelectD
               return Button.component({
                 children: label,
                 icon: active ? 'check' : true,
-                onclick: saveSettings.bind(_this, babelHelpers.defineProperty({}, props.key, value)),
+                onclick: saveSettings.bind(_this2, babelHelpers.defineProperty({}, props.key, value)),
                 active: active
               });
             });
           }
         }]);
         return SettingDropdown;
-      })(SelectDropdown);
+      }(SelectDropdown);
 
       _export('default', SettingDropdown);
     }
   };
 });;
-System.register('flarum/components/SettingsModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/utils/saveSettings'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/components/SettingsModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/utils/saveSettings'], function (_export, _context) {
   var Modal, Button, saveSettings, SettingsModal;
   return {
     setters: [function (_flarumComponentsModal) {
-      Modal = _flarumComponentsModal['default'];
+      Modal = _flarumComponentsModal.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumUtilsSaveSettings) {
-      saveSettings = _flarumUtilsSaveSettings['default'];
+      saveSettings = _flarumUtilsSaveSettings.default;
     }],
     execute: function () {
-      SettingsModal = (function (_Modal) {
+      SettingsModal = function (_Modal) {
         babelHelpers.inherits(SettingsModal, _Modal);
 
         function SettingsModal() {
           babelHelpers.classCallCheck(this, SettingsModal);
-          babelHelpers.get(Object.getPrototypeOf(SettingsModal.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(SettingsModal).apply(this, arguments));
         }
 
         babelHelpers.createClass(SettingsModal, [{
@@ -20052,7 +20241,7 @@ System.register('flarum/components/SettingsModal', ['flarum/components/Modal', '
                 className: 'Button Button--primary',
                 loading: this.loading,
                 disabled: !this.changed() },
-              'Save Changes'
+              app.translator.trans('core.admin.settings.submit_button')
             );
           }
         }, {
@@ -20067,12 +20256,12 @@ System.register('flarum/components/SettingsModal', ['flarum/components/Modal', '
         }, {
           key: 'dirty',
           value: function dirty() {
-            var _this = this;
+            var _this2 = this;
 
             var dirty = {};
 
             Object.keys(this.settings).forEach(function (key) {
-              var value = _this.settings[key]();
+              var value = _this2.settings[key]();
 
               if (value !== app.settings[key]) {
                 dirty[key] = value;
@@ -20097,36 +20286,31 @@ System.register('flarum/components/SettingsModal', ['flarum/components/Modal', '
           }
         }]);
         return SettingsModal;
-      })(Modal);
+      }(Modal);
 
       _export('default', SettingsModal);
     }
   };
 });;
-System.register('flarum/components/SplitDropdown', ['flarum/components/Dropdown', 'flarum/components/Button', 'flarum/helpers/icon'], function (_export) {
+'use strict';
 
-  /**
-   * The `SplitDropdown` component is similar to `Dropdown`, but the first child
-   * is displayed as its own button prior to the toggle button.
-   */
-  'use strict';
-
+System.register('flarum/components/SplitDropdown', ['flarum/components/Dropdown', 'flarum/components/Button', 'flarum/helpers/icon'], function (_export, _context) {
   var Dropdown, Button, icon, SplitDropdown;
   return {
     setters: [function (_flarumComponentsDropdown) {
-      Dropdown = _flarumComponentsDropdown['default'];
+      Dropdown = _flarumComponentsDropdown.default;
     }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton['default'];
+      Button = _flarumComponentsButton.default;
     }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon['default'];
+      icon = _flarumHelpersIcon.default;
     }],
     execute: function () {
-      SplitDropdown = (function (_Dropdown) {
+      SplitDropdown = function (_Dropdown) {
         babelHelpers.inherits(SplitDropdown, _Dropdown);
 
         function SplitDropdown() {
           babelHelpers.classCallCheck(this, SplitDropdown);
-          babelHelpers.get(Object.getPrototypeOf(SplitDropdown.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(SplitDropdown).apply(this, arguments));
         }
 
         babelHelpers.createClass(SplitDropdown, [{
@@ -20136,7 +20320,7 @@ System.register('flarum/components/SplitDropdown', ['flarum/components/Dropdown'
             // these props to a new button, so that it has exactly the same behaviour as
             // the first child.
             var firstChild = this.getFirstChild();
-            var buttonProps = babelHelpers._extends({}, firstChild.props);
+            var buttonProps = babelHelpers.extends({}, firstChild.props);
             buttonProps.className = (buttonProps.className || '') + ' SplitDropdown-button Button ' + this.props.buttonClassName;
 
             return [Button.component(buttonProps), m(
@@ -20148,22 +20332,14 @@ System.register('flarum/components/SplitDropdown', ['flarum/components/Dropdown'
               icon('caret-down', { className: 'Button-caret' })
             )];
           }
-
-          /**
-           * Get the first child. If the first child is an array, the first item in that
-           * array will be returned.
-           *
-           * @return {*}
-           * @protected
-           */
         }, {
           key: 'getFirstChild',
           value: function getFirstChild() {
             var firstChild = this.props.children;
 
-            while (firstChild instanceof Array) firstChild = firstChild[0];
-
-            return firstChild;
+            while (firstChild instanceof Array) {
+              firstChild = firstChild[0];
+            }return firstChild;
           }
         }], [{
           key: 'initProps',
@@ -20175,32 +20351,27 @@ System.register('flarum/components/SplitDropdown', ['flarum/components/Dropdown'
           }
         }]);
         return SplitDropdown;
-      })(Dropdown);
+      }(Dropdown);
 
       _export('default', SplitDropdown);
     }
   };
 });;
-System.register('flarum/components/Switch', ['flarum/components/Checkbox'], function (_export) {
+'use strict';
 
-  /**
-   * The `Switch` component is a `Checkbox`, but with a switch display instead of
-   * a tick/cross one.
-   */
-  'use strict';
-
+System.register('flarum/components/Switch', ['flarum/components/Checkbox'], function (_export, _context) {
   var Checkbox, Switch;
   return {
     setters: [function (_flarumComponentsCheckbox) {
-      Checkbox = _flarumComponentsCheckbox['default'];
+      Checkbox = _flarumComponentsCheckbox.default;
     }],
     execute: function () {
-      Switch = (function (_Checkbox) {
+      Switch = function (_Checkbox) {
         babelHelpers.inherits(Switch, _Checkbox);
 
         function Switch() {
           babelHelpers.classCallCheck(this, Switch);
-          babelHelpers.get(Object.getPrototypeOf(Switch.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Switch).apply(this, arguments));
         }
 
         babelHelpers.createClass(Switch, [{
@@ -20217,111 +20388,102 @@ System.register('flarum/components/Switch', ['flarum/components/Checkbox'], func
           }
         }]);
         return Switch;
-      })(Checkbox);
+      }(Checkbox);
 
       _export('default', Switch);
     }
   };
 });;
-System.register("flarum/extend", [], function (_export) {
-  /**
-   * Extend an object's method by running its output through a mutating callback
-   * every time it is called.
-   *
-   * The callback accepts the method's return value and should perform any
-   * mutations directly on this value. For this reason, this function will not be
-   * effective on methods which return scalar values (numbers, strings, booleans).
-   *
-   * Care should be taken to extend the correct object – in most cases, a class'
-   * prototype will be the desired target of extension, not the class itself.
-   *
-   * @example
-   * extend(Discussion.prototype, 'badges', function(badges) {
-   *   // do something with `badges`
-   * });
-   *
-   * @param {Object} object The object that owns the method
-   * @param {String} method The name of the method to extend
-   * @param {function} callback A callback which mutates the method's output
-   */
-  "use strict";
+"use strict";
 
-  /**
-   * Override an object's method by replacing it with a new function, so that the
-   * new function will be run every time the object's method is called.
-   *
-   * The replacement function accepts the original method as its first argument,
-   * which is like a call to 'super'. Any arguments passed to the original method
-   * are also passed to the replacement.
-   *
-   * Care should be taken to extend the correct object – in most cases, a class'
-   * prototype will be the desired target of extension, not the class itself.
-   *
-   * @example
-   * override(Discussion.prototype, 'badges', function(original) {
-   *   const badges = original();
-   *   // do something with badges
-   *   return badges;
-   * });
-   *
-   * @param {Object} object The object that owns the method
-   * @param {String} method The name of the method to override
-   * @param {function} newMethod The method to replace it with
-   */
-
-  _export("extend", extend);
-
-  _export("override", override);
-
-  function extend(object, method, callback) {
-    var original = object[method];
-
-    object[method] = function () {
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      var value = original ? original.apply(this, args) : undefined;
-
-      callback.apply(this, [value].concat(args));
-
-      return value;
-    };
-
-    babelHelpers._extends(object[method], original);
-  }
-
-  function override(object, method, newMethod) {
-    var original = object[method];
-
-    object[method] = function () {
-      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
-      }
-
-      return newMethod.apply(this, [original.bind(this)].concat(args));
-    };
-
-    babelHelpers._extends(object[method], original);
-  }
-
+System.register("flarum/extend", [], function (_export, _context) {
   return {
     setters: [],
-    execute: function () {}
+    execute: function () {
+      /**
+       * Extend an object's method by running its output through a mutating callback
+       * every time it is called.
+       *
+       * The callback accepts the method's return value and should perform any
+       * mutations directly on this value. For this reason, this function will not be
+       * effective on methods which return scalar values (numbers, strings, booleans).
+       *
+       * Care should be taken to extend the correct object – in most cases, a class'
+       * prototype will be the desired target of extension, not the class itself.
+       *
+       * @example
+       * extend(Discussion.prototype, 'badges', function(badges) {
+       *   // do something with `badges`
+       * });
+       *
+       * @param {Object} object The object that owns the method
+       * @param {String} method The name of the method to extend
+       * @param {function} callback A callback which mutates the method's output
+       */
+      function extend(object, method, callback) {
+        var original = object[method];
+
+        object[method] = function () {
+          for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          var value = original ? original.apply(this, args) : undefined;
+
+          callback.apply(this, [value].concat(args));
+
+          return value;
+        };
+
+        babelHelpers.extends(object[method], original);
+      }
+
+      /**
+       * Override an object's method by replacing it with a new function, so that the
+       * new function will be run every time the object's method is called.
+       *
+       * The replacement function accepts the original method as its first argument,
+       * which is like a call to 'super'. Any arguments passed to the original method
+       * are also passed to the replacement.
+       *
+       * Care should be taken to extend the correct object – in most cases, a class'
+       * prototype will be the desired target of extension, not the class itself.
+       *
+       * @example
+       * override(Discussion.prototype, 'badges', function(original) {
+       *   const badges = original();
+       *   // do something with badges
+       *   return badges;
+       * });
+       *
+       * @param {Object} object The object that owns the method
+       * @param {String} method The name of the method to override
+       * @param {function} newMethod The method to replace it with
+       */
+
+      _export("extend", extend);
+
+      function override(object, method, newMethod) {
+        var original = object[method];
+
+        object[method] = function () {
+          for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            args[_key2] = arguments[_key2];
+          }
+
+          return newMethod.apply(this, [original.bind(this)].concat(args));
+        };
+
+        babelHelpers.extends(object[method], original);
+      }
+
+      _export("override", override);
+    }
   };
 });;
-System.register('flarum/helpers/avatar', [], function (_export) {
-  /**
-   * The `avatar` helper displays a user's avatar.
-   *
-   * @param {User} user
-   * @param {Object} attrs Attributes to apply to the avatar element
-   * @return {Object}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', avatar);
-
+System.register('flarum/helpers/avatar', [], function (_export, _context) {
   function avatar(user) {
     var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -20344,7 +20506,7 @@ System.register('flarum/helpers/avatar', [], function (_export) {
       if (hasTitle) attrs.title = attrs.title || username;
 
       if (avatarUrl) {
-        return m('img', babelHelpers._extends({}, attrs, { src: avatarUrl }));
+        return m('img', babelHelpers.extends({}, attrs, { src: avatarUrl }));
       }
 
       content = username.charAt(0).toUpperCase();
@@ -20358,23 +20520,16 @@ System.register('flarum/helpers/avatar', [], function (_export) {
     );
   }
 
+  _export('default', avatar);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/helpers/fullTime', [], function (_export) {
-  /**
-   * The `fullTime` helper displays a formatted time string wrapped in a <time>
-   * tag.
-   *
-   * @param {Date} time
-   * @return {Object}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', fullTime);
-
+System.register('flarum/helpers/fullTime', [], function (_export, _context) {
   function fullTime(time) {
     var mo = moment(time);
 
@@ -20388,29 +20543,17 @@ System.register('flarum/helpers/fullTime', [], function (_export) {
     );
   }
 
+  _export('default', fullTime);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/helpers/highlight', ['flarum/utils/string'], function (_export) {
+'use strict';
 
-  /**
-   * The `highlight` helper searches for a word phrase in a string, and wraps
-   * matches with the <mark> tag.
-   *
-   * @param {String} string The string to highlight.
-   * @param {String|RegExp} phrase The word or words to highlight.
-   * @param {Integer} [length] The number of characters to truncate the string to.
-   *     The string will be truncated surrounding the first match.
-   * @return {Object}
-   */
-  'use strict';
-
+System.register('flarum/helpers/highlight', ['flarum/utils/string'], function (_export, _context) {
   var truncate;
-
-  _export('default', highlight);
-
   function highlight(string, phrase, length) {
     if (!phrase && !length) return string;
 
@@ -20437,6 +20580,8 @@ System.register('flarum/helpers/highlight', ['flarum/utils/string'], function (_
     return m.trust(highlighted);
   }
 
+  _export('default', highlight);
+
   return {
     setters: [function (_flarumUtilsString) {
       truncate = _flarumUtilsString.truncate;
@@ -20444,22 +20589,10 @@ System.register('flarum/helpers/highlight', ['flarum/utils/string'], function (_
     execute: function () {}
   };
 });;
-System.register('flarum/helpers/humanTime', ['flarum/utils/humanTime'], function (_export) {
+'use strict';
 
-  /**
-   * The `humanTime` helper displays a time in a human-friendly time-ago format
-   * (e.g. '12 days ago'), wrapped in a <time> tag with other information about
-   * the time.
-   *
-   * @param {Date} time
-   * @return {Object}
-   */
-  'use strict';
-
+System.register('flarum/helpers/humanTime', ['flarum/utils/humanTime'], function (_export, _context) {
   var humanTimeUtil;
-
-  _export('default', humanTime);
-
   function humanTime(time) {
     var mo = moment(time);
 
@@ -20474,25 +20607,18 @@ System.register('flarum/helpers/humanTime', ['flarum/utils/humanTime'], function
     );
   }
 
+  _export('default', humanTime);
+
   return {
     setters: [function (_flarumUtilsHumanTime) {
-      humanTimeUtil = _flarumUtilsHumanTime['default'];
+      humanTimeUtil = _flarumUtilsHumanTime.default;
     }],
     execute: function () {}
   };
 });;
-System.register('flarum/helpers/icon', [], function (_export) {
-  /**
-   * The `icon` helper displays a FontAwesome icon. The fa-fw class is applied.
-   *
-   * @param {String} name The name of the icon class, without the `fa-` prefix.
-   * @param {Object} attrs Any other attributes to apply.
-   * @return {Object}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', icon);
-
+System.register('flarum/helpers/icon', [], function (_export, _context) {
   function icon(name) {
     var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -20501,25 +20627,18 @@ System.register('flarum/helpers/icon', [], function (_export) {
     return m('i', attrs);
   }
 
+  _export('default', icon);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/helpers/listItems', ['flarum/components/Separator', 'flarum/utils/classList'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/helpers/listItems', ['flarum/components/Separator', 'flarum/utils/classList'], function (_export, _context) {
   var Separator, classList;
 
-  _export('default', listItems);
-
-  /**
-   * The `listItems` helper wraps a collection of components in <li> tags,
-   * stripping out any unnecessary `Separator` components.
-   *
-   * @param {*} items
-   * @return {Array}
-   */
 
   function isSeparator(item) {
     return item && item.component === Separator;
@@ -20527,7 +20646,7 @@ System.register('flarum/helpers/listItems', ['flarum/components/Separator', 'fla
 
   function withoutUnnecessarySeparators(items) {
     var newItems = [];
-    var prevItem = undefined;
+    var prevItem = void 0;
 
     items.forEach(function (item, i) {
       if (!isSeparator(item) || prevItem && !isSeparator(prevItem) && i !== items.length - 1) {
@@ -20538,6 +20657,14 @@ System.register('flarum/helpers/listItems', ['flarum/components/Separator', 'fla
 
     return newItems;
   }
+
+  /**
+   * The `listItems` helper wraps a collection of components in <li> tags,
+   * stripping out any unnecessary `Separator` components.
+   *
+   * @param {*} items
+   * @return {Array}
+   */
   function listItems(items) {
     if (!(items instanceof Array)) items = [items];
 
@@ -20546,39 +20673,37 @@ System.register('flarum/helpers/listItems', ['flarum/components/Separator', 'fla
       var active = item.component && item.component.isActive && item.component.isActive(item.props);
       var className = item.props ? item.props.itemClassName : item.itemClassName;
 
+      if (isListItem) {
+        item.attrs = item.attrs || {};
+        item.attrs.key = item.attrs.key || item.itemName;
+      }
+
+      var space = new String(' ');
+      space.attrs = { key: '_space_' + item.itemName };
+
       return [isListItem ? item : m(
         'li',
-        { className: classList([item.itemName ? 'item-' + item.itemName : '', className, active ? 'active' : '']) },
+        { className: classList([item.itemName ? 'item-' + item.itemName : '', className, active ? 'active' : '']),
+          key: item.itemName },
         item
-      ), ' '];
+      ), space];
     });
   }
 
+  _export('default', listItems);
+
   return {
     setters: [function (_flarumComponentsSeparator) {
-      Separator = _flarumComponentsSeparator['default'];
+      Separator = _flarumComponentsSeparator.default;
     }, function (_flarumUtilsClassList) {
-      classList = _flarumUtilsClassList['default'];
+      classList = _flarumUtilsClassList.default;
     }],
     execute: function () {}
   };
 });;
-System.register('flarum/helpers/punctuateSeries', [], function (_export) {
-  /**
-   * The `punctuateSeries` helper formats a list of strings (e.g. names) to read
-   * fluently in the application's locale.
-   *
-   * ```js
-   * punctuateSeries(['Toby', 'Franz', 'Dominion']) // Toby, Franz, and Dominion
-   * ```
-   *
-   * @param {Array} items
-   * @return {VirtualElement}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', punctuateSeries);
-
+System.register('flarum/helpers/punctuateSeries', [], function (_export, _context) {
   function punctuateSeries(items) {
     if (items.length === 2) {
       return app.translator.trans('core.lib.series.two_text', {
@@ -20603,25 +20728,18 @@ System.register('flarum/helpers/punctuateSeries', [], function (_export) {
     return items;
   }
 
+  _export('default', punctuateSeries);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register("flarum/helpers/username", [], function (_export) {
-  /**
-   * The `username` helper displays a user's username in a <span class="username">
-   * tag. If the user doesn't exist, the username will be displayed as [deleted].
-   *
-   * @param {User} user
-   * @return {Object}
-   */
-  "use strict";
+"use strict";
 
-  _export("default", username);
-
+System.register("flarum/helpers/username", [], function (_export, _context) {
   function username(user) {
-    var name = user && user.username() || app.translator.trans('core.lib.deleted_user_text');
+    var name = user && user.username() || app.translator.trans('core.lib.username.deleted_text');
 
     return m(
       "span",
@@ -20630,26 +20748,40 @@ System.register("flarum/helpers/username", [], function (_export) {
     );
   }
 
+  _export("default", username);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/initializers/boot', ['flarum/utils/ScrollListener', 'flarum/utils/Drawer', 'flarum/utils/mapRoutes', 'flarum/components/Navigation', 'flarum/components/HeaderPrimary', 'flarum/components/HeaderSecondary', 'flarum/components/AdminNav', 'flarum/components/ModalManager', 'flarum/components/AlertManager'], function (_export) {
-  /*global FastClick*/
+'use strict';
 
-  /**
-   * The `boot` initializer boots up the admin app. It initializes some app
-   * globals, mounts components to the page, and begins routing.
-   *
-   * @param {ForumApp} app
-   */
-  'use strict';
+System.register('flarum/helpers/userOnline', ['flarum/helpers/icon'], function (_export, _context) {
+    var icon;
+    function userOnline(user) {
+        if (user.lastSeenTime() && user.isOnline()) {
+            return m(
+                'span',
+                { className: 'UserOnline' },
+                icon('circle')
+            );
+        }
+    }
 
+    _export('default', userOnline);
+
+    return {
+        setters: [function (_flarumHelpersIcon) {
+            icon = _flarumHelpersIcon.default;
+        }],
+        execute: function () {}
+    };
+});;
+'use strict';
+
+System.register('flarum/initializers/boot', ['flarum/utils/ScrollListener', 'flarum/utils/Drawer', 'flarum/utils/mapRoutes', 'flarum/components/Navigation', 'flarum/components/HeaderPrimary', 'flarum/components/HeaderSecondary', 'flarum/components/AdminNav', 'flarum/components/ModalManager', 'flarum/components/AlertManager'], function (_export, _context) {
   var ScrollListener, Drawer, mapRoutes, Navigation, HeaderPrimary, HeaderSecondary, AdminNav, ModalManager, AlertManager;
-
-  _export('default', boot);
-
   function boot(app) {
     m.startComputation();
 
@@ -20700,40 +20832,36 @@ System.register('flarum/initializers/boot', ['flarum/utils/ScrollListener', 'fla
     }
   }
 
+  _export('default', boot);
+
   return {
     setters: [function (_flarumUtilsScrollListener) {
-      ScrollListener = _flarumUtilsScrollListener['default'];
+      ScrollListener = _flarumUtilsScrollListener.default;
     }, function (_flarumUtilsDrawer) {
-      Drawer = _flarumUtilsDrawer['default'];
+      Drawer = _flarumUtilsDrawer.default;
     }, function (_flarumUtilsMapRoutes) {
-      mapRoutes = _flarumUtilsMapRoutes['default'];
+      mapRoutes = _flarumUtilsMapRoutes.default;
     }, function (_flarumComponentsNavigation) {
-      Navigation = _flarumComponentsNavigation['default'];
+      Navigation = _flarumComponentsNavigation.default;
     }, function (_flarumComponentsHeaderPrimary) {
-      HeaderPrimary = _flarumComponentsHeaderPrimary['default'];
+      HeaderPrimary = _flarumComponentsHeaderPrimary.default;
     }, function (_flarumComponentsHeaderSecondary) {
-      HeaderSecondary = _flarumComponentsHeaderSecondary['default'];
+      HeaderSecondary = _flarumComponentsHeaderSecondary.default;
     }, function (_flarumComponentsAdminNav) {
-      AdminNav = _flarumComponentsAdminNav['default'];
+      AdminNav = _flarumComponentsAdminNav.default;
     }, function (_flarumComponentsModalManager) {
-      ModalManager = _flarumComponentsModalManager['default'];
+      ModalManager = _flarumComponentsModalManager.default;
     }, function (_flarumComponentsAlertManager) {
-      AlertManager = _flarumComponentsAlertManager['default'];
+      AlertManager = _flarumComponentsAlertManager.default;
     }],
     execute: function () {}
   };
 });;
-System.register('flarum/initializers/humanTime', ['flarum/utils/humanTime'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/initializers/humanTime', ['flarum/utils/humanTime'], function (_export, _context) {
   var humanTimeUtil;
 
-  _export('default', humanTime);
-
-  /**
-   * The `humanTime` initializer sets up a loop every 1 second to update
-   * timestamps rendered with the `humanTime` helper.
-   */
 
   function updateHumanTimes() {
     $('[data-humantime]').each(function () {
@@ -20743,101 +20871,79 @@ System.register('flarum/initializers/humanTime', ['flarum/utils/humanTime'], fun
       $this.html(ago);
     });
   }
+
+  /**
+   * The `humanTime` initializer sets up a loop every 1 second to update
+   * timestamps rendered with the `humanTime` helper.
+   */
   function humanTime() {
     setInterval(updateHumanTimes, 1000);
   }
 
+  _export('default', humanTime);
+
   return {
     setters: [function (_flarumUtilsHumanTime) {
-      humanTimeUtil = _flarumUtilsHumanTime['default'];
+      humanTimeUtil = _flarumUtilsHumanTime.default;
     }],
     execute: function () {}
   };
 });;
-System.register('flarum/initializers/preload', ['flarum/Session'], function (_export) {
+'use strict';
 
-  /**
-   * The `preload` initializer creates the application session and preloads it
-   * with data that has been set on the application's `preload` property. It also
-   * preloads any data on the application's `preload` property into the store.
-   * Finally, it sets the application's `forum` instance to the one that was
-   * preloaded.
-   *
-   * `app.preload.session` should be the same as the response from the /api/token
-   * endpoint: it should contain `token` and `userId` keys.
-   *
-   * @param {App} app
-   */
-  'use strict';
-
+System.register('flarum/initializers/preload', ['flarum/Session'], function (_export, _context) {
   var Session;
-
-  _export('default', preload);
-
   function preload(app) {
     app.store.pushPayload({ data: app.preload.data });
 
     app.forum = app.store.getById('forums', 1);
 
-    app.session = new Session(app.preload.session.token, app.store.getById('users', app.preload.session.userId));
+    app.session = new Session(app.store.getById('users', app.preload.session.userId), app.preload.session.csrfToken);
   }
+
+  _export('default', preload);
 
   return {
     setters: [function (_flarumSession) {
-      Session = _flarumSession['default'];
+      Session = _flarumSession.default;
     }],
     execute: function () {}
   };
 });;
-System.register('flarum/initializers/routes', ['flarum/components/DashboardPage', 'flarum/components/BasicsPage', 'flarum/components/PermissionsPage', 'flarum/components/AppearancePage', 'flarum/components/ExtensionsPage'], function (_export) {
+'use strict';
 
-  /**
-   * The `routes` initializer defines the admin app's routes.
-   *
-   * @param {App} app
-   */
-  'use strict';
-
+System.register('flarum/initializers/routes', ['flarum/components/DashboardPage', 'flarum/components/BasicsPage', 'flarum/components/PermissionsPage', 'flarum/components/AppearancePage', 'flarum/components/ExtensionsPage'], function (_export, _context) {
   var DashboardPage, BasicsPage, PermissionsPage, AppearancePage, ExtensionsPage;
+
+  _export('default', function (app) {
+    app.routes = {
+      'dashboard': { path: '/', component: DashboardPage.component() },
+      'basics': { path: '/basics', component: BasicsPage.component() },
+      'permissions': { path: '/permissions', component: PermissionsPage.component() },
+      'appearance': { path: '/appearance', component: AppearancePage.component() },
+      'extensions': { path: '/extensions', component: ExtensionsPage.component() }
+    };
+  });
+
   return {
     setters: [function (_flarumComponentsDashboardPage) {
-      DashboardPage = _flarumComponentsDashboardPage['default'];
+      DashboardPage = _flarumComponentsDashboardPage.default;
     }, function (_flarumComponentsBasicsPage) {
-      BasicsPage = _flarumComponentsBasicsPage['default'];
+      BasicsPage = _flarumComponentsBasicsPage.default;
     }, function (_flarumComponentsPermissionsPage) {
-      PermissionsPage = _flarumComponentsPermissionsPage['default'];
+      PermissionsPage = _flarumComponentsPermissionsPage.default;
     }, function (_flarumComponentsAppearancePage) {
-      AppearancePage = _flarumComponentsAppearancePage['default'];
+      AppearancePage = _flarumComponentsAppearancePage.default;
     }, function (_flarumComponentsExtensionsPage) {
-      ExtensionsPage = _flarumComponentsExtensionsPage['default'];
+      ExtensionsPage = _flarumComponentsExtensionsPage.default;
     }],
-    execute: function () {
-      _export('default', function (app) {
-        app.routes = {
-          'dashboard': { path: '/', component: DashboardPage.component() },
-          'basics': { path: '/basics', component: BasicsPage.component() },
-          'permissions': { path: '/permissions', component: PermissionsPage.component() },
-          'appearance': { path: '/appearance', component: AppearancePage.component() },
-          'extensions': { path: '/extensions', component: ExtensionsPage.component() }
-        };
-      });
-    }
+    execute: function () {}
   };
 });;
-System.register('flarum/initializers/store', ['flarum/Store', 'flarum/models/Forum', 'flarum/models/User', 'flarum/models/Discussion', 'flarum/models/Post', 'flarum/models/Group', 'flarum/models/Activity', 'flarum/models/Notification'], function (_export) {
+'use strict';
 
-  /**
-   * The `store` initializer creates the application's data store and registers
-   * the default resource types to their models.
-   *
-   * @param {App} app
-   */
-  'use strict';
-
+System.register('flarum/initializers/store', ['flarum/Store', 'flarum/models/Forum', 'flarum/models/User', 'flarum/models/Discussion', 'flarum/models/Post', 'flarum/models/Group', 'flarum/models/Activity', 'flarum/models/Notification'], function (_export, _context) {
   var Store, Forum, User, Discussion, Post, Group, Activity, Notification;
-
-  _export('default', store);
-
   function store(app) {
     app.store = new Store({
       forums: Forum,
@@ -20850,41 +20956,37 @@ System.register('flarum/initializers/store', ['flarum/Store', 'flarum/models/For
     });
   }
 
+  _export('default', store);
+
   return {
     setters: [function (_flarumStore) {
-      Store = _flarumStore['default'];
+      Store = _flarumStore.default;
     }, function (_flarumModelsForum) {
-      Forum = _flarumModelsForum['default'];
+      Forum = _flarumModelsForum.default;
     }, function (_flarumModelsUser) {
-      User = _flarumModelsUser['default'];
+      User = _flarumModelsUser.default;
     }, function (_flarumModelsDiscussion) {
-      Discussion = _flarumModelsDiscussion['default'];
+      Discussion = _flarumModelsDiscussion.default;
     }, function (_flarumModelsPost) {
-      Post = _flarumModelsPost['default'];
+      Post = _flarumModelsPost.default;
     }, function (_flarumModelsGroup) {
-      Group = _flarumModelsGroup['default'];
+      Group = _flarumModelsGroup.default;
     }, function (_flarumModelsActivity) {
-      Activity = _flarumModelsActivity['default'];
+      Activity = _flarumModelsActivity.default;
     }, function (_flarumModelsNotification) {
-      Notification = _flarumModelsNotification['default'];
+      Notification = _flarumModelsNotification.default;
     }],
     execute: function () {}
   };
 });;
-System.register('flarum/Model', [], function (_export) {
-  /**
-   * The `Model` class represents a local data resource. It provides methods to
-   * persist changes via the API.
-   *
-   * @abstract
-   */
-  'use strict';
+'use strict';
 
+System.register('flarum/Model', [], function (_export, _context) {
   var Model;
   return {
     setters: [],
     execute: function () {
-      Model = (function () {
+      Model = function () {
         /**
          * @param {Object} data A resource object from the API.
          * @param {Store} store The data store that this model should be persisted to.
@@ -20938,32 +21040,18 @@ System.register('flarum/Model', [], function (_export) {
          * @public
          * @final
          */
+
+
         babelHelpers.createClass(Model, [{
           key: 'id',
           value: function id() {
             return this.data.id;
           }
-
-          /**
-           * Get one of the model's attributes.
-           *
-           * @param {String} attribute
-           * @return {*}
-           * @public
-           * @final
-           */
         }, {
           key: 'attribute',
           value: function attribute(_attribute) {
             return this.data.attributes[_attribute];
           }
-
-          /**
-           * Merge new data into this model locally.
-           *
-           * @param {Object} data A resource object to merge into this model
-           * @public
-           */
         }, {
           key: 'pushData',
           value: function pushData(data) {
@@ -20971,7 +21059,7 @@ System.register('flarum/Model', [], function (_export) {
             // (e.g. relationships, attributes), we'll need to check and perform the
             // merge at the second level if that's the case.
             for (var key in data) {
-              if (typeof data[key] === 'object') {
+              if (babelHelpers.typeof(data[key]) === 'object') {
                 this.data[key] = this.data[key] || {};
 
                 // For every item in a second-level object, we want to check if we've
@@ -20992,28 +21080,11 @@ System.register('flarum/Model', [], function (_export) {
             // This is an easy way to invalidate retained subtrees etc.
             this.freshness = new Date();
           }
-
-          /**
-           * Merge new attributes into this model locally.
-           *
-           * @param {Object} attributes The attributes to merge.
-           * @public
-           */
         }, {
           key: 'pushAttributes',
           value: function pushAttributes(attributes) {
             this.pushData({ attributes: attributes });
           }
-
-          /**
-           * Merge new attributes into this model, both locally and with persistence.
-           *
-           * @param {Object} attributes The attributes to save. If a 'relationships' key
-           *     exists, it will be extracted and relationships will also be saved.
-           * @param {Object} [options]
-           * @return {Promise}
-           * @public
-           */
         }, {
           key: 'save',
           value: function save(attributes) {
@@ -21047,14 +21118,17 @@ System.register('flarum/Model', [], function (_export) {
             // Before we update the model's data, we should make a copy of the model's
             // old data so that we can revert back to it if something goes awry during
             // persistence.
-            var oldData = JSON.parse(JSON.stringify(this.data));
+            var oldData = this.copyData();
 
             this.pushData(data);
 
-            return app.request(babelHelpers._extends({
+            var request = { data: data };
+            if (options.meta) request.meta = options.meta;
+
+            return app.request(babelHelpers.extends({
               method: this.exists ? 'PATCH' : 'POST',
               url: app.forum.attribute('apiUrl') + this.apiEndpoint(),
-              data: { data: data }
+              data: request
             }, options)).then(
             // If everything went well, we'll make sure the store knows that this
             // model exists now (if it didn't already), and we'll push the data that
@@ -21073,15 +21147,6 @@ System.register('flarum/Model', [], function (_export) {
               throw response;
             });
           }
-
-          /**
-           * Send a request to delete the resource.
-           *
-           * @param {Object} data Data to send along with the DELETE request.
-           * @param {Object} [options]
-           * @return {Promise}
-           * @public
-           */
         }, {
           key: 'delete',
           value: function _delete(data) {
@@ -21091,7 +21156,7 @@ System.register('flarum/Model', [], function (_export) {
 
             if (!this.exists) return m.deferred.resolve().promise;
 
-            return app.request(babelHelpers._extends({
+            return app.request(babelHelpers.extends({
               method: 'DELETE',
               url: app.forum.attribute('apiUrl') + this.apiEndpoint(),
               data: data
@@ -21100,27 +21165,16 @@ System.register('flarum/Model', [], function (_export) {
               _this2.store.remove(_this2);
             });
           }
-
-          /**
-           * Construct a path to the API endpoint for this resource.
-           *
-           * @return {String}
-           * @protected
-           */
         }, {
           key: 'apiEndpoint',
           value: function apiEndpoint() {
             return '/' + this.data.type + (this.exists ? '/' + this.data.id : '');
           }
-
-          /**
-           * Generate a function which returns the value of the given attribute.
-           *
-           * @param {String} name
-           * @param {function} [transform] A function to transform the attribute value
-           * @return {*}
-           * @public
-           */
+        }, {
+          key: 'copyData',
+          value: function copyData() {
+            return JSON.parse(JSON.stringify(this.data));
+          }
         }], [{
           key: 'attribute',
           value: function attribute(name, transform) {
@@ -21130,17 +21184,6 @@ System.register('flarum/Model', [], function (_export) {
               return transform ? transform(value) : value;
             };
           }
-
-          /**
-           * Generate a function which returns the value of the given has-one
-           * relationship.
-           *
-           * @param {String} name
-           * @return {Model|Boolean|undefined} false if no information about the
-           *     relationship exists; undefined if the relationship exists but the model
-           *     has not been loaded; or the model if it has been loaded.
-           * @public
-           */
         }, {
           key: 'hasOne',
           value: function hasOne(name) {
@@ -21156,17 +21199,6 @@ System.register('flarum/Model', [], function (_export) {
               return false;
             };
           }
-
-          /**
-           * Generate a function which returns the value of the given has-many
-           * relationship.
-           *
-           * @param {String} name
-           * @return {Array|Boolean} false if no information about the relationship
-           *     exists; an array if it does, containing models if they have been
-           *     loaded, and undefined for those that have not.
-           * @public
-           */
         }, {
           key: 'hasMany',
           value: function hasMany(name) {
@@ -21184,27 +21216,11 @@ System.register('flarum/Model', [], function (_export) {
               return false;
             };
           }
-
-          /**
-           * Transform the given value into a Date object.
-           *
-           * @param {String} value
-           * @return {Date|null}
-           * @public
-           */
         }, {
           key: 'transformDate',
           value: function transformDate(value) {
             return value ? new Date(value) : null;
           }
-
-          /**
-           * Get a resource identifier object for the given model.
-           *
-           * @param {Model} model
-           * @return {Object}
-           * @protected
-           */
         }, {
           key: 'getIdentifier',
           value: function getIdentifier(model) {
@@ -21215,47 +21231,45 @@ System.register('flarum/Model', [], function (_export) {
           }
         }]);
         return Model;
-      })();
+      }();
 
       _export('default', Model);
     }
   };
 });;
-System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/computed', 'flarum/utils/ItemList', 'flarum/utils/string', 'flarum/components/Badge'], function (_export) {
-  'use strict';
+'use strict';
 
-  var Model, mixin, computed, ItemList, slug, Badge, Discussion;
+System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/computed', 'flarum/utils/ItemList', 'flarum/components/Badge'], function (_export, _context) {
+  var Model, mixin, computed, ItemList, Badge, Discussion;
   return {
     setters: [function (_flarumModel) {
-      Model = _flarumModel['default'];
+      Model = _flarumModel.default;
     }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin['default'];
+      mixin = _flarumUtilsMixin.default;
     }, function (_flarumUtilsComputed) {
-      computed = _flarumUtilsComputed['default'];
+      computed = _flarumUtilsComputed.default;
     }, function (_flarumUtilsItemList) {
-      ItemList = _flarumUtilsItemList['default'];
-    }, function (_flarumUtilsString) {
-      slug = _flarumUtilsString.slug;
+      ItemList = _flarumUtilsItemList.default;
     }, function (_flarumComponentsBadge) {
-      Badge = _flarumComponentsBadge['default'];
+      Badge = _flarumComponentsBadge.default;
     }],
     execute: function () {
-      Discussion = (function (_Model) {
+      Discussion = function (_Model) {
         babelHelpers.inherits(Discussion, _Model);
 
         function Discussion() {
           babelHelpers.classCallCheck(this, Discussion);
-          babelHelpers.get(Object.getPrototypeOf(Discussion.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Discussion).apply(this, arguments));
         }
 
         return Discussion;
-      })(Model);
+      }(Model);
 
       _export('default', Discussion);
 
-      babelHelpers._extends(Discussion.prototype, {
+      babelHelpers.extends(Discussion.prototype, {
         title: Model.attribute('title'),
-        slug: computed('title', slug),
+        slug: Model.attribute('slug'),
 
         startTime: Model.attribute('startTime', Model.transformDate),
         startUser: Model.hasOne('startUser'),
@@ -21293,12 +21307,6 @@ System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/mixin
         canHide: Model.attribute('canHide'),
         canDelete: Model.attribute('canDelete'),
 
-        /**
-         * Remove a post from the discussion's posts relationship.
-         *
-         * @param {Integer} id The ID of the post to remove.
-         * @public
-         */
         removePost: function removePost(id) {
           var relationships = this.data.relationships;
           var posts = relationships && relationships.posts;
@@ -21312,14 +21320,6 @@ System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/mixin
             });
           }
         },
-
-        /**
-         * Get the estimated number of unread posts in this discussion for the current
-         * user.
-         *
-         * @return {Integer}
-         * @public
-         */
         unreadCount: function unreadCount() {
           var user = app.session.user;
 
@@ -21329,13 +21329,6 @@ System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/mixin
 
           return 0;
         },
-
-        /**
-         * Get the Badge components that apply to this discussion.
-         *
-         * @return {ItemList}
-         * @public
-         */
         badges: function badges() {
           var items = new ItemList();
 
@@ -21345,17 +21338,12 @@ System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/mixin
 
           return items;
         },
-
-        /**
-         * Get a list of all of the post IDs in this discussion.
-         *
-         * @return {Array}
-         * @public
-         */
         postIds: function postIds() {
-          return this.data.relationships.posts.data.map(function (link) {
+          var posts = this.data.relationships.posts;
+
+          return posts ? posts.data.map(function (link) {
             return link.id;
-          });
+          }) : [];
         }
       });
 
@@ -21363,23 +21351,23 @@ System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/mixin
     }
   };
 });;
-System.register('flarum/models/Forum', ['flarum/Model', 'flarum/utils/mixin'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/models/Forum', ['flarum/Model', 'flarum/utils/mixin'], function (_export, _context) {
   var Model, mixin, Forum;
   return {
     setters: [function (_flarumModel) {
-      Model = _flarumModel['default'];
+      Model = _flarumModel.default;
     }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin['default'];
+      mixin = _flarumUtilsMixin.default;
     }],
     execute: function () {
-      Forum = (function (_Model) {
+      Forum = function (_Model) {
         babelHelpers.inherits(Forum, _Model);
 
         function Forum() {
           babelHelpers.classCallCheck(this, Forum);
-          babelHelpers.get(Object.getPrototypeOf(Forum.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Forum).apply(this, arguments));
         }
 
         babelHelpers.createClass(Forum, [{
@@ -21389,35 +21377,35 @@ System.register('flarum/models/Forum', ['flarum/Model', 'flarum/utils/mixin'], f
           }
         }]);
         return Forum;
-      })(Model);
+      }(Model);
 
       _export('default', Forum);
     }
   };
 });;
-System.register('flarum/models/Group', ['flarum/Model', 'flarum/utils/mixin'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/models/Group', ['flarum/Model', 'flarum/utils/mixin'], function (_export, _context) {
   var Model, mixin, Group;
   return {
     setters: [function (_flarumModel) {
-      Model = _flarumModel['default'];
+      Model = _flarumModel.default;
     }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin['default'];
+      mixin = _flarumUtilsMixin.default;
     }],
     execute: function () {
-      Group = (function (_Model) {
+      Group = function (_Model) {
         babelHelpers.inherits(Group, _Model);
 
         function Group() {
           babelHelpers.classCallCheck(this, Group);
-          babelHelpers.get(Object.getPrototypeOf(Group.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Group).apply(this, arguments));
         }
 
         return Group;
-      })(Model);
+      }(Model);
 
-      babelHelpers._extends(Group.prototype, {
+      babelHelpers.extends(Group.prototype, {
         nameSingular: Model.attribute('nameSingular'),
         namePlural: Model.attribute('namePlural'),
         color: Model.attribute('color'),
@@ -21432,33 +21420,33 @@ System.register('flarum/models/Group', ['flarum/Model', 'flarum/utils/mixin'], f
     }
   };
 });;
-System.register('flarum/models/Notification', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/computed'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/models/Notification', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/computed'], function (_export, _context) {
   var Model, mixin, computed, Notification;
   return {
     setters: [function (_flarumModel) {
-      Model = _flarumModel['default'];
+      Model = _flarumModel.default;
     }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin['default'];
+      mixin = _flarumUtilsMixin.default;
     }, function (_flarumUtilsComputed) {
-      computed = _flarumUtilsComputed['default'];
+      computed = _flarumUtilsComputed.default;
     }],
     execute: function () {
-      Notification = (function (_Model) {
+      Notification = function (_Model) {
         babelHelpers.inherits(Notification, _Model);
 
         function Notification() {
           babelHelpers.classCallCheck(this, Notification);
-          babelHelpers.get(Object.getPrototypeOf(Notification.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Notification).apply(this, arguments));
         }
 
         return Notification;
-      })(Model);
+      }(Model);
 
       _export('default', Notification);
 
-      babelHelpers._extends(Notification.prototype, {
+      babelHelpers.extends(Notification.prototype, {
         contentType: Model.attribute('contentType'),
         subjectId: Model.attribute('subjectId'),
         content: Model.attribute('content'),
@@ -21479,35 +21467,35 @@ System.register('flarum/models/Notification', ['flarum/Model', 'flarum/utils/mix
     }
   };
 });;
-System.register('flarum/models/Post', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/computed', 'flarum/utils/string'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/models/Post', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/computed', 'flarum/utils/string'], function (_export, _context) {
   var Model, mixin, computed, getPlainContent, Post;
   return {
     setters: [function (_flarumModel) {
-      Model = _flarumModel['default'];
+      Model = _flarumModel.default;
     }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin['default'];
+      mixin = _flarumUtilsMixin.default;
     }, function (_flarumUtilsComputed) {
-      computed = _flarumUtilsComputed['default'];
+      computed = _flarumUtilsComputed.default;
     }, function (_flarumUtilsString) {
       getPlainContent = _flarumUtilsString.getPlainContent;
     }],
     execute: function () {
-      Post = (function (_Model) {
+      Post = function (_Model) {
         babelHelpers.inherits(Post, _Model);
 
         function Post() {
           babelHelpers.classCallCheck(this, Post);
-          babelHelpers.get(Object.getPrototypeOf(Post.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Post).apply(this, arguments));
         }
 
         return Post;
-      })(Model);
+      }(Model);
 
       _export('default', Post);
 
-      babelHelpers._extends(Post.prototype, {
+      babelHelpers.extends(Post.prototype, {
         number: Model.attribute('number'),
         discussion: Model.hasOne('discussion'),
 
@@ -21538,41 +21526,39 @@ System.register('flarum/models/Post', ['flarum/Model', 'flarum/utils/mixin', 'fl
     }
   };
 });;
-System.register('flarum/models/User', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/stringToColor', 'flarum/utils/ItemList', 'flarum/utils/computed', 'flarum/components/GroupBadge'], function (_export) {
-  /*global ColorThief*/
+'use strict';
 
-  'use strict';
-
+System.register('flarum/models/User', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/stringToColor', 'flarum/utils/ItemList', 'flarum/utils/computed', 'flarum/components/GroupBadge'], function (_export, _context) {
   var Model, mixin, stringToColor, ItemList, computed, GroupBadge, User;
   return {
     setters: [function (_flarumModel) {
-      Model = _flarumModel['default'];
+      Model = _flarumModel.default;
     }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin['default'];
+      mixin = _flarumUtilsMixin.default;
     }, function (_flarumUtilsStringToColor) {
-      stringToColor = _flarumUtilsStringToColor['default'];
+      stringToColor = _flarumUtilsStringToColor.default;
     }, function (_flarumUtilsItemList) {
-      ItemList = _flarumUtilsItemList['default'];
+      ItemList = _flarumUtilsItemList.default;
     }, function (_flarumUtilsComputed) {
-      computed = _flarumUtilsComputed['default'];
+      computed = _flarumUtilsComputed.default;
     }, function (_flarumComponentsGroupBadge) {
-      GroupBadge = _flarumComponentsGroupBadge['default'];
+      GroupBadge = _flarumComponentsGroupBadge.default;
     }],
     execute: function () {
-      User = (function (_Model) {
+      User = function (_Model) {
         babelHelpers.inherits(User, _Model);
 
         function User() {
           babelHelpers.classCallCheck(this, User);
-          babelHelpers.get(Object.getPrototypeOf(User.prototype), 'constructor', this).apply(this, arguments);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(User).apply(this, arguments));
         }
 
         return User;
-      })(Model);
+      }(Model);
 
       _export('default', User);
 
-      babelHelpers._extends(User.prototype, {
+      babelHelpers.extends(User.prototype, {
         username: Model.attribute('username'),
         email: Model.attribute('email'),
         isActivated: Model.attribute('isActivated'),
@@ -21581,7 +21567,7 @@ System.register('flarum/models/User', ['flarum/Model', 'flarum/utils/mixin', 'fl
         avatarUrl: Model.attribute('avatarUrl'),
         bio: Model.attribute('bio'),
         bioHtml: computed('bio', function (bio) {
-          return bio ? '<p>' + $('<div/>').text(bio).html().replace(/\n/g, '<br>').autoLink() + '</p>' : '';
+          return bio ? '<p>' + $('<div/>').text(bio).html().replace(/\n/g, '<br>').autoLink({ rel: 'nofollow' }) + '</p>' : '';
         }),
         preferences: Model.attribute('preferences'),
         groups: Model.hasMany('groups'),
@@ -21614,21 +21600,9 @@ System.register('flarum/models/User', ['flarum/Model', 'flarum/utils/mixin', 'fl
           return '#' + stringToColor(username);
         }),
 
-        /**
-         * Check whether or not the user has been seen in the last 5 minutes.
-         *
-         * @return {Boolean}
-         * @public
-         */
         isOnline: function isOnline() {
           return this.lastSeenTime() > moment().subtract(5, 'minutes').toDate();
         },
-
-        /**
-         * Get the Badge components that apply to this user.
-         *
-         * @return {ItemList}
-         */
         badges: function badges() {
           var items = new ItemList();
           var groups = this.groups();
@@ -21641,13 +21615,6 @@ System.register('flarum/models/User', ['flarum/Model', 'flarum/utils/mixin', 'fl
 
           return items;
         },
-
-        /**
-         * Calculate the dominant color of the user's avatar. The dominant color will
-         * be set to the `avatarColor` property once it has been calculated.
-         *
-         * @protected
-         */
         calculateAvatarColor: function calculateAvatarColor() {
           var image = new Image();
           var user = this;
@@ -21660,17 +21627,10 @@ System.register('flarum/models/User', ['flarum/Model', 'flarum/utils/mixin', 'fl
           };
           image.src = this.avatarUrl();
         },
-
-        /**
-         * Update the user's preferences.
-         *
-         * @param {Object} newPreferences
-         * @return {Promise}
-         */
         savePreferences: function savePreferences(newPreferences) {
           var preferences = this.preferences();
 
-          babelHelpers._extends(preferences, newPreferences);
+          babelHelpers.extends(preferences, newPreferences);
 
           return this.save({ preferences: preferences });
         }
@@ -21680,19 +21640,15 @@ System.register('flarum/models/User', ['flarum/Model', 'flarum/utils/mixin', 'fl
     }
   };
 });;
-System.register('flarum/Session', [], function (_export) {
-  /**
-   * The `Session` class defines the current user session. It stores a reference
-   * to the current authenticated user, and provides methods to log in/out.
-   */
-  'use strict';
+'use strict';
 
+System.register('flarum/Session', [], function (_export, _context) {
   var Session;
   return {
     setters: [],
     execute: function () {
-      Session = (function () {
-        function Session(token, user) {
+      Session = function () {
+        function Session(user, csrfToken) {
           babelHelpers.classCallCheck(this, Session);
 
           /**
@@ -21704,12 +21660,12 @@ System.register('flarum/Session', [], function (_export) {
           this.user = user;
 
           /**
-           * The token that was used for authentication.
+           * The CSRF token.
            *
            * @type {String|null}
            * @public
            */
-          this.token = token;
+          this.csrfToken = csrfToken;
         }
 
         /**
@@ -21721,65 +21677,40 @@ System.register('flarum/Session', [], function (_export) {
          * @return {Promise}
          * @public
          */
+
+
         babelHelpers.createClass(Session, [{
           key: 'login',
           value: function login(identification, password) {
             var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
-            return app.request(babelHelpers._extends({
+            return app.request(babelHelpers.extends({
               method: 'POST',
               url: app.forum.attribute('baseUrl') + '/login',
               data: { identification: identification, password: password }
-            }, options)).then(function () {
-              return window.location.reload();
-            });
+            }, options));
           }
-
-          /**
-           * Log the user out.
-           *
-           * @public
-           */
         }, {
           key: 'logout',
           value: function logout() {
-            window.location = app.forum.attribute('baseUrl') + '/logout?token=' + this.token;
-          }
-
-          /**
-           * Apply an authorization header with the current token to the given
-           * XMLHttpRequest object.
-           *
-           * @param {XMLHttpRequest} xhr
-           * @public
-           */
-        }, {
-          key: 'authorize',
-          value: function authorize(xhr) {
-            if (this.token) {
-              xhr.setRequestHeader('Authorization', 'Token ' + this.token);
-            }
+            window.location = app.forum.attribute('baseUrl') + '/logout?token=' + this.csrfToken;
           }
         }]);
         return Session;
-      })();
+      }();
 
       _export('default', Session);
     }
   };
 });;
-System.register('flarum/Store', [], function (_export) {
-  /**
-   * The `Store` class defines a local data store, and provides methods to
-   * retrieve data from the API.
-   */
-  'use strict';
+'use strict';
 
+System.register('flarum/Store', [], function (_export, _context) {
   var Store;
   return {
     setters: [],
     execute: function () {
-      Store = (function () {
+      Store = function () {
         function Store(models) {
           babelHelpers.classCallCheck(this, Store);
 
@@ -21810,6 +21741,8 @@ System.register('flarum/Store', [], function (_export) {
          *     within the 'data' key of the payload.
          * @public
          */
+
+
         babelHelpers.createClass(Store, [{
           key: 'pushPayload',
           value: function pushPayload(payload) {
@@ -21824,16 +21757,6 @@ System.register('flarum/Store', [], function (_export) {
 
             return result;
           }
-
-          /**
-           * Create a model to represent a resource object (or update an existing one),
-           * and push it into the store.
-           *
-           * @param {Object} data The resource object
-           * @return {Model|null} The model, or null if no model class has been
-           *     registered for this resource type.
-           * @public
-           */
         }, {
           key: 'pushObject',
           value: function pushObject(data) {
@@ -21851,19 +21774,6 @@ System.register('flarum/Store', [], function (_export) {
 
             return type[data.id];
           }
-
-          /**
-           * Make a request to the API to find record(s) of a specific type.
-           *
-           * @param {String} type The resource type.
-           * @param {Integer|Integer[]|Object} [id] The ID(s) of the model(s) to retreive.
-           *     Alternatively, if an object is passed, it will be handled as the
-           *     `query` parameter.
-           * @param {Object} [query]
-           * @param {Object} [options]
-           * @return {Promise}
-           * @public
-           */
         }, {
           key: 'find',
           value: function find(type, id) {
@@ -21875,42 +21785,23 @@ System.register('flarum/Store', [], function (_export) {
 
             if (id instanceof Array) {
               url += '?filter[id]=' + id.join(',');
-            } else if (typeof id === 'object') {
+            } else if ((typeof id === 'undefined' ? 'undefined' : babelHelpers.typeof(id)) === 'object') {
               data = id;
             } else if (id) {
               url += '/' + id;
             }
 
-            return app.request(babelHelpers._extends({
+            return app.request(babelHelpers.extends({
               method: 'GET',
               url: url,
               data: data
             }, options)).then(this.pushPayload.bind(this));
           }
-
-          /**
-           * Get a record from the store by ID.
-           *
-           * @param {String} type The resource type.
-           * @param {Integer} id The resource ID.
-           * @return {Model}
-           * @public
-           */
         }, {
           key: 'getById',
           value: function getById(type, id) {
             return this.data[type] && this.data[type][id];
           }
-
-          /**
-           * Get a record from the store by the value of a model attribute.
-           *
-           * @param {String} type The resource type.
-           * @param {String} key The name of the method on the model.
-           * @param {*} value The value of the model attribute.
-           * @return {Model}
-           * @public
-           */
         }, {
           key: 'getBy',
           value: function getBy(type, key, value) {
@@ -21918,14 +21809,6 @@ System.register('flarum/Store', [], function (_export) {
               return model[key]() === value;
             })[0];
           }
-
-          /**
-           * Get all loaded records of a specific type.
-           *
-           * @param {String} type
-           * @return {Model[]}
-           * @public
-           */
         }, {
           key: 'all',
           value: function all(type) {
@@ -21935,26 +21818,11 @@ System.register('flarum/Store', [], function (_export) {
               return records[id];
             }) : [];
           }
-
-          /**
-           * Remove the given model from the store.
-           *
-           * @param {Model} model
-           */
         }, {
           key: 'remove',
           value: function remove(model) {
             delete this.data[model.data.type][model.id()];
           }
-
-          /**
-           * Create a new record of the given type.
-           *
-           * @param {String} type The resource type
-           * @param {Object} [data] Any data to initialize the model with
-           * @return {Model}
-           * @public
-           */
         }, {
           key: 'createRecord',
           value: function createRecord(type) {
@@ -21966,36 +21834,28 @@ System.register('flarum/Store', [], function (_export) {
           }
         }]);
         return Store;
-      })();
+      }();
 
       _export('default', Store);
     }
   };
 });;
-System.register('flarum/Translator', ['flarum/models/User', 'flarum/helpers/username', 'flarum/utils/extractText', 'flarum/utils/extract'], function (_export) {
+'use strict';
 
-  /**
-   * Translator with the same API as Symfony's.
-   *
-   * Derived from https://github.com/willdurand/BazingaJsTranslationBundle
-   * which is available under the MIT License.
-   * Copyright (c) William Durand <william.durand1@gmail.com>
-   */
-  'use strict';
-
+System.register('flarum/Translator', ['flarum/models/User', 'flarum/helpers/username', 'flarum/utils/extractText', 'flarum/utils/extract'], function (_export, _context) {
   var User, username, extractText, extract, Translator;
   return {
     setters: [function (_flarumModelsUser) {
-      User = _flarumModelsUser['default'];
+      User = _flarumModelsUser.default;
     }, function (_flarumHelpersUsername) {
-      username = _flarumHelpersUsername['default'];
+      username = _flarumHelpersUsername.default;
     }, function (_flarumUtilsExtractText) {
-      extractText = _flarumUtilsExtractText['default'];
+      extractText = _flarumUtilsExtractText.default;
     }, function (_flarumUtilsExtract) {
-      extract = _flarumUtilsExtract['default'];
+      extract = _flarumUtilsExtract.default;
     }],
     execute: function () {
-      Translator = (function () {
+      Translator = function () {
         function Translator() {
           babelHelpers.classCallCheck(this, Translator);
 
@@ -22095,8 +21955,8 @@ System.register('flarum/Translator', ['flarum/models/User', 'flarum/helpers/user
                 var matches = part.match(cPluralRegex);
                 explicitRules[matches[0]] = matches[matches.length - 1];
               } else if (sPluralRegex.test(part)) {
-                var matches = part.match(sPluralRegex);
-                standardRules.push(matches[1]);
+                var _matches = part.match(sPluralRegex);
+                standardRules.push(_matches[1]);
               } else {
                 standardRules.push(part);
               }
@@ -22280,27 +22140,15 @@ System.register('flarum/Translator', ['flarum/models/User', 'flarum/helpers/user
           }
         }]);
         return Translator;
-      })();
+      }();
 
       _export('default', Translator);
     }
   };
 });;
-System.register('flarum/utils/abbreviateNumber', [], function (_export) {
-  /**
-   * The `abbreviateNumber` utility converts a number to a shorter localized form.
-   *
-   * @example
-   * abbreviateNumber(1234);
-   * // "1.2K"
-   *
-   * @param {Integer} number
-   * @return {String}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', abbreviateNumber);
-
+System.register('flarum/utils/abbreviateNumber', [], function (_export, _context) {
   function abbreviateNumber(number) {
     // TODO: translation
     if (number >= 1000000) {
@@ -22312,29 +22160,16 @@ System.register('flarum/utils/abbreviateNumber', [], function (_export) {
     }
   }
 
+  _export('default', abbreviateNumber);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register("flarum/utils/anchorScroll", [], function (_export) {
-  /**
-   * The `anchorScroll` utility saves the scroll position relative to an element,
-   * and then restores it after a callback has been run.
-   *
-   * This is useful if a redraw will change the page's content above the viewport.
-   * Normally doing this will result in the content in the viewport being pushed
-   * down or pulled up. By wrapping the redraw with this utility, the scroll
-   * position can be anchor to an element that is in or below the viewport, so
-   * the content in the viewport will stay the same.
-   *
-   * @param {DOMElement} element The element to anchor the scroll position to.
-   * @param {Function} callback The callback to run that will change page content.
-   */
-  "use strict";
+"use strict";
 
-  _export("default", anchorScroll);
-
+System.register("flarum/utils/anchorScroll", [], function (_export, _context) {
   function anchorScroll(element, callback) {
     var $window = $(window);
     var relativeScroll = $(element).offset().top - $window.scrollTop();
@@ -22344,29 +22179,18 @@ System.register("flarum/utils/anchorScroll", [], function (_export) {
     $window.scrollTop($(element).offset().top - relativeScroll);
   }
 
+  _export("default", anchorScroll);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/utils/classList', [], function (_export) {
-  /**
-   * The `classList` utility creates a list of class names by joining an object's
-   * keys, but only for values which are truthy.
-   *
-   * @example
-   * classList({ foo: true, bar: false, qux: 'qaz' });
-   * // "foo qux"
-   *
-   * @param {Object} classes
-   * @return {String}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', classList);
-
+System.register('flarum/utils/classList', [], function (_export, _context) {
   function classList(classes) {
-    var classNames = undefined;
+    var classNames = void 0;
 
     if (classes instanceof Array) {
       classNames = classes.filter(function (name) {
@@ -22383,25 +22207,16 @@ System.register('flarum/utils/classList', [], function (_export) {
     return classNames.join(' ');
   }
 
+  _export('default', classList);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/utils/computed', [], function (_export) {
-  /**
-   * The `computed` utility creates a function that will cache its output until
-   * any of the dependent values are dirty.
-   *
-   * @param {...String} dependentKeys The keys of the dependent values.
-   * @param {function} compute The function which computes the value using the
-   *     dependent values.
-   * @return {Function}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', computed);
-
+System.register('flarum/utils/computed', [], function (_export, _context) {
   function computed() {
     for (var _len = arguments.length, dependentKeys = Array(_len), _key = 0; _key < _len; _key++) {
       dependentKeys[_key] = arguments[_key];
@@ -22411,7 +22226,7 @@ System.register('flarum/utils/computed', [], function (_export) {
     var compute = dependentKeys.slice(-1)[0];
 
     var dependentValues = {};
-    var computedValue = undefined;
+    var computedValue = void 0;
 
     return function () {
       var _this = this;
@@ -22439,24 +22254,21 @@ System.register('flarum/utils/computed', [], function (_export) {
     };
   }
 
+  _export('default', computed);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/utils/Drawer', [], function (_export) {
-  /**
-   * The `Drawer` class controls the page's drawer. The drawer is the area the
-   * slides out from the left on mobile devices; it contains the header and the
-   * footer.
-   */
-  'use strict';
+'use strict';
 
+System.register('flarum/utils/Drawer', [], function (_export, _context) {
   var Drawer;
   return {
     setters: [],
     execute: function () {
-      Drawer = (function () {
+      Drawer = function () {
         function Drawer() {
           var _this = this;
 
@@ -22478,17 +22290,13 @@ System.register('flarum/utils/Drawer', [], function (_export) {
          * @return {Boolean}
          * @public
          */
+
+
         babelHelpers.createClass(Drawer, [{
           key: 'isOpen',
           value: function isOpen() {
             return $('#app').hasClass('drawerOpen');
           }
-
-          /**
-           * Hide the drawer.
-           *
-           * @public
-           */
         }, {
           key: 'hide',
           value: function hide() {
@@ -22496,12 +22304,6 @@ System.register('flarum/utils/Drawer', [], function (_export) {
 
             if (this.$backdrop) this.$backdrop.remove();
           }
-
-          /**
-           * Show the drawer.
-           *
-           * @public
-           */
         }, {
           key: 'show',
           value: function show() {
@@ -22519,19 +22321,15 @@ System.register('flarum/utils/Drawer', [], function (_export) {
           }
         }]);
         return Drawer;
-      })();
+      }();
 
       _export('default', Drawer);
     }
   };
 });;
-System.register("flarum/utils/evented", [], function (_export) {
-  /**
-   * The `evented` mixin provides methods allowing an object to trigger events,
-   * running externally registered event handlers.
-   */
-  "use strict";
+"use strict";
 
+System.register("flarum/utils/evented", [], function (_export, _context) {
   return {
     setters: [],
     execute: function () {
@@ -22544,13 +22342,6 @@ System.register("flarum/utils/evented", [], function (_export) {
          */
         handlers: null,
 
-        /**
-         * Get all of the registered handlers for an event.
-         *
-         * @param {String} event The name of the event.
-         * @return {Array}
-         * @protected
-         */
         getHandlers: function getHandlers(event) {
           this.handlers = this.handlers || {};
 
@@ -22558,14 +22349,6 @@ System.register("flarum/utils/evented", [], function (_export) {
 
           return this.handlers[event];
         },
-
-        /**
-         * Trigger an event.
-         *
-         * @param {String} event The name of the event.
-         * @param {...*} args Arguments to pass to event handlers.
-         * @public
-         */
         trigger: function trigger(event) {
           var _this = this;
 
@@ -22577,24 +22360,9 @@ System.register("flarum/utils/evented", [], function (_export) {
             return handler.apply(_this, args);
           });
         },
-
-        /**
-         * Register an event handler.
-         *
-         * @param {String} event The name of the event.
-         * @param {function} handler The function to handle the event.
-         */
         on: function on(event, handler) {
           this.getHandlers(event).push(handler);
         },
-
-        /**
-         * Register an event handler so that it will run only once, and then
-         * unregister itself.
-         *
-         * @param {String} event The name of the event.
-         * @param {function} handler The function to handle the event.
-         */
         one: function one(event, handler) {
           var wrapper = function wrapper() {
             handler.apply(this, arguments);
@@ -22604,13 +22372,6 @@ System.register("flarum/utils/evented", [], function (_export) {
 
           this.getHandlers(event).push(wrapper);
         },
-
-        /**
-         * Unregister an event handler.
-         *
-         * @param {String} event The name of the event.
-         * @param {function} handler The function that handles the event.
-         */
         off: function off(event, handler) {
           var handlers = this.getHandlers(event);
           var index = handlers.indexOf(handler);
@@ -22623,19 +22384,9 @@ System.register("flarum/utils/evented", [], function (_export) {
     }
   };
 });;
-System.register("flarum/utils/extract", [], function (_export) {
-  /**
-   * The `extract` utility deletes a property from an object and returns its
-   * value.
-   *
-   * @param {Object} object The object that owns the property
-   * @param {String} property The name of the property to extract
-   * @return {*} The value of the property
-   */
-  "use strict";
+"use strict";
 
-  _export("default", extract);
-
+System.register("flarum/utils/extract", [], function (_export, _context) {
   function extract(object, property) {
     var value = object[property];
 
@@ -22644,22 +22395,16 @@ System.register("flarum/utils/extract", [], function (_export) {
     return value;
   }
 
+  _export("default", extract);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/utils/extractText', [], function (_export) {
-  /**
-   * Extract the text nodes from a virtual element.
-   *
-   * @param {VirtualElement} vdom
-   * @return {String}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', extractText);
-
+System.register('flarum/utils/extractText', [], function (_export, _context) {
   function extractText(vdom) {
     var text = '';
 
@@ -22667,7 +22412,7 @@ System.register('flarum/utils/extractText', [], function (_export) {
       text += vdom.map(function (element) {
         return extractText(element);
       }).join('');
-    } else if (typeof vdom === 'object') {
+    } else if ((typeof vdom === 'undefined' ? 'undefined' : babelHelpers.typeof(vdom)) === 'object') {
       text += extractText(vdom.children);
     } else {
       text += vdom;
@@ -22676,48 +22421,30 @@ System.register('flarum/utils/extractText', [], function (_export) {
     return text;
   }
 
+  _export('default', extractText);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/utils/formatNumber', [], function (_export) {
-  /**
-   * The `formatNumber` utility localizes a number into a string with the
-   * appropriate punctuation.
-   *
-   * @example
-   * formatNumber(1234);
-   * // 1,234
-   *
-   * @param {Number} number
-   * @return {String}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', formatNumber);
-
+System.register('flarum/utils/formatNumber', [], function (_export, _context) {
   function formatNumber(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  _export('default', formatNumber);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/utils/humanTime', [], function (_export) {
-  /**
-   * The `humanTime` utility converts a date to a localized, human-readable time-
-   * ago string.
-   *
-   * @param {Date} time
-   * @return {String}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', humanTime);
-
+System.register('flarum/utils/humanTime', [], function (_export, _context) {
   function humanTime(time) {
     var m = moment(time);
 
@@ -22739,17 +22466,24 @@ System.register('flarum/utils/humanTime', [], function (_export) {
 
     return ago;
   }
+  _export('default', humanTime);
 
   return {
     setters: [],
     execute: function () {
-      ;
+      ; /**
+         * The `humanTime` utility converts a date to a localized, human-readable time-
+         * ago string.
+         *
+         * @param {Date} time
+         * @return {String}
+         */
     }
   };
 });;
-System.register("flarum/utils/ItemList", [], function (_export) {
-  "use strict";
+"use strict";
 
+System.register("flarum/utils/ItemList", [], function (_export, _context) {
   var Item, ItemList;
   return {
     setters: [],
@@ -22759,15 +22493,9 @@ System.register("flarum/utils/ItemList", [], function (_export) {
 
         this.content = content;
         this.priority = priority;
-      }
+      };
 
-      /**
-       * The `ItemList` class collects items and then arranges them into an array
-       * by priority.
-       */
-      ;
-
-      ItemList = (function () {
+      ItemList = function () {
         function ItemList() {
           babelHelpers.classCallCheck(this, ItemList);
 
@@ -22786,34 +22514,18 @@ System.register("flarum/utils/ItemList", [], function (_export) {
          * @param key
          * @returns {boolean}
          */
+
+
         babelHelpers.createClass(ItemList, [{
           key: "has",
           value: function has(key) {
             return !!this.items[key];
           }
-
-          /**
-           * Get the content of an item.
-           *
-           * @param {String} key
-           * @return {*}
-           * @public
-           */
         }, {
           key: "get",
           value: function get(key) {
             return this.items[key].content;
           }
-
-          /**
-           * Add an item to the list.
-           *
-           * @param {String} key A unique key for the item.
-           * @param {*} content The item's content.
-           * @param {Integer} [priority] The priority of the item. Items with a higher
-           *     priority will be positioned before items with a lower priority.
-           * @public
-           */
         }, {
           key: "add",
           value: function add(key, content) {
@@ -22821,15 +22533,6 @@ System.register("flarum/utils/ItemList", [], function (_export) {
 
             this.items[key] = new Item(content, priority);
           }
-
-          /**
-           * Replace an item in the list, only if it is already present.
-           *
-           * @param {String} key
-           * @param {*} [content]
-           * @param {Integer} [priority]
-           * @public
-           */
         }, {
           key: "replace",
           value: function replace(key) {
@@ -22846,25 +22549,11 @@ System.register("flarum/utils/ItemList", [], function (_export) {
               }
             }
           }
-
-          /**
-           * Remove an item from the list.
-           *
-           * @param {String} key
-           * @public
-           */
         }, {
           key: "remove",
           value: function remove(key) {
             delete this.items[key];
           }
-
-          /**
-           * Merge another list's items into this one.
-           *
-           * @param {ItemList} items
-           * @public
-           */
         }, {
           key: "merge",
           value: function merge(items) {
@@ -22874,15 +22563,6 @@ System.register("flarum/utils/ItemList", [], function (_export) {
               }
             }
           }
-
-          /**
-           * Convert the list into an array of item content arranged by priority. Each
-           * item's content will be assigned an `itemName` property equal to the item's
-           * unique key.
-           *
-           * @return {Array}
-           * @public
-           */
         }, {
           key: "toArray",
           value: function toArray() {
@@ -22911,26 +22591,15 @@ System.register("flarum/utils/ItemList", [], function (_export) {
           }
         }]);
         return ItemList;
-      })();
+      }();
 
       _export("default", ItemList);
     }
   };
 });;
-System.register('flarum/utils/mapRoutes', [], function (_export) {
-  /**
-   * The `mapRoutes` utility converts a map of named application routes into a
-   * format that can be understood by Mithril.
-   *
-   * @see https://lhorie.github.io/mithril/mithril.route.html#defining-routes
-   * @param {Object} routes
-   * @param {String} [basePath]
-   * @return {Object}
-   */
-  'use strict';
+'use strict';
 
-  _export('default', mapRoutes);
-
+System.register('flarum/utils/mapRoutes', [], function (_export, _context) {
   function mapRoutes(routes) {
     var basePath = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
 
@@ -22947,62 +22616,50 @@ System.register('flarum/utils/mapRoutes', [], function (_export) {
     return map;
   }
 
+  _export('default', mapRoutes);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register("flarum/utils/mixin", [], function (_export) {
-  /**
-   * The `mixin` utility assigns the properties of a set of 'mixin' objects to
-   * the prototype of a parent object.
-   *
-   * @example
-   * class MyClass extends mixin(ExtistingClass, evented, etc) {}
-   *
-   * @param {Class} Parent The class to extend the new class from.
-   * @param {...Object} mixins The objects to mix in.
-   * @return {Class} A new class that extends Parent and contains the mixins.
-   */
-  "use strict";
+"use strict";
 
-  _export("default", mixin);
-
+System.register("flarum/utils/mixin", [], function (_export, _context) {
   function mixin(Parent) {
-    for (var _len = arguments.length, mixins = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      mixins[_key - 1] = arguments[_key];
-    }
-
-    var Mixed = (function (_Parent) {
+    var Mixed = function (_Parent) {
       babelHelpers.inherits(Mixed, _Parent);
 
       function Mixed() {
         babelHelpers.classCallCheck(this, Mixed);
-        babelHelpers.get(Object.getPrototypeOf(Mixed.prototype), "constructor", this).apply(this, arguments);
+        return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Mixed).apply(this, arguments));
       }
 
       return Mixed;
-    })(Parent);
+    }(Parent);
+
+    for (var _len = arguments.length, mixins = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      mixins[_key - 1] = arguments[_key];
+    }
 
     mixins.forEach(function (object) {
-      babelHelpers._extends(Mixed.prototype, object);
+      babelHelpers.extends(Mixed.prototype, object);
     });
 
     return Mixed;
   }
 
+  _export("default", mixin);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/utils/patchMithril', ['../Component'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register('flarum/utils/patchMithril', ['../Component'], function (_export, _context) {
   var Component;
-
-  _export('default', patchMithril);
-
   function patchMithril(global) {
     var mo = global.m;
 
@@ -23048,16 +22705,18 @@ System.register('flarum/utils/patchMithril', ['../Component'], function (_export
     global.m = m;
   }
 
+  _export('default', patchMithril);
+
   return {
     setters: [function (_Component) {
-      Component = _Component['default'];
+      Component = _Component.default;
     }],
     execute: function () {}
   };
 });;
-System.register("flarum/utils/RequestError", [], function (_export) {
-  "use strict";
+"use strict";
 
+System.register("flarum/utils/RequestError", [], function (_export, _context) {
   var RequestError;
   return {
     setters: [],
@@ -23083,34 +22742,34 @@ System.register("flarum/utils/RequestError", [], function (_export) {
     }
   };
 });;
-System.register('flarum/utils/saveSettings', [], function (_export) {
-  'use strict';
+'use strict';
 
-  _export('default', saveSettings);
-
+System.register('flarum/utils/saveSettings', [], function (_export, _context) {
   function saveSettings(settings) {
     var oldSettings = JSON.parse(JSON.stringify(app.settings));
 
-    babelHelpers._extends(app.settings, settings);
+    babelHelpers.extends(app.settings, settings);
 
     return app.request({
       method: 'POST',
       url: app.forum.attribute('apiUrl') + '/settings',
       data: settings
-    })['catch'](function (error) {
+    }).catch(function (error) {
       app.settings = oldSettings;
       throw error;
     });
   }
+
+  _export('default', saveSettings);
 
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register("flarum/utils/ScrollListener", [], function (_export) {
-  "use strict";
+"use strict";
 
+System.register("flarum/utils/ScrollListener", [], function (_export, _context) {
   var scroll, ScrollListener;
   return {
     setters: [],
@@ -23119,12 +22778,7 @@ System.register("flarum/utils/ScrollListener", [], function (_export) {
         return window.setTimeout(callback, 1000 / 60);
       };
 
-      /**
-       * The `ScrollListener` class sets up a listener that handles window scroll
-       * events.
-       */
-
-      ScrollListener = (function () {
+      ScrollListener = function () {
         /**
          * @param {Function} callback The callback to run when the scroll position
          *     changes.
@@ -23144,6 +22798,8 @@ System.register("flarum/utils/ScrollListener", [], function (_export) {
          *
          * @protected
          */
+
+
         babelHelpers.createClass(ScrollListener, [{
           key: "loop",
           value: function loop() {
@@ -23153,14 +22809,6 @@ System.register("flarum/utils/ScrollListener", [], function (_export) {
 
             scroll(this.loop.bind(this));
           }
-
-          /**
-           * Check if the scroll position has changed; if it has, run the handler.
-           *
-           * @param {Boolean} [force=false] Whether or not to force the handler to be
-           *     run, even if the scroll position hasn't changed.
-           * @public
-           */
         }, {
           key: "update",
           value: function update(force) {
@@ -23171,12 +22819,6 @@ System.register("flarum/utils/ScrollListener", [], function (_export) {
               this.lastTop = top;
             }
           }
-
-          /**
-           * Start listening to and handling the window's scroll position.
-           *
-           * @public
-           */
         }, {
           key: "start",
           value: function start() {
@@ -23185,12 +22827,6 @@ System.register("flarum/utils/ScrollListener", [], function (_export) {
               this.loop();
             }
           }
-
-          /**
-           * Stop listening to and handling the window's scroll position.
-           *
-           * @public
-           */
         }, {
           key: "stop",
           value: function stop() {
@@ -23198,104 +22834,95 @@ System.register("flarum/utils/ScrollListener", [], function (_export) {
           }
         }]);
         return ScrollListener;
-      })();
+      }();
 
       _export("default", ScrollListener);
     }
   };
 });;
-System.register('flarum/utils/string', [], function (_export) {
-  /**
-   * Truncate a string to the given length, appending ellipses if necessary.
-   *
-   * @param {String} string
-   * @param {Number} length
-   * @param {Number} [start=0]
-   * @return {String}
-   */
-  'use strict';
+'use strict';
 
-  /**
-   * Create a slug out of the given string. Non-alphanumeric characters are
-   * converted to hyphens.
-   *
-   * @param {String} string
-   * @return {String}
-   */
-
-  _export('truncate', truncate);
-
-  /**
-   * Strip HTML tags and quotes out of the given string, replacing them with
-   * meaningful punctuation.
-   *
-   * @param {String} string
-   * @return {String}
-   */
-
-  _export('slug', slug);
-
-  /**
-   * An array of DOM selectors to remove when getting plain content.
-   *
-   * @type {Array}
-   */
-
-  _export('getPlainContent', getPlainContent);
-
-  _export('ucfirst', ucfirst);
-
-  function truncate(string, length) {
-    var start = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-
-    return (start > 0 ? '...' : '') + string.substring(start, start + length) + (string.length > start + length ? '...' : '');
-  }
-
-  function slug(string) {
-    return string.toLowerCase().replace(/[^a-z0-9]/gi, '-').replace(/-+/g, '-').replace(/-$|^-/g, '') || '-';
-  }
-
-  function getPlainContent(string) {
-    var dom = $('<div/>').html(string.replace(/(<\/p>|<br>)/g, '$1 &nbsp;'));
-
-    dom.find(getPlainContent.removeSelectors.join(',')).remove();
-
-    return dom.text();
-  }
-
-  /**
-   * Make a string's first character uppercase.
-   *
-   * @param {String} string
-   * @return {String}
-   */
-
-  function ucfirst(string) {
-    return string.substr(0, 1).toUpperCase() + string.substr(1);
-  }
-
+System.register('flarum/utils/string', [], function (_export, _context) {
   return {
     setters: [],
     execute: function () {
+      /**
+       * Truncate a string to the given length, appending ellipses if necessary.
+       *
+       * @param {String} string
+       * @param {Number} length
+       * @param {Number} [start=0]
+       * @return {String}
+       */
+      function truncate(string, length) {
+        var start = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+        return (start > 0 ? '...' : '') + string.substring(start, start + length) + (string.length > start + length ? '...' : '');
+      }
+
+      /**
+       * Create a slug out of the given string. Non-alphanumeric characters are
+       * converted to hyphens.
+       *
+       * @param {String} string
+       * @return {String}
+       */
+
+      _export('truncate', truncate);
+
+      function slug(string) {
+        return string.toLowerCase().replace(/[^a-z0-9]/gi, '-').replace(/-+/g, '-').replace(/-$|^-/g, '') || '-';
+      }
+
+      /**
+       * Strip HTML tags and quotes out of the given string, replacing them with
+       * meaningful punctuation.
+       *
+       * @param {String} string
+       * @return {String}
+       */
+
+      _export('slug', slug);
+
+      function getPlainContent(string) {
+        var dom = $('<div/>').html(string.replace(/(<\/p>|<br>)/g, '$1 &nbsp;'));
+
+        dom.find(getPlainContent.removeSelectors.join(',')).remove();
+
+        return dom.text();
+      }
+
+      /**
+       * An array of DOM selectors to remove when getting plain content.
+       *
+       * @type {Array}
+       */
+
+      _export('getPlainContent', getPlainContent);
+
       getPlainContent.removeSelectors = ['blockquote', 'script'];
+
+      /**
+       * Make a string's first character uppercase.
+       *
+       * @param {String} string
+       * @return {String}
+       */
+      function ucfirst(string) {
+        return string.substr(0, 1).toUpperCase() + string.substr(1);
+      }
+
+      _export('ucfirst', ucfirst);
     }
   };
 });;
-System.register('flarum/utils/stringToColor', [], function (_export) {
-  'use strict';
+'use strict';
 
-  _export('default', stringToColor);
-
-  /**
-   * Convert the given string to a unique color.
-   *
-   * @param {String} string
-   * @return {String}
-   */
+System.register('flarum/utils/stringToColor', [], function (_export, _context) {
   function hsvToRgb(h, s, v) {
-    var r = undefined;
-    var g = undefined;
-    var b = undefined;
+    var r = void 0;
+    var g = void 0;
+    var b = void 0;
 
     var i = Math.floor(h * 6);
     var f = h * 6 - i;
@@ -23324,6 +22951,13 @@ System.register('flarum/utils/stringToColor', [], function (_export) {
       b: Math.floor(b * 255)
     };
   }
+
+  /**
+   * Convert the given string to a unique color.
+   *
+   * @param {String} string
+   * @return {String}
+   */
   function stringToColor(string) {
     var num = 0;
 
@@ -23341,37 +22975,21 @@ System.register('flarum/utils/stringToColor', [], function (_export) {
     return '' + rgb.r.toString(16) + rgb.g.toString(16) + rgb.b.toString(16);
   }
 
+  _export('default', stringToColor);
+
   return {
     setters: [],
     execute: function () {}
   };
 });;
-System.register('flarum/utils/SubtreeRetainer', [], function (_export) {
-  /**
-   * The `SubtreeRetainer` class represents a Mithril virtual DOM subtree. It
-   * keeps track of a number of pieces of data, allowing the subtree to be
-   * retained if none of them have changed.
-   *
-   * @example
-   * // constructor
-   * this.subtree = new SubtreeRetainer(
-   *   () => this.props.post.freshness,
-   *   () => this.showing
-   * );
-   * this.subtree.check(() => this.props.user.freshness);
-   *
-   * // view
-   * this.subtree.retain() || 'expensive expression'
-   *
-   * @see https://lhorie.github.io/mithril/mithril.html#persisting-dom-elements-across-route-changes
-   */
-  'use strict';
+'use strict';
 
+System.register('flarum/utils/SubtreeRetainer', [], function (_export, _context) {
   var SubtreeRetainer;
   return {
     setters: [],
     execute: function () {
-      SubtreeRetainer = (function () {
+      SubtreeRetainer = function () {
         /**
          * @param {...callbacks} callbacks Functions returning data to keep track of.
          */
@@ -23394,6 +23012,8 @@ System.register('flarum/utils/SubtreeRetainer', [], function (_export) {
          * @return {Object|false}
          * @public
          */
+
+
         babelHelpers.createClass(SubtreeRetainer, [{
           key: 'retain',
           value: function retain() {
@@ -23412,13 +23032,6 @@ System.register('flarum/utils/SubtreeRetainer', [], function (_export) {
 
             return needsRebuild ? false : { subtree: 'retain' };
           }
-
-          /**
-           * Add another callback to be checked.
-           *
-           * @param {...Function} callbacks
-           * @public
-           */
         }, {
           key: 'check',
           value: function check() {
@@ -23428,12 +23041,6 @@ System.register('flarum/utils/SubtreeRetainer', [], function (_export) {
 
             this.callbacks = this.callbacks.concat(callbacks);
           }
-
-          /**
-           * Invalidate the subtree, forcing it to be rerendered.
-           *
-           * @public
-           */
         }, {
           key: 'invalidate',
           value: function invalidate() {
@@ -23441,7 +23048,7 @@ System.register('flarum/utils/SubtreeRetainer', [], function (_export) {
           }
         }]);
         return SubtreeRetainer;
-      })();
+      }();
 
       _export('default', SubtreeRetainer);
     }

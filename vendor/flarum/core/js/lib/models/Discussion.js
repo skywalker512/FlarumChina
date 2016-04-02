@@ -2,14 +2,13 @@ import Model from 'flarum/Model';
 import mixin from 'flarum/utils/mixin';
 import computed from 'flarum/utils/computed';
 import ItemList from 'flarum/utils/ItemList';
-import { slug } from 'flarum/utils/string';
 import Badge from 'flarum/components/Badge';
 
 export default class Discussion extends Model {}
 
 Object.assign(Discussion.prototype, {
   title: Model.attribute('title'),
-  slug: computed('title', slug),
+  slug: Model.attribute('slug'),
 
   startTime: Model.attribute('startTime', Model.transformDate),
   startUser: Model.hasOne('startUser'),
@@ -99,7 +98,9 @@ Object.assign(Discussion.prototype, {
    * @public
    */
   postIds() {
-    return this.data.relationships.posts.data.map(link => link.id);
+    const posts = this.data.relationships.posts;
+
+    return posts ? posts.data.map(link => link.id) : [];
   }
 });
 

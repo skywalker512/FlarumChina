@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.3.5 - 2016-03-17
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#160](https://github.com/zendframework/zend-diactoros/pull/160) fixes HTTP
+  protocol detection in the `ServerRequestFactory` to work correctly with HTTP/2.
+
+## 1.3.4 - 2016-03-17
+
+### Added
+
+- [#119](https://github.com/zendframework/zend-diactoros/pull/119) adds the 451
+  (Unavailable for Legal Reasons) status code to the `Response` class.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#117](https://github.com/zendframework/zend-diactoros/pull/117) provides
+  validation of the HTTP protocol version.
+- [#127](https://github.com/zendframework/zend-diactoros/pull/127) now properly
+  removes attributes with `null` values when calling `withoutAttribute()`.
+- [#132](https://github.com/zendframework/zend-diactoros/pull/132) updates the
+  `ServerRequestFactory` to marshal the request path fragment, if present.
+- [#142](https://github.com/zendframework/zend-diactoros/pull/142) updates the
+  exceptions thrown by `HeaderSecurity` to include the header name and/or
+  value.
+- [#148](https://github.com/zendframework/zend-diactoros/pull/148) fixes several
+  stream operations to ensure they raise exceptions when the internal pointer
+  is at an invalid position.
+- [#151](https://github.com/zendframework/zend-diactoros/pull/151) ensures
+  URI fragments are properly encoded.
+
 ## 1.3.3 - 2016-01-04
 
 ### Added

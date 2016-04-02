@@ -110,4 +110,25 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
+
+    /**
+     * @test
+     */
+    public function it_expires_cookies()
+    {
+        $setCookie = SetCookie::createExpired('expire_immediately');
+
+        $this->assertLessThan(time(), $setCookie->getExpires());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_long_living_cookies()
+    {
+        $setCookie = SetCookie::createRememberedForever('remember_forever');
+
+        $fourYearsFromNow = (new \DateTime('+4 years'))->getTimestamp();
+        $this->assertGreaterThan($fourYearsFromNow, $setCookie->getExpires());
+    }
 }

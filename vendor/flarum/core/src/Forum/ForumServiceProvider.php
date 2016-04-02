@@ -32,7 +32,7 @@ class ForumServiceProvider extends AbstractServiceProvider
         });
 
         $this->app->singleton('flarum.forum.routes', function () {
-            return $this->getRoutes();
+            return new RouteCollection;
         });
     }
 
@@ -41,6 +41,8 @@ class ForumServiceProvider extends AbstractServiceProvider
      */
     public function boot()
     {
+        $this->populateRoutes($this->app->make('flarum.forum.routes'));
+
         $this->loadViewsFrom(__DIR__.'/../../views', 'flarum.forum');
 
         $this->flushAssetsWhenThemeChanged();
@@ -49,14 +51,12 @@ class ForumServiceProvider extends AbstractServiceProvider
     }
 
     /**
-     * Get the forum client routes.
+     * Populate the forum client routes.
      *
-     * @return RouteCollection
+     * @param RouteCollection $routes
      */
-    protected function getRoutes()
+    protected function populateRoutes(RouteCollection $routes)
     {
-        $routes = new RouteCollection;
-
         $toController = $this->getHandlerGenerator($this->app);
 
         $routes->get(
@@ -80,25 +80,25 @@ class ForumServiceProvider extends AbstractServiceProvider
         $routes->get(
             '/settings',
             'settings',
-            $toController('Flarum\Forum\Controller\ClientController')
+            $toController('Flarum\Forum\Controller\AuthorizedClientController')
         );
 
         $routes->get(
             '/notifications',
             'notifications',
-            $toController('Flarum\Forum\Controller\ClientController')
+            $toController('Flarum\Forum\Controller\AuthorizedClientController')
         );
 
         $routes->get(
             '/logout',
             'logout',
-            $toController('Flarum\Forum\Controller\LogoutController')
+            $toController('Flarum\Forum\Controller\LogOutController')
         );
 
         $routes->post(
             '/login',
             'login',
-            $toController('Flarum\Forum\Controller\LoginController')
+            $toController('Flarum\Forum\Controller\LogInController')
         );
 
         $routes->post(
@@ -140,8 +140,6 @@ class ForumServiceProvider extends AbstractServiceProvider
             'default',
             $toDefaultController
         );
-
-        return $routes;
     }
 
     protected function flushAssetsWhenThemeChanged()

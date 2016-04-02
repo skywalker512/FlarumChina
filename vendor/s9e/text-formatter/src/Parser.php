@@ -268,7 +268,8 @@ class Parser
 				'parser'         => $this,
 				'registeredVars' => $this->registeredVars,
 				'tag'            => $tag,
-				'tagConfig'      => $tagConfig
+				'tagConfig'      => $tagConfig,
+				'text'           => $this->text
 			);
 			foreach ($tagConfig['filterChain'] as $filter)
 				if (!self::executeFilter($filter, $vars))
@@ -621,10 +622,11 @@ class Parser
 					{
 						$child = $this->addCopyTag($parent, $tag->getPos() + $tag->getLen(), 0);
 						$tag->cascadeInvalidationTo($child);
+						$child->setSortPriority($tag->getSortPriority() + 1);
 					}
-					++$this->currentFixingCost;
 					$this->tagStack[] = $tag;
-					$this->addMagicEndTag($parent, $tag->getPos());
+					$this->addMagicEndTag($parent, $tag->getPos())->setSortPriority($tag->getSortPriority() - 1);
+					$this->currentFixingCost += \count($this->tagStack);
 					return \true;
 				}
 			}
@@ -653,7 +655,9 @@ class Parser
 		$tagName = $startTag->getName();
 		if ($startTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
 			$tagPos = $this->getMagicPos($tagPos);
-		$this->addEndTag($tagName, $tagPos, 0)->pairWith($startTag);
+		$endTag = $this->addEndTag($tagName, $tagPos, 0);
+		$endTag->pairWith($startTag);
+		return $endTag;
 	}
 	protected function getMagicPos($tagPos)
 	{

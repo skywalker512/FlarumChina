@@ -11,12 +11,12 @@
 namespace Flarum\Core\Command;
 
 use Flarum\Core\Access\AssertPermissionTrait;
-use Flarum\Core\User;
 use Flarum\Core\Repository\UserRepository;
-use Flarum\Core\Validator\UserValidator;
-use Flarum\Event\UserWillBeSaved;
-use Flarum\Event\UserGroupsWereChanged;
 use Flarum\Core\Support\DispatchEventsTrait;
+use Flarum\Core\User;
+use Flarum\Core\Validator\UserValidator;
+use Flarum\Event\UserGroupsWereChanged;
+use Flarum\Event\UserWillBeSaved;
 use Illuminate\Contracts\Events\Dispatcher;
 
 class EditUserHandler
@@ -83,6 +83,10 @@ class EditUserHandler
             }
         }
 
+        if ($actor->isAdmin() && ! empty($attributes['isActivated'])) {
+            $user->activate();
+        }
+
         if (isset($attributes['password'])) {
             $this->assertPermission($canEdit);
             $user->changePassword($attributes['password']);
@@ -134,6 +138,7 @@ class EditUserHandler
             new UserWillBeSaved($user, $actor, $data)
         );
 
+        $this->validator->setUser($user);
         $this->validator->assertValid(array_merge($user->getDirty(), $validate));
 
         $user->save();

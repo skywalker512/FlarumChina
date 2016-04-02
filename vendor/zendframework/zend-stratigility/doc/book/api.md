@@ -248,7 +248,7 @@ following convenience methods:
 - `write()`, which proxies to the `write()` method of the composed response stream.
 - `end()`, which marks the response as complete; it can take an optional argument, which, when
   provided, will be passed to the `write()` method. Once `end()` has been called, the response is
-  immutable.
+  immutable and will throw an exception if a state mutating method like `withHeader` is called.
 - `isComplete()` indicates whether or not `end()` has been called.
 
 Additionally, it provides access to the original response created by the server via the method

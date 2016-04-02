@@ -15,9 +15,9 @@ use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\NotificationSerializer;
 use Flarum\Event\ConfigureApiRoutes;
 use Flarum\Event\ConfigureNotificationTypes;
+use Flarum\Foundation\AbstractServiceProvider;
 use Flarum\Http\GenerateRouteHandlerTrait;
 use Flarum\Http\RouteCollection;
-use Flarum\Foundation\AbstractServiceProvider;
 use Tobscure\JsonApi\ErrorHandler;
 use Tobscure\JsonApi\Exception\Handler\FallbackExceptionHandler;
 use Tobscure\JsonApi\Exception\Handler\InvalidParameterExceptionHandler;
@@ -36,7 +36,7 @@ class ApiServiceProvider extends AbstractServiceProvider
         });
 
         $this->app->singleton('flarum.api.routes', function () {
-            return $this->getRoutes();
+            return new RouteCollection;
         });
 
         $this->app->singleton(ErrorHandler::class, function () {
@@ -44,9 +44,13 @@ class ApiServiceProvider extends AbstractServiceProvider
 
             $handler->registerHandler(new Handler\FloodingExceptionHandler);
             $handler->registerHandler(new Handler\IlluminateValidationExceptionHandler);
+            $handler->registerHandler(new Handler\InvalidAccessTokenExceptionHandler);
             $handler->registerHandler(new Handler\InvalidConfirmationTokenExceptionHandler);
+            $handler->registerHandler(new Handler\MethodNotAllowedExceptionHandler);
             $handler->registerHandler(new Handler\ModelNotFoundExceptionHandler);
             $handler->registerHandler(new Handler\PermissionDeniedExceptionHandler);
+            $handler->registerHandler(new Handler\RouteNotFoundExceptionHandler);
+            $handler->registerHandler(new Handler\TokenMismatchExceptionHandler);
             $handler->registerHandler(new Handler\ValidationExceptionHandler);
             $handler->registerHandler(new InvalidParameterExceptionHandler);
             $handler->registerHandler(new FallbackExceptionHandler($this->app->inDebugMode()));
@@ -60,6 +64,8 @@ class ApiServiceProvider extends AbstractServiceProvider
      */
     public function boot()
     {
+        $this->populateRoutes($this->app->make('flarum.api.routes'));
+
         $this->registerNotificationSerializers();
 
         AbstractSerializeController::setContainer($this->app);
@@ -89,14 +95,12 @@ class ApiServiceProvider extends AbstractServiceProvider
     }
 
     /**
-     * Get the API routes.
+     * Populate the API routes.
      *
-     * @return RouteCollection
+     * @param RouteCollection $routes
      */
-    protected function getRoutes()
+    protected function populateRoutes(RouteCollection $routes)
     {
-        $routes = new RouteCollection;
-
         $toController = $this->getHandlerGenerator($this->app);
 
         // Get forum information
@@ -104,13 +108,6 @@ class ApiServiceProvider extends AbstractServiceProvider
             '/forum',
             'forum.show',
             $toController('Flarum\Api\Controller\ShowForumController')
-        );
-
-        // Save forum information
-        $routes->patch(
-            '/forum',
-            'forum.update',
-            $toController('Flarum\Api\Controller\UpdateForumController')
         );
 
         // Retrieve authentication token
@@ -180,6 +177,13 @@ class ApiServiceProvider extends AbstractServiceProvider
             '/users/{id}/avatar',
             'users.avatar.delete',
             $toController('Flarum\Api\Controller\DeleteAvatarController')
+        );
+
+        // send confirmation email
+        $routes->post(
+            '/users/{id}/send-confirmation',
+            'users.confirmation.send',
+            $toController('Flarum\Api\Controller\SendConfirmationEmailController')
         );
 
         /*
@@ -362,7 +366,5 @@ class ApiServiceProvider extends AbstractServiceProvider
         $this->app->make('events')->fire(
             new ConfigureApiRoutes($routes, $toController)
         );
-
-        return $routes;
     }
 }

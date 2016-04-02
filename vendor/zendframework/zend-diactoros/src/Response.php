@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @see       http://github.com/zendframework/zend-diactoros for the canonical source repository
- * @copyright Copyright (c) 2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2015-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   https://github.com/zendframework/zend-diactoros/blob/master/LICENSE.md New BSD License
  */
 
@@ -81,6 +81,7 @@ class Response implements ResponseInterface
         428 => 'Precondition Required',
         429 => 'Too Many Requests',
         431 => 'Request Header Fields Too Large',
+        451 => 'Unavailable For Legal Reasons',
         // SERVER ERROR
         500 => 'Internal Server Error',
         501 => 'Not Implemented',
@@ -112,18 +113,8 @@ class Response implements ResponseInterface
      */
     public function __construct($body = 'php://memory', $status = 200, array $headers = [])
     {
-        if (! is_string($body) && ! is_resource($body) && ! $body instanceof StreamInterface) {
-            throw new InvalidArgumentException(
-                'Stream must be a string stream resource identifier, '
-                . 'an actual stream resource, '
-                . 'or a Psr\Http\Message\StreamInterface implementation'
-            );
-        }
-
         $this->setStatusCode($status);
-
-        $this->stream = ($body instanceof StreamInterface) ? $body : new Stream($body, 'wb+');
-
+        $this->stream = $this->getStream($body, 'wb+');
         list($this->headerNames, $headers) = $this->filterHeaders($headers);
         $this->assertHeaders($headers);
         $this->headers = $headers;

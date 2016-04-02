@@ -14,7 +14,6 @@ use Flarum\Api\Client;
 use Flarum\Asset\AssetManager;
 use Flarum\Asset\JsCompiler;
 use Flarum\Asset\LessCompiler;
-use Flarum\Core;
 use Flarum\Event\ConfigureClientView;
 use Flarum\Foundation\Application;
 use Flarum\Locale\JsCompiler as LocaleJsCompiler;
@@ -309,9 +308,7 @@ abstract class AbstractClientController extends AbstractHtmlController
         }
 
         $filtered = array_filter(array_keys($translations), function ($id) {
-            if (preg_match($this->translations, $id)) {
-                return true;
-            }
+            return preg_match($this->translations, $id);
         });
 
         return array_only($translations, $filtered);

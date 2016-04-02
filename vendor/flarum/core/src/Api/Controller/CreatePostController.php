@@ -12,6 +12,7 @@ namespace Flarum\Api\Controller;
 
 use Flarum\Core\Command\PostReply;
 use Flarum\Core\Command\ReadDiscussion;
+use Flarum\Core\Post\Floodgate;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
@@ -39,11 +40,18 @@ class CreatePostController extends AbstractCreateController
     protected $bus;
 
     /**
-     * @param Dispatcher $bus
+     * @var Floodgate
      */
-    public function __construct(Dispatcher $bus)
+    protected $floodgate;
+
+    /**
+     * @param Dispatcher $bus
+     * @param Floodgate $floodgate
+     */
+    public function __construct(Dispatcher $bus, Floodgate $floodgate)
     {
         $this->bus = $bus;
+        $this->floodgate = $floodgate;
     }
 
     /**
@@ -52,9 +60,13 @@ class CreatePostController extends AbstractCreateController
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = $request->getAttribute('actor');
-        $data = array_get($request->getParsedBody(), 'data');
+        $data = array_get($request->getParsedBody(), 'data', []);
         $discussionId = array_get($data, 'relationships.discussion.data.id');
         $ipAddress = array_get($request->getServerParams(), 'REMOTE_ADDR', '127.0.0.1');
+
+        if (! $request->getAttribute('bypassFloodgate')) {
+            $this->floodgate->assertNotFlooding($actor);
+        }
 
         $post = $this->bus->dispatch(
             new PostReply($discussionId, $actor, $data, $ipAddress)

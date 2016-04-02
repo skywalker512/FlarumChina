@@ -1289,19 +1289,23 @@ function fosterParent(tag)
 			{
 				if (parentName !== tagName && currentFixingCost < maxFixingCost)
 				{
-					// Add a 0-width copy of the parent tag right after this tag, and make it
-					// depend on this tag
+					// Add a 0-width copy of the parent tag right after this tag, with a worse
+					// priority and make it depend on this tag
 					var child = addCopyTag(parent, tag.getPos() + tag.getLen(), 0);
 					tag.cascadeInvalidationTo(child);
+					child.setSortPriority(tag.getSortPriority() + 1);
 				}
-
-				++currentFixingCost;
 
 				// Reinsert current tag
 				tagStack.push(tag);
 
-				// And finally close its parent
-				addMagicEndTag(parent, tag.getPos());
+				// And finally close its parent with a priority that ensures it is processed
+				// before this tag
+				addMagicEndTag(parent, tag.getPos()).setSortPriority(tag.getSortPriority() - 1);
+
+				// Adjust the fixing cost commensurately with the size of the tag stack which
+				// has to be sorted
+				currentFixingCost += tagStack.length;
 
 				return true;
 			}
@@ -1359,6 +1363,7 @@ function requireAncestor(tag)
 *
 * @param  {!Tag}    startTag Start tag
 * @param  {!number} tagPos   End tag's position (will be adjusted for whitespace if applicable)
+* @return {!Tag}
 */
 function addMagicEndTag(startTag, tagPos)
 {
@@ -1371,7 +1376,10 @@ function addMagicEndTag(startTag, tagPos)
 	}
 
 	// Add a 0-width end tag that is paired with the given start tag
-	addEndTag(tagName, tagPos, 0).pairWith(startTag);
+	var endTag = addEndTag(tagName, tagPos, 0);
+	endTag.pairWith(startTag);
+
+	return endTag;
 }
 
 /**

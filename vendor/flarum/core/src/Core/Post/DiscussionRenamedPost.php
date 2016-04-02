@@ -21,14 +21,14 @@ use Flarum\Core\Post;
 class DiscussionRenamedPost extends AbstractEventPost implements MergeableInterface
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static $type = 'discussionRenamed';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function saveAfter(Post $previous)
+    public function saveAfter(Post $previous = null)
     {
         // If the previous post is another 'discussion renamed' post, and it's
         // by the same user, then we can merge this post into it. If we find
@@ -64,10 +64,10 @@ class DiscussionRenamedPost extends AbstractEventPost implements MergeableInterf
     {
         $post = new static;
 
-        $post->content       = static::buildContent($oldTitle, $newTitle);
-        $post->time          = time();
+        $post->content = static::buildContent($oldTitle, $newTitle);
+        $post->time = time();
         $post->discussion_id = $discussionId;
-        $post->user_id       = $userId;
+        $post->user_id = $userId;
 
         return $post;
     }

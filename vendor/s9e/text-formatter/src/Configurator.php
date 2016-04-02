@@ -5079,6 +5079,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		$this->collection->append('OptimizeConditionalAttributes');
 		$this->collection->append('OptimizeConditionalValueOf');
 		$this->collection->append('OptimizeChoose');
+		$this->collection->append('SetRelNoreferrerOnTargetedLinks');
 	}
 	public function normalizeTag(Tag $tag)
 	{
@@ -6172,7 +6173,7 @@ class BlockElementsFosterFormattingElements implements TargetedRulesGenerator
 {
 	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
-		return ($src->isBlock() && $trg->isFormattingElement()) ? array('fosterParent') : array();
+		return ($src->isBlock() && $src->isPassthrough() && $trg->isFormattingElement()) ? array('fosterParent') : array();
 	}
 }
 
@@ -7373,8 +7374,7 @@ class OptimizeChoose extends TemplateNormalization
 	public function normalize(DOMElement $template)
 	{
 		$this->xpath = new DOMXPath($template->ownerDocument);
-		$query       = '//xsl:choose';
-		foreach ($this->xpath->query($query) as $choose)
+		foreach ($template->getElementsByTagNameNS(self::XMLNS_XSL, 'choose') as $choose)
 		{
 			$this->choose = $choose;
 			$this->optimizeChooseElement();
@@ -7640,6 +7640,46 @@ class RemoveInterElementWhitespace extends TemplateNormalization
 		$query = '//text()[normalize-space() = ""][. != " "][not(parent::xsl:text)]';
 		foreach ($xpath->query($query) as $textNode)
 			$textNode->parentNode->removeChild($textNode);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
+use DOMElement;
+use DOMNodeList;
+use s9e\TextFormatter\Configurator\TemplateNormalization;
+class SetRelNoreferrerOnTargetedLinks extends TemplateNormalization
+{
+	public function normalize(DOMElement $template)
+	{
+		$this->normalizeElements($template->ownerDocument->getElementsByTagName('a'));
+		$this->normalizeElements($template->ownerDocument->getElementsByTagName('area'));
+	}
+	protected function addRelAttribute(DOMElement $element)
+	{
+		$rel = $element->getAttribute('rel');
+		if (\preg_match('(\\S$)', $rel))
+			$rel .= ' ';
+		$rel .= 'noreferrer';
+		$element->setAttribute('rel', $rel);
+	}
+	protected function linkTargetCanAccessOpener(DOMElement $element)
+	{
+		if (!$element->hasAttribute('target'))
+			return \false;
+		if (\preg_match('(\\bno(?:open|referr)er\\b)', $element->getAttribute('rel')))
+			return \false;
+		return \true;
+	}
+	protected function normalizeElements(DOMNodeList $elements)
+	{
+		foreach ($elements as $element)
+			if ($this->linkTargetCanAccessOpener($element))
+				$this->addRelAttribute($element);
 	}
 }
 

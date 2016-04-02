@@ -21,7 +21,13 @@ class Configurator extends ConfiguratorBase
 			),
 			'template' =>
 				'<pre>
-					<code class="{@lang}">
+					<code>
+						<xsl:if test="@lang">
+							<xsl:attribute name="class">
+								<xsl:text>language-</xsl:text>
+								<xsl:value-of select="@lang"/>
+							</xsl:attribute>
+						</xsl:if>
 						<xsl:apply-templates />
 					</code>
 				</pre>'

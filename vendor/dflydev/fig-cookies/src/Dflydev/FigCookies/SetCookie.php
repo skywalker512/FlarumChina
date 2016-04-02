@@ -99,6 +99,16 @@ class SetCookie
         return $clone;
     }
 
+    public function rememberForever()
+    {
+        return $this->withExpires(new DateTime('+5 years'));
+    }
+
+    public function expire()
+    {
+        return $this->withExpires(new DateTime('-5 years'));
+    }
+
     public function withMaxAge($maxAge = null)
     {
         $clone = clone($this);
@@ -163,6 +173,16 @@ class SetCookie
     public static function create($name, $value = null)
     {
         return new static($name, $value);
+    }
+
+    public static function createRememberedForever($name, $value = null)
+    {
+        return static::create($name, $value)->rememberForever();
+    }
+
+    public static function createExpired($name)
+    {
+        return static::create($name)->expire();
     }
 
     public static function fromSetCookieString($string)

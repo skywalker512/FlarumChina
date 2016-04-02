@@ -57,11 +57,11 @@ PSR-7 Request or PSR-7 Response like this:
 ```php
 // Render the Cookie headers and add them to the headers of a
 // PSR-7 Request.
-$request = $cookies->renderIntoRequest($request);
+$request = $cookies->renderIntoCookieHeader($request);
 
 // Render the Set-Cookie headers and add them to the headers of a
 // PSR-7 Response.
-$response = $setCookies->renderIntoResponse($response);
+$response = $setCookies->renderIntoSetCookieHeader($response);
 ```
 
 Like PSR-7 Messages, `Cookie`, `Cookies`, `SetCookie`, and `SetCookies`
@@ -220,8 +220,8 @@ $response = FigResponseCookies::set($response, SetCookie::create('token')
 
 #### Modify a Response Cookie
 
-The `modify' method allows for replacing the contents of a cookie based on the
-current cookie with the specified name. The third argument is a `callable that
+The `modify` method allows for replacing the contents of a cookie based on the
+current cookie with the specified name. The third argument is a `callable` that
 takes a `SetCookie` instance as its first argument and is expected to return a
 `SetCookie` instance.
 

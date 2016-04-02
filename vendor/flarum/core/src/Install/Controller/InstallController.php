@@ -10,43 +10,42 @@
 
 namespace Flarum\Install\Controller;
 
-use Flarum\Http\Controller\ControllerInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response;
-use Flarum\Install\Console\InstallCommand;
-use Flarum\Install\Console\DefaultsDataProvider;
-use Flarum\Api\Command\GenerateAccessToken;
-use Flarum\Forum\Controller\WriteRememberCookieTrait;
-use Symfony\Component\Console\Output\StreamOutput;
-use Symfony\Component\Console\Input\StringInput;
-use Illuminate\Contracts\Bus\Dispatcher;
 use Exception;
-use DateTime;
+use Flarum\Http\Controller\ControllerInterface;
+use Flarum\Http\SessionAuthenticator;
+use Flarum\Install\Console\DefaultsDataProvider;
+use Flarum\Install\Console\InstallCommand;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\StreamOutput;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\HtmlResponse;
 
 class InstallController implements ControllerInterface
 {
-    use WriteRememberCookieTrait;
-
     protected $command;
 
     /**
-     * @var Dispatcher
+     * @var SessionAuthenticator
      */
-    protected $bus;
+    protected $authenticator;
 
-    public function __construct(InstallCommand $command, Dispatcher $bus)
+    /**
+     * InstallController constructor.
+     * @param InstallCommand $command
+     * @param SessionAuthenticator $authenticator
+     */
+    public function __construct(InstallCommand $command, SessionAuthenticator $authenticator)
     {
         $this->command = $command;
-        $this->bus = $bus;
+        $this->authenticator = $authenticator;
     }
 
     /**
      * @param Request $request
-     * @param array $routeParams
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function handle(Request $request, array $routeParams = [])
+    public function handle(Request $request)
     {
         $input = $request->getParsedBody();
 
@@ -72,8 +71,8 @@ class InstallController implements ControllerInterface
         $data->setBaseUrl($baseUrl);
 
         $data->setSetting('forum_title', array_get($input, 'forumTitle'));
-        $data->setSetting('mail_from', 'noreply@' . preg_replace('/^www\./i', '', parse_url($baseUrl, PHP_URL_HOST)));
-        $data->setSetting('welcome_title', 'Welcome to ' . array_get($input, 'forumTitle'));
+        $data->setSetting('mail_from', 'noreply@'.preg_replace('/^www\./i', '', parse_url($baseUrl, PHP_URL_HOST)));
+        $data->setSetting('welcome_title', 'Welcome to '.array_get($input, 'forumTitle'));
 
         $body = fopen('php://temp', 'wb+');
         $input = new StringInput('');
@@ -87,14 +86,9 @@ class InstallController implements ControllerInterface
             return new HtmlResponse($e->getMessage(), 500);
         }
 
-        $token = $this->bus->dispatch(
-            new GenerateAccessToken(1)
-        );
-        $token->update(['expires_at' => new DateTime('+2 weeks')]);
+        $session = $request->getAttribute('session');
+        $this->authenticator->logIn($session, 1);
 
-        return $this->withRememberCookie(
-            new Response($body, 200),
-            $token->id
-        );
+        return new Response($body);
     }
 }

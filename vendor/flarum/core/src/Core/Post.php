@@ -10,15 +10,11 @@
 
 namespace Flarum\Core;
 
-use DomainException;
 use Flarum\Core\Post\RegisteredTypesScope;
-use Flarum\Event\PostWasDeleted;
-use Flarum\Database\AbstractModel;
-use Flarum\Core\User;
-use Flarum\Core\Support\Locked;
-use Flarum\Core\Support\ScopeVisibilityTrait;
 use Flarum\Core\Support\EventGeneratorTrait;
-use Flarum\Core\Support\ValidateBeforeSaveTrait;
+use Flarum\Core\Support\ScopeVisibilityTrait;
+use Flarum\Database\AbstractModel;
+use Flarum\Event\PostWasDeleted;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -37,6 +33,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property User|null $user
  * @property User|null $editUser
  * @property User|null $hideUser
+ * @property string $ip_address
  */
 class Post extends AbstractModel
 {
@@ -88,14 +85,6 @@ class Post extends AbstractModel
             $post->discussion->save();
         });
 
-        // Don't allow the first post in a discussion to be deleted, because
-        // it doesn't make sense. The discussion must be deleted instead.
-        static::deleting(function (Post $post) {
-            if ($post->number == 1) {
-                throw new DomainException('Cannot delete the first post of a discussion');
-            }
-        });
-
         static::deleted(function (Post $post) {
             $post->raise(new PostWasDeleted($post));
         });
@@ -107,7 +96,7 @@ class Post extends AbstractModel
      * Determine whether or not this post is visible to the given user.
      *
      * @param User $user
-     * @return boolean
+     * @return bool
      */
     public function isVisibleTo(User $user)
     {

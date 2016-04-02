@@ -192,6 +192,8 @@
 .Button--block {
   display: block;
   width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   // Vertically space out multiple block buttons
   + .Button--block {
@@ -217,7 +219,7 @@
   border-radius: 18px;
 
   .Avatar {
-    margin: -2px 5px -2px -5px;
+    margin: -2px 5px -2px -6px;
     .Avatar--size(24px);
   }
 }

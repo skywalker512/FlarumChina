@@ -40,6 +40,17 @@ class FigResponseCookies
 
     /**
      * @param ResponseInterface $response
+     * @param string $cookieName
+     *
+     * @return ResponseInterface
+     */
+    public static function expire(ResponseInterface $response, $cookieName)
+    {
+        return static::set($response, SetCookie::createExpired($cookieName));
+    }
+
+    /**
+     * @param ResponseInterface $response
      * @param string $name
      * @param callable $modify
      *

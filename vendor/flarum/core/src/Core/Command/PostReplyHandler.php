@@ -10,13 +10,14 @@
 
 namespace Flarum\Core\Command;
 
+use DateTime;
 use Flarum\Core\Access\AssertPermissionTrait;
+use Flarum\Core\Notification\NotificationSyncer;
+use Flarum\Core\Post\CommentPost;
+use Flarum\Core\Repository\DiscussionRepository;
+use Flarum\Core\Support\DispatchEventsTrait;
 use Flarum\Core\Validator\PostValidator;
 use Flarum\Event\PostWillBeSaved;
-use Flarum\Core\Repository\DiscussionRepository;
-use Flarum\Core\Post\CommentPost;
-use Flarum\Core\Support\DispatchEventsTrait;
-use Flarum\Core\Notification\NotificationSyncer;
 use Illuminate\Contracts\Events\Dispatcher;
 
 class PostReplyHandler
@@ -84,6 +85,10 @@ class PostReplyHandler
             $actor->id,
             $command->ipAddress
         );
+
+        if ($actor->isAdmin() && ($time = array_get($command->data, 'attributes.time'))) {
+            $post->time = new DateTime($time);
+        }
 
         $this->events->fire(
             new PostWillBeSaved($post, $actor, $command->data)

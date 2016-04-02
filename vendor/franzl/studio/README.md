@@ -4,13 +4,14 @@ Develop your Composer libraries with style.
 
 This package makes it easy to develop Composer packages while using them.
 
-Instead of installing the packages you're actively working on as a dependency, use Studio to manage your libraries.
-It will take care of autoloading your library's dependencies, and you won't have to develop in the `vendor` directory.
+Instead of installing the packages you're working on from the Packagist repository, use Studio to symlink them from the filesystem instead.
+Under the hood, it uses Composer's [path repositories](https://getcomposer.org/doc/05-repositories.md#path) to do so.
+As a result, you won't have to develop in the `vendor` directory.
 
 Studio also knows how to configure development tools that might be part of your workflow.
 This includes the following:
 
-- Autoloading (src & tests)
+- Autoloading (`src` and `tests`)
 - PhpUnit
 - PhpSpec
 - TravisCI
@@ -24,7 +25,7 @@ Studio can be installed globally or per project, with Composer:
 Globally (recommended): `composer global require franzl/studio`
 (use as `studio`)
 
->Make sure to place the ~/.composer/vendor/bin directory in your PATH so the `studio` executable can be located by your system.
+> Make sure that the ~/.composer/vendor/bin directory is added to your PATH, so that the `studio` executable can be located by your system.
 
 Per project: `composer require --dev franzl/studio`
 (use as `vendor/bin/studio`)

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
 
     <style>
-      @import url(//cdn.css.net/fonts/css?family=Open+Sans:400italic,700italic,400,700,600);
+      @import url(//fonts.css.network/css?family=Open+Sans:400italic,700italic,400,700,600);
 
       body {
         background: #fff;
@@ -162,7 +162,7 @@
   <body>
     <div class="container">
       <h1>
-        <?php echo file_get_contents(__DIR__ . '/logo.svg'); ?>
+        <?php echo file_get_contents(__DIR__.'/logo.svg'); ?>
       </h1>
 
       <div class="animated fadeIn">

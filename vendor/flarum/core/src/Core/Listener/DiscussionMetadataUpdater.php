@@ -11,9 +11,9 @@
 namespace Flarum\Core\Listener;
 
 use Flarum\Core\Post;
-use Flarum\Event\PostWasPosted;
 use Flarum\Event\PostWasDeleted;
 use Flarum\Event\PostWasHidden;
+use Flarum\Event\PostWasPosted;
 use Flarum\Event\PostWasRestored;
 use Illuminate\Contracts\Events\Dispatcher;
 
@@ -51,6 +51,12 @@ class DiscussionMetadataUpdater
     public function whenPostWasDeleted(PostWasDeleted $event)
     {
         $this->removePost($event->post);
+
+        $discussion = $event->post->discussion;
+
+        if ($discussion && $discussion->posts()->count() === 0) {
+            $discussion->delete();
+        }
     }
 
     /**

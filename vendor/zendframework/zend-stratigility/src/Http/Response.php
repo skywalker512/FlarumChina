@@ -3,12 +3,13 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @see       http://github.com/zendframework/zend-stratigility for the canonical source repository
- * @copyright Copyright (c) 2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2015-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   https://github.com/zendframework/zend-stratigility/blob/master/LICENSE.md New BSD License
  */
 
 namespace Zend\Stratigility\Http;
 
+use RuntimeException;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -56,11 +57,13 @@ class Response implements
      * Proxies to the underlying stream and writes the provided data to it.
      *
      * @param string $data
+     * @return self
+     * @throws RuntimeException if response is already completed
      */
     public function write($data)
     {
         if ($this->complete) {
-            return $this;
+            throw $this->responseIsAlreadyCompleted(__METHOD__);
         }
 
         $this->getBody()->write($data);
@@ -77,6 +80,7 @@ class Response implements
      * prior to marking the response as complete.
      *
      * @param string $data
+     * @return self
      */
     public function end($data = null)
     {
@@ -140,11 +144,12 @@ class Response implements
      * Proxy to PsrResponseInterface::withBody()
      *
      * {@inheritdoc}
+     * @throws RuntimeException if response is already completed
      */
     public function withBody(StreamInterface $body)
     {
         if ($this->complete) {
-            return $this;
+            throw $this->responseIsAlreadyCompleted(__METHOD__);
         }
 
         $new = $this->psrResponse->withBody($body);
@@ -195,11 +200,12 @@ class Response implements
      * Proxy to PsrResponseInterface::withHeader()
      *
      * {@inheritdoc}
+     * @throws RuntimeException if response is already completed
      */
     public function withHeader($header, $value)
     {
         if ($this->complete) {
-            return $this;
+            throw $this->responseIsAlreadyCompleted(__METHOD__);
         }
 
         $new = $this->psrResponse->withHeader($header, $value);
@@ -210,11 +216,12 @@ class Response implements
      * Proxy to PsrResponseInterface::withAddedHeader()
      *
      * {@inheritdoc}
+     * @throws RuntimeException if response is already completed
      */
     public function withAddedHeader($header, $value)
     {
         if ($this->complete) {
-            return $this;
+            throw $this->responseIsAlreadyCompleted(__METHOD__);
         }
 
         $new = $this->psrResponse->withAddedHeader($header, $value);
@@ -225,11 +232,12 @@ class Response implements
      * Proxy to PsrResponseInterface::withoutHeader()
      *
      * {@inheritdoc}
+     * @throws RuntimeException if response is already completed
      */
     public function withoutHeader($header)
     {
         if ($this->complete) {
-            return $this;
+            throw $this->responseIsAlreadyCompleted(__METHOD__);
         }
 
         $new = $this->psrResponse->withoutHeader($header);
@@ -250,11 +258,12 @@ class Response implements
      * Proxy to PsrResponseInterface::withStatus()
      *
      * {@inheritdoc}
+     * @throws RuntimeException if response is already completed
      */
     public function withStatus($code, $reasonPhrase = null)
     {
         if ($this->complete) {
-            return $this;
+            throw $this->responseIsAlreadyCompleted(__METHOD__);
         }
 
         $new = $this->psrResponse->withStatus($code, $reasonPhrase);
@@ -269,5 +278,17 @@ class Response implements
     public function getReasonPhrase()
     {
         return $this->psrResponse->getReasonPhrase();
+    }
+
+    /**
+     * @param string $detectedInMethod
+     * @return RuntimeException
+     */
+    private function responseIsAlreadyCompleted($detectedInMethod)
+    {
+        return new RuntimeException(sprintf(
+            'Calling %s is not possible, as the response is already marked as completed.',
+            $detectedInMethod
+        ));
     }
 }

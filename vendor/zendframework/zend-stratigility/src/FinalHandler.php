@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @see       http://github.com/zendframework/zend-stratigility for the canonical source repository
- * @copyright Copyright (c) 2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2015-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   https://github.com/zendframework/zend-stratigility/blob/master/LICENSE.md New BSD License
  */
 
@@ -44,12 +44,9 @@ class FinalHandler
      */
     public function __construct(array $options = [], ResponseInterface $response = null)
     {
-        $this->options  = $options;
-        $this->response = $response;
+        $this->options = $options;
 
-        if ($response) {
-            $this->bodySize = $response->getBody()->getSize();
-        }
+        $this->setOriginalResponse($response);
     }
 
     /**
@@ -98,6 +95,20 @@ class FinalHandler
     }
 
     /**
+     * Set the original response and response body size for comparison.
+     *
+     * @param ResponseInterface $response
+     */
+    public function setOriginalResponse(ResponseInterface $response = null)
+    {
+        $this->response = $response;
+
+        if ($response) {
+            $this->bodySize = $response->getBody()->getSize();
+        }
+    }
+
+    /**
      * Handle an error condition
      *
      * Use the $error to create details for the response.
@@ -109,14 +120,14 @@ class FinalHandler
      */
     private function handleError($error, RequestInterface $request, ResponseInterface $response)
     {
-        $response = $response->withStatus(
-            Utils::getStatusCode($error, $response)
-        );
-
+        $statusCode = Utils::getStatusCode($error, $response);
+        $reasonPhrase = $response->getStatusCode() === $statusCode
+                      ? $response->getReasonPhrase()
+                      : '';
+        $response = $response->withStatus($statusCode, $reasonPhrase);
         $message = $response->getReasonPhrase() ?: 'Unknown Error';
-        if (! isset($this->options['env'])
-            || $this->options['env'] !== 'production'
-        ) {
+
+        if (isset($this->options['env']) && $this->options['env'] !== 'production') {
             $message = $this->createDevelopmentErrorMessage($error);
         }
 
@@ -168,8 +179,7 @@ class FinalHandler
     private function createDevelopmentErrorMessage($error)
     {
         if ($error instanceof Exception) {
-            $message  = $error->getMessage() . "\n";
-            $message .= $error->getTraceAsString();
+            $message  = $error;
         } elseif (is_object($error) && ! method_exists($error, '__toString')) {
             $message = sprintf('Error of type "%s" occurred', get_class($error));
         } else {
@@ -241,10 +251,10 @@ class FinalHandler
     private function completeResponse(ResponseInterface $response, $message)
     {
         if ($response instanceof Http\Response) {
-            return $response->end($message);
+            return $response->write($message);
         }
 
         $response = new Http\Response($response);
-        return $response->end($message);
+        return $response->write($message);
     }
 }

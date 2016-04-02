@@ -180,7 +180,7 @@ EOF;
     {
         $dump = $this->dumper->dump(array('foo' => new A(), 'bar' => 1), 0, 0, false, true);
 
-        $this->assertEquals('{ foo: !!php/object:O:30:"Symfony\Component\Yaml\Tests\A":1:{s:1:"a";s:3:"foo";}, bar: 1 }', $dump, '->dump() is able to dump objects');
+        $this->assertEquals('{ foo: !php/object:O:30:"Symfony\Component\Yaml\Tests\A":1:{s:1:"a";s:3:"foo";}, bar: 1 }', $dump, '->dump() is able to dump objects');
     }
 
     public function testObjectSupportDisabledButNoExceptions()
@@ -227,6 +227,24 @@ EOF;
             'line-separator' => array("\t\\L", '"\t\\\\L"'),
             'paragraph-separator' => array("\t\\P", '"\t\\\\P"'),
         );
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The indentation must be greater than zero
+     */
+    public function testZeroIndentationThrowsException()
+    {
+        $this->dumper->setIndentation(0);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The indentation must be greater than zero
+     */
+    public function testNegativeIndentationThrowsException()
+    {
+        $this->dumper->setIndentation(-4);
     }
 }
 

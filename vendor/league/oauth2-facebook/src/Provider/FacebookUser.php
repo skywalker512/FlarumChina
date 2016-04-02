@@ -20,6 +20,10 @@ class FacebookUser implements ResourceOwnerInterface
             $this->data['picture_url'] = $response['picture']['data']['url'];
         }
 
+        if (isset($response['picture']['data']['is_silhouette'])) {
+            $this->data['is_silhouette'] = $response['picture']['data']['is_silhouette'];
+        }
+
         if (!empty($response['cover']['source'])) {
             $this->data['cover_photo_url'] = $response['cover']['source'];
         }
@@ -96,6 +100,17 @@ class FacebookUser implements ResourceOwnerInterface
     }
 
     /**
+     * Returns if user has not defined a specific avatar
+     *
+     * @return boolean
+     */
+
+    public function isDefaultPicture()
+    {
+        return $this->getField('is_silhouette');
+    }
+
+    /**
      * Returns the profile picture of the user as a string if present.
      *
      * @return string|null
@@ -143,6 +158,16 @@ class FacebookUser implements ResourceOwnerInterface
     public function getLink()
     {
         return $this->getField('link');
+    }
+
+    /**
+     * Returns the current timezone offset from UTC (from -24 to 24)
+     *
+     * @return float|null
+     */
+    public function getTimezone()
+    {
+        return $this->getField('timezone');
     }
 
     /**

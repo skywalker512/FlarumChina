@@ -12,10 +12,6 @@ namespace Flarum\Update\Console;
 
 use Flarum\Console\Command\AbstractCommand;
 use Illuminate\Contracts\Container\Container;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrateCommand extends AbstractCommand
 {
@@ -41,7 +37,7 @@ class MigrateCommand extends AbstractCommand
     {
         $this
             ->setName('migrate')
-            ->setDescription("Run outstanding migrations.");
+            ->setDescription('Run outstanding migrations');
     }
 
     /**
@@ -74,14 +70,14 @@ class MigrateCommand extends AbstractCommand
 
         $migrator = $extensions->getMigrator();
 
-        foreach ($extensions->getInfo() as $name => $extension) {
-            if (! $extensions->isEnabled($name)) {
+        foreach ($extensions->getExtensions() as $name => $extension) {
+            if (! $extension->isEnabled()) {
                 continue;
             }
 
             $this->info('Migrating extension: '.$name);
 
-            $extensions->migrate($name);
+            $extensions->migrate($extension);
 
             foreach ($migrator->getNotes() as $note) {
                 $this->info($note);

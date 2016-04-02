@@ -3,13 +3,14 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @see       http://github.com/zendframework/zend-stratigility for the canonical source repository
- * @copyright Copyright (c) 2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2015-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   https://github.com/zendframework/zend-stratigility/blob/master/LICENSE.md New BSD License
  */
 
 namespace Zend\Stratigility;
 
 use Exception;
+use Throwable;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -74,14 +75,16 @@ class Dispatch
 
         try {
             if ($hasError && $arity === 4) {
-                return call_user_func($handler, $err, $request, $response, $next);
+                return $handler($err, $request, $response, $next);
             }
 
             if (! $hasError && $arity < 4) {
-                return call_user_func($handler, $request, $response, $next);
+                return $handler($request, $response, $next);
             }
-        } catch (Exception $e) {
-            $err = $e;
+        } catch (Throwable $throwable) {
+            return $next($request, $response, $throwable);
+        } catch (Exception $exception) {
+            return $next($request, $response, $exception);
         }
 
         return $next($request, $response, $err);

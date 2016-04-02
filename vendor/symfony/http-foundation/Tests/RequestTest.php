@@ -17,11 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
-    public function testConstructor()
-    {
-        $this->testInitialize();
-    }
-
     public function testInitialize()
     {
         $request = new Request();
@@ -328,6 +323,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $request = new Request();
             $this->assertEquals($mimeTypes[0], $request->getMimeType($format));
         }
+    }
+
+    public function testGetFormatWithCustomMimeType()
+    {
+        $request = new Request();
+        $request->setFormat('custom', 'application/vnd.foo.api;myversion=2.3');
+        $this->assertEquals('custom', $request->getFormat('application/vnd.foo.api;myversion=2.3'));
     }
 
     public function getFormatToMimeTypeMapProvider()
@@ -858,7 +860,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         //              $expected                                  $remoteAddr  $httpForwarded                                       $trustedProxies
         return array(
             array(array('127.0.0.1'),                              '127.0.0.1', 'for="_gazonk"',                                      null),
-            array(array('_gazonk'),                                '127.0.0.1', 'for="_gazonk"',                                      array('127.0.0.1')),
+            array(array('127.0.0.1'),                              '127.0.0.1', 'for="_gazonk"',                                      array('127.0.0.1')),
             array(array('88.88.88.88'),                            '127.0.0.1', 'for="88.88.88.88:80"',                               array('127.0.0.1')),
             array(array('192.0.2.60'),                             '::1',       'for=192.0.2.60;proto=http;by=203.0.113.43',          array('::1')),
             array(array('2620:0:1cfe:face:b00c::3', '192.0.2.43'), '::1',       'for=192.0.2.43, for=2620:0:1cfe:face:b00c::3',       array('::1')),
@@ -914,6 +916,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
             // client IP with port
             array(array('88.88.88.88'), '127.0.0.1', '88.88.88.88:12345, 127.0.0.1', array('127.0.0.1')),
+
+            // invalid forwarded IP is ignored
+            array(array('88.88.88.88'), '127.0.0.1', 'unknown,88.88.88.88', array('127.0.0.1')),
+            array(array('88.88.88.88'), '127.0.0.1', '}__test|O:21:&quot;JDatabaseDriverMysqli&quot;:3:{s:2,88.88.88.88', array('127.0.0.1')),
         );
     }
 
@@ -1568,6 +1574,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(80, $request->getPort());
         $this->assertFalse($request->isSecure());
 
+        // request is forwarded by a non-trusted proxy
+        Request::setTrustedProxies(array('2.2.2.2'));
+        $this->assertEquals('3.3.3.3', $request->getClientIp());
+        $this->assertEquals('example.com', $request->getHost());
+        $this->assertEquals(80, $request->getPort());
+        $this->assertFalse($request->isSecure());
+
         // trusted proxy via setTrustedProxies()
         Request::setTrustedProxies(array('3.3.3.3', '2.2.2.2'));
         $this->assertEquals('1.1.1.1', $request->getClientIp());
@@ -1789,7 +1802,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request = Request::create('/');
         $request->headers->set('host', $host);
         $this->assertEquals($host, $request->getHost());
-        $this->assertLessThan(1, microtime(true) - $start);
+        $this->assertLessThan(5, microtime(true) - $start);
     }
 
     /**

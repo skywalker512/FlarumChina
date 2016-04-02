@@ -39,11 +39,14 @@
   h3 {
     margin: 0;
     line-height: 1.5em;
+    color: @secondary-color;
 
     &, input, a {
-      color: @secondary-color;
       font-size: 14px;
       font-weight: normal;
+    }
+    input, a {
+      color: inherit;
     }
     input {
       font-size: 16px;
@@ -142,6 +145,9 @@
       }
     }
   }
+  .Composer-controls .fa-minus:before {
+    content: @fa-var-times;
+  }
   .composer-backdrop {
     position: fixed;
     top: 0;
@@ -172,6 +178,21 @@
         border-bottom: 0;
         padding: 15px;
       }
+
+      .normal &:first-child {
+        margin: -@header-height-phone 50px 0;
+        text-align: center;
+        position: relative;
+        z-index: @zindex-header + 1;
+        border: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        h3 {
+          color: @header-control-color;
+        }
+      }
     }
     h3 {
       &, a, input {
@@ -184,10 +205,9 @@
   }
   .ComposerBody-editor {
     padding: 15px;
-
-    textarea {
-      height: 50vh !important;
-    }
+  }
+  .ComposerBody-editor .TextEditor-controls .item-submit {
+    position: absolute !important;
   }
 }
 
@@ -283,6 +303,9 @@
     .fullScreen & textarea {
       font-size: 16px;
     }
+  }
+  .ComposerBody--discussion .ComposerBody-header .item-title {
+    display: none;
   }
 }
 

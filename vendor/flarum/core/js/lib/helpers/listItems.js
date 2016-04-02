@@ -34,6 +34,14 @@ export default function listItems(items) {
     const active = item.component && item.component.isActive && item.component.isActive(item.props);
     const className = item.props ? item.props.itemClassName : item.itemClassName;
 
+    if (isListItem) {
+      item.attrs = item.attrs || {};
+      item.attrs.key = item.attrs.key || item.itemName;
+    }
+
+    const space = new String(' ');
+    space.attrs = {key: '_space_'+item.itemName};
+
     return [
       isListItem
         ? item
@@ -41,10 +49,11 @@ export default function listItems(items) {
             (item.itemName ? 'item-' + item.itemName : ''),
             className,
             (active ? 'active' : '')
-          ])}>
+          ])}
+            key={item.itemName}>
             {item}
           </li>,
-      ' '
+      space
     ];
   });
 }

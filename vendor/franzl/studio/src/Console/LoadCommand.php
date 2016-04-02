@@ -37,11 +37,7 @@ class LoadCommand extends BaseCommand
         $package = Package::fromFolder($this->input->getArgument('path'));
         $this->config->addPackage($package);
 
-        $this->output->note('Package loaded successfully.');
-
-        $this->output->note('Dumping autoloads...');
-        Shell::run('composer dump-autoload');
-        $this->output->success('Autoloads successfully generated.');
+        $this->output->success('Package loaded successfully.');
     }
 
 }

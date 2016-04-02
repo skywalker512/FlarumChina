@@ -40,7 +40,9 @@ class SearchServiceProvider extends AbstractServiceProvider
             ->needs('Flarum\Core\Search\GambitManager')
             ->give(function (Container $app) {
                 $gambits = new GambitManager($app);
-                $gambits->setFulltextGambit('Flarum\Core\Search\User\Gambits\FulltextGambit');
+
+                $gambits->setFulltextGambit('Flarum\Core\Search\User\Gambit\FulltextGambit');
+                $gambits->add('Flarum\Core\Search\User\Gambit\EmailGambit');
 
                 $app->make('events')->fire(
                     new ConfigureUserGambits($gambits)
@@ -59,6 +61,7 @@ class SearchServiceProvider extends AbstractServiceProvider
 
                 $gambits->setFulltextGambit('Flarum\Core\Search\Discussion\Gambit\FulltextGambit');
                 $gambits->add('Flarum\Core\Search\Discussion\Gambit\AuthorGambit');
+                $gambits->add('Flarum\Core\Search\Discussion\Gambit\CreatedGambit');
                 $gambits->add('Flarum\Core\Search\Discussion\Gambit\HiddenGambit');
                 $gambits->add('Flarum\Core\Search\Discussion\Gambit\UnreadGambit');
 

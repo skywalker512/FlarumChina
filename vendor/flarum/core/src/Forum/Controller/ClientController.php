@@ -13,9 +13,9 @@ namespace Flarum\Forum\Controller;
 use Flarum\Api\Client;
 use Flarum\Formatter\Formatter;
 use Flarum\Foundation\Application;
+use Flarum\Http\Controller\AbstractClientController;
 use Flarum\Locale\LocaleManager;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\Http\Controller\AbstractClientController;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 
@@ -29,7 +29,7 @@ class ClientController extends AbstractClientController
     /**
      * {@inheritdoc}
      */
-    protected $translations = '/[^\.]\.(forum|lib)\.*+/';
+    protected $translations = '/^[^\.]+\.(?:forum|lib)\./';
 
     /**
      * @var Formatter
@@ -55,7 +55,7 @@ class ClientController extends AbstractClientController
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getAssets()
     {

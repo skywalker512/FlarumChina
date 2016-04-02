@@ -81,8 +81,8 @@
 .define-header(true) {
   @header-bg:                      @primary-color;
   @header-color:                   @body-bg;
-  @header-control-bg:              fade(#000, 10%);
-  @header-control-color:           @body-bg;
+  @header-control-bg:              mix(#000, @header-bg, 10%);
+  @header-control-color:           mix(@body-bg, @header-bg, 60%);
 }
 
 // ---------------------------------
@@ -95,10 +95,10 @@
 
 @border-radius:                    4px;
 
-@zindex-dropdown:                  1000;
-@zindex-header:                    1010;
+@zindex-header:                    1000;
+@zindex-pane:                      1010;
 @zindex-composer:                  1020;
-@zindex-pane:                      1030;
+@zindex-dropdown:                  1030;
 @zindex-modal-background:          1040;
 @zindex-modal:                     1050;
 @zindex-alerts:                    1060;

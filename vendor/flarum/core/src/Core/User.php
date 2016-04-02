@@ -12,26 +12,23 @@ namespace Flarum\Core;
 
 use DomainException;
 use Flarum\Core\Access\Gate;
-use Flarum\Foundation\Application;
-use Flarum\Core;
+use Flarum\Core\Support\EventGeneratorTrait;
+use Flarum\Core\Support\ScopeVisibilityTrait;
 use Flarum\Database\AbstractModel;
-use Flarum\Core\Notification;
 use Flarum\Event\ConfigureUserPreferences;
-use Illuminate\Contracts\Hashing\Hasher;
-use Flarum\Event\UserWasDeleted;
 use Flarum\Event\PostWasDeleted;
-use Flarum\Event\UserWasRegistered;
-use Flarum\Event\UserWasRenamed;
+use Flarum\Event\PrepareUserGroups;
+use Flarum\Event\UserAvatarWasChanged;
+use Flarum\Event\UserBioWasChanged;
+use Flarum\Event\UserEmailChangeWasRequested;
 use Flarum\Event\UserEmailWasChanged;
 use Flarum\Event\UserPasswordWasChanged;
-use Flarum\Event\UserBioWasChanged;
-use Flarum\Event\UserAvatarWasChanged;
 use Flarum\Event\UserWasActivated;
-use Flarum\Event\UserEmailChangeWasRequested;
-use Flarum\Event\PrepareUserGroups;
-use Flarum\Core\Support\ScopeVisibilityTrait;
-use Flarum\Core\Support\EventGeneratorTrait;
-use Flarum\Core\Exception\ValidationException;
+use Flarum\Event\UserWasDeleted;
+use Flarum\Event\UserWasRegistered;
+use Flarum\Event\UserWasRenamed;
+use Flarum\Foundation\Application;
+use Illuminate\Contracts\Hashing\Hasher;
 
 /**
  * @property int $id
@@ -80,7 +77,7 @@ class User extends AbstractModel
 
     /**
      * An array of registered user preferences. Each preference is defined with
-     * a key, and its value is an array containing the following keys:
+     * a key, and its value is an array containing the following keys:.
      *
      * - transformer: a callback that confines the value of the preference
      * - default: a default value if the preference isn't set
@@ -156,9 +153,9 @@ class User extends AbstractModel
     {
         $user = new static;
 
-        $user->username  = $username;
-        $user->email     = $email;
-        $user->password  = $password;
+        $user->username = $username;
+        $user->email = $email;
+        $user->password = $password;
         $user->join_time = time();
 
         $user->raise(new UserWasRegistered($user));
@@ -339,7 +336,7 @@ class User extends AbstractModel
      * Check if a given password matches the user's password.
      *
      * @param string $password
-     * @return boolean
+     * @return bool
      */
     public function checkPassword($password)
     {
@@ -353,9 +350,11 @@ class User extends AbstractModel
      */
     public function activate()
     {
-        $this->is_activated = true;
+        if ($this->is_activated !== true) {
+            $this->is_activated = true;
 
-        $this->raise(new UserWasActivated($this));
+            $this->raise(new UserWasActivated($this));
+        }
 
         return $this;
     }
@@ -364,7 +363,7 @@ class User extends AbstractModel
      * Check whether the user has a certain permission based on their groups.
      *
      * @param string $permission
-     * @return boolean
+     * @return bool
      */
     public function hasPermission($permission)
     {
@@ -384,7 +383,7 @@ class User extends AbstractModel
      * based on their groups.
      *
      * @param string $match
-     * @return boolean
+     * @return bool
      */
     public function hasPermissionLike($match)
     {
@@ -429,7 +428,7 @@ class User extends AbstractModel
     }
 
     /**
-     * Get all notifications that have not been read yet
+     * Get all notifications that have not been read yet.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -660,7 +659,7 @@ class User extends AbstractModel
      */
     public function accessTokens()
     {
-        return $this->hasMany('Flarum\Api\AccessToken');
+        return $this->hasMany('Flarum\Http\AccessToken');
     }
 
     /**

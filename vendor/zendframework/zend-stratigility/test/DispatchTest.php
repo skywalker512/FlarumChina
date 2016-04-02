@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @see       http://github.com/zendframework/zend-stratigility for the canonical source repository
- * @copyright Copyright (c) 2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2015-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   https://github.com/zendframework/zend-stratigility/blob/master/LICENSE.md New BSD License
  */
 
@@ -13,11 +13,23 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
+use stdClass;
+use TypeError;
 use Zend\Stratigility\Dispatch;
 use Zend\Stratigility\Route;
 
 class DispatchTest extends TestCase
 {
+    /**
+     * @var \Zend\Stratigility\Http\Request|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $request;
+
+    /**
+     * @var \Zend\Stratigility\Http\Response|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $response;
+
     public function setUp()
     {
         $this->request  = $this->getMockBuilder('Zend\Stratigility\Http\Request')
@@ -198,5 +210,48 @@ class DispatchTest extends TestCase
         $err      = null;
         $result = $dispatch($route, $err, $request->reveal(), $response->reveal(), $next);
         $this->assertSame($response->reveal(), $result);
+    }
+
+    /**
+     * @requires PHP 7.0
+     * @group 37
+     */
+    public function testWillCatchPhp7Throwable()
+    {
+        $callableWithHint = function (stdClass $parameter) {
+            // will not be executed
+        };
+
+        $middleware = function ($req, $res, $next) use ($callableWithHint) {
+            $callableWithHint('not an stdClass');
+        };
+
+        $errorHandler = $this->getMock('stdClass', ['__invoke']);
+        $errorHandler
+            ->expects(self::once())
+            ->method('__invoke')
+            ->with(
+                $this->request,
+                $this->response,
+                self::callback(function (TypeError $throwable) {
+                    self::assertStringStartsWith(
+                        'Argument 1 passed to ZendTest\Stratigility\DispatchTest::ZendTest\Stratigility\{closure}()'
+                        . ' must be an instance of stdClass, string given',
+                        $throwable->getMessage()
+                    );
+
+                    return true;
+                })
+            );
+
+        $dispatch = new Dispatch();
+
+        $dispatch(
+            new Route('/foo', $middleware),
+            null,
+            $this->request,
+            $this->response,
+            $errorHandler
+        );
     }
 }

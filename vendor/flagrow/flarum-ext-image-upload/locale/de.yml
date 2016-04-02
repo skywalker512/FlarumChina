@@ -1,0 +1,49 @@
+flagrow-image-upload:
+    forum:
+        buttons:
+            attach: Einfügen
+        states:
+            loading: Bitte warten ...
+            success: Erfolg
+            error: Fehler
+    admin:
+        permissions:
+            upload_images_label: Bilder hochladen
+        upload_methods:
+            local: Lokal
+            imgur: Imgur
+            cloudinary: Cloudinary
+        labels:
+            upload_method: Speicher Methode
+            preferences:
+                title: Allgemeine Einstellungen
+                max_file_size: Maximale Dateigröße (in Kilobytes)
+            resize:
+                title: Größe ändern
+                toggle: Größe des Bildes ändern
+                max_width: Maximale Bildbreite
+                max_height: Maximale Bildhöhe
+            imgur:
+                title: Imgur Einstellungen
+                client_id: Client-ID
+            local:
+                title: Lokale Speicherung Einstellungen
+                cdn_url: Content Delivery URL (Prefix für Bilder)
+            cloudinary:
+                title: Cloudinary Einstellungen
+                cloud_name: Cloud name
+                api_key: API Key
+                api_secret: API Secret
+        buttons:
+            save: => core.ref.save_changes
+        help_texts:
+            description: >
+                Richte das Bilder hochladen und die Einstellungen ein.
+            upload_method: >
+                Hier kannst du die Methode aussuchen, mit der die Bilder 
+                hochgeladen werden sollen. Die entsprechenden Einstellungen werden danach angezeigt.
+            resize: >
+                Wähle aus, ob die Bilder in ihrer Größe vor dem Upload 
+                verändert werden sollen. Du kannst dabei eine maximale 
+                Breite und Höhe (in Pixel) einstellen. Bei der 
+                Größenveränderung wird das Seitenverhältnis beibehalten.

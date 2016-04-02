@@ -71,14 +71,14 @@ class UserRepository
      *
      * @param string $username
      * @param User|null $actor
-     * @return integer|null
+     * @return int|null
      */
     public function getIdForUsername($username, User $actor = null)
     {
-        $username = rawurldecode($username);        
+        $username = rawurldecode($username); 
         $query = User::where('username', 'like', $username);
 
-        return $this->scopeVisibleTo($query, $actor)->pluck('id');
+        return $this->scopeVisibleTo($query, $actor)->value('id');
     }
 
     /**

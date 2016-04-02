@@ -32,7 +32,7 @@
   pointer-events: none;
 
   .Badge {
-    margin-left: -15px;
+    margin-left: -10px;
     position: relative;
     pointer-events: auto;
   }
@@ -199,7 +199,7 @@
     transition: background 0.2s;
 
     &:hover {
-      background: @control-bg;
+      background: mix(@control-bg, @body-bg, 50%);
     }
     &:hover .DiscussionListItem-controls,
     .DiscussionListItem-controls.open {

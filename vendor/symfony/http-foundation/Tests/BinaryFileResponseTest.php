@@ -34,6 +34,17 @@ class BinaryFileResponseTest extends ResponseTestCase
         $this->assertEquals('inline; filename="README.md"', $response->headers->get('Content-Disposition'));
     }
 
+    public function testConstructWithNonAsciiFilename()
+    {
+        touch(sys_get_temp_dir().'/fööö.html');
+
+        $response = new BinaryFileResponse(sys_get_temp_dir().'/fööö.html', 200, array(), true, 'attachment');
+
+        @unlink(sys_get_temp_dir().'/fööö.html');
+
+        $this->assertSame('fööö.html', $response->getFile()->getFilename());
+    }
+
     /**
      * @expectedException \LogicException
      */
@@ -47,6 +58,14 @@ class BinaryFileResponseTest extends ResponseTestCase
     {
         $response = new BinaryFileResponse(__FILE__);
         $this->assertFalse($response->getContent());
+    }
+
+    public function testSetContentDispositionGeneratesSafeFallbackFilename()
+    {
+        $response = new BinaryFileResponse(__FILE__);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'föö.html');
+
+        $this->assertSame('attachment; filename="f__.html"; filename*=utf-8\'\'f%C3%B6%C3%B6.html', $response->headers->get('Content-Disposition'));
     }
 
     /**
@@ -80,6 +99,37 @@ class BinaryFileResponseTest extends ResponseTestCase
         $this->assertEquals($responseRange, $response->headers->get('Content-Range'));
     }
 
+    /**
+     * @dataProvider provideRanges
+     */
+    public function testRequestsWithoutEtag($requestRange, $offset, $length, $responseRange)
+    {
+        $response = BinaryFileResponse::create(__DIR__.'/File/Fixtures/test.gif', 200, array('Content-Type' => 'application/octet-stream'));
+
+        // do a request to get the LastModified
+        $request = Request::create('/');
+        $response->prepare($request);
+        $lastModified = $response->headers->get('Last-Modified');
+
+        // prepare a request for a range of the testing file
+        $request = Request::create('/');
+        $request->headers->set('If-Range', $lastModified);
+        $request->headers->set('Range', $requestRange);
+
+        $file = fopen(__DIR__.'/File/Fixtures/test.gif', 'r');
+        fseek($file, $offset);
+        $data = fread($file, $length);
+        fclose($file);
+
+        $this->expectOutputString($data);
+        $response = clone $response;
+        $response->prepare($request);
+        $response->sendContent();
+
+        $this->assertEquals(206, $response->getStatusCode());
+        $this->assertEquals($responseRange, $response->headers->get('Content-Range'));
+    }
+
     public function provideRanges()
     {
         return array(
@@ -89,6 +139,25 @@ class BinaryFileResponseTest extends ResponseTestCase
             array('bytes=30-30', 30, 1, 'bytes 30-30/35'),
             array('bytes=30-34', 30, 5, 'bytes 30-34/35'),
         );
+    }
+
+    public function testRangeRequestsWithoutLastModifiedDate()
+    {
+        // prevent auto last modified
+        $response = BinaryFileResponse::create(__DIR__.'/File/Fixtures/test.gif', 200, array('Content-Type' => 'application/octet-stream'), true, null, false, false);
+
+        // prepare a request for a range of the testing file
+        $request = Request::create('/');
+        $request->headers->set('If-Range', date('D, d M Y H:i:s').' GMT');
+        $request->headers->set('Range', 'bytes=1-4');
+
+        $this->expectOutputString(file_get_contents(__DIR__.'/File/Fixtures/test.gif'));
+        $response = clone $response;
+        $response->prepare($request);
+        $response->sendContent();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNull($response->headers->get('Content-Range'));
     }
 
     /**
@@ -142,7 +211,7 @@ class BinaryFileResponseTest extends ResponseTestCase
         $response->sendContent();
 
         $this->assertEquals(416, $response->getStatusCode());
-        #$this->assertEquals('', $response->headers->get('Content-Range'));
+        $this->assertEquals('bytes */35', $response->headers->get('Content-Range'));
     }
 
     public function provideInvalidRanges()
