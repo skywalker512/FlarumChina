@@ -55,6 +55,7 @@ class ImgurAdapter implements UploadAdapterContract
         if ($result->getStatusCode() === 200) {
             $meta = array_get(json_decode($result->getBody(), true), 'data', []);
             $meta['url'] = array_get($meta, 'link');
+            $meta = preg_replace("/^http:/i", "https:", $meta);
             return $meta;
         } else {
             return false;

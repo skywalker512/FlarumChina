@@ -4632,57 +4632,6 @@
         ]
     },
     {
-        "name": "jsthon/flarum-ext-simplified-chinese",
-        "version": "v0.1.0-beta.4",
-        "version_normalized": "0.1.0.0-beta4",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jsthon/flarum-ext-simplified-chinese.git",
-            "reference": "aebd06ac1a13e6286141938d198ead0823f0671f"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jsthon/flarum-ext-simplified-chinese/zipball/aebd06ac1a13e6286141938d198ead0823f0671f",
-            "reference": "aebd06ac1a13e6286141938d198ead0823f0671f",
-            "shasum": ""
-        },
-        "require": {
-            "flarum/core": "^0.1.0-beta.4"
-        },
-        "time": "2015-12-01 07:46:13",
-        "type": "flarum-extension",
-        "extra": {
-            "flarum-extension": {
-                "title": "Simplified Chinese",
-                "icon": {
-                    "image": "icon.svg",
-                    "backgroundColor": "#DE2910",
-                    "backgroundSize": "cover",
-                    "backgroundPosition": "center"
-                }
-            },
-            "flarum-locale": {
-                "code": "zh",
-                "title": "简体中文"
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jsthon Wong",
-                "email": "jsthon@outlook.com"
-            }
-        ],
-        "description": "Simplified Chinese language pack.",
-        "keywords": [
-            "locale"
-        ]
-    },
-    {
         "name": "s9e/flarum-ext-mediaembed",
         "version": "0.3.2",
         "version_normalized": "0.3.2.0",
@@ -4843,6 +4792,57 @@
             "image",
             "imgur",
             "upload"
+        ]
+    },
+    {
+        "name": "jsthon/flarum-ext-simplified-chinese",
+        "version": "v0.1.0-beta.5",
+        "version_normalized": "0.1.0.0-beta5",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Flarum-Chinese/flarum-ext-simplified-chinese.git",
+            "reference": "3b2ae7142f77b0eda343d0d25553d3f2bfe20976"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Flarum-Chinese/flarum-ext-simplified-chinese/zipball/3b2ae7142f77b0eda343d0d25553d3f2bfe20976",
+            "reference": "3b2ae7142f77b0eda343d0d25553d3f2bfe20976",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.5"
+        },
+        "time": "2016-04-09 10:34:05",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Simplified Chinese",
+                "icon": {
+                    "image": "icon.svg",
+                    "backgroundColor": "#DE2910",
+                    "backgroundSize": "cover",
+                    "backgroundPosition": "center"
+                }
+            },
+            "flarum-locale": {
+                "code": "zh",
+                "title": "简体中文"
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jsthon Wong",
+                "email": "jsthon@outlook.com"
+            }
+        ],
+        "description": "Simplified Chinese language pack.",
+        "keywords": [
+            "locale"
         ]
     }
 ]

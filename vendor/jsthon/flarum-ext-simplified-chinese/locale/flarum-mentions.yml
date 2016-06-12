@@ -32,4 +32,4 @@ flarum-mentions:
 
     # These translations are used in the user profile page and profile popup.
     user:
-      mentions_link: 关注
+      mentions_link: 提到用户

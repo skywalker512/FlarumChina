@@ -18,6 +18,10 @@ GitHub: https://github.com/jsthon/flarum-simplified-chinese
 * **下载解压至 extensions 插件目录**
 * **后台开启 Simplified Chinese 插件**
 
+**最新 Git 版本为 Beta.5 专用，不向下兼容 Beta.4。**
+
+**非 Beta.5 用户请使用 [历史发行版本](https://github.com/jsthon/flarum-simplified-chinese/releases)。**
+
 ###联系作者
 如有疑问或建议  
 请直接提出问题  

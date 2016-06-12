@@ -1,6 +1,9 @@
 <!doctype html>
 <html>
   <head>
+    <script type="text/javascript">
+       var _speedMark = new Date();
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{{ $title }}</title>
@@ -54,5 +57,6 @@
     @endif
 
     {!! $foot !!}
+    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=55392319" charset="UTF-8"></script>
   </body>
 </html>

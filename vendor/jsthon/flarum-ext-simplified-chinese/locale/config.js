@@ -10,7 +10,7 @@ moment.locale('zh', {
     L: 'YYYY-MM-DD',
     LL: 'YYYY年MMMD日',
     LLL: 'YYYY年MMMD日Ah点mm分',
-    LLLL: 'YYYY年MMMD日ddddAh点mm分',
+    LLLL: 'YYYY年MMMD日 ddd H:mm:ss',
     l: 'YYYY-MM-DD',
     ll: 'YYYY年MMMD日',
     lll: 'YYYY年MMMD日Ah点mm分',

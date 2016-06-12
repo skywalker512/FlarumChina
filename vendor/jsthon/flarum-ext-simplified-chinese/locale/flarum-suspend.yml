@@ -22,7 +22,7 @@ flarum-suspend:
       not_suspended_label: 不冻结
       status_heading: 冻结用户状态
       submit_button: => core.ref.save_changes
-      title: "冻结 {user}"
+      title: "冻结 {username}"
 
     # These translations are displayed as tooltips for user badges.
     user_badge:

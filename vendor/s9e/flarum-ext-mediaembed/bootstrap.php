@@ -47,6 +47,18 @@ function subscribe(Dispatcher $events)
 					'iframe'  => ['src' => 'http://www.tucao.tv/mini/{@id}.swf']
 				]
 			);
+			$event->configurator->MediaEmbed->add(
+                'bilibili',
+                [   
+                    'host'    => 'www.bilibili.com',
+                    'extract' => "!www.bilibili.com/video/av(?'id'[0-9]+)/!",
+                    'flash'  => [
+                        'width'  => 720,
+                        'height' => 405,
+                        'src'    => 'https://static-s.bilibili.com/miniloader.swf?aid={@id}'
+                    ]
+                ]
+            );
 			$event->configurator->Autoimage;
 			(new MediaPack)->configure($event->configurator);
 		}

@@ -22,8 +22,8 @@ flarum-likes:
     # These translations are displayed beneath individual posts.
     post:
       like_link: 喜欢
-      liked_by_self_text: "{users} 喜欢了"  # Can be pluralized to agree with the number of users!
-      liked_by_text: "{users} 喜欢了|{users} 喜欢了"
+      liked_by_self_text: "{users} 喜欢它"  # Can be pluralized to agree with the number of users!
+      liked_by_text: "{users} 喜欢它|{users} 喜欢它"
       others_link: => core.ref.some_others
       unlike_link: 取消喜欢
       you_text: => core.ref.you

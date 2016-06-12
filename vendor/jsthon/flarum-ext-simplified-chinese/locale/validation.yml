@@ -1,5 +1,5 @@
 validation:
-  accepted: ":attribute 必须选择接受"
+  accepted: ":attribute 未被选择接受"
   active_url: "此 :attribute 不是有效的URL地址"
   after: ":attribute 只能是 :date 后的日期"
   alpha: ":attribute 只能是字母"
@@ -19,11 +19,13 @@ validation:
   different: ":attribute 与 :other 不一致"
   digits: ":attribute 只能是 :digits 位数"
   digits_between: ":attribute 只能是 :min 至 :max 位数"
+  distinct: ":attribute 是一个重复的值"
   email: ":attribute 必须是有效的"
   exists: "选择的 :attribute 无效"
   filled: "不可以缺少:attribute"
   image: ":attribute 只能是图像"
   in: "选择的 :attribute 无效"
+  in_array: ":attribute 在 :other 中不存在"
   integer: ":attribute 只能是一个整数"
   ip: ":attribute 必须是有效的IP地址"
   json: ":attribute 必须是有效的 JSON 字符串"
@@ -40,6 +42,7 @@ validation:
     array: ":attribute 至少有 :min 个"
   not_in: "选择的 :attribute 无效"
   numeric: ":attribute 只能是一个数字"
+  present: ":attribute 必须存在一个值"
   regex: ":attribute 格式无效"
   required: "没有:attribute"
   required_if: "当 :other 为 :value 时 :attribute 必须完整"
@@ -67,3 +70,7 @@ validation:
     content: 内容
     name_singular: 单数名称
     name_plural: 复数名称
+
+  custom:
+    username:
+      regex: "用户名只能含有字母、数字、连字符。"

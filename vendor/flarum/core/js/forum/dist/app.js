@@ -30562,11 +30562,11 @@ System.register('flarum/utils/humanTime', [], function (_export, _context) {
 
     // If this date was more than a month ago, we'll show the name of the month
     // in the string. If it wasn't this year, we'll show the year as well.
-    if (diff < -30 * day) {
+    if (diff < -1 * day) {
       if (m.year() === moment().year()) {
-        ago = m.format('D MMM');
+        ago = m.format('L');
       } else {
-        ago = m.format('MMM \'YY');
+        ago = m.format('LL');
       }
     } else {
       ago = m.fromNow();

@@ -2861,20 +2861,20 @@
         },
         {
             "name": "jsthon/flarum-ext-simplified-chinese",
-            "version": "v0.1.0-beta.4",
+            "version": "v0.1.0-beta.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jsthon/flarum-ext-simplified-chinese.git",
-                "reference": "aebd06ac1a13e6286141938d198ead0823f0671f"
+                "url": "https://github.com/Flarum-Chinese/flarum-ext-simplified-chinese.git",
+                "reference": "3b2ae7142f77b0eda343d0d25553d3f2bfe20976"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsthon/flarum-ext-simplified-chinese/zipball/aebd06ac1a13e6286141938d198ead0823f0671f",
-                "reference": "aebd06ac1a13e6286141938d198ead0823f0671f",
+                "url": "https://api.github.com/repos/Flarum-Chinese/flarum-ext-simplified-chinese/zipball/3b2ae7142f77b0eda343d0d25553d3f2bfe20976",
+                "reference": "3b2ae7142f77b0eda343d0d25553d3f2bfe20976",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.4"
+                "flarum/core": "^0.1.0-beta.5"
             },
             "type": "flarum-extension",
             "extra": {
@@ -2906,7 +2906,7 @@
             "keywords": [
                 "locale"
             ],
-            "time": "2015-12-01 07:46:13"
+            "time": "2016-04-09 10:34:05"
         },
         {
             "name": "league/flysystem",
