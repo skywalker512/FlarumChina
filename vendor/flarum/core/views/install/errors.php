@@ -1,6 +1,6 @@
-<h2>Hold Up!</h2>
+<h2>请注意！</h2>
 
-<p>These errors must be resolved before you can continue the installation. If you're having trouble, get help on the <a href="http://flarum.org/docs/installation" target="_blank">Flarum website</a>.</p>
+<p>这里有严重的问题需要解决，请访问 <a href="http://flarum.ga/docs/installation" target="_blank">Flarum 安装文档</a>，<a href="http://discuss.flarum.ga/" target="_blank">Flarum交流论坛</a>获得帮助！</p>
 
 <div class="Errors">
   <?php foreach ($errors as $error): ?>

@@ -1,0 +1,35 @@
+{
+    "name": "sijad/flarum-ext-links",
+    "description": "Manage flarum primary navbar menu links.",
+    "type": "flarum-extension",
+    "keywords": ["link", "nav", "menu", "item"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sajjad Hashemian",
+            "email": "wolaws@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/sijad/flarum-ext-links/issues",
+        "source": "https://github.com/sijad/flarum-ext-links"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sijad\\Links\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Links",
+            "icon": {
+                "name": "bars",
+                "backgroundColor": "#83AF9B",
+                "color": "#fff"
+            }
+        }
+    }
+}

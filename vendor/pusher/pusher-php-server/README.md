@@ -49,12 +49,19 @@ A fourth parameter `$options` parameter can also be passed. The available option
 * `timeout` - the HTTP timeout
 * `encrypted` - quick option to use scheme of https and port 443.
 * `cluster` - specify the cluster where the application is running from.
+* `curl_options` - array with custom curl commands
 
 For example, by default calls will be made over a non-encrypted connection. To change this to make calls over HTTPS use:
 
 ```php
 $pusher = new Pusher( $app_key, $app_secret, $app_id, array( 'encrypted' => true ) );
 ```
+
+For example, if you want to set custom curl options, use this:
+```php
+$pusher = new Pusher( $app_key, $app_secret, $app_id, array( 'encrypted' => true, 'curl_options' => array( CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4 ) ) );
+```
+
 
 *Note: The `$options` parameter was introduced in version 2.2.0 of the library.
 Previously additional parameters could be passed for each option, but this was
@@ -76,6 +83,18 @@ $pusher->trigger( 'my-channel', 'my_event', 'hello world' );
 
 ```php
 $pusher->trigger( [ 'channel-1', 'channel-2' ], 'my_event', 'hello world' );
+```
+
+### Batches
+
+It's also possible to send multiple events with a single API call (max 10
+events per call on multi-tenant clusters):
+
+```php
+$batch = array();
+$batch[] = array('channel' => 'my-channel', 'event' => 'my_event', 'data' => array('hello' => 'world'));
+$batch[] = array('channel' => 'my-channel', 'event' => 'my_event', 'data' => array('myname' => 'bob'));
+$pusher->triggerBatch($batch);
 ```
 
 ### Arrays

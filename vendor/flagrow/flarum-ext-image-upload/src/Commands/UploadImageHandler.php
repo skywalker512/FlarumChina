@@ -116,6 +116,7 @@ class UploadImageHandler
         );
 
         // validate the file
+        $this->validator->maxFileSize = $this->settings->get('flagrow.image-upload.maxFileSize', 2048);
         $this->validator->assertValid(['image' => $file]);
 
         // resize if enabled

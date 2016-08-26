@@ -425,7 +425,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $application->add(new \FooCommand());
         $application->add(new \Foo1Command());
         $application->add(new \Foo2Command());
-        $application->add(new \foo3Command());
+        $application->add(new \Foo3Command());
 
         try {
             $application->find('Unknown-namespace:Unknown-command');
@@ -732,6 +732,33 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $exitCode = $application->run(new ArrayInput(array()), new NullOutput());
 
         $this->assertSame(1, $exitCode, '->run() returns exit code 1 when exception code is 0');
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage An option with shortcut "e" already exists.
+     */
+    public function testAddingOptionWithDuplicateShortcut()
+    {
+        $dispatcher = new EventDispatcher();
+        $application = new Application();
+        $application->setAutoExit(false);
+        $application->setCatchExceptions(false);
+        $application->setDispatcher($dispatcher);
+
+        $application->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'Environment'));
+
+        $application
+            ->register('foo')
+            ->setAliases(array('f'))
+            ->setDefinition(array(new InputOption('survey', 'e', InputOption::VALUE_REQUIRED, 'My option with a shortcut.')))
+            ->setCode(function (InputInterface $input, OutputInterface $output) {})
+        ;
+
+        $input = new ArrayInput(array('command' => 'foo'));
+        $output = new NullOutput();
+
+        $application->run($input, $output);
     }
 
     /**

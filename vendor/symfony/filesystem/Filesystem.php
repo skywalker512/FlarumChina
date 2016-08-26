@@ -155,24 +155,27 @@ class Filesystem
      */
     public function remove($files)
     {
-        $files = iterator_to_array($this->toIterator($files));
+        if ($files instanceof \Traversable) {
+            $files = iterator_to_array($files, false);
+        } elseif (!is_array($files)) {
+            $files = array($files);
+        }
         $files = array_reverse($files);
         foreach ($files as $file) {
-            if (@(unlink($file) || rmdir($file))) {
-                continue;
-            }
             if (is_link($file)) {
                 // See https://bugs.php.net/52176
-                $error = error_get_last();
-                throw new IOException(sprintf('Failed to remove symlink "%s": %s.', $file, $error['message']));
+                if (!@(unlink($file) || '\\' !== DIRECTORY_SEPARATOR || rmdir($file)) && file_exists($file)) {
+                    $error = error_get_last();
+                    throw new IOException(sprintf('Failed to remove symlink "%s": %s.', $file, $error['message']));
+                }
             } elseif (is_dir($file)) {
-                $this->remove(new \FilesystemIterator($file));
+                $this->remove(new \FilesystemIterator($file, \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS));
 
-                if (!@rmdir($file)) {
+                if (!@rmdir($file) && file_exists($file)) {
                     $error = error_get_last();
                     throw new IOException(sprintf('Failed to remove directory "%s": %s.', $file, $error['message']));
                 }
-            } elseif (file_exists($file)) {
+            } elseif (!@unlink($file) && file_exists($file)) {
                 $error = error_get_last();
                 throw new IOException(sprintf('Failed to remove file "%s": %s.', $file, $error['message']));
             }
@@ -280,7 +283,7 @@ class Filesystem
     /**
      * Tells whether a file exists and is readable.
      *
-     * @param string $filename Path to the file.
+     * @param string $filename Path to the file
      *
      * @throws IOException When windows path is longer than 258 characters
      */
@@ -476,11 +479,11 @@ class Filesystem
     /**
      * Creates a temporary file with support for custom stream wrappers.
      *
-     * @param string $dir    The directory where the temporary filename will be created.
-     * @param string $prefix The prefix of the generated temporary filename.
-     *                       Note: Windows uses only the first three characters of prefix.
+     * @param string $dir    The directory where the temporary filename will be created
+     * @param string $prefix The prefix of the generated temporary filename
+     *                       Note: Windows uses only the first three characters of prefix
      *
-     * @return string The new temporary filename (with path), or throw an exception on failure.
+     * @return string The new temporary filename (with path), or throw an exception on failure
      */
     public function tempnam($dir, $prefix)
     {
@@ -488,7 +491,7 @@ class Filesystem
 
         // If no scheme or scheme is "file" or "gs" (Google Cloud) create temp file in local filesystem
         if (null === $scheme || 'file' === $scheme || 'gs' === $scheme) {
-            $tmpFile = tempnam($hierarchy, $prefix);
+            $tmpFile = @tempnam($hierarchy, $prefix);
 
             // If tempnam failed or no scheme return the filename otherwise prepend the scheme
             if (false !== $tmpFile) {
@@ -528,8 +531,8 @@ class Filesystem
     /**
      * Atomically dumps content into a file.
      *
-     * @param string $filename The file to be written to.
-     * @param string $content  The data to write into the file.
+     * @param string $filename The file to be written to
+     * @param string $content  The data to write into the file
      *
      * @throws IOException If the file cannot be written to.
      */
@@ -573,7 +576,7 @@ class Filesystem
     /**
      * Gets a 2-tuple of scheme (may be null) and hierarchical part of a filename (e.g. file:///tmp -> array(file, tmp)).
      *
-     * @param string $filename The filename to be parsed.
+     * @param string $filename The filename to be parsed
      *
      * @return array The filename scheme and hierarchical part
      */

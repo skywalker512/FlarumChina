@@ -24,23 +24,23 @@ interface SessionStorageInterface
     /**
      * Starts the session.
      *
-     * @throws \RuntimeException If something goes wrong starting the session.
+     * @return bool True if started
      *
-     * @return bool True if started.
+     * @throws \RuntimeException If something goes wrong starting the session.
      */
     public function start();
 
     /**
      * Checks if the session is started.
      *
-     * @return bool True if started, false otherwise.
+     * @return bool True if started, false otherwise
      */
     public function isStarted();
 
     /**
      * Returns the session ID.
      *
-     * @return string The session ID or empty.
+     * @return string The session ID or empty
      */
     public function getId();
 
@@ -54,7 +54,7 @@ interface SessionStorageInterface
     /**
      * Returns the session name.
      *
-     * @return mixed The session name.
+     * @return mixed The session name
      */
     public function getName();
 

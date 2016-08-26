@@ -1,0 +1,6 @@
+{
+  "name": "sijad-links-admin",
+  "devDependencies": {
+    "html.sortable": "^0.3.1"
+  }
+}

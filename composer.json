@@ -41,9 +41,14 @@
         "flarum/flarum-ext-suspend": "^0.1.0",
         "flarum/flarum-ext-tags": "^0.1.0",
         "jsthon/flarum-ext-simplified-chinese": "^0.1.0@beta",
+        "sijad/flarum-ext-pages": "^0.1.0@beta",
+        "sijad/flarum-ext-links": "^0.1.0@beta",
+        "flagrow/flarum-ext-image-upload": "^0.2.3",
+        "cloudinary/cloudinary_php": "^1.4",
         "s9e/flarum-ext-mediaembed": "^0.3.2",
-        "vingle/flarum-configure-smtp": "^0.1.0@beta",
-        "flagrow/flarum-ext-image-upload": "^0.2.1"
+        "sijad/flarum-ext-details": "^0.1.2",
+        "vingle/flarum-configure-smtp": "^0.2.0",
+        "vingle/flarum-share-social": "^0.1.0"
     },
     "require-dev": {
         "franzl/studio": "^0.10.0"

@@ -1,0 +1,6 @@
+{
+  "name": "sijad-details-forum",
+  "devDependencies": {
+    "jquery-details": "mathiasbynens/jquery-details#master"
+  }
+}

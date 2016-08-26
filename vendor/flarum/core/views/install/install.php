@@ -1,6 +1,6 @@
 <h2>安装 Flarum</h2>
 
-<p>请在下面设置你的信息. 若你遇到麻烦可点击  <a href="http://flarum.org/docs/installation" target="_blank">Flarum 交流论坛（英文）</a>.</p>
+<p>请在下面设置你的信息. 若你遇到麻烦可点击  <a href="http://flarum.ga/docs/installation" target="_blank">Flarum 安装文档</a>，<a href="http://discuss.flarum.ga/" target="_blank">Flarum交流论坛</a>.</p>
 
 <form method="post">
   <div id="error" style="display:none"></div>
@@ -70,19 +70,24 @@
 <script>
 $(function() {
   $('form :input:first').select();
+
   $('form').on('submit', function(e) {
     e.preventDefault();
+
     var $button = $(this).find('button')
       .text('Please Wait...')
       .prop('disabled', true);
+
     $.post('', $(this).serialize())
       .done(function() {
         window.location.reload();
       })
       .fail(function(data) {
         $('#error').show().text('Something went wrong:\n\n' + data.responseText);
+
         $button.prop('disabled', false).text('Install Flarum');
       });
+
     return false;
   });
 });

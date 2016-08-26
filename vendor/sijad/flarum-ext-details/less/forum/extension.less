@@ -1,0 +1,29 @@
+details {
+  padding: 0.5em 0;
+
+  & > div {
+    padding-left: 20px;
+    border-left: 1px solid @control-bg;
+  }
+
+  summary:focus {
+    outline: none;
+  }
+
+  summary {
+    cursor: pointer;
+    display: block;
+  }
+}
+
+.no-details {
+  details {
+    summary:before {
+      content: '► ';
+    }
+
+    &.open > summary:before {
+      content: '▼ ';
+    }
+  }
+}

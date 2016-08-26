@@ -69,7 +69,7 @@ class FormatUserMentions
             ->addParameterByName('userRepository')
             ->setJS('function() { return true; }');
 
-         $configurator->Preg->match('/\B@(?<username>[-_a-zA-Z0-9\x7f-\xff]+)(?!#)/i', $tagName);
+        $configurator->Preg->match('/\B@(?<username>[-_a-zA-Z0-9\x7f-\xff]+)(?!#)/i', $tagName);
     }
 
     /**

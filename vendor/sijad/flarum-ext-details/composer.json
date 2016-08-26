@@ -1,0 +1,35 @@
+{
+    "name": "sijad/flarum-ext-details",
+    "description": "Details BBCode for Flarum",
+    "type": "flarum-extension",
+    "keywords": ["formatting", "bbcode", "details", "summary", "hide", "content", "text", "hidden", "invisible"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sajjad Hashemian",
+            "email": "wolaws@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/sijad/flarum-ext-details/issues",
+        "source": "https://github.com/sijad/flarum-ext-details"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sijad\\Details\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Details",
+            "icon": {
+                "name": "minus-square",
+                "backgroundColor": "#f05049",
+                "color": "#fff"
+            }
+        }
+    }
+}

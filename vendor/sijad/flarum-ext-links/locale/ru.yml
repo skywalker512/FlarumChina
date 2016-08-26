@@ -1,0 +1,37 @@
+sijad-links:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These strings are used in the Edit Link modal dialog.
+    edit_link:
+      delete_link_button: Удалить
+      delete_link_confirmation: "Вы уверены, что хотите удалить эту ссылку?"
+      submit_button: Сохранить
+      title: => sijad-links.ref.create_link
+      title_label: => sijad-links.ref.title
+      title_placeholder: => sijad-links.ref.title
+      url_label: => sijad-links.ref.url
+      url_placeholder: => sijad-links.ref.url
+
+    # These strings are used in the Links page.
+    links:
+      about_text: Список ссылок в навигации
+      create_button: => sijad-links.ref.create_link
+      links: => sijad-links.ref.links
+
+    # These strings are used in the navigation bar.
+    nav:
+      links_button: => sijad-links.ref.links
+      links_text: Управление ссылками в навигации
+
+  # Strings in this namespace are referenced by two or more unique keys.
+  ref:
+    create_link: Создать ссылку
+    links: Список ссылок
+    title: Имя
+    url: Url

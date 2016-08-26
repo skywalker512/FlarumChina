@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  * This file is part of flagrow/flarum-ext-image-upload.
  *
@@ -16,6 +16,8 @@ use Flarum\Core\Validator\AbstractValidator;
 
 class ImageValidator extends AbstractValidator
 {
+    public $maxFileSize;
+
     /**
      * @return array
      */
@@ -25,7 +27,7 @@ class ImageValidator extends AbstractValidator
             'image' => [
                 'required',
                 'image',
-                'max:' . app('config')->get('flagrow.image-upload.maxFileSize', 2048)
+                'max:' . $this->maxFileSize
             ]
         ];
     }

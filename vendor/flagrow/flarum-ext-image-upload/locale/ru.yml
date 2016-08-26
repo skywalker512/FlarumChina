@@ -6,3 +6,43 @@ flagrow-image-upload:
             loading: Загрузка
             success: Загружено
             error: Ошибка
+    admin:
+        permissions:
+            upload_images_label: Загрузка изображений
+        upload_methods:
+            local: Локально
+            imgur: Imgur
+            cloudinary: Cloudinary
+        labels:
+            upload_method: Метод загрузки
+            preferences:
+                title: Общее
+                max_file_size: Максимальный размер файла (в килобайтах)
+            resize:
+                title: Размер изображения
+                toggle: Разрешить изменение изображения
+                max_width: Максимальная ширина
+                max_height: Максимальная высота
+            imgur:
+                title: Настройки Imgur
+                client_id: Client-ID
+            local:
+                title: Настройки локального хранилища
+                cdn_url: Конечный URL (префикс файла)
+            cloudinary:
+                title: Настройки Cloudinary
+                cloud_name: Cloud name
+                api_key: Api key
+                api_secret: Api secret
+        buttons:
+            save: Сохранить настройки
+        help_texts:
+            description: >
+                Настройка загрузки изображений.
+            upload_method: >
+                Здесь вы можете выбрать метод, который вы хотите использовать
+                для загрузки изображений.
+            resize: >
+                Выберите, нужно ли изменить размер изображения перед загрузкой изображения.
+                Вы можете выбрать максимальную ширину 
+                и высоту в пикселях. Процесс изменения размера сохраняет пропорции изображения.

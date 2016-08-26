@@ -1,0 +1,50 @@
+flagrow-image-upload:
+    forum:
+        buttons:
+            attach: Ekle
+        states:
+            loading: Yükleniyor
+            success: Başarılı
+            error: Hata
+    admin:
+        permissions:
+            upload_images_label: Resim yükleme
+        upload_methods:
+            local: Yerel
+            imgur: Imgur
+            cloudinary: Cloudinary
+        labels:
+            upload_method: Yükleme yöntemi
+            preferences:
+                title: Genel özellikler
+                max_file_size: Maksimum dosya boyutu (kilobayt cinsinden)
+            resize:
+                title: Yeniden boyutlandırma
+                toggle: Yeniden boyutlandırmaya geç
+                max_width: Maksimum resim genişliği
+                max_height: Maksimum resim yüksekliği
+            imgur:
+                title: Imgur ayarları
+                client_id: Client-ID
+            local:
+                title: Yerel depolama ayarları
+                cdn_url: Content Delivery URL (prefixes files)
+            cloudinary:
+                title: Cloudinary ayarları
+                cloud_name: Cloud ismi
+                api_key: Api anahtarı
+                api_secret: Api secret
+        buttons:
+            save: Ayarları kaydet
+        help_texts:
+            description: >
+                Resim yükleme servislerini ve ayarlarını yapın.
+            upload_method: >
+                Burada resimleri yüklerken kullanmak istediğiniz
+                yöntemi seçebilirsiniz. Seçim yaptığınızda uygun
+                ayar ekranı da görüntülenecek.
+            resize: >
+                Resimlerinizin yüklenmeden önce yeniden boyutlandırılmasını
+                isteyip istemediğinizi seçin. Maksimum yükseklik ve genişliği
+                piksel cinsinden seçebilirsiniz. Bu işlem resimlerin yükseklik
+                ve genişlik oranını koruyacaktır.

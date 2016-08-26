@@ -1,4 +1,17 @@
-# Changelog
+
+## 2.4.2 (2016-07-04)
+
+[CHANGED] One curl instance per Pusher instance
+
+## 2.4.1 (2016-05-27)
+
+[FIXED] Presence data could not be submitted after the style changes
+
+## 2.4.0 (2016-05-25)
+
+[ADDED] Support for batch events
+[ADDED] Curl options
+[FIXED] Applied fixes from StyleCI
 
 ## 2.3.0 (2015-02-16)
 

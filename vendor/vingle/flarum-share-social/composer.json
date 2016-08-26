@@ -1,0 +1,29 @@
+{
+    "name": "vingle/flarum-share-social",
+    "description": "Include share social button.",
+    "keywords": ["share", "facebook", "twitter", "google", "google plus", "social"],
+    "type": "flarum-extension",
+    "version": "0.1.0",
+    "authors": [{
+        "name": "Binh Duong",
+        "email": "binh.duong@vingle.net"
+        }],
+        "require": {
+            "flarum/core": "^0.1.0-beta.3"
+            },
+            "extra": {
+                "flarum-extension": {
+                    "title": "_ Share Social",
+                    "icon": {
+                        "name": "share-alt",
+                        "backgroundColor": "#000", 
+                        "color": "#FF0"
+                    }
+                }
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Vingle\\Share\\Social\\": "src/"
+                    }
+                }
+            }

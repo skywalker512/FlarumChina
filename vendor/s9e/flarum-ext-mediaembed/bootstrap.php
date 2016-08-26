@@ -14,53 +14,63 @@ function subscribe(Dispatcher $events)
 		ConfigureFormatter::class,
 		function (ConfigureFormatter $event)
 		{
+            $event->configurator->Autoimage;
             $event->configurator->MediaEmbed->add(
-            'music163',
-            [
-                'host'    => 'music.163.com',
-                'extract' => "!music\\.163\\.com/#/song\\?id=(?'id'[-0-9A-Z_a-z]+)!",
-                'iframe'  => [
-                    'width'  => 330,
-                    'height' => 86,
-                    'src'    => 'http://music.163.com/outchain/player?type=2&id={@id}&auto=0&height=66'
+                'music163',
+                [
+                    'host'    => 'music.163.com',
+                    'extract' => "!music\\.163\\.com/#/song\\?id=(?'id'\\d+)!",
+                    'iframe'  => [
+                        'width'  => 330,
+                        'height' => 86,
+                        'src'    => '//music.163.com/outchain/player?type=2&id={@id}&auto=0&height=66'
+                    ]
                 ]
-            ]
             );
             $event->configurator->MediaEmbed->add(
-            'ku6',
-            [
-                'host'    => 'ku6.com',
-                'extract' => "!ku6\\.com/show/(?'id'[\\w\\.\\-]+)\\.html!",
-                'flash'  => [
-                    'width'  => 480,
-                    'height' => 400,
-                    'flashvars' => "from=ku6",
-                    'src'    => 'http://player.ku6.com/refer/{@id}/v.swf&auto=0'
+                'youku',
+                [
+                    'host'    => 'v.youku.com',
+                    'extract' => "!v\\.youku\\.com/v_show/\\id_(?'id'[-0-9A-Z_a-z]+)!",
+                    'iframe'  => [
+                        'width'  => 720,
+                        'height' => 405,
+                        'src'    => '/assets/youku/index.html#{@id}'
+                    ]
                 ]
-            ]
             );
             $event->configurator->MediaEmbed->add(
-				'tucao',
-				[
-					'host'    => 'tucao.tv',
-					'extract' => "!tucao\\.tv/play/h(?'id'[-0-9A-Z_a-z]+)!",
-					'iframe'  => ['src' => 'http://www.tucao.tv/mini/{@id}.swf']
-				]
-			);
-			$event->configurator->MediaEmbed->add(
                 'bilibili',
                 [   
                     'host'    => 'www.bilibili.com',
-                    'extract' => "!www.bilibili.com/video/av(?'id'[0-9]+)/!",
+                    'extract' => "!www.bilibili.com/video/av(?'id'\\d+)/!",
                     'flash'  => [
-                        'width'  => 720,
-                        'height' => 405,
+                        'width'  => 760,
+                        'height' => 450,
                         'src'    => 'https://static-s.bilibili.com/miniloader.swf?aid={@id}'
                     ]
                 ]
             );
-			$event->configurator->Autoimage;
-			(new MediaPack)->configure($event->configurator);
+             $event->configurator->MediaEmbed->add(
+                'qq',
+                [
+                    'host'    => 'qq.com',
+                    'extract' => [
+                       "!qq\\.com/x/cover/\\w+/(?'id'\\w+)\\.html!",
+                       "!qq\\.com/x/cover/\\w+\\.html\\?vid=(?'id'\\w+)!",
+                       "!qq\\.com/cover/[^/]+/\\w+/(?'id'\\w+)\\.html!",
+                       "!qq\\.com/cover/[^/]+/\\w+\\.html\\?vid=(?'id'\\w+)!",
+                       "!qq\\.com/x/page/(?'id'\\w+)\\.html!",
+                       "!qq\\.com/page/[^/]+/[^/]+/[^/]+/(?'id'\\w+)\\.html!"
+                    ],
+                    'iframe'  => [
+                        'width'  => 760,
+                        'height' => 450,
+                        'src'    => '//v.qq.com/iframe/player.html?vid={@id}&tiny=0&auto=0'
+                    ]
+                ]
+            );
+            (new MediaPack)->configure($event->configurator);
 		}
 	);
 };

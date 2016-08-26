@@ -8,7 +8,7 @@
     "email": "binh.duong@vingle.net"
   }],
   "require": {
-    "flarum/core": "^0.1.0-beta.3"
+    "flarum/core": "^0.1.0-beta.5"
   },
   "autoload": {
     "psr-4": {
@@ -17,7 +17,7 @@
   },
   "extra": {
     "flarum-extension": {
-      "title": "_ Configure SMTP",
+      "title": "Configure SMTP",
       "icon": {
         "name": "cogs",
         "backgroundColor": "#000",

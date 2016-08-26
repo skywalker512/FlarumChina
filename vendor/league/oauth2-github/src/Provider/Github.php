@@ -2,7 +2,7 @@
 
 namespace League\OAuth2\Client\Provider;
 
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Provider\Exception\GithubIdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
@@ -79,6 +79,7 @@ class Github extends AbstractProvider
      * Check a provider response for errors.
      *
      * @link   https://developer.github.com/v3/#client-errors
+     * @link   https://developer.github.com/v3/oauth/#common-errors-for-the-access-token-request
      * @throws IdentityProviderException
      * @param  ResponseInterface $response
      * @param  string $data Parsed response data
@@ -87,11 +88,9 @@ class Github extends AbstractProvider
     protected function checkResponse(ResponseInterface $response, $data)
     {
         if ($response->getStatusCode() >= 400) {
-            throw new IdentityProviderException(
-                $data['message'] ?: $response->getReasonPhrase(),
-                $response->getStatusCode(),
-                $response
-            );
+            throw GithubIdentityProviderException::clientException($response, $data);
+        } elseif (isset($data['error'])) {
+            throw GithubIdentityProviderException::oauthException($response, $data);
         }
     }
 

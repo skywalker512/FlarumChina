@@ -1,0 +1,74 @@
+.PagesPage-header {
+  background: @control-bg;
+  color: @control-color;
+  padding: 20px 0;
+
+  .container {
+    max-width: 600px;
+  }
+  p {
+    margin-bottom: 20px;
+  }
+  .Button {
+    margin-right: 10px;
+  }
+}
+
+.PagesPage-list {
+  padding-top: 20px;
+  .container {
+    max-width: 700px;
+  }
+}
+
+.PageList-results {
+  white-space: nowrap;
+  width: 100%;
+  td, th {
+    padding: 10px;
+    text-align: left;
+  }
+  thead th {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+    color: @muted-color;
+    min-width: 140px;
+    border-bottom: 2px solid @control-bg;
+  }
+  tbody {
+    tr {
+      td, th {
+        border-top: 1px solid @control-bg;
+      }
+      &:nth-of-type(odd) {
+        background-color: #fcfcfc;
+      }
+    }
+  }
+  .Pages-actions {
+    text-align: right;
+  }
+}
+
+.EditPageModal {
+  .Form-group:not(:last-child) {
+    margin-bottom: 30px;
+  }
+}
+
+.EditPageModal-delete {
+  float: right;
+}
+
+.PageList-pagination {
+  margin-top: 25px;
+}
+
+.Button--PageList-prev {
+  float: left;
+}
+
+.Button--PageList-next {
+  float: right;
+}

@@ -1,0 +1,35 @@
+{
+    "name": "sijad/flarum-ext-pages",
+    "description": "Create custom page with Flarum",
+    "type": "flarum-extension",
+    "keywords": ["static", "page"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sajjad Hashemian",
+            "email": "wolaws@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/sijad/flarum-ext-pages/issues",
+        "source": "https://github.com/sijad/flarum-ext-pages"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sijad\\Pages\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Pages",
+            "icon": {
+                "name": "file-text-o",
+                "backgroundColor": "#4C49A2",
+                "color": "#B8DC3C"
+            }
+        }
+    }
+}

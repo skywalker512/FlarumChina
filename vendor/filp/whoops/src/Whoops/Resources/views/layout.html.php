@@ -29,8 +29,8 @@
       </div>
     </div>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/1.3.5/ZeroClipboard.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js"></script>
+    <script src="//cdn.css.net/libs/zeroclipboard/1.3.5/ZeroClipboard.min.js"></script>
+    <script src="//cdn.css.net/libs/prettify/r224/prettify.js"></script>
     <script><?php echo $zepto ?></script>
     <script><?php echo $javascript ?></script>
   </body>
