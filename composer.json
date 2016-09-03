@@ -23,6 +23,7 @@
     "require": {
         "php": "^5.6.11",
         "ext-mbstring": "*",
+        "ext-gd": "*",
         "flarum/core": "^0.1.0",
         "flarum/flarum-ext-akismet": "^0.1.0",
         "flarum/flarum-ext-approval": "^0.1.0",
@@ -50,7 +51,6 @@
         "s9e/flarum-ext-mediaembed": "^0.3.2",
         "sijad/flarum-ext-details": "^0.1.2",
         "vingle/flarum-configure-smtp": "^0.2.0",
-        "ext-gd": "*",
         "vingle/flarum-share-social": "^0.1.0"
     },
     "require-dev": {
