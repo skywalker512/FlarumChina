@@ -7,6 +7,15 @@
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
 use ArrayObject;
-class Dictionary extends ArrayObject
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+class Dictionary extends ArrayObject implements FilterableConfigValue
 {
+	public function filterConfig($target)
+	{
+		$value = $this->getArrayCopy();
+		if ($target === 'JS')
+			$value = new Dictionary(ConfigHelper::filterConfig($value, $target));
+		return $value;
+	}
 }

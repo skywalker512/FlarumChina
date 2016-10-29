@@ -48,8 +48,8 @@ class CallbackGenerator
 	}
 	protected function generateFunction(array $config, array $params)
 	{
-		if ($config['js'] === 'returnFalse' || $config['js'] === 'returnTrue')
-			return new Code($config['js']);
+		if ($config['js'] == 'returnFalse' || $config['js'] == 'returnTrue')
+			return new Code((string) $config['js']);
 		$config += array('params' => array());
 		$src  = $this->getHeader($params);
 		$src .= 'function(' . \implode(',', \array_keys($params)) . '){';

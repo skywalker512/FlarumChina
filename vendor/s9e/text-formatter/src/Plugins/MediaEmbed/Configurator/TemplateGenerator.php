@@ -58,6 +58,8 @@ abstract class TemplateGenerator
 		
 		if (!empty($this->attributes['padding-height']))
 			$css .= ';padding-bottom:calc(<xsl:value-of select="100*' . $height . ' div' . $width . '"/>% + ' . $paddingHeight . 'px)';
+		if (\strpos($width, '@') !== \false)
+			$css = '<xsl:if test="@width&gt;0">' . $css . '</xsl:if>';
 		return $css;
 	}
 	protected function generateAttributes(array $attributes)

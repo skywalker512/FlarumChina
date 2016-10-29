@@ -1,17 +1,7 @@
-/** @const */
-var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
 matches.forEach(function(m)
 {
-	// Make sure that the URL is not preceded by an alphanumeric character
-	var matchPos = m[0][1];
-	if (matchPos > 0 && chars.indexOf(text.charAt(matchPos - 1)) > -1)
-	{
-		return;
-	}
-
 	// Linkify the trimmed URL
-	linkifyUrl(matchPos, trimUrl(m[0][0]));
+	linkifyUrl(m[0][1], trimUrl(m[0][0]));
 });
 
 /**
@@ -50,26 +40,23 @@ function linkifyUrl(tagPos, url)
 };
 
 /**
-* Trim any trailing punctuation from given URL
+* Remove trailing punctuation from given URL
 *
-* Removes trailing punctuation and right angle brackets. We preserve right parentheses
-* if there's a balanced number of parentheses in the URL, e.g.
-*   http://en.wikipedia.org/wiki/Mars_(disambiguation)
+* We remove most ASCII non-letters from the end of the string.
+* Exceptions:
+*  - dashes (some YouTube URLs end with a dash due to the video ID)
+*  - equal signs (because of "foo?bar="),
+*  - trailing slashes,
+*  - closing parentheses are balanced separately.
 *
 * @param  {!string} url Original URL
 * @return {!string}     Trimmed URL
 */
 function trimUrl(url)
 {
-	// Remove trailing punctuation and right angle brackets. We preserve right parentheses
-	// if there's a balanced number of parentheses in the URL, e.g.
-	//   http://en.wikipedia.org/wiki/Mars_(disambiguation)
 	while (1)
 	{
-		// We remove some common ASCII punctuation and whitespace. We don't have access to Unicode
-		// properties, so we try to cover the most common usage
-		url = url.replace(/[\s!"',.<>?]+$/, '');
-
+		url = url.replace(/(?![-=\/)])[\s!-.:-@[-`{-~]+$/, '');
 		if (url.substr(-1) === ')' && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length)
 		{
 			url = url.substr(0, url.length - 1);

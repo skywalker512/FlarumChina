@@ -16,6 +16,7 @@ export default class EditPageModal extends Modal {
     this.slug = m.prop(this.page.slug() || '');
     this.pageContent = m.prop(this.page.content() || '');
     this.isHidden = m.prop(this.page.isHidden() && true);
+    this.isHtml = m.prop(this.page.isHtml() && true);
   }
 
   className() {
@@ -62,6 +63,15 @@ export default class EditPageModal extends Modal {
               </label>
             </div>
           </div>
+
+          <div className="Form-group">
+            <div>
+              <label className="checkbox">
+                <input type="checkbox" value="1" checked={this.isHtml()} onchange={m.withAttr('checked', this.isHtml)}/>
+                {app.translator.trans('sijad-pages.admin.edit_page.html_label')}
+              </label>
+            </div>
+          </div>
           <div className="Form-group">
             {Button.component({
               type: 'submit',
@@ -90,6 +100,7 @@ export default class EditPageModal extends Modal {
       slug: this.slug(),
       content: this.pageContent(),
       isHidden: this.isHidden(),
+      isHtml: this.isHtml(),
     }, {errorHandler: this.onerror.bind(this)})
       .then(this.hide.bind(this))
       .catch(() => {

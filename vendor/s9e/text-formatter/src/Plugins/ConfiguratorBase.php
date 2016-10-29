@@ -11,6 +11,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 abstract class ConfiguratorBase implements ConfigProvider
@@ -47,11 +48,15 @@ abstract class ConfiguratorBase implements ConfigProvider
 	}
 	final public function getBaseProperties()
 	{
-		return array(
+		$config = array(
 			'className'   => \preg_replace('/Configurator$/', 'Parser', \get_class($this)),
 			'quickMatch'  => $this->quickMatch,
 			'regexpLimit' => $this->regexpLimit
 		);
+		$js = $this->getJSParser();
+		if (isset($js))
+			$config['js'] = new Code($js);
+		return $config;
 	}
 	public function getJSHints()
 	{

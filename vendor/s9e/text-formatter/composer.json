@@ -1,6 +1,6 @@
 {
 	"name": "s9e/text-formatter",
-	"version": "0.4.12",
+	"version": "0.6.2",
 	"type": "library",
 	"description": "Multi-purpose text formatting and markup library. Plugins offer support for BBCodes, Markdown, emoticons, HTML, embedding media (YouTube, etc...), enhanced typography and more.",
 	"homepage": "https://github.com/s9e/TextFormatter/",

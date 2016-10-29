@@ -64,7 +64,7 @@ class JavaScript
 		$rendererGenerator = new XSLT;
 		$this->xsl = $rendererGenerator->getXSL($this->configurator->rendering);
 		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
-		ConfigHelper::filterVariants($this->config, 'JS');
+		$this->config = ConfigHelper::filterConfig($this->config, 'JS');
 		$this->config = $this->callbackGenerator->replaceCallbacks($this->config);
 		$src = $this->getHints() . $this->injectConfig($this->getSource());
 		$src .= $this->getExports();
@@ -114,8 +114,10 @@ class JavaScript
 		$plugins = new Dictionary;
 		foreach ($this->config['plugins'] as $pluginName => $pluginConfig)
 		{
-			if (!isset($pluginConfig['parser']))
+			if (!isset($pluginConfig['js']))
 				continue;
+			$js = $pluginConfig['js'];
+			unset($pluginConfig['js']);
 			unset($pluginConfig['className']);
 			if (isset($pluginConfig['quickMatch']))
 			{
@@ -132,7 +134,6 @@ class JavaScript
 					unset($pluginConfig['quickMatch']);
 			}
 			$globalKeys = array(
-				'parser'      => 1,
 				'quickMatch'  => 1,
 				'regexp'      => 1,
 				'regexpLimit' => 1
@@ -140,7 +141,7 @@ class JavaScript
 			$globalConfig = \array_intersect_key($pluginConfig, $globalKeys);
 			$localConfig  = \array_diff_key($pluginConfig, $globalKeys);
 			if (isset($globalConfig['regexp']) && !($globalConfig['regexp'] instanceof Code))
-				$globalConfig['regexp'] = RegexpConvertor::toJS($globalConfig['regexp'], \true);
+				$globalConfig['regexp'] = new Code(RegexpConvertor::toJS($globalConfig['regexp'], \true));
 			$globalConfig['parser'] = new Code(
 				'/**
 				* @param {!string} text
@@ -150,7 +151,7 @@ class JavaScript
 				{
 					/** @const */
 					var config=' . $this->encode($localConfig) . ';
-					' . $globalConfig['parser'] . '
+					' . $js . '
 				}'
 			);
 			$plugins[$pluginName] = $globalConfig;

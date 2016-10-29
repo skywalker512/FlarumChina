@@ -9,13 +9,9 @@ namespace s9e\TextFormatter\Configurator\JavaScript;
 use s9e\TextFormatter\Utils\Http;
 abstract class OnlineMinifier extends Minifier
 {
-	public $client;
-	public $timeout = 10;
-	protected function getHttpClient()
+	public $httpClient;
+	public function __construct()
 	{
-		if (!isset($this->client))
-			$this->client = Http::getClient();
-		$this->client->timeout = $this->timeout;
-		return $this->client;
+		$this->httpClient = Http::getClient();
 	}
 }

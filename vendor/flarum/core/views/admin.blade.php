@@ -1,3 +1,5 @@
+{!! array_get($forum, 'attributes.headerHtml') !!}
+
 <div id="app" class="App">
 
   <div id="app-navigation" class="App-navigation"></div>
@@ -8,8 +10,13 @@
       <div id="header-navigation" class="Header-navigation"></div>
       <div class="container">
         <h1 class="Header-title">
-          <a href="{{ $forum->attributes->baseUrl }}">
-            {{ $forum->attributes->title }}
+          <a href="{{ array_get($forum, 'attributes.baseUrl') }}">
+            <?php $title = array_get($forum, 'attributes.title'); ?>
+            @if ($logo = array_get($forum, 'attributes.logoUrl'))
+              <img src="{{ $logo }}" alt="{{ $title }}" class="Header-logo">
+            @else
+              {{ $title }}
+            @endif
           </a>
         </h1>
         <div id="header-primary" class="Header-primary"></div>

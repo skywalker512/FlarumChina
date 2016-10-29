@@ -569,11 +569,11 @@ exports.System = System;
 		global.m = m
 	}
 	/* eslint-enable no-undef */
-})(typeof window !== "undefined" ? window : {}, function (global, undefined) { // eslint-disable-line
+})(typeof window !== "undefined" ? window : this, function (global, undefined) { // eslint-disable-line
 	"use strict"
 
 	m.version = function () {
-		return "v0.2.3"
+		return "v0.2.5"
 	}
 
 	var hasOwn = {}.hasOwnProperty
@@ -655,7 +655,7 @@ exports.System = System;
 				classes.push(match[2])
 			} else if (match[3][0] === "[") {
 				var pair = /\[(.+?)(?:=("|'|)(.*?)\2)?\]/.exec(match[3])
-				cell.attrs[pair[1]] = pair[3] || (pair[2] ? "" : true)
+				cell.attrs[pair[1]] = pair[3] || ""
 			}
 		}
 
@@ -700,7 +700,11 @@ exports.System = System;
 	 *                      or splat (optional)
 	 */
 	function m(tag, pairs) {
-		var args = [].slice.call(arguments, 1)
+		var args = []
+
+		for (var i = 1, length = arguments.length; i < length; i++) {
+			args[i - 1] = arguments[i]
+		}
 
 		if (isObject(tag)) return parameterize(tag, args)
 
@@ -794,8 +798,10 @@ exports.System = System;
 		})
 
 		var actions = []
-		for (var prop in existing) if (hasOwn.call(existing, prop)) {
-			actions.push(existing[prop])
+		for (var prop in existing) {
+			if (hasOwn.call(existing, prop)) {
+				actions.push(existing[prop])
+			}
 		}
 
 		var changes = actions.sort(sortChanges)
@@ -926,8 +932,10 @@ exports.System = System;
 
 			if (cached.controllers) {
 				forEach(cached.controllers, function (controller) {
-					if (controller.onunload) controller.onunload({preventDefault: noop});
-				});
+					if (controller.onunload) {
+						controller.onunload({preventDefault: noop})
+					}
+				})
 			}
 		}
 	}
@@ -1308,7 +1316,9 @@ exports.System = System;
 	var unloaders = []
 
 	function updateLists(views, controllers, view, controller) {
-		if (controller.onunload != null && unloaders.map(function(u) {return u.handler}).indexOf(controller.onunload) < 0) {
+		if (controller.onunload != null &&
+				unloaders.map(function (u) { return u.handler })
+					.indexOf(controller.onunload) < 0) {
 			unloaders.push({
 				controller: controller,
 				handler: controller.onunload
@@ -1320,11 +1330,32 @@ exports.System = System;
 	}
 
 	var forcing = false
-	function checkView(data, view, cached, cachedControllers, controllers, views) {
-		var controller = getController(cached.views, view, cachedControllers, data.controller)
+	function checkView(
+		data,
+		view,
+		cached,
+		cachedControllers,
+		controllers,
+		views
+	) {
+		var controller = getController(
+			cached.views,
+			view,
+			cachedControllers,
+			data.controller)
+
 		var key = data && data.attrs && data.attrs.key
-		data = pendingRequests === 0 || forcing || cachedControllers && cachedControllers.indexOf(controller) > -1 ? data.view(controller) : {tag: "placeholder"}
-		if (data.subtree === "retain") return data;
+
+		if (pendingRequests === 0 ||
+				forcing ||
+				cachedControllers &&
+					cachedControllers.indexOf(controller) > -1) {
+			data = data.view(controller)
+		} else {
+			data = {tag: "placeholder"}
+		}
+
+		if (data.subtree === "retain") return data
 		data.attrs = data.attrs || {}
 		data.attrs.key = key
 		updateLists(views, controllers, view, controller)
@@ -1389,6 +1420,9 @@ exports.System = System;
 			// set attributes first, then create children
 			var attrs = constructAttrs(data, node, namespace, hasKeys)
 
+			// add the node to its parent before attaching children to it
+			insertNode(parentElement, node, index)
+
 			var children = constructChildren(data, node, cached, editable,
 				namespace, configs)
 
@@ -1412,7 +1446,7 @@ exports.System = System;
 				controllers)
 		}
 
-		if (isNew || shouldReattach === true && node != null) {
+		if (!isNew && shouldReattach === true && node != null) {
 			insertNode(parentElement, node, index)
 		}
 
@@ -1531,14 +1565,18 @@ exports.System = System;
 	}
 
 	function copyStyleAttrs(node, dataAttr, cachedAttr) {
-		for (var rule in dataAttr) if (hasOwn.call(dataAttr, rule)) {
-			if (cachedAttr == null || cachedAttr[rule] !== dataAttr[rule]) {
-				node.style[rule] = dataAttr[rule]
+		for (var rule in dataAttr) {
+			if (hasOwn.call(dataAttr, rule)) {
+				if (cachedAttr == null || cachedAttr[rule] !== dataAttr[rule]) {
+					node.style[rule] = dataAttr[rule]
+				}
 			}
 		}
 
-		for (rule in cachedAttr) if (hasOwn.call(cachedAttr, rule)) {
-			if (!hasOwn.call(dataAttr, rule)) node.style[rule] = ""
+		for (rule in cachedAttr) {
+			if (hasOwn.call(cachedAttr, rule)) {
+				if (!hasOwn.call(dataAttr, rule)) node.style[rule] = ""
+			}
 		}
 	}
 
@@ -1611,7 +1649,7 @@ exports.System = System;
 		tag,
 		namespace
 	) {
-		if (!(attrName in cachedAttrs) || (cachedAttr !== dataAttr)) {
+		if (!(attrName in cachedAttrs) || (cachedAttr !== dataAttr) || ($document.activeElement === node)) {
 			cachedAttrs[attrName] = dataAttr
 			try {
 				return setSingleAttr(
@@ -1634,16 +1672,18 @@ exports.System = System;
 	}
 
 	function setAttributes(node, tag, dataAttrs, cachedAttrs, namespace) {
-		for (var attrName in dataAttrs) if (hasOwn.call(dataAttrs, attrName)) {
-			if (trySetAttr(
-					node,
-					attrName,
-					dataAttrs[attrName],
-					cachedAttrs[attrName],
-					cachedAttrs,
-					tag,
-					namespace)) {
-				continue
+		for (var attrName in dataAttrs) {
+			if (hasOwn.call(dataAttrs, attrName)) {
+				if (trySetAttr(
+						node,
+						attrName,
+						dataAttrs[attrName],
+						cachedAttrs[attrName],
+						cachedAttrs,
+						tag,
+						namespace)) {
+					continue
+				}
 			}
 		}
 		return cachedAttrs
@@ -1695,7 +1735,39 @@ exports.System = System;
 				$document.createRange().createContextualFragment(data))
 		} catch (e) {
 			parentElement.insertAdjacentHTML("beforeend", data)
+			replaceScriptNodes(parentElement)
 		}
+	}
+
+	// Replace script tags inside given DOM element with executable ones.
+	// Will also check children recursively and replace any found script
+	// tags in same manner.
+	function replaceScriptNodes(node) {
+		if (node.tagName === "SCRIPT") {
+			node.parentNode.replaceChild(buildExecutableNode(node), node)
+		} else {
+			var children = node.childNodes
+			if (children && children.length) {
+				for (var i = 0; i < children.length; i++) {
+					replaceScriptNodes(children[i])
+				}
+			}
+		}
+
+		return node
+	}
+
+	// Replace script element with one whose contents are executable.
+	function buildExecutableNode(node){
+		var scriptEl = document.createElement("script")
+		var attrs = node.attributes
+
+		for (var i = 0; i < attrs.length; i++) {
+			scriptEl.setAttribute(attrs[i].name, attrs[i].value)
+		}
+
+		scriptEl.text = node.innerHTML
+		return scriptEl
 	}
 
 	function injectHTML(parentElement, index, data) {
@@ -1825,7 +1897,7 @@ exports.System = System;
 	}
 
 	m.prop = function (store) {
-		if ((store != null && isObject(store) || isFunction(store)) &&
+		if ((store != null && (isObject(store) || isFunction(store)) || ((typeof Promise !== "undefined") && (store instanceof Promise))) &&
 				isFunction(store.then)) {
 			return propify(store)
 		}
@@ -1870,7 +1942,11 @@ exports.System = System;
 	}
 
 	m.component = function (component) {
-		var args = [].slice.call(arguments, 1)
+		var args = new Array(arguments.length - 1)
+
+		for (var i = 1; i < arguments.length; i++) {
+			args[i - 1] = arguments[i]
+		}
 
 		return parameterize(component, args)
 	}
@@ -1962,7 +2038,7 @@ exports.System = System;
 		try {
 			// lastRedrawId is a positive number if a second redraw is requested
 			// before the next animation frame
-			// lastRedrawID is null if it's the first redraw and not an event
+			// lastRedrawId is null if it's the first redraw and not an event
 			// handler
 			if (lastRedrawId && !force) {
 				// when setTimeout: only reschedule redraw if time between now
@@ -2021,7 +2097,7 @@ exports.System = System;
 
 	m.withAttr = function (prop, withAttrCallback, callbackThis) {
 		return function (e) {
-			e = e || event
+			e = e || window.event
 			/* eslint-disable no-invalid-this */
 			var currentTarget = e.currentTarget || this
 			var _this = callbackThis || this
@@ -2103,8 +2179,10 @@ exports.System = System;
 				params = {}
 			}
 
-			for (var i in args) if (hasOwn.call(args, i)) {
-				params[i] = args[i]
+			for (var i in args) {
+				if (hasOwn.call(args, i)) {
+					params[i] = args[i]
+				}
 			}
 
 			var querystring = buildQueryString(params)
@@ -2130,8 +2208,16 @@ exports.System = System;
 				var method = replaceHistory ? "replaceState" : "pushState"
 				computePreRedrawHook = setScroll
 				computePostRedrawHook = function () {
-					global.history[method](null, $document.title,
-						modes[m.route.mode] + currentRoute)
+					try {
+						global.history[method](null, $document.title,
+							modes[m.route.mode] + currentRoute)
+					} catch (err) {
+						// In the event of a pushState or replaceState failure,
+						// fallback to a standard redirect. This is specifically
+						// to address a Safari security error when attempting to
+						// call pushState more than 100 times.
+						$location[m.route.mode] = currentRoute
+					}
 				}
 				redirect(modes[m.route.mode] + currentRoute)
 			} else {
@@ -2180,29 +2266,31 @@ exports.System = System;
 			return true
 		}
 
-		for (var route in router) if (hasOwn.call(router, route)) {
-			if (route === path) {
-				m.mount(root, router[route])
-				return true
-			}
-
-			var matcher = new RegExp("^" + route
-				.replace(/:[^\/]+?\.{3}/g, "(.*?)")
-				.replace(/:[^\/]+/g, "([^\\/]+)") + "\/?$")
-
-			if (matcher.test(path)) {
-				/* eslint-disable no-loop-func */
-				path.replace(matcher, function () {
-					var keys = route.match(/:[^\/]+/g) || []
-					var values = [].slice.call(arguments, 1, -2)
-					forEach(keys, function (key, i) {
-						routeParams[key.replace(/:|\./g, "")] =
-							decodeURIComponent(values[i])
-					})
+		for (var route in router) {
+			if (hasOwn.call(router, route)) {
+				if (route === path) {
 					m.mount(root, router[route])
-				})
-				/* eslint-enable no-loop-func */
-				return true
+					return true
+				}
+
+				var matcher = new RegExp("^" + route
+					.replace(/:[^\/]+?\.{3}/g, "(.*?)")
+					.replace(/:[^\/]+/g, "([^\\/]+)") + "\/?$")
+
+				if (matcher.test(path)) {
+					/* eslint-disable no-loop-func */
+					path.replace(matcher, function () {
+						var keys = route.match(/:[^\/]+/g) || []
+						var values = [].slice.call(arguments, 1, -2)
+						forEach(keys, function (key, i) {
+							routeParams[key.replace(/:|\./g, "")] =
+								decodeURIComponent(values[i])
+						})
+						m.mount(root, router[route])
+					})
+					/* eslint-enable no-loop-func */
+					return true
+				}
 			}
 		}
 	}
@@ -2248,32 +2336,35 @@ exports.System = System;
 		var duplicates = {}
 		var str = []
 
-		for (var prop in object) if (hasOwn.call(object, prop)) {
-			var key = prefix ? prefix + "[" + prop + "]" : prop
-			var value = object[prop]
+		for (var prop in object) {
+			if (hasOwn.call(object, prop)) {
+				var key = prefix ? prefix + "[" + prop + "]" : prop
+				var value = object[prop]
 
-			if (value === null) {
-				str.push(encodeURIComponent(key))
-			} else if (isObject(value)) {
-				str.push(buildQueryString(value, key))
-			} else if (isArray(value)) {
-				var keys = []
-				duplicates[key] = duplicates[key] || {}
-				/* eslint-disable no-loop-func */
-				forEach(value, function (item) {
-					/* eslint-enable no-loop-func */
-					if (!duplicates[key][item]) {
-						duplicates[key][item] = true
-						keys.push(encodeURIComponent(key) + "=" +
-							encodeURIComponent(item))
-					}
-				})
-				str.push(keys.join("&"))
-			} else if (value !== undefined) {
-				str.push(encodeURIComponent(key) + "=" +
-					encodeURIComponent(value))
+				if (value === null) {
+					str.push(encodeURIComponent(key))
+				} else if (isObject(value)) {
+					str.push(buildQueryString(value, key))
+				} else if (isArray(value)) {
+					var keys = []
+					duplicates[key] = duplicates[key] || {}
+					/* eslint-disable no-loop-func */
+					forEach(value, function (item) {
+						/* eslint-enable no-loop-func */
+						if (!duplicates[key][item]) {
+							duplicates[key][item] = true
+							keys.push(encodeURIComponent(key) + "=" +
+								encodeURIComponent(item))
+						}
+					})
+					str.push(keys.join("&"))
+				} else if (value !== undefined) {
+					str.push(encodeURIComponent(key) + "=" +
+						encodeURIComponent(value))
+				}
 			}
 		}
+
 		return str.join("&")
 	}
 
@@ -2481,7 +2572,7 @@ exports.System = System;
 	m.sync = function (args) {
 		var deferred = m.deferred()
 		var outstanding = args.length
-		var results = new Array(outstanding)
+		var results = []
 		var method = "resolve"
 
 		function synchronizer(pos, resolved) {
@@ -2510,7 +2601,7 @@ exports.System = System;
 	function identity(value) { return value }
 
 	function handleJsonp(options) {
-		var callbackKey = "mithril_callback_" +
+		var callbackKey = options.callbackName || "mithril_callback_" +
 			new Date().getTime() + "_" +
 			(Math.round(Math.random() * 1e16)).toString(36)
 
@@ -2619,9 +2710,9 @@ exports.System = System;
 
 	function parameterizeUrl(url, data) {
 		if (data) {
-			url = url.replace(/:[a-z]\w+/gi, function(token){
+			url = url.replace(/:[a-z]\w+/gi, function (token){
 				var key = token.slice(1)
-				var value = data[key]
+				var value = data[key] || token
 				delete data[key]
 				return value
 			})
@@ -2686,6 +2777,7 @@ exports.System = System;
 				}
 			} catch (e) {
 				deferred.reject(e)
+				m.deferred.onerror(e)
 			} finally {
 				if (options.background !== true) m.endComputation()
 			}
@@ -2697,7 +2789,7 @@ exports.System = System;
 	}
 
 	return m
-})
+}); // eslint-disable-line
 ;
 ( function _package( factory ){
 	if( typeof define === 'function' && define.amd ){
@@ -14921,10 +15013,10 @@ return jQuery;
 }).call(this);
 ;
 /* ========================================================================
- * Bootstrap: affix.js v3.3.6
+ * Bootstrap: affix.js v3.3.7
  * http://getbootstrap.com/javascript/#affix
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -14950,7 +15042,7 @@ return jQuery;
     this.checkPosition()
   }
 
-  Affix.VERSION  = '3.3.6'
+  Affix.VERSION  = '3.3.7'
 
   Affix.RESET    = 'affix affix-top affix-bottom'
 
@@ -15084,10 +15176,10 @@ return jQuery;
 }(jQuery);
 ;
 /* ========================================================================
- * Bootstrap: dropdown.js v3.3.6
+ * Bootstrap: dropdown.js v3.3.7
  * http://getbootstrap.com/javascript/#dropdowns
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -15104,7 +15196,7 @@ return jQuery;
     $(element).on('click.bs.dropdown', this.toggle)
   }
 
-  Dropdown.VERSION = '3.3.6'
+  Dropdown.VERSION = '3.3.7'
 
   function getParent($this) {
     var selector = $this.attr('data-target')
@@ -15250,10 +15342,10 @@ return jQuery;
 }(jQuery);
 ;
 /* ========================================================================
- * Bootstrap: modal.js v3.3.6
+ * Bootstrap: modal.js v3.3.7
  * http://getbootstrap.com/javascript/#modals
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -15284,7 +15376,7 @@ return jQuery;
     }
   }
 
-  Modal.VERSION  = '3.3.6'
+  Modal.VERSION  = '3.3.7'
 
   Modal.TRANSITION_DURATION = 300
   Modal.BACKDROP_TRANSITION_DURATION = 150
@@ -15391,7 +15483,9 @@ return jQuery;
     $(document)
       .off('focusin.bs.modal') // guard against infinite focus loop
       .on('focusin.bs.modal', $.proxy(function (e) {
-        if (this.$element[0] !== e.target && !this.$element.has(e.target).length) {
+        if (document !== e.target &&
+            this.$element[0] !== e.target &&
+            !this.$element.has(e.target).length) {
           this.$element.trigger('focus')
         }
       }, this))
@@ -15588,11 +15682,11 @@ return jQuery;
 }(jQuery);
 ;
 /* ========================================================================
- * Bootstrap: tooltip.js v3.3.6
+ * Bootstrap: tooltip.js v3.3.7
  * http://getbootstrap.com/javascript/#tooltip
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -15615,7 +15709,7 @@ return jQuery;
     this.init('tooltip', element, options)
   }
 
-  Tooltip.VERSION  = '3.3.6'
+  Tooltip.VERSION  = '3.3.7'
 
   Tooltip.TRANSITION_DURATION = 150
 
@@ -15906,9 +16000,11 @@ return jQuery;
 
     function complete() {
       if (that.hoverState != 'in') $tip.detach()
-      that.$element
-        .removeAttr('aria-describedby')
-        .trigger('hidden.bs.' + that.type)
+      if (that.$element) { // TODO: Check whether guarding this code with this `if` is really necessary.
+        that.$element
+          .removeAttr('aria-describedby')
+          .trigger('hidden.bs.' + that.type)
+      }
       callback && callback()
     }
 
@@ -15951,7 +16047,10 @@ return jQuery;
       // width and height are missing in IE8, so compute them manually; see https://github.com/twbs/bootstrap/issues/14093
       elRect = $.extend({}, elRect, { width: elRect.right - elRect.left, height: elRect.bottom - elRect.top })
     }
-    var elOffset  = isBody ? { top: 0, left: 0 } : $element.offset()
+    var isSvg = window.SVGElement && el instanceof window.SVGElement
+    // Avoid using $.offset() on SVGs since it gives incorrect results in jQuery 3.
+    // See https://github.com/twbs/bootstrap/issues/20280
+    var elOffset  = isBody ? { top: 0, left: 0 } : (isSvg ? null : $element.offset())
     var scroll    = { scroll: isBody ? document.documentElement.scrollTop || document.body.scrollTop : $element.scrollTop() }
     var outerDims = isBody ? { width: $(window).width(), height: $(window).height() } : null
 
@@ -16067,6 +16166,7 @@ return jQuery;
       that.$tip = null
       that.$arrow = null
       that.$viewport = null
+      that.$element = null
     })
   }
 
@@ -16103,10 +16203,10 @@ return jQuery;
 }(jQuery);
 ;
 /* ========================================================================
- * Bootstrap: transition.js v3.3.6
+ * Bootstrap: transition.js v3.3.7
  * http://getbootstrap.com/javascript/#transitions
  * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -16584,6 +16684,8 @@ $('#el').spin('flower', 'red');
 'use strict';
 
 System.register('flarum/app', ['flarum/App', 'flarum/initializers/store', 'flarum/initializers/preload', 'flarum/initializers/routes', 'flarum/initializers/boot'], function (_export, _context) {
+  "use strict";
+
   var App, store, preload, routes, boot, app;
   return {
     setters: [function (_flarumApp) {
@@ -16609,6 +16711,22 @@ System.register('flarum/app', ['flarum/App', 'flarum/initializers/store', 'flaru
 
       app.extensionSettings = {};
 
+      app.getRequiredPermissions = function (permission) {
+        var required = [];
+
+        if (permission === 'startDiscussion' || permission.indexOf('discussion.') === 0) {
+          required.push('viewDiscussions');
+        }
+        if (permission === 'discussion.delete') {
+          required.push('discussion.hide');
+        }
+        if (permission === 'discussion.deletePosts') {
+          required.push('discussion.editPosts');
+        }
+
+        return required;
+      };
+
       _export('default', app);
     }
   };
@@ -16616,6 +16734,8 @@ System.register('flarum/app', ['flarum/App', 'flarum/initializers/store', 'flaru
 'use strict';
 
 System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert', 'flarum/components/Button', 'flarum/components/RequestErrorModal', 'flarum/components/ConfirmPasswordModal', 'flarum/Translator', 'flarum/utils/extract', 'flarum/utils/patchMithril', 'flarum/utils/RequestError', 'flarum/extend'], function (_export, _context) {
+  "use strict";
+
   var ItemList, Alert, Button, RequestErrorModal, ConfirmPasswordModal, Translator, extract, patchMithril, RequestError, extend, App;
   return {
     setters: [function (_flarumUtilsItemList) {
@@ -16668,24 +16788,6 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
            * @public
            */
           this.routes = {};
-
-          /**
-           * An object containing data to preload into the application.
-           *
-           * @type {Object}
-           * @property {Object} preload.data An array of resource objects to preload
-           *     into the data store.
-           * @property {Object} preload.document An API response document to be used
-           *     by the route that is first activated.
-           * @property {Object} preload.session A response from the /api/token
-           *     endpoint containing the session's authentication token and user ID.
-           * @public
-           */
-          this.preload = {
-            data: null,
-            document: null,
-            session: null
-          };
 
           /**
            * An ordered list of initializers to bootstrap the application.
@@ -16758,10 +16860,12 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
 
         babelHelpers.createClass(App, [{
           key: 'boot',
-          value: function boot() {
+          value: function boot(data) {
             var _this = this;
 
-            this.translator.locale = this.locale;
+            this.data = data;
+
+            this.translator.locale = data.locale;
 
             this.initializers.toArray().forEach(function (initializer) {
               return initializer(_this);
@@ -16770,9 +16874,9 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
         }, {
           key: 'preloadedDocument',
           value: function preloadedDocument() {
-            if (app.preload.document) {
-              var results = app.store.pushPayload(app.preload.document);
-              app.preload.document = null;
+            if (this.data.document) {
+              var results = this.store.pushPayload(this.data.document);
+              this.data.document = null;
 
               return results;
             }
@@ -16960,6 +17064,8 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
 'use strict';
 
 System.register('flarum/Component', [], function (_export, _context) {
+  "use strict";
+
   var Component;
   return {
     setters: [],
@@ -16970,7 +17076,6 @@ System.register('flarum/Component', [], function (_export, _context) {
          * @param {Array|Object} children
          * @public
          */
-
         function Component() {
           var props = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
           var children = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
@@ -17128,6 +17233,8 @@ System.register('flarum/Component', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/components/AddExtensionModal', ['flarum/components/Modal'], function (_export, _context) {
+  "use strict";
+
   var Modal, AddExtensionModal;
   return {
     setters: [function (_flarumComponentsModal) {
@@ -17186,6 +17293,8 @@ System.register('flarum/components/AddExtensionModal', ['flarum/components/Modal
 "use strict";
 
 System.register("flarum/components/AdminLinkButton", ["flarum/components/LinkButton"], function (_export, _context) {
+  "use strict";
+
   var LinkButton, AdminLinkButton;
   return {
     setters: [function (_flarumComponentsLinkButton) {
@@ -17224,6 +17333,8 @@ System.register("flarum/components/AdminLinkButton", ["flarum/components/LinkBut
 'use strict';
 
 System.register('flarum/components/AdminNav', ['flarum/Component', 'flarum/components/AdminLinkButton', 'flarum/components/SelectDropdown', 'flarum/utils/ItemList'], function (_export, _context) {
+  "use strict";
+
   var Component, AdminLinkButton, SelectDropdown, ItemList, AdminNav;
   return {
     setters: [function (_flarumComponent) {
@@ -17272,6 +17383,13 @@ System.register('flarum/components/AdminNav', ['flarum/Component', 'flarum/compo
               description: app.translator.trans('core.admin.nav.basics_text')
             }));
 
+            items.add('mail', AdminLinkButton.component({
+              href: app.route('mail'),
+              icon: 'envelope',
+              children: app.translator.trans('core.admin.nav.email_button'),
+              description: app.translator.trans('core.admin.nav.email_text')
+            }));
+
             items.add('permissions', AdminLinkButton.component({
               href: app.route('permissions'),
               icon: 'key',
@@ -17306,6 +17424,8 @@ System.register('flarum/components/AdminNav', ['flarum/Component', 'flarum/compo
 'use strict';
 
 System.register('flarum/components/Alert', ['flarum/Component', 'flarum/components/Button', 'flarum/helpers/listItems', 'flarum/utils/extract'], function (_export, _context) {
+  "use strict";
+
   var Component, Button, listItems, extract, Alert;
   return {
     setters: [function (_flarumComponent) {
@@ -17377,6 +17497,8 @@ System.register('flarum/components/Alert', ['flarum/Component', 'flarum/componen
 'use strict';
 
 System.register('flarum/components/AlertManager', ['flarum/Component', 'flarum/components/Alert'], function (_export, _context) {
+  "use strict";
+
   var Component, Alert, AlertManager;
   return {
     setters: [function (_flarumComponent) {
@@ -17420,6 +17542,14 @@ System.register('flarum/components/AlertManager', ['flarum/Component', 'flarum/c
             );
           }
         }, {
+          key: 'config',
+          value: function config(isInitialized, context) {
+            // Since this component is 'above' the content of the page (that is, it is a
+            // part of the global UI that persists between routes), we will flag the DOM
+            // to be retained across route changes.
+            context.retain = true;
+          }
+        }, {
           key: 'show',
           value: function show(component) {
             if (!(component instanceof Alert)) {
@@ -17457,8 +17587,10 @@ System.register('flarum/components/AlertManager', ['flarum/Component', 'flarum/c
 });;
 'use strict';
 
-System.register('flarum/components/AppearancePage', ['flarum/components/Page', 'flarum/components/Button', 'flarum/components/Switch', 'flarum/components/EditCustomCssModal', 'flarum/utils/saveSettings'], function (_export, _context) {
-  var Page, Button, Switch, EditCustomCssModal, saveSettings, AppearancePage;
+System.register('flarum/components/AppearancePage', ['flarum/components/Page', 'flarum/components/Button', 'flarum/components/Switch', 'flarum/components/EditCustomCssModal', 'flarum/components/EditCustomHeaderModal', 'flarum/components/UploadImageButton', 'flarum/utils/saveSettings'], function (_export, _context) {
+  "use strict";
+
+  var Page, Button, Switch, EditCustomCssModal, EditCustomHeaderModal, UploadImageButton, saveSettings, AppearancePage;
   return {
     setters: [function (_flarumComponentsPage) {
       Page = _flarumComponentsPage.default;
@@ -17468,6 +17600,10 @@ System.register('flarum/components/AppearancePage', ['flarum/components/Page', '
       Switch = _flarumComponentsSwitch.default;
     }, function (_flarumComponentsEditCustomCssModal) {
       EditCustomCssModal = _flarumComponentsEditCustomCssModal.default;
+    }, function (_flarumComponentsEditCustomHeaderModal) {
+      EditCustomHeaderModal = _flarumComponentsEditCustomHeaderModal.default;
+    }, function (_flarumComponentsUploadImageButton) {
+      UploadImageButton = _flarumComponentsUploadImageButton.default;
     }, function (_flarumUtilsSaveSettings) {
       saveSettings = _flarumUtilsSaveSettings.default;
     }],
@@ -17485,10 +17621,10 @@ System.register('flarum/components/AppearancePage', ['flarum/components/Page', '
           value: function init() {
             babelHelpers.get(Object.getPrototypeOf(AppearancePage.prototype), 'init', this).call(this);
 
-            this.primaryColor = m.prop(app.settings.theme_primary_color);
-            this.secondaryColor = m.prop(app.settings.theme_secondary_color);
-            this.darkMode = m.prop(app.settings.theme_dark_mode === '1');
-            this.coloredHeader = m.prop(app.settings.theme_colored_header === '1');
+            this.primaryColor = m.prop(app.data.settings.theme_primary_color);
+            this.secondaryColor = m.prop(app.data.settings.theme_secondary_color);
+            this.darkMode = m.prop(app.data.settings.theme_dark_mode === '1');
+            this.coloredHeader = m.prop(app.data.settings.theme_colored_header === '1');
           }
         }, {
           key: 'view',
@@ -17538,6 +17674,57 @@ System.register('flarum/components/AppearancePage', ['flarum/components/Page', '
                       loading: this.loading
                     })
                   )
+                ),
+                m(
+                  'fieldset',
+                  null,
+                  m(
+                    'legend',
+                    null,
+                    app.translator.trans('core.admin.appearance.logo_heading')
+                  ),
+                  m(
+                    'div',
+                    { className: 'helpText' },
+                    app.translator.trans('core.admin.appearance.logo_text')
+                  ),
+                  m(UploadImageButton, { name: 'logo' })
+                ),
+                m(
+                  'fieldset',
+                  null,
+                  m(
+                    'legend',
+                    null,
+                    app.translator.trans('core.admin.appearance.favicon_heading')
+                  ),
+                  m(
+                    'div',
+                    { className: 'helpText' },
+                    app.translator.trans('core.admin.appearance.favicon_text')
+                  ),
+                  m(UploadImageButton, { name: 'favicon' })
+                ),
+                m(
+                  'fieldset',
+                  null,
+                  m(
+                    'legend',
+                    null,
+                    app.translator.trans('core.admin.appearance.custom_header_heading')
+                  ),
+                  m(
+                    'div',
+                    { className: 'helpText' },
+                    app.translator.trans('core.admin.appearance.custom_header_text')
+                  ),
+                  Button.component({
+                    className: 'Button',
+                    children: app.translator.trans('core.admin.appearance.edit_header_button'),
+                    onclick: function onclick() {
+                      return app.modal.show(new EditCustomHeaderModal());
+                    }
+                  })
                 ),
                 m(
                   'fieldset',
@@ -17597,6 +17784,8 @@ System.register('flarum/components/AppearancePage', ['flarum/components/Page', '
 'use strict';
 
 System.register('flarum/components/Badge', ['flarum/Component', 'flarum/helpers/icon', 'flarum/utils/extract'], function (_export, _context) {
+  "use strict";
+
   var Component, icon, extract, Badge;
   return {
     setters: [function (_flarumComponent) {
@@ -17649,6 +17838,8 @@ System.register('flarum/components/Badge', ['flarum/Component', 'flarum/helpers/
 'use strict';
 
 System.register('flarum/components/BasicsPage', ['flarum/components/Page', 'flarum/components/FieldSet', 'flarum/components/Select', 'flarum/components/Button', 'flarum/components/Alert', 'flarum/utils/saveSettings', 'flarum/utils/ItemList'], function (_export, _context) {
+  "use strict";
+
   var Page, FieldSet, Select, Button, Alert, saveSettings, ItemList, BasicsPage;
   return {
     setters: [function (_flarumComponentsPage) {
@@ -17687,13 +17878,13 @@ System.register('flarum/components/BasicsPage', ['flarum/components/Page', 'flar
             this.fields = ['forum_title', 'forum_description', 'default_locale', 'default_route', 'welcome_title', 'welcome_message'];
             this.values = {};
 
-            var settings = app.settings;
+            var settings = app.data.settings;
             this.fields.forEach(function (key) {
               return _this2.values[key] = m.prop(settings[key]);
             });
 
             this.localeOptions = {};
-            var locales = app.locales;
+            var locales = app.data.locales;
             for (var i in locales) {
               this.localeOptions[i] = locales[i] + ' (' + i + ')';
             }
@@ -17780,7 +17971,7 @@ System.register('flarum/components/BasicsPage', ['flarum/components/Page', 'flar
             var _this4 = this;
 
             return this.fields.some(function (key) {
-              return _this4.values[key]() !== app.settings[key];
+              return _this4.values[key]() !== app.data.settings[key];
             });
           }
         }, {
@@ -17830,8 +18021,10 @@ System.register('flarum/components/BasicsPage', ['flarum/components/Page', 'flar
 });;
 'use strict';
 
-System.register('flarum/components/Button', ['flarum/Component', 'flarum/helpers/icon', 'flarum/utils/extract', 'flarum/components/LoadingIndicator'], function (_export, _context) {
-  var Component, icon, extract, LoadingIndicator, Button;
+System.register('flarum/components/Button', ['flarum/Component', 'flarum/helpers/icon', 'flarum/utils/extract', 'flarum/utils/extractText', 'flarum/components/LoadingIndicator'], function (_export, _context) {
+  "use strict";
+
+  var Component, icon, extract, extractText, LoadingIndicator, Button;
   return {
     setters: [function (_flarumComponent) {
       Component = _flarumComponent.default;
@@ -17839,6 +18032,8 @@ System.register('flarum/components/Button', ['flarum/Component', 'flarum/helpers
       icon = _flarumHelpersIcon.default;
     }, function (_flarumUtilsExtract) {
       extract = _flarumUtilsExtract.default;
+    }, function (_flarumUtilsExtractText) {
+      extractText = _flarumUtilsExtractText.default;
     }, function (_flarumComponentsLoadingIndicator) {
       LoadingIndicator = _flarumComponentsLoadingIndicator.default;
     }],
@@ -17860,6 +18055,11 @@ System.register('flarum/components/Button', ['flarum/Component', 'flarum/helpers
 
             attrs.className = attrs.className || '';
             attrs.type = attrs.type || 'button';
+
+            // If nothing else is provided, we use the textual button content as tooltip
+            if (!attrs.title && this.props.children) {
+              attrs.title = extractText(this.props.children);
+            }
 
             var iconName = extract(attrs, 'icon');
             if (iconName) attrs.className += ' hasIcon';
@@ -17898,6 +18098,8 @@ System.register('flarum/components/Button', ['flarum/Component', 'flarum/helpers
 'use strict';
 
 System.register('flarum/components/Checkbox', ['flarum/Component', 'flarum/components/LoadingIndicator', 'flarum/helpers/icon'], function (_export, _context) {
+  "use strict";
+
   var Component, LoadingIndicator, icon, Checkbox;
   return {
     setters: [function (_flarumComponent) {
@@ -17970,6 +18172,8 @@ System.register('flarum/components/Checkbox', ['flarum/Component', 'flarum/compo
 "use strict";
 
 System.register("flarum/components/DashboardPage", ["flarum/components/Page"], function (_export, _context) {
+  "use strict";
+
   var Page, DashboardPage;
   return {
     setters: [function (_flarumComponentsPage) {
@@ -18055,6 +18259,8 @@ System.register("flarum/components/DashboardPage", ["flarum/components/Page"], f
 'use strict';
 
 System.register('flarum/components/Dropdown', ['flarum/Component', 'flarum/helpers/icon', 'flarum/helpers/listItems'], function (_export, _context) {
+  "use strict";
+
   var Component, icon, listItems, Dropdown;
   return {
     setters: [function (_flarumComponent) {
@@ -18074,13 +18280,18 @@ System.register('flarum/components/Dropdown', ['flarum/Component', 'flarum/helpe
         }
 
         babelHelpers.createClass(Dropdown, [{
+          key: 'init',
+          value: function init() {
+            this.showing = false;
+          }
+        }, {
           key: 'view',
           value: function view() {
             var items = this.props.children ? listItems(this.props.children) : [];
 
             return m(
               'div',
-              { className: 'ButtonGroup Dropdown dropdown ' + this.props.className + ' itemCount' + items.length },
+              { className: 'ButtonGroup Dropdown dropdown ' + this.props.className + ' itemCount' + items.length + (this.showing ? ' open' : '') },
               this.getButton(),
               this.getMenu(items)
             );
@@ -18096,25 +18307,32 @@ System.register('flarum/components/Dropdown', ['flarum/Component', 'flarum/helpe
             // bottom of the viewport. If it does, we will apply class to make it show
             // above the toggle button instead of below it.
             this.$().on('shown.bs.dropdown', function () {
+              _this2.showing = true;
+
+              if (_this2.props.onshow) {
+                _this2.props.onshow();
+              }
+
+              m.redraw();
+
               var $menu = _this2.$('.Dropdown-menu');
               var isRight = $menu.hasClass('Dropdown-menu--right');
+
               $menu.removeClass('Dropdown-menu--top Dropdown-menu--right');
 
               $menu.toggleClass('Dropdown-menu--top', $menu.offset().top + $menu.height() > $(window).scrollTop() + $(window).height());
 
               $menu.toggleClass('Dropdown-menu--right', isRight || $menu.offset().left + $menu.width() > $(window).scrollLeft() + $(window).width());
-
-              if (_this2.props.onshow) {
-                _this2.props.onshow();
-                m.redraw();
-              }
             });
 
             this.$().on('hidden.bs.dropdown', function () {
+              _this2.showing = false;
+
               if (_this2.props.onhide) {
                 _this2.props.onhide();
-                m.redraw();
               }
+
+              m.redraw();
             });
           }
         }, {
@@ -18168,19 +18386,17 @@ System.register('flarum/components/Dropdown', ['flarum/Component', 'flarum/helpe
 });;
 'use strict';
 
-System.register('flarum/components/EditCustomCssModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/utils/saveSettings'], function (_export, _context) {
-  var Modal, Button, saveSettings, EditCustomCssModal;
+System.register('flarum/components/EditCustomCssModal', ['flarum/components/SettingsModal'], function (_export, _context) {
+  "use strict";
+
+  var SettingsModal, EditCustomCssModal;
   return {
-    setters: [function (_flarumComponentsModal) {
-      Modal = _flarumComponentsModal.default;
-    }, function (_flarumComponentsButton) {
-      Button = _flarumComponentsButton.default;
-    }, function (_flarumUtilsSaveSettings) {
-      saveSettings = _flarumUtilsSaveSettings.default;
+    setters: [function (_flarumComponentsSettingsModal) {
+      SettingsModal = _flarumComponentsSettingsModal.default;
     }],
     execute: function () {
-      EditCustomCssModal = function (_Modal) {
-        babelHelpers.inherits(EditCustomCssModal, _Modal);
+      EditCustomCssModal = function (_SettingsModal) {
+        babelHelpers.inherits(EditCustomCssModal, _SettingsModal);
 
         function EditCustomCssModal() {
           babelHelpers.classCallCheck(this, EditCustomCssModal);
@@ -18188,11 +18404,6 @@ System.register('flarum/components/EditCustomCssModal', ['flarum/components/Moda
         }
 
         babelHelpers.createClass(EditCustomCssModal, [{
-          key: 'init',
-          value: function init() {
-            this.customLess = m.prop(app.settings.custom_less || '');
-          }
-        }, {
           key: 'className',
           value: function className() {
             return 'EditCustomCssModal Modal--large';
@@ -18203,53 +18414,26 @@ System.register('flarum/components/EditCustomCssModal', ['flarum/components/Moda
             return app.translator.trans('core.admin.edit_css.title');
           }
         }, {
-          key: 'content',
-          value: function content() {
-            return m(
+          key: 'form',
+          value: function form() {
+            return [m(
+              'p',
+              null,
+              app.translator.trans('core.admin.edit_css.customize_text', { a: m('a', { href: 'https://github.com/flarum/core/tree/master/less', target: '_blank' }) })
+            ), m(
               'div',
-              { className: 'Modal-body' },
-              m(
-                'p',
-                null,
-                app.translator.trans('core.admin.edit_css.customize_text', { a: m('a', { href: 'https://github.com/flarum/core/tree/master/less', target: '_blank' }) })
-              ),
-              m(
-                'div',
-                { className: 'Form' },
-                m(
-                  'div',
-                  { className: 'Form-group' },
-                  m('textarea', { className: 'FormControl', rows: '30', value: this.customLess(), onchange: m.withAttr('value', this.customLess) })
-                ),
-                m(
-                  'div',
-                  { className: 'Form-group' },
-                  Button.component({
-                    className: 'Button Button--primary',
-                    type: 'submit',
-                    children: app.translator.trans('core.admin.edit_css.submit_button'),
-                    loading: this.loading
-                  })
-                )
-              )
-            );
+              { className: 'Form-group' },
+              m('textarea', { className: 'FormControl', rows: '30', bidi: this.setting('custom_less') })
+            )];
           }
         }, {
-          key: 'onsubmit',
-          value: function onsubmit(e) {
-            e.preventDefault();
-
-            this.loading = true;
-
-            saveSettings({
-              custom_less: this.customLess()
-            }).then(function () {
-              return window.location.reload();
-            });
+          key: 'onsaved',
+          value: function onsaved() {
+            window.location.reload();
           }
         }]);
         return EditCustomCssModal;
-      }(Modal);
+      }(SettingsModal);
 
       _export('default', EditCustomCssModal);
     }
@@ -18257,7 +18441,64 @@ System.register('flarum/components/EditCustomCssModal', ['flarum/components/Moda
 });;
 'use strict';
 
+System.register('flarum/components/EditCustomHeaderModal', ['flarum/components/SettingsModal'], function (_export, _context) {
+  "use strict";
+
+  var SettingsModal, EditCustomHeaderModal;
+  return {
+    setters: [function (_flarumComponentsSettingsModal) {
+      SettingsModal = _flarumComponentsSettingsModal.default;
+    }],
+    execute: function () {
+      EditCustomHeaderModal = function (_SettingsModal) {
+        babelHelpers.inherits(EditCustomHeaderModal, _SettingsModal);
+
+        function EditCustomHeaderModal() {
+          babelHelpers.classCallCheck(this, EditCustomHeaderModal);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(EditCustomHeaderModal).apply(this, arguments));
+        }
+
+        babelHelpers.createClass(EditCustomHeaderModal, [{
+          key: 'className',
+          value: function className() {
+            return 'EditCustomHeaderModal Modal--large';
+          }
+        }, {
+          key: 'title',
+          value: function title() {
+            return app.translator.trans('core.admin.edit_header.title');
+          }
+        }, {
+          key: 'form',
+          value: function form() {
+            return [m(
+              'p',
+              null,
+              app.translator.trans('core.admin.edit_header.customize_text')
+            ), m(
+              'div',
+              { className: 'Form-group' },
+              m('textarea', { className: 'FormControl', rows: '30', bidi: this.setting('custom_header') })
+            )];
+          }
+        }, {
+          key: 'onsaved',
+          value: function onsaved() {
+            window.location.reload();
+          }
+        }]);
+        return EditCustomHeaderModal;
+      }(SettingsModal);
+
+      _export('default', EditCustomHeaderModal);
+    }
+  };
+});;
+'use strict';
+
 System.register('flarum/components/EditGroupModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/components/Badge', 'flarum/models/Group'], function (_export, _context) {
+  "use strict";
+
   var Modal, Button, Badge, Group, EditGroupModal;
   return {
     setters: [function (_flarumComponentsModal) {
@@ -18346,7 +18587,7 @@ System.register('flarum/components/EditGroupModal', ['flarum/components/Modal', 
                   m(
                     'div',
                     { className: 'helpText' },
-                    app.translator.trans('core.admin.edit_group.icon_text', { a: m('a', { href: 'http://fortawesome.github.io/Font-Awesome/icons/', tabindex: '-1' }) }, { em: m('em', null) }, { code: m('code', null) })
+                    app.translator.trans('core.admin.edit_group.icon_text', { a: m('a', { href: 'http://fortawesome.github.io/Font-Awesome/icons/', tabindex: '-1' }) })
                   ),
                   m('input', { className: 'FormControl', placeholder: 'bolt', value: this.icon(), oninput: m.withAttr('value', this.icon) })
                 ),
@@ -18408,6 +18649,8 @@ System.register('flarum/components/EditGroupModal', ['flarum/components/Modal', 
 'use strict';
 
 System.register('flarum/components/ExtensionsPage', ['flarum/components/Page', 'flarum/components/LinkButton', 'flarum/components/Button', 'flarum/components/Dropdown', 'flarum/components/Separator', 'flarum/components/AddExtensionModal', 'flarum/components/LoadingModal', 'flarum/utils/ItemList', 'flarum/helpers/icon', 'flarum/helpers/listItems'], function (_export, _context) {
+  "use strict";
+
   var Page, LinkButton, Button, Dropdown, Separator, AddExtensionModal, LoadingModal, ItemList, icon, listItems, ExtensionsPage;
   return {
     setters: [function (_flarumComponentsPage) {
@@ -18473,8 +18716,8 @@ System.register('flarum/components/ExtensionsPage', ['flarum/components/Page', '
                   m(
                     'ul',
                     { className: 'ExtensionList' },
-                    Object.keys(app.extensions).map(function (id) {
-                      var extension = app.extensions[id];
+                    Object.keys(app.data.extensions).map(function (id) {
+                      var extension = app.data.extensions[id];
                       var controls = _this2.controlItems(extension.id).toArray();
 
                       return m(
@@ -18554,7 +18797,7 @@ System.register('flarum/components/ExtensionsPage', ['flarum/components/Page', '
         }, {
           key: 'isEnabled',
           value: function isEnabled(name) {
-            var enabled = JSON.parse(app.settings.extensions_enabled);
+            var enabled = JSON.parse(app.data.settings.extensions_enabled);
 
             return enabled.indexOf(name) !== -1;
           }
@@ -18568,7 +18811,7 @@ System.register('flarum/components/ExtensionsPage', ['flarum/components/Page', '
               method: 'PATCH',
               data: { enabled: !enabled }
             }).then(function () {
-              if (enabled) localStorage.setItem('enabledExtension', id);
+              if (!enabled) localStorage.setItem('enabledExtension', id);
               window.location.reload();
             });
 
@@ -18585,6 +18828,8 @@ System.register('flarum/components/ExtensionsPage', ['flarum/components/Page', '
 'use strict';
 
 System.register('flarum/components/FieldSet', ['flarum/Component', 'flarum/helpers/listItems'], function (_export, _context) {
+  "use strict";
+
   var Component, listItems, FieldSet;
   return {
     setters: [function (_flarumComponent) {
@@ -18630,6 +18875,8 @@ System.register('flarum/components/FieldSet', ['flarum/Component', 'flarum/helpe
 'use strict';
 
 System.register('flarum/components/GroupBadge', ['flarum/components/Badge'], function (_export, _context) {
+  "use strict";
+
   var Badge, GroupBadge;
   return {
     setters: [function (_flarumComponentsBadge) {
@@ -18653,7 +18900,7 @@ System.register('flarum/components/GroupBadge', ['flarum/components/Badge'], fun
               props.icon = props.group.icon();
               props.style = { backgroundColor: props.group.color() };
               props.label = typeof props.label === 'undefined' ? props.group.nameSingular() : props.label;
-              props.type = 'group--' + props.group.nameSingular();
+              props.type = 'group--' + props.group.id();
 
               delete props.group;
             }
@@ -18669,6 +18916,8 @@ System.register('flarum/components/GroupBadge', ['flarum/components/Badge'], fun
 'use strict';
 
 System.register('flarum/components/HeaderPrimary', ['flarum/Component', 'flarum/utils/ItemList', 'flarum/helpers/listItems'], function (_export, _context) {
+  "use strict";
+
   var Component, ItemList, listItems, HeaderPrimary;
   return {
     setters: [function (_flarumComponent) {
@@ -18697,6 +18946,14 @@ System.register('flarum/components/HeaderPrimary', ['flarum/Component', 'flarum/
             );
           }
         }, {
+          key: 'config',
+          value: function config(isInitialized, context) {
+            // Since this component is 'above' the content of the page (that is, it is a
+            // part of the global UI that persists between routes), we will flag the DOM
+            // to be retained across route changes.
+            context.retain = true;
+          }
+        }, {
           key: 'items',
           value: function items() {
             return new ItemList();
@@ -18712,6 +18969,8 @@ System.register('flarum/components/HeaderPrimary', ['flarum/Component', 'flarum/
 'use strict';
 
 System.register('flarum/components/HeaderSecondary', ['flarum/Component', 'flarum/components/SessionDropdown', 'flarum/utils/ItemList', 'flarum/helpers/listItems'], function (_export, _context) {
+  "use strict";
+
   var Component, SessionDropdown, ItemList, listItems, HeaderSecondary;
   return {
     setters: [function (_flarumComponent) {
@@ -18742,6 +19001,14 @@ System.register('flarum/components/HeaderSecondary', ['flarum/Component', 'flaru
             );
           }
         }, {
+          key: 'config',
+          value: function config(isInitialized, context) {
+            // Since this component is 'above' the content of the page (that is, it is a
+            // part of the global UI that persists between routes), we will flag the DOM
+            // to be retained across route changes.
+            context.retain = true;
+          }
+        }, {
           key: 'items',
           value: function items() {
             var items = new ItemList();
@@ -18761,6 +19028,8 @@ System.register('flarum/components/HeaderSecondary', ['flarum/Component', 'flaru
 'use strict';
 
 System.register('flarum/components/LinkButton', ['flarum/components/Button'], function (_export, _context) {
+  "use strict";
+
   var Button, LinkButton;
   return {
     setters: [function (_flarumComponentsButton) {
@@ -18806,6 +19075,8 @@ System.register('flarum/components/LinkButton', ['flarum/components/Button'], fu
 'use strict';
 
 System.register('flarum/components/LoadingIndicator', ['flarum/Component'], function (_export, _context) {
+  "use strict";
+
   var Component, LoadingIndicator;
   return {
     setters: [function (_flarumComponent) {
@@ -18853,6 +19124,8 @@ System.register('flarum/components/LoadingIndicator', ['flarum/Component'], func
 'use strict';
 
 System.register('flarum/components/LoadingModal', ['flarum/components/Modal'], function (_export, _context) {
+  "use strict";
+
   var Modal, LoadingModal;
   return {
     setters: [function (_flarumComponentsModal) {
@@ -18897,7 +19170,200 @@ System.register('flarum/components/LoadingModal', ['flarum/components/Modal'], f
 });;
 'use strict';
 
+System.register('flarum/components/MailPage', ['flarum/components/Page', 'flarum/components/FieldSet', 'flarum/components/Button', 'flarum/components/Alert', 'flarum/utils/saveSettings'], function (_export, _context) {
+  "use strict";
+
+  var Page, FieldSet, Button, Alert, saveSettings, MailPage;
+  return {
+    setters: [function (_flarumComponentsPage) {
+      Page = _flarumComponentsPage.default;
+    }, function (_flarumComponentsFieldSet) {
+      FieldSet = _flarumComponentsFieldSet.default;
+    }, function (_flarumComponentsButton) {
+      Button = _flarumComponentsButton.default;
+    }, function (_flarumComponentsAlert) {
+      Alert = _flarumComponentsAlert.default;
+    }, function (_flarumUtilsSaveSettings) {
+      saveSettings = _flarumUtilsSaveSettings.default;
+    }],
+    execute: function () {
+      MailPage = function (_Page) {
+        babelHelpers.inherits(MailPage, _Page);
+
+        function MailPage() {
+          babelHelpers.classCallCheck(this, MailPage);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(MailPage).apply(this, arguments));
+        }
+
+        babelHelpers.createClass(MailPage, [{
+          key: 'init',
+          value: function init() {
+            var _this2 = this;
+
+            babelHelpers.get(Object.getPrototypeOf(MailPage.prototype), 'init', this).call(this);
+
+            this.loading = false;
+
+            this.fields = ['mail_driver', 'mail_host', 'mail_from', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption'];
+            this.values = {};
+
+            var settings = app.data.settings;
+            this.fields.forEach(function (key) {
+              return _this2.values[key] = m.prop(settings[key]);
+            });
+
+            this.localeOptions = {};
+            var locales = app.locales;
+            for (var i in locales) {
+              this.localeOptions[i] = locales[i] + ' (' + i + ')';
+            }
+          }
+        }, {
+          key: 'view',
+          value: function view() {
+            return m(
+              'div',
+              { className: 'MailPage' },
+              m(
+                'div',
+                { className: 'container' },
+                m(
+                  'form',
+                  { onsubmit: this.onsubmit.bind(this) },
+                  m(
+                    'h2',
+                    null,
+                    app.translator.trans('core.admin.email.heading')
+                  ),
+                  m(
+                    'div',
+                    { className: 'helpText' },
+                    app.translator.trans('core.admin.email.text')
+                  ),
+                  FieldSet.component({
+                    label: app.translator.trans('core.admin.email.server_heading'),
+                    className: 'MailPage-MailSettings',
+                    children: [m(
+                      'div',
+                      { className: 'MailPage-MailSettings-input' },
+                      m(
+                        'label',
+                        null,
+                        app.translator.trans('core.admin.email.driver_label')
+                      ),
+                      m('input', { className: 'FormControl', value: this.values.mail_driver() || '', oninput: m.withAttr('value', this.values.mail_driver) }),
+                      m(
+                        'label',
+                        null,
+                        app.translator.trans('core.admin.email.host_label')
+                      ),
+                      m('input', { className: 'FormControl', value: this.values.mail_host() || '', oninput: m.withAttr('value', this.values.mail_host) }),
+                      m(
+                        'label',
+                        null,
+                        app.translator.trans('core.admin.email.port_label')
+                      ),
+                      m('input', { className: 'FormControl', value: this.values.mail_port() || '', oninput: m.withAttr('value', this.values.mail_port) }),
+                      m(
+                        'label',
+                        null,
+                        app.translator.trans('core.admin.email.encryption_label')
+                      ),
+                      m('input', { className: 'FormControl', value: this.values.mail_encryption() || '', oninput: m.withAttr('value', this.values.mail_encryption) })
+                    )]
+                  }),
+                  FieldSet.component({
+                    label: app.translator.trans('core.admin.email.account_heading'),
+                    className: 'MailPage-MailSettings',
+                    children: [m(
+                      'div',
+                      { className: 'MailPage-MailSettings-input' },
+                      m(
+                        'label',
+                        null,
+                        app.translator.trans('core.admin.email.username_label')
+                      ),
+                      m('input', { className: 'FormControl', value: this.values.mail_username() || '', oninput: m.withAttr('value', this.values.mail_username) }),
+                      m(
+                        'label',
+                        null,
+                        app.translator.trans('core.admin.email.password_label')
+                      ),
+                      m('input', { className: 'FormControl', value: this.values.mail_password() || '', oninput: m.withAttr('value', this.values.mail_password) })
+                    )]
+                  }),
+                  FieldSet.component({
+                    label: app.translator.trans('core.admin.email.addresses_heading'),
+                    className: 'MailPage-MailSettings',
+                    children: [m(
+                      'div',
+                      { className: 'MailPage-MailSettings-input' },
+                      m(
+                        'label',
+                        null,
+                        app.translator.trans('core.admin.email.from_label')
+                      ),
+                      m('input', { className: 'FormControl', value: this.values.mail_from() || '', oninput: m.withAttr('value', this.values.mail_from) })
+                    )]
+                  }),
+                  Button.component({
+                    type: 'submit',
+                    className: 'Button Button--primary',
+                    children: app.translator.trans('core.admin.email.submit_button'),
+                    loading: this.loading,
+                    disabled: !this.changed()
+                  })
+                )
+              )
+            );
+          }
+        }, {
+          key: 'changed',
+          value: function changed() {
+            var _this3 = this;
+
+            return this.fields.some(function (key) {
+              return _this3.values[key]() !== app.data.settings[key];
+            });
+          }
+        }, {
+          key: 'onsubmit',
+          value: function onsubmit(e) {
+            var _this4 = this;
+
+            e.preventDefault();
+
+            if (this.loading) return;
+
+            this.loading = true;
+            app.alerts.dismiss(this.successAlert);
+
+            var settings = {};
+
+            this.fields.forEach(function (key) {
+              return settings[key] = _this4.values[key]();
+            });
+
+            saveSettings(settings).then(function () {
+              app.alerts.show(_this4.successAlert = new Alert({ type: 'success', children: app.translator.trans('core.admin.basics.saved_message') }));
+            }).catch(function () {}).then(function () {
+              _this4.loading = false;
+              m.redraw();
+            });
+          }
+        }]);
+        return MailPage;
+      }(Page);
+
+      _export('default', MailPage);
+    }
+  };
+});;
+'use strict';
+
 System.register('flarum/components/Modal', ['flarum/Component', 'flarum/components/Alert', 'flarum/components/Button'], function (_export, _context) {
+  "use strict";
+
   var Component, Alert, Button, Modal;
   return {
     setters: [function (_flarumComponent) {
@@ -19030,6 +19496,8 @@ System.register('flarum/components/Modal', ['flarum/Component', 'flarum/componen
 'use strict';
 
 System.register('flarum/components/ModalManager', ['flarum/Component', 'flarum/components/Modal'], function (_export, _context) {
+  "use strict";
+
   var Component, Modal, ModalManager;
   return {
     setters: [function (_flarumComponent) {
@@ -19066,6 +19534,9 @@ System.register('flarum/components/ModalManager', ['flarum/Component', 'flarum/c
           value: function config(isInitialized, context) {
             if (isInitialized) return;
 
+            // Since this component is 'above' the content of the page (that is, it is a
+            // part of the global UI that persists between routes), we will flag the DOM
+            // to be retained across route changes.
             context.retain = true;
 
             this.$().on('hidden.bs.modal', this.clear.bind(this)).on('shown.bs.modal', this.onready.bind(this));
@@ -19137,6 +19608,8 @@ System.register('flarum/components/ModalManager', ['flarum/Component', 'flarum/c
 'use strict';
 
 System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/components/Button', 'flarum/components/LinkButton'], function (_export, _context) {
+  "use strict";
+
   var Component, Button, LinkButton, Navigation;
   return {
     setters: [function (_flarumComponent) {
@@ -19245,6 +19718,8 @@ System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/com
 'use strict';
 
 System.register('flarum/components/Page', ['flarum/Component'], function (_export, _context) {
+  "use strict";
+
   var Component, Page;
   return {
     setters: [function (_flarumComponent) {
@@ -19299,14 +19774,40 @@ System.register('flarum/components/Page', ['flarum/Component'], function (_expor
 });;
 'use strict';
 
-System.register('flarum/components/PermissionDropdown', ['flarum/components/Dropdown', 'flarum/components/Button', 'flarum/components/Separator', 'flarum/models/Group', 'flarum/components/GroupBadge'], function (_export, _context) {
-  var Dropdown, Button, Separator, Group, GroupBadge, PermissionDropdown;
+System.register('flarum/components/PermissionDropdown', ['flarum/components/Dropdown', 'flarum/components/Button', 'flarum/components/Separator', 'flarum/models/Group', 'flarum/components/Badge', 'flarum/components/GroupBadge'], function (_export, _context) {
+  "use strict";
+
+  var Dropdown, Button, Separator, Group, Badge, GroupBadge, PermissionDropdown;
 
 
   function badgeForId(id) {
     var group = app.store.getById('groups', id);
 
     return group ? GroupBadge.component({ group: group, label: null }) : '';
+  }
+
+  function filterByRequiredPermissions(groupIds, permission) {
+    app.getRequiredPermissions(permission).forEach(function (required) {
+      var restrictToGroupIds = app.data.permissions[required] || [];
+
+      if (restrictToGroupIds.indexOf(Group.GUEST_ID) !== -1) {
+        // do nothing
+      } else if (restrictToGroupIds.indexOf(Group.MEMBER_ID) !== -1) {
+        groupIds = groupIds.filter(function (id) {
+          return id !== Group.GUEST_ID;
+        });
+      } else if (groupIds.indexOf(Group.MEMBER_ID) !== -1) {
+        groupIds = restrictToGroupIds;
+      } else {
+        groupIds = restrictToGroupIds.filter(function (id) {
+          return groupIds.indexOf(id) !== -1;
+        });
+      }
+
+      groupIds = filterByRequiredPermissions(groupIds, required);
+    });
+
+    return groupIds;
   }
 
   return {
@@ -19318,6 +19819,8 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
       Separator = _flarumComponentsSeparator.default;
     }, function (_flarumModelsGroup) {
       Group = _flarumModelsGroup.default;
+    }, function (_flarumComponentsBadge) {
+      Badge = _flarumComponentsBadge.default;
     }, function (_flarumComponentsGroupBadge) {
       GroupBadge = _flarumComponentsGroupBadge.default;
     }],
@@ -19337,57 +19840,65 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
 
             this.props.children = [];
 
-            var groupIds = app.permissions[this.props.permission] || [];
+            var groupIds = app.data.permissions[this.props.permission] || [];
+
+            groupIds = filterByRequiredPermissions(groupIds, this.props.permission);
+
             var everyone = groupIds.indexOf(Group.GUEST_ID) !== -1;
             var members = groupIds.indexOf(Group.MEMBER_ID) !== -1;
             var adminGroup = app.store.getById('groups', Group.ADMINISTRATOR_ID);
 
             if (everyone) {
-              this.props.label = app.translator.trans('core.admin.permissions_controls.everyone_button');
+              this.props.label = Badge.component({ icon: 'globe' });
             } else if (members) {
-              this.props.label = app.translator.trans('core.admin.permissions_controls.members_button');
+              this.props.label = Badge.component({ icon: 'user' });
             } else {
               this.props.label = [badgeForId(Group.ADMINISTRATOR_ID), groupIds.map(badgeForId)];
             }
 
-            if (this.props.allowGuest) {
+            if (this.showing) {
+              if (this.props.allowGuest) {
+                this.props.children.push(Button.component({
+                  children: [Badge.component({ icon: 'globe' }), ' ', app.translator.trans('core.admin.permissions_controls.everyone_button')],
+                  icon: everyone ? 'check' : true,
+                  onclick: function onclick() {
+                    return _this2.save([Group.GUEST_ID]);
+                  },
+                  disabled: this.isGroupDisabled(Group.GUEST_ID)
+                }));
+              }
+
               this.props.children.push(Button.component({
-                children: app.translator.trans('core.admin.permissions_controls.everyone_button'),
-                icon: everyone ? 'check' : true,
+                children: [Badge.component({ icon: 'user' }), ' ', app.translator.trans('core.admin.permissions_controls.members_button')],
+                icon: members ? 'check' : true,
                 onclick: function onclick() {
-                  return _this2.save([Group.GUEST_ID]);
-                }
-              }));
-            }
-
-            this.props.children.push(Button.component({
-              children: app.translator.trans('core.admin.permissions_controls.members_button'),
-              icon: members ? 'check' : true,
-              onclick: function onclick() {
-                return _this2.save([Group.MEMBER_ID]);
-              }
-            }), Separator.component(), Button.component({
-              children: [GroupBadge.component({ group: adminGroup, label: null }), ' ', adminGroup.namePlural()],
-              icon: !everyone && !members ? 'check' : true,
-              disabled: !everyone && !members,
-              onclick: function onclick(e) {
-                if (e.shiftKey) e.stopPropagation();
-                _this2.save([]);
-              }
-            }));
-
-            [].push.apply(this.props.children, app.store.all('groups').filter(function (group) {
-              return [Group.ADMINISTRATOR_ID, Group.GUEST_ID, Group.MEMBER_ID].indexOf(group.id()) === -1;
-            }).map(function (group) {
-              return Button.component({
-                children: [GroupBadge.component({ group: group, label: null }), ' ', group.namePlural()],
-                icon: groupIds.indexOf(group.id()) !== -1 ? 'check' : true,
+                  return _this2.save([Group.MEMBER_ID]);
+                },
+                disabled: this.isGroupDisabled(Group.MEMBER_ID)
+              }), Separator.component(), Button.component({
+                children: [badgeForId(adminGroup.id()), ' ', adminGroup.namePlural()],
+                icon: !everyone && !members ? 'check' : true,
+                disabled: !everyone && !members,
                 onclick: function onclick(e) {
                   if (e.shiftKey) e.stopPropagation();
-                  _this2.toggle(group.id());
+                  _this2.save([]);
                 }
-              });
-            }));
+              }));
+
+              [].push.apply(this.props.children, app.store.all('groups').filter(function (group) {
+                return [Group.ADMINISTRATOR_ID, Group.GUEST_ID, Group.MEMBER_ID].indexOf(group.id()) === -1;
+              }).map(function (group) {
+                return Button.component({
+                  children: [badgeForId(group.id()), ' ', group.namePlural()],
+                  icon: groupIds.indexOf(group.id()) !== -1 ? 'check' : true,
+                  onclick: function onclick(e) {
+                    if (e.shiftKey) e.stopPropagation();
+                    _this2.toggle(group.id());
+                  },
+                  disabled: _this2.isGroupDisabled(group.id()) && _this2.isGroupDisabled(Group.MEMBER_ID) && _this2.isGroupDisabled(Group.GUEST_ID)
+                });
+              }));
+            }
 
             return babelHelpers.get(Object.getPrototypeOf(PermissionDropdown.prototype), 'view', this).call(this);
           }
@@ -19396,7 +19907,7 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
           value: function save(groupIds) {
             var permission = this.props.permission;
 
-            app.permissions[permission] = groupIds;
+            app.data.permissions[permission] = groupIds;
 
             app.request({
               method: 'POST',
@@ -19409,7 +19920,7 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
           value: function toggle(groupId) {
             var permission = this.props.permission;
 
-            var groupIds = app.permissions[permission] || [];
+            var groupIds = app.data.permissions[permission] || [];
 
             var index = groupIds.indexOf(groupId);
 
@@ -19423,6 +19934,11 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
             }
 
             this.save(groupIds);
+          }
+        }, {
+          key: 'isGroupDisabled',
+          value: function isGroupDisabled(id) {
+            return filterByRequiredPermissions([id], this.props.permission).indexOf(id) === -1;
           }
         }], [{
           key: 'initProps',
@@ -19443,6 +19959,8 @@ System.register('flarum/components/PermissionDropdown', ['flarum/components/Drop
 'use strict';
 
 System.register('flarum/components/PermissionGrid', ['flarum/Component', 'flarum/components/PermissionDropdown', 'flarum/components/SettingDropdown', 'flarum/components/Button', 'flarum/utils/ItemList', 'flarum/helpers/icon'], function (_export, _context) {
+  "use strict";
+
   var Component, PermissionDropdown, SettingDropdown, Button, ItemList, icon, PermissionGrid;
   return {
     setters: [function (_flarumComponent) {
@@ -19535,7 +20053,7 @@ System.register('flarum/components/PermissionGrid', ['flarum/Component', 'flarum
                       m(
                         'th',
                         null,
-                        child.icon ? icon(child.icon) : '',
+                        icon(child.icon),
                         child.label
                       ),
                       permissionCells(child),
@@ -19613,7 +20131,7 @@ System.register('flarum/components/PermissionGrid', ['flarum/Component', 'flarum
               icon: 'i-cursor',
               label: app.translator.trans('core.admin.permissions.allow_renaming_label'),
               setting: function setting() {
-                var minutes = parseInt(app.settings.allow_renaming, 10);
+                var minutes = parseInt(app.data.settings.allow_renaming, 10);
 
                 return SettingDropdown.component({
                   defaultLabel: minutes ? app.translator.transChoice('core.admin.permissions_controls.allow_some_minutes_button', minutes, { count: minutes }) : app.translator.trans('core.admin.permissions_controls.allow_indefinitely_button'),
@@ -19640,7 +20158,7 @@ System.register('flarum/components/PermissionGrid', ['flarum/Component', 'flarum
               icon: 'pencil',
               label: app.translator.trans('core.admin.permissions.allow_post_editing_label'),
               setting: function setting() {
-                var minutes = parseInt(app.settings.allow_post_editing, 10);
+                var minutes = parseInt(app.data.settings.allow_post_editing, 10);
 
                 return SettingDropdown.component({
                   defaultLabel: minutes ? app.translator.transChoice('core.admin.permissions_controls.allow_some_minutes_button', minutes, { count: minutes }) : app.translator.trans('core.admin.permissions_controls.allow_indefinitely_button'),
@@ -19656,6 +20174,12 @@ System.register('flarum/components/PermissionGrid', ['flarum/Component', 'flarum
           key: 'moderateItems',
           value: function moderateItems() {
             var items = new ItemList();
+
+            items.add('viewIpsPosts', {
+              icon: 'bullseye',
+              label: app.translator.trans('core.admin.permissions.view_post_ips_label'),
+              permission: 'discussion.viewIpsPosts'
+            }, 110);
 
             items.add('renameDiscussions', {
               icon: 'i-cursor',
@@ -19728,6 +20252,8 @@ System.register('flarum/components/PermissionGrid', ['flarum/Component', 'flarum
 'use strict';
 
 System.register('flarum/components/PermissionsPage', ['flarum/components/Page', 'flarum/components/GroupBadge', 'flarum/components/EditGroupModal', 'flarum/models/Group', 'flarum/helpers/icon', 'flarum/components/PermissionGrid'], function (_export, _context) {
+  "use strict";
+
   var Page, GroupBadge, EditGroupModal, Group, icon, PermissionGrid, PermissionsPage;
   return {
     setters: [function (_flarumComponentsPage) {
@@ -19820,6 +20346,8 @@ System.register('flarum/components/PermissionsPage', ['flarum/components/Page', 
 "use strict";
 
 System.register("flarum/components/Placeholder", ["flarum/Component"], function (_export, _context) {
+  "use strict";
+
   var Component, Placeholder;
   return {
     setters: [function (_flarumComponent) {
@@ -19858,6 +20386,8 @@ System.register("flarum/components/Placeholder", ["flarum/Component"], function 
 'use strict';
 
 System.register('flarum/components/RequestErrorModal', ['flarum/components/Modal'], function (_export, _context) {
+  "use strict";
+
   var Modal, RequestErrorModal;
   return {
     setters: [function (_flarumComponentsModal) {
@@ -19919,6 +20449,8 @@ System.register('flarum/components/RequestErrorModal', ['flarum/components/Modal
 'use strict';
 
 System.register('flarum/components/Select', ['flarum/Component', 'flarum/helpers/icon'], function (_export, _context) {
+  "use strict";
+
   var Component, icon, Select;
   return {
     setters: [function (_flarumComponent) {
@@ -19972,6 +20504,8 @@ System.register('flarum/components/Select', ['flarum/Component', 'flarum/helpers
 'use strict';
 
 System.register('flarum/components/SelectDropdown', ['flarum/components/Dropdown', 'flarum/helpers/icon'], function (_export, _context) {
+  "use strict";
+
   var Dropdown, icon, SelectDropdown;
   return {
     setters: [function (_flarumComponentsDropdown) {
@@ -20024,6 +20558,8 @@ System.register('flarum/components/SelectDropdown', ['flarum/components/Dropdown
 "use strict";
 
 System.register("flarum/components/Separator", ["flarum/Component"], function (_export, _context) {
+  "use strict";
+
   var Component, Separator;
   return {
     setters: [function (_flarumComponent) {
@@ -20056,6 +20592,8 @@ System.register("flarum/components/Separator", ["flarum/Component"], function (_
 'use strict';
 
 System.register('flarum/components/SessionDropdown', ['flarum/helpers/avatar', 'flarum/helpers/username', 'flarum/components/Dropdown', 'flarum/components/Button', 'flarum/utils/ItemList'], function (_export, _context) {
+  "use strict";
+
   var avatar, username, Dropdown, Button, ItemList, SessionDropdown;
   return {
     setters: [function (_flarumHelpersAvatar) {
@@ -20129,6 +20667,8 @@ System.register('flarum/components/SessionDropdown', ['flarum/helpers/avatar', '
 'use strict';
 
 System.register('flarum/components/SettingDropdown', ['flarum/components/SelectDropdown', 'flarum/components/Button', 'flarum/utils/saveSettings'], function (_export, _context) {
+  "use strict";
+
   var SelectDropdown, Button, saveSettings, SettingDropdown;
   return {
     setters: [function (_flarumComponentsSelectDropdown) {
@@ -20163,7 +20703,7 @@ System.register('flarum/components/SettingDropdown', ['flarum/components/SelectD
               var value = _ref.value;
               var label = _ref.label;
 
-              var active = app.settings[props.key] === value;
+              var active = app.data.settings[props.key] === value;
 
               return Button.component({
                 children: label,
@@ -20184,6 +20724,8 @@ System.register('flarum/components/SettingDropdown', ['flarum/components/SelectD
 'use strict';
 
 System.register('flarum/components/SettingsModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/utils/saveSettings'], function (_export, _context) {
+  "use strict";
+
   var Modal, Button, saveSettings, SettingsModal;
   return {
     setters: [function (_flarumComponentsModal) {
@@ -20249,7 +20791,7 @@ System.register('flarum/components/SettingsModal', ['flarum/components/Modal', '
           value: function setting(key) {
             var fallback = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
 
-            this.settings[key] = this.settings[key] || m.prop(app.settings[key] || fallback);
+            this.settings[key] = this.settings[key] || m.prop(app.data.settings[key] || fallback);
 
             return this.settings[key];
           }
@@ -20263,7 +20805,7 @@ System.register('flarum/components/SettingsModal', ['flarum/components/Modal', '
             Object.keys(this.settings).forEach(function (key) {
               var value = _this2.settings[key]();
 
-              if (value !== app.settings[key]) {
+              if (value !== app.data.settings[key]) {
                 dirty[key] = value;
               }
             });
@@ -20282,7 +20824,12 @@ System.register('flarum/components/SettingsModal', ['flarum/components/Modal', '
 
             this.loading = true;
 
-            saveSettings(this.dirty()).then(this.hide.bind(this), this.loaded.bind(this));
+            saveSettings(this.dirty()).then(this.onsaved.bind(this), this.loaded.bind(this));
+          }
+        }, {
+          key: 'onsaved',
+          value: function onsaved() {
+            this.hide();
           }
         }]);
         return SettingsModal;
@@ -20295,6 +20842,8 @@ System.register('flarum/components/SettingsModal', ['flarum/components/Modal', '
 'use strict';
 
 System.register('flarum/components/SplitDropdown', ['flarum/components/Dropdown', 'flarum/components/Button', 'flarum/helpers/icon'], function (_export, _context) {
+  "use strict";
+
   var Dropdown, Button, icon, SplitDropdown;
   return {
     setters: [function (_flarumComponentsDropdown) {
@@ -20360,6 +20909,8 @@ System.register('flarum/components/SplitDropdown', ['flarum/components/Dropdown'
 'use strict';
 
 System.register('flarum/components/Switch', ['flarum/components/Checkbox'], function (_export, _context) {
+  "use strict";
+
   var Checkbox, Switch;
   return {
     setters: [function (_flarumComponentsCheckbox) {
@@ -20394,96 +20945,215 @@ System.register('flarum/components/Switch', ['flarum/components/Checkbox'], func
     }
   };
 });;
+'use strict';
+
+System.register('flarum/components/UploadImageButton', ['flarum/components/Button'], function (_export, _context) {
+  "use strict";
+
+  var Button, UploadImageButton;
+  return {
+    setters: [function (_flarumComponentsButton) {
+      Button = _flarumComponentsButton.default;
+    }],
+    execute: function () {
+      UploadImageButton = function (_Button) {
+        babelHelpers.inherits(UploadImageButton, _Button);
+
+        function UploadImageButton() {
+          babelHelpers.classCallCheck(this, UploadImageButton);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(UploadImageButton).apply(this, arguments));
+        }
+
+        babelHelpers.createClass(UploadImageButton, [{
+          key: 'init',
+          value: function init() {
+            this.loading = false;
+          }
+        }, {
+          key: 'view',
+          value: function view() {
+            this.props.loading = this.loading;
+            this.props.className = (this.props.className || '') + ' Button';
+
+            if (app.data.settings[this.props.name + '_path']) {
+              this.props.onclick = this.remove.bind(this);
+              this.props.children = app.translator.trans('core.admin.upload_image.remove_button');
+
+              return m(
+                'div',
+                null,
+                m(
+                  'p',
+                  null,
+                  m('img', { src: app.forum.attribute(this.props.name + 'Url'), alt: '' })
+                ),
+                m(
+                  'p',
+                  null,
+                  babelHelpers.get(Object.getPrototypeOf(UploadImageButton.prototype), 'view', this).call(this)
+                )
+              );
+            } else {
+              this.props.onclick = this.upload.bind(this);
+              this.props.children = app.translator.trans('core.admin.upload_image.upload_button');
+            }
+
+            return babelHelpers.get(Object.getPrototypeOf(UploadImageButton.prototype), 'view', this).call(this);
+          }
+        }, {
+          key: 'upload',
+          value: function upload() {
+            var _this2 = this;
+
+            if (this.loading) return;
+
+            var $input = $('<input type="file">');
+
+            $input.appendTo('body').hide().click().on('change', function (e) {
+              var data = new FormData();
+              data.append(_this2.props.name, $(e.target)[0].files[0]);
+
+              _this2.loading = true;
+              m.redraw();
+
+              app.request({
+                method: 'POST',
+                url: _this2.resourceUrl(),
+                serialize: function serialize(raw) {
+                  return raw;
+                },
+                data: data
+              }).then(_this2.success.bind(_this2), _this2.failure.bind(_this2));
+            });
+          }
+        }, {
+          key: 'remove',
+          value: function remove() {
+            this.loading = true;
+            m.redraw();
+
+            app.request({
+              method: 'DELETE',
+              url: this.resourceUrl()
+            }).then(this.success.bind(this), this.failure.bind(this));
+          }
+        }, {
+          key: 'resourceUrl',
+          value: function resourceUrl() {
+            return app.forum.attribute('apiUrl') + '/' + this.props.name;
+          }
+        }, {
+          key: 'success',
+          value: function success(response) {
+            window.location.reload();
+          }
+        }, {
+          key: 'failure',
+          value: function failure(response) {
+            this.loading = false;
+            m.redraw();
+          }
+        }]);
+        return UploadImageButton;
+      }(Button);
+
+      _export('default', UploadImageButton);
+    }
+  };
+});;
 "use strict";
 
 System.register("flarum/extend", [], function (_export, _context) {
+  "use strict";
+
+  /**
+   * Extend an object's method by running its output through a mutating callback
+   * every time it is called.
+   *
+   * The callback accepts the method's return value and should perform any
+   * mutations directly on this value. For this reason, this function will not be
+   * effective on methods which return scalar values (numbers, strings, booleans).
+   *
+   * Care should be taken to extend the correct object – in most cases, a class'
+   * prototype will be the desired target of extension, not the class itself.
+   *
+   * @example
+   * extend(Discussion.prototype, 'badges', function(badges) {
+   *   // do something with `badges`
+   * });
+   *
+   * @param {Object} object The object that owns the method
+   * @param {String} method The name of the method to extend
+   * @param {function} callback A callback which mutates the method's output
+   */
+  function extend(object, method, callback) {
+    var original = object[method];
+
+    object[method] = function () {
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      var value = original ? original.apply(this, args) : undefined;
+
+      callback.apply(this, [value].concat(args));
+
+      return value;
+    };
+
+    babelHelpers.extends(object[method], original);
+  }
+
+  /**
+   * Override an object's method by replacing it with a new function, so that the
+   * new function will be run every time the object's method is called.
+   *
+   * The replacement function accepts the original method as its first argument,
+   * which is like a call to 'super'. Any arguments passed to the original method
+   * are also passed to the replacement.
+   *
+   * Care should be taken to extend the correct object – in most cases, a class'
+   * prototype will be the desired target of extension, not the class itself.
+   *
+   * @example
+   * override(Discussion.prototype, 'badges', function(original) {
+   *   const badges = original();
+   *   // do something with badges
+   *   return badges;
+   * });
+   *
+   * @param {Object} object The object that owns the method
+   * @param {String} method The name of the method to override
+   * @param {function} newMethod The method to replace it with
+   */
+
+  _export("extend", extend);
+
+  function override(object, method, newMethod) {
+    var original = object[method];
+
+    object[method] = function () {
+      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      return newMethod.apply(this, [original.bind(this)].concat(args));
+    };
+
+    babelHelpers.extends(object[method], original);
+  }
+  _export("override", override);
+
   return {
     setters: [],
-    execute: function () {
-      /**
-       * Extend an object's method by running its output through a mutating callback
-       * every time it is called.
-       *
-       * The callback accepts the method's return value and should perform any
-       * mutations directly on this value. For this reason, this function will not be
-       * effective on methods which return scalar values (numbers, strings, booleans).
-       *
-       * Care should be taken to extend the correct object – in most cases, a class'
-       * prototype will be the desired target of extension, not the class itself.
-       *
-       * @example
-       * extend(Discussion.prototype, 'badges', function(badges) {
-       *   // do something with `badges`
-       * });
-       *
-       * @param {Object} object The object that owns the method
-       * @param {String} method The name of the method to extend
-       * @param {function} callback A callback which mutates the method's output
-       */
-      function extend(object, method, callback) {
-        var original = object[method];
-
-        object[method] = function () {
-          for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-          }
-
-          var value = original ? original.apply(this, args) : undefined;
-
-          callback.apply(this, [value].concat(args));
-
-          return value;
-        };
-
-        babelHelpers.extends(object[method], original);
-      }
-
-      /**
-       * Override an object's method by replacing it with a new function, so that the
-       * new function will be run every time the object's method is called.
-       *
-       * The replacement function accepts the original method as its first argument,
-       * which is like a call to 'super'. Any arguments passed to the original method
-       * are also passed to the replacement.
-       *
-       * Care should be taken to extend the correct object – in most cases, a class'
-       * prototype will be the desired target of extension, not the class itself.
-       *
-       * @example
-       * override(Discussion.prototype, 'badges', function(original) {
-       *   const badges = original();
-       *   // do something with badges
-       *   return badges;
-       * });
-       *
-       * @param {Object} object The object that owns the method
-       * @param {String} method The name of the method to override
-       * @param {function} newMethod The method to replace it with
-       */
-
-      _export("extend", extend);
-
-      function override(object, method, newMethod) {
-        var original = object[method];
-
-        object[method] = function () {
-          for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-            args[_key2] = arguments[_key2];
-          }
-
-          return newMethod.apply(this, [original.bind(this)].concat(args));
-        };
-
-        babelHelpers.extends(object[method], original);
-      }
-
-      _export("override", override);
-    }
+    execute: function () {}
   };
 });;
 'use strict';
 
 System.register('flarum/helpers/avatar', [], function (_export, _context) {
+  "use strict";
+
   function avatar(user) {
     var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -20530,6 +21200,8 @@ System.register('flarum/helpers/avatar', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/helpers/fullTime', [], function (_export, _context) {
+  "use strict";
+
   function fullTime(time) {
     var mo = moment(time);
 
@@ -20553,6 +21225,8 @@ System.register('flarum/helpers/fullTime', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/helpers/highlight', ['flarum/utils/string'], function (_export, _context) {
+  "use strict";
+
   var truncate;
   function highlight(string, phrase, length) {
     if (!phrase && !length) return string;
@@ -20592,6 +21266,8 @@ System.register('flarum/helpers/highlight', ['flarum/utils/string'], function (_
 'use strict';
 
 System.register('flarum/helpers/humanTime', ['flarum/utils/humanTime'], function (_export, _context) {
+  "use strict";
+
   var humanTimeUtil;
   function humanTime(time) {
     var mo = moment(time);
@@ -20619,6 +21295,8 @@ System.register('flarum/helpers/humanTime', ['flarum/utils/humanTime'], function
 'use strict';
 
 System.register('flarum/helpers/icon', [], function (_export, _context) {
+  "use strict";
+
   function icon(name) {
     var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -20637,6 +21315,8 @@ System.register('flarum/helpers/icon', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/helpers/listItems', ['flarum/components/Separator', 'flarum/utils/classList'], function (_export, _context) {
+  "use strict";
+
   var Separator, classList;
 
 
@@ -20678,15 +21358,12 @@ System.register('flarum/helpers/listItems', ['flarum/components/Separator', 'fla
         item.attrs.key = item.attrs.key || item.itemName;
       }
 
-      var space = new String(' ');
-      space.attrs = { key: '_space_' + item.itemName };
-
-      return [isListItem ? item : m(
+      return isListItem ? item : m(
         'li',
         { className: classList([item.itemName ? 'item-' + item.itemName : '', className, active ? 'active' : '']),
           key: item.itemName },
         item
-      ), space];
+      );
     });
   }
 
@@ -20704,6 +21381,8 @@ System.register('flarum/helpers/listItems', ['flarum/components/Separator', 'fla
 'use strict';
 
 System.register('flarum/helpers/punctuateSeries', [], function (_export, _context) {
+  "use strict";
+
   function punctuateSeries(items) {
     if (items.length === 2) {
       return app.translator.trans('core.lib.series.two_text', {
@@ -20738,6 +21417,8 @@ System.register('flarum/helpers/punctuateSeries', [], function (_export, _contex
 "use strict";
 
 System.register("flarum/helpers/username", [], function (_export, _context) {
+  "use strict";
+
   function username(user) {
     var name = user && user.username() || app.translator.trans('core.lib.username.deleted_text');
 
@@ -20758,6 +21439,8 @@ System.register("flarum/helpers/username", [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/helpers/userOnline', ['flarum/helpers/icon'], function (_export, _context) {
+    "use strict";
+
     var icon;
     function userOnline(user) {
         if (user.lastSeenTime() && user.isOnline()) {
@@ -20781,6 +21464,8 @@ System.register('flarum/helpers/userOnline', ['flarum/helpers/icon'], function (
 'use strict';
 
 System.register('flarum/initializers/boot', ['flarum/utils/ScrollListener', 'flarum/utils/Drawer', 'flarum/utils/mapRoutes', 'flarum/components/Navigation', 'flarum/components/HeaderPrimary', 'flarum/components/HeaderSecondary', 'flarum/components/AdminNav', 'flarum/components/ModalManager', 'flarum/components/AlertManager'], function (_export, _context) {
+  "use strict";
+
   var ScrollListener, Drawer, mapRoutes, Navigation, HeaderPrimary, HeaderSecondary, AdminNav, ModalManager, AlertManager;
   function boot(app) {
     m.startComputation();
@@ -20860,6 +21545,8 @@ System.register('flarum/initializers/boot', ['flarum/utils/ScrollListener', 'fla
 'use strict';
 
 System.register('flarum/initializers/humanTime', ['flarum/utils/humanTime'], function (_export, _context) {
+  "use strict";
+
   var humanTimeUtil;
 
 
@@ -20877,7 +21564,7 @@ System.register('flarum/initializers/humanTime', ['flarum/utils/humanTime'], fun
    * timestamps rendered with the `humanTime` helper.
    */
   function humanTime() {
-    setInterval(updateHumanTimes, 1000);
+    setInterval(updateHumanTimes, 10000);
   }
 
   _export('default', humanTime);
@@ -20892,13 +21579,15 @@ System.register('flarum/initializers/humanTime', ['flarum/utils/humanTime'], fun
 'use strict';
 
 System.register('flarum/initializers/preload', ['flarum/Session'], function (_export, _context) {
+  "use strict";
+
   var Session;
   function preload(app) {
-    app.store.pushPayload({ data: app.preload.data });
+    app.store.pushPayload({ data: app.data.resources });
 
     app.forum = app.store.getById('forums', 1);
 
-    app.session = new Session(app.store.getById('users', app.preload.session.userId), app.preload.session.csrfToken);
+    app.session = new Session(app.store.getById('users', app.data.session.userId), app.data.session.csrfToken);
   }
 
   _export('default', preload);
@@ -20912,8 +21601,10 @@ System.register('flarum/initializers/preload', ['flarum/Session'], function (_ex
 });;
 'use strict';
 
-System.register('flarum/initializers/routes', ['flarum/components/DashboardPage', 'flarum/components/BasicsPage', 'flarum/components/PermissionsPage', 'flarum/components/AppearancePage', 'flarum/components/ExtensionsPage'], function (_export, _context) {
-  var DashboardPage, BasicsPage, PermissionsPage, AppearancePage, ExtensionsPage;
+System.register('flarum/initializers/routes', ['flarum/components/DashboardPage', 'flarum/components/BasicsPage', 'flarum/components/PermissionsPage', 'flarum/components/AppearancePage', 'flarum/components/ExtensionsPage', 'flarum/components/MailPage'], function (_export, _context) {
+  "use strict";
+
+  var DashboardPage, BasicsPage, PermissionsPage, AppearancePage, ExtensionsPage, MailPage;
 
   _export('default', function (app) {
     app.routes = {
@@ -20921,7 +21612,8 @@ System.register('flarum/initializers/routes', ['flarum/components/DashboardPage'
       'basics': { path: '/basics', component: BasicsPage.component() },
       'permissions': { path: '/permissions', component: PermissionsPage.component() },
       'appearance': { path: '/appearance', component: AppearancePage.component() },
-      'extensions': { path: '/extensions', component: ExtensionsPage.component() }
+      'extensions': { path: '/extensions', component: ExtensionsPage.component() },
+      'mail': { path: '/mail', component: MailPage.component() }
     };
   });
 
@@ -20936,6 +21628,8 @@ System.register('flarum/initializers/routes', ['flarum/components/DashboardPage'
       AppearancePage = _flarumComponentsAppearancePage.default;
     }, function (_flarumComponentsExtensionsPage) {
       ExtensionsPage = _flarumComponentsExtensionsPage.default;
+    }, function (_flarumComponentsMailPage) {
+      MailPage = _flarumComponentsMailPage.default;
     }],
     execute: function () {}
   };
@@ -20943,6 +21637,8 @@ System.register('flarum/initializers/routes', ['flarum/components/DashboardPage'
 'use strict';
 
 System.register('flarum/initializers/store', ['flarum/Store', 'flarum/models/Forum', 'flarum/models/User', 'flarum/models/Discussion', 'flarum/models/Post', 'flarum/models/Group', 'flarum/models/Activity', 'flarum/models/Notification'], function (_export, _context) {
+  "use strict";
+
   var Store, Forum, User, Discussion, Post, Group, Activity, Notification;
   function store(app) {
     app.store = new Store({
@@ -20982,6 +21678,8 @@ System.register('flarum/initializers/store', ['flarum/Store', 'flarum/models/For
 'use strict';
 
 System.register('flarum/Model', [], function (_export, _context) {
+  "use strict";
+
   var Model;
   return {
     setters: [],
@@ -20992,7 +21690,6 @@ System.register('flarum/Model', [], function (_export, _context) {
          * @param {Store} store The data store that this model should be persisted to.
          * @public
          */
-
         function Model() {
           var data = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
           var store = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
@@ -21239,13 +21936,13 @@ System.register('flarum/Model', [], function (_export, _context) {
 });;
 'use strict';
 
-System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/computed', 'flarum/utils/ItemList', 'flarum/components/Badge'], function (_export, _context) {
-  var Model, mixin, computed, ItemList, Badge, Discussion;
+System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/computed', 'flarum/utils/ItemList', 'flarum/components/Badge'], function (_export, _context) {
+  "use strict";
+
+  var Model, computed, ItemList, Badge, Discussion;
   return {
     setters: [function (_flarumModel) {
       Model = _flarumModel.default;
-    }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin.default;
     }, function (_flarumUtilsComputed) {
       computed = _flarumUtilsComputed.default;
     }, function (_flarumUtilsItemList) {
@@ -21298,8 +21995,8 @@ System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/mixin
 
         hideTime: Model.attribute('hideTime', Model.transformDate),
         hideUser: Model.hasOne('hideUser'),
-        isHidden: computed('hideTime', 'commentsCount', function (hideTime, commentsCount) {
-          return !!hideTime || commentsCount === 0;
+        isHidden: computed('hideTime', function (hideTime) {
+          return !!hideTime;
         }),
 
         canReply: Model.attribute('canReply'),
@@ -21353,13 +22050,13 @@ System.register('flarum/models/Discussion', ['flarum/Model', 'flarum/utils/mixin
 });;
 'use strict';
 
-System.register('flarum/models/Forum', ['flarum/Model', 'flarum/utils/mixin'], function (_export, _context) {
-  var Model, mixin, Forum;
+System.register('flarum/models/Forum', ['flarum/Model'], function (_export, _context) {
+  "use strict";
+
+  var Model, Forum;
   return {
     setters: [function (_flarumModel) {
       Model = _flarumModel.default;
-    }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin.default;
     }],
     execute: function () {
       Forum = function (_Model) {
@@ -21385,13 +22082,13 @@ System.register('flarum/models/Forum', ['flarum/Model', 'flarum/utils/mixin'], f
 });;
 'use strict';
 
-System.register('flarum/models/Group', ['flarum/Model', 'flarum/utils/mixin'], function (_export, _context) {
-  var Model, mixin, Group;
+System.register('flarum/models/Group', ['flarum/Model'], function (_export, _context) {
+  "use strict";
+
+  var Model, Group;
   return {
     setters: [function (_flarumModel) {
       Model = _flarumModel.default;
-    }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin.default;
     }],
     execute: function () {
       Group = function (_Model) {
@@ -21422,13 +22119,13 @@ System.register('flarum/models/Group', ['flarum/Model', 'flarum/utils/mixin'], f
 });;
 'use strict';
 
-System.register('flarum/models/Notification', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/computed'], function (_export, _context) {
-  var Model, mixin, computed, Notification;
+System.register('flarum/models/Notification', ['flarum/Model', 'flarum/utils/computed'], function (_export, _context) {
+  "use strict";
+
+  var Model, computed, Notification;
   return {
     setters: [function (_flarumModel) {
       Model = _flarumModel.default;
-    }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin.default;
     }, function (_flarumUtilsComputed) {
       computed = _flarumUtilsComputed.default;
     }],
@@ -21469,13 +22166,13 @@ System.register('flarum/models/Notification', ['flarum/Model', 'flarum/utils/mix
 });;
 'use strict';
 
-System.register('flarum/models/Post', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/computed', 'flarum/utils/string'], function (_export, _context) {
-  var Model, mixin, computed, getPlainContent, Post;
+System.register('flarum/models/Post', ['flarum/Model', 'flarum/utils/computed', 'flarum/utils/string'], function (_export, _context) {
+  "use strict";
+
+  var Model, computed, getPlainContent, Post;
   return {
     setters: [function (_flarumModel) {
       Model = _flarumModel.default;
-    }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin.default;
     }, function (_flarumUtilsComputed) {
       computed = _flarumUtilsComputed.default;
     }, function (_flarumUtilsString) {
@@ -21528,13 +22225,13 @@ System.register('flarum/models/Post', ['flarum/Model', 'flarum/utils/mixin', 'fl
 });;
 'use strict';
 
-System.register('flarum/models/User', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/stringToColor', 'flarum/utils/ItemList', 'flarum/utils/computed', 'flarum/components/GroupBadge'], function (_export, _context) {
-  var Model, mixin, stringToColor, ItemList, computed, GroupBadge, User;
+System.register('flarum/models/User', ['flarum/Model', 'flarum/utils/stringToColor', 'flarum/utils/ItemList', 'flarum/utils/computed', 'flarum/components/GroupBadge'], function (_export, _context) {
+  "use strict";
+
+  var Model, stringToColor, ItemList, computed, GroupBadge, User;
   return {
     setters: [function (_flarumModel) {
       Model = _flarumModel.default;
-    }, function (_flarumUtilsMixin) {
-      mixin = _flarumUtilsMixin.default;
     }, function (_flarumUtilsStringToColor) {
       stringToColor = _flarumUtilsStringToColor.default;
     }, function (_flarumUtilsItemList) {
@@ -21643,6 +22340,8 @@ System.register('flarum/models/User', ['flarum/Model', 'flarum/utils/mixin', 'fl
 'use strict';
 
 System.register('flarum/Session', [], function (_export, _context) {
+  "use strict";
+
   var Session;
   return {
     setters: [],
@@ -21706,6 +22405,8 @@ System.register('flarum/Session', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/Store', [], function (_export, _context) {
+  "use strict";
+
   var Store;
   return {
     setters: [],
@@ -21843,6 +22544,8 @@ System.register('flarum/Store', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/Translator', ['flarum/models/User', 'flarum/helpers/username', 'flarum/utils/extractText', 'flarum/utils/extract'], function (_export, _context) {
+  "use strict";
+
   var User, username, extractText, extract, Translator;
   return {
     setters: [function (_flarumModelsUser) {
@@ -21925,7 +22628,7 @@ System.register('flarum/Translator', ['flarum/models/User', 'flarum/helpers/user
                   if (match[2]) {
                     open.shift();
                   } else {
-                    var tag = input[match[3]] || [];
+                    var tag = input[match[3]] || { tag: match[3], children: [] };
                     open[0].push(tag);
                     open.unshift(tag.children || tag);
                   }
@@ -22021,10 +22724,10 @@ System.register('flarum/Translator', ['flarum/models/User', 'flarum/helpers/user
               case 'ko':
               case 'ms':
               case 'th':
-              case 'tr':
               case 'vi':
               case 'zh':
                 return 0;
+
               case 'af':
               case 'az':
               case 'bn':
@@ -22074,6 +22777,7 @@ System.register('flarum/Translator', ['flarum/models/User', 'flarum/helpers/user
               case 'ta':
               case 'te':
               case 'tk':
+              case 'tr':
               case 'ur':
               case 'zu':
                 return number == 1 ? 0 : 1;
@@ -22149,6 +22853,8 @@ System.register('flarum/Translator', ['flarum/models/User', 'flarum/helpers/user
 'use strict';
 
 System.register('flarum/utils/abbreviateNumber', [], function (_export, _context) {
+  "use strict";
+
   function abbreviateNumber(number) {
     // TODO: translation
     if (number >= 1000000) {
@@ -22170,6 +22876,8 @@ System.register('flarum/utils/abbreviateNumber', [], function (_export, _context
 "use strict";
 
 System.register("flarum/utils/anchorScroll", [], function (_export, _context) {
+  "use strict";
+
   function anchorScroll(element, callback) {
     var $window = $(window);
     var relativeScroll = $(element).offset().top - $window.scrollTop();
@@ -22189,6 +22897,8 @@ System.register("flarum/utils/anchorScroll", [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/utils/classList', [], function (_export, _context) {
+  "use strict";
+
   function classList(classes) {
     var classNames = void 0;
 
@@ -22217,6 +22927,8 @@ System.register('flarum/utils/classList', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/utils/computed', [], function (_export, _context) {
+  "use strict";
+
   function computed() {
     for (var _len = arguments.length, dependentKeys = Array(_len), _key = 0; _key < _len; _key++) {
       dependentKeys[_key] = arguments[_key];
@@ -22264,6 +22976,8 @@ System.register('flarum/utils/computed', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/utils/Drawer', [], function (_export, _context) {
+  "use strict";
+
   var Drawer;
   return {
     setters: [],
@@ -22330,6 +23044,8 @@ System.register('flarum/utils/Drawer', [], function (_export, _context) {
 "use strict";
 
 System.register("flarum/utils/evented", [], function (_export, _context) {
+  "use strict";
+
   return {
     setters: [],
     execute: function () {
@@ -22387,6 +23103,8 @@ System.register("flarum/utils/evented", [], function (_export, _context) {
 "use strict";
 
 System.register("flarum/utils/extract", [], function (_export, _context) {
+  "use strict";
+
   function extract(object, property) {
     var value = object[property];
 
@@ -22405,20 +23123,18 @@ System.register("flarum/utils/extract", [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/utils/extractText', [], function (_export, _context) {
-  function extractText(vdom) {
-    var text = '';
+  "use strict";
 
+  function extractText(vdom) {
     if (vdom instanceof Array) {
-      text += vdom.map(function (element) {
+      return vdom.map(function (element) {
         return extractText(element);
       }).join('');
     } else if ((typeof vdom === 'undefined' ? 'undefined' : babelHelpers.typeof(vdom)) === 'object') {
-      text += extractText(vdom.children);
+      return extractText(vdom.children);
     } else {
-      text += vdom;
+      return vdom;
     }
-
-    return text;
   }
 
   _export('default', extractText);
@@ -22431,6 +23147,8 @@ System.register('flarum/utils/extractText', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/utils/formatNumber', [], function (_export, _context) {
+  "use strict";
+
   function formatNumber(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
@@ -22445,8 +23163,18 @@ System.register('flarum/utils/formatNumber', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/utils/humanTime', [], function (_export, _context) {
+  "use strict";
+
   function humanTime(time) {
     var m = moment(time);
+    var now = moment();
+
+    // To prevent showing things like "in a few seconds" due to small offsets
+    // between client and server time, we always reset future dates to the
+    // current time. This will result in "just now" being shown instead.
+    if (m.isAfter(now)) {
+      m = now;
+    }
 
     var day = 864e5;
     var diff = m.diff(moment());
@@ -22484,6 +23212,8 @@ System.register('flarum/utils/humanTime', [], function (_export, _context) {
 "use strict";
 
 System.register("flarum/utils/ItemList", [], function (_export, _context) {
+  "use strict";
+
   var Item, ItemList;
   return {
     setters: [],
@@ -22600,6 +23330,8 @@ System.register("flarum/utils/ItemList", [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/utils/mapRoutes', [], function (_export, _context) {
+  "use strict";
+
   function mapRoutes(routes) {
     var basePath = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
 
@@ -22626,6 +23358,8 @@ System.register('flarum/utils/mapRoutes', [], function (_export, _context) {
 "use strict";
 
 System.register("flarum/utils/mixin", [], function (_export, _context) {
+  "use strict";
+
   function mixin(Parent) {
     var Mixed = function (_Parent) {
       babelHelpers.inherits(Mixed, _Parent);
@@ -22659,6 +23393,8 @@ System.register("flarum/utils/mixin", [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/utils/patchMithril', ['../Component'], function (_export, _context) {
+  "use strict";
+
   var Component;
   function patchMithril(global) {
     var mo = global.m;
@@ -22717,6 +23453,8 @@ System.register('flarum/utils/patchMithril', ['../Component'], function (_export
 "use strict";
 
 System.register("flarum/utils/RequestError", [], function (_export, _context) {
+  "use strict";
+
   var RequestError;
   return {
     setters: [],
@@ -22745,17 +23483,19 @@ System.register("flarum/utils/RequestError", [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/utils/saveSettings', [], function (_export, _context) {
-  function saveSettings(settings) {
-    var oldSettings = JSON.parse(JSON.stringify(app.settings));
+  "use strict";
 
-    babelHelpers.extends(app.settings, settings);
+  function saveSettings(settings) {
+    var oldSettings = JSON.parse(JSON.stringify(app.data.settings));
+
+    babelHelpers.extends(app.data.settings, settings);
 
     return app.request({
       method: 'POST',
       url: app.forum.attribute('apiUrl') + '/settings',
       data: settings
     }).catch(function (error) {
-      app.settings = oldSettings;
+      app.data.settings = oldSettings;
       throw error;
     });
   }
@@ -22770,6 +23510,8 @@ System.register('flarum/utils/saveSettings', [], function (_export, _context) {
 "use strict";
 
 System.register("flarum/utils/ScrollListener", [], function (_export, _context) {
+  "use strict";
+
   var scroll, ScrollListener;
   return {
     setters: [],
@@ -22784,7 +23526,6 @@ System.register("flarum/utils/ScrollListener", [], function (_export, _context) 
          *     changes.
          * @public
          */
-
         function ScrollListener(callback) {
           babelHelpers.classCallCheck(this, ScrollListener);
 
@@ -22843,82 +23584,88 @@ System.register("flarum/utils/ScrollListener", [], function (_export, _context) 
 'use strict';
 
 System.register('flarum/utils/string', [], function (_export, _context) {
+  "use strict";
+
+  /**
+   * Truncate a string to the given length, appending ellipses if necessary.
+   *
+   * @param {String} string
+   * @param {Number} length
+   * @param {Number} [start=0]
+   * @return {String}
+   */
+  function truncate(string, length) {
+    var start = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+    return (start > 0 ? '...' : '') + string.substring(start, start + length) + (string.length > start + length ? '...' : '');
+  }
+
+  /**
+   * Create a slug out of the given string. Non-alphanumeric characters are
+   * converted to hyphens.
+   *
+   * @param {String} string
+   * @return {String}
+   */
+
+  _export('truncate', truncate);
+
+  function slug(string) {
+    return string.toLowerCase().replace(/[^a-z0-9]/gi, '-').replace(/-+/g, '-').replace(/-$|^-/g, '') || '-';
+  }
+
+  /**
+   * Strip HTML tags and quotes out of the given string, replacing them with
+   * meaningful punctuation.
+   *
+   * @param {String} string
+   * @return {String}
+   */
+
+  _export('slug', slug);
+
+  function getPlainContent(string) {
+    var html = string.replace(/(<\/p>|<br>)/g, '$1 &nbsp;').replace(/<img\b[^>]*>/ig, ' ');
+
+    var dom = $('<div/>').html(html);
+
+    dom.find(getPlainContent.removeSelectors.join(',')).remove();
+
+    return dom.text().replace(/\s+/g, ' ').trim();
+  }
+
+  /**
+   * An array of DOM selectors to remove when getting plain content.
+   *
+   * @type {Array}
+   */
+
+  _export('getPlainContent', getPlainContent);
+
+  /**
+   * Make a string's first character uppercase.
+   *
+   * @param {String} string
+   * @return {String}
+   */
+  function ucfirst(string) {
+    return string.substr(0, 1).toUpperCase() + string.substr(1);
+  }
+
+  _export('ucfirst', ucfirst);
+
   return {
     setters: [],
     execute: function () {
-      /**
-       * Truncate a string to the given length, appending ellipses if necessary.
-       *
-       * @param {String} string
-       * @param {Number} length
-       * @param {Number} [start=0]
-       * @return {String}
-       */
-      function truncate(string, length) {
-        var start = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-
-        return (start > 0 ? '...' : '') + string.substring(start, start + length) + (string.length > start + length ? '...' : '');
-      }
-
-      /**
-       * Create a slug out of the given string. Non-alphanumeric characters are
-       * converted to hyphens.
-       *
-       * @param {String} string
-       * @return {String}
-       */
-
-      _export('truncate', truncate);
-
-      function slug(string) {
-        return string.toLowerCase().replace(/[^a-z0-9]/gi, '-').replace(/-+/g, '-').replace(/-$|^-/g, '') || '-';
-      }
-
-      /**
-       * Strip HTML tags and quotes out of the given string, replacing them with
-       * meaningful punctuation.
-       *
-       * @param {String} string
-       * @return {String}
-       */
-
-      _export('slug', slug);
-
-      function getPlainContent(string) {
-        var dom = $('<div/>').html(string.replace(/(<\/p>|<br>)/g, '$1 &nbsp;'));
-
-        dom.find(getPlainContent.removeSelectors.join(',')).remove();
-
-        return dom.text();
-      }
-
-      /**
-       * An array of DOM selectors to remove when getting plain content.
-       *
-       * @type {Array}
-       */
-
-      _export('getPlainContent', getPlainContent);
-
       getPlainContent.removeSelectors = ['blockquote', 'script'];
-
-      /**
-       * Make a string's first character uppercase.
-       *
-       * @param {String} string
-       * @return {String}
-       */
-      function ucfirst(string) {
-        return string.substr(0, 1).toUpperCase() + string.substr(1);
-      }
-
-      _export('ucfirst', ucfirst);
     }
   };
 });;
 'use strict';
 
 System.register('flarum/utils/stringToColor', [], function (_export, _context) {
+  "use strict";
+
   function hsvToRgb(h, s, v) {
     var r = void 0;
     var g = void 0;
@@ -22985,6 +23732,8 @@ System.register('flarum/utils/stringToColor', [], function (_export, _context) {
 'use strict';
 
 System.register('flarum/utils/SubtreeRetainer', [], function (_export, _context) {
+  "use strict";
+
   var SubtreeRetainer;
   return {
     setters: [],
@@ -22993,7 +23742,6 @@ System.register('flarum/utils/SubtreeRetainer', [], function (_export, _context)
         /**
          * @param {...callbacks} callbacks Functions returning data to keep track of.
          */
-
         function SubtreeRetainer() {
           babelHelpers.classCallCheck(this, SubtreeRetainer);
 

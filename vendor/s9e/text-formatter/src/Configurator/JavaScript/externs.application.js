@@ -30,12 +30,6 @@ punycode.toASCII;
 /** @constructor */
 function XSLTProcessor() {}
 /**
- * @param {Node} externalNode
- * @param {boolean} deep
- * @return {Node}
- */
-Document.prototype.importNode = function(externalNode, deep) {};
-/**
  * @type {string}
  * @implicitCast
  */
@@ -80,6 +74,7 @@ function DocumentFragment() {}
  * @constructor
  * @implements {IObject<(string|number), T>}
  * @implements {IArrayLike<T>}
+ * @implements {Iterable<T>}
  * @template T
  */
 function NamedNodeMap() {}
@@ -150,6 +145,7 @@ Node.prototype.removeChild = function(oldChild) {};
 /**
  * @constructor
  * @implements {IArrayLike<T>}
+ * @implements {Iterable<T>}
  * @template T
  */
 function NodeList() {}
@@ -166,6 +162,12 @@ function Element() {}
  * @constructor
  */
 function Window() {}
+/**
+ * @param {Node} externalNode
+ * @param {boolean} deep
+ * @return {Node}
+ */
+Document.prototype.importNode = function(externalNode, deep) {};
 /**
  * @constructor
  * @extends {Document}

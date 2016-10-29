@@ -24,7 +24,7 @@
     "psr/http-message": "~1.0"
   },
   "require-dev": {
-    "phpunit/PHPUnit": "~4.6",
+    "phpunit/phpunit": "^4.6 || ^5.5",
     "squizlabs/php_codesniffer": "^2.3.1"
   },
   "provide": {
@@ -46,13 +46,13 @@
   },
   "scripts": {
     "check": [
-      "@cs",
+      "@cs-check",
       "@test"
     ],
-    "coveralls": "coveralls",
-    "cs": "phpcs",
+    "upload-coverage": "coveralls -v",
+    "cs-check": "phpcs",
     "cs-fix": "phpcbf",
-    "test": "phpunit",
-    "test-coverage": "phpunit --coverage-clover clover.xml"
+    "test": "phpunit --colors=always",
+    "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
   }
 }

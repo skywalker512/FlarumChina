@@ -19,16 +19,16 @@ class Relationship
     /**
      * The data object.
      *
-     * @var ElementInterface
+     * @var ElementInterface|null
      */
     protected $data;
 
     /**
      * Create a new relationship.
      *
-     * @param ElementInterface $data
+     * @param ElementInterface|null $data
      */
-    public function __construct(ElementInterface $data)
+    public function __construct(ElementInterface $data = null)
     {
         $this->data = $data;
     }
@@ -36,7 +36,7 @@ class Relationship
     /**
      * Get the data object.
      *
-     * @return ElementInterface
+     * @return ElementInterface|null
      */
     public function getData()
     {
@@ -46,7 +46,7 @@ class Relationship
     /**
      * Set the data object.
      *
-     * @param ElementInterface $data
+     * @param ElementInterface|null $data
      * @return $this
      */
     public function setData($data)

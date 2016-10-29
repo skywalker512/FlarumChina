@@ -1,4 +1,52 @@
 
+1.4.2 / 2016-10-28
+==================
+
+New functionality and features
+------------------------------
+
+  * Add streaming profiles API
+  * Merge pull request #40 from sergey-safonov/feature/config-connection-timeout
+    * Allow specify connection timeout in config
+
+1.4.1 / 2016-08-14
+==================
+
+New functionality and features
+------------------------------
+
+  * Add `allow_missing` parameter to the archive api
+  * Add `skip_transformation_name` parameter to `create_archive`.
+  * Add `expire_at` parameter to `create_archive`.
+  * Add `transformation` parameter to `delete_resources`.
+  * Add original height and width test.
+  * Allow `cloud_name` to be specified in options array
+  * Add TravisCI configuration
+  * Add badges to README.md
+  * Add license file
+  * Update sample project: use cdnjs instead of locally stored JS files and bootstrap with `cloudinary_fileupload()`.
+
+Other Changes
+-------------
+
+  * Merge pull request #38 from RobinMalfait/patch-1
+  * Merge pull request #37 from Welkio/master
+  * Merge pull request #41 from DacotahHarvey
+  * Fix Zip tests.
+  * Add default message to assertPost, assertGet, assertPut, assertDelete. Add optional message to assertUrl.
+  * Add assert helper methods.
+  * Add test for `gravity: auto` parameter.
+  * Use eager transformation in timeout test.
+  * Remove `overwrite` test.
+  * Mock `eager` test.
+  * Use random number for test tag.
+  * Add `url_prefix` to the tests.
+  * Mock restore tests.
+  * Mock upload_presets tests.
+  * Mock start_at test
+  * Separare `mock` to `apiMock` and `uploadMock`. Use random public_ids in API tests.
+  * Update README.md
+
 1.4.0 / 2016-06-22
 ==================
 

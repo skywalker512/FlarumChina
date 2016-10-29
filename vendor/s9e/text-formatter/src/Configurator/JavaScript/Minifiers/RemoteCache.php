@@ -14,7 +14,7 @@ class RemoteCache extends OnlineMinifier
 	public function minify($src)
 	{
 		$url  = $this->url . '?hash=' . $this->getHash($src);
-		$code = $this->getHttpClient()->get($url);
+		$code = $this->httpClient->get($url);
 		if ($code === \false)
 			throw new RuntimeException;
 		return $code;

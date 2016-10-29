@@ -5,10 +5,10 @@ import SettingDropdown from 'flarum/components/SettingDropdown';
 export default function() {
   extend(PermissionGrid.prototype, 'startItems', items => {
     items.add('allowTagChange', {
-      icon: 'tags',
+      icon: 'tag',
       label: app.translator.trans('flarum-tags.admin.permissions.allow_edit_tags_label'),
       setting: () => {
-        const minutes = parseInt(app.settings.allow_tag_change, 10);
+        const minutes = parseInt(app.data.settings.allow_tag_change, 10);
 
         return SettingDropdown.component({
           defaultLabel: minutes

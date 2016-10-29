@@ -13,6 +13,15 @@ class Page extends AbstractModel
     protected $table = 'pages';
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'is_hidden' => 'boolean',
+        'is_html' => 'boolean',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     protected $dates = ['time', 'edit_time'];
@@ -81,12 +90,13 @@ class Page extends AbstractModel
     /**
      * Get the content rendered as HTML.
      *
-     * @param string $value
-     *
      * @return string
      */
-    public function getContentHtmlAttribute($value)
+    public function getContentHtmlAttribute()
     {
+        if ($this->is_html) {
+            return nl2br($this->content);
+        }
         return static::$formatter->render($this->attributes['content'], $this);
     }
 

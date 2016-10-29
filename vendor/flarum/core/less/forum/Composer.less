@@ -194,13 +194,8 @@
         }
       }
     }
-    h3 {
-      &, a, input {
-        font-size: 14px;
-      }
-      input {
-        width: 100% !important;
-      }
+    h3 input {
+      width: 100% !important;
     }
   }
   .ComposerBody-editor {
@@ -293,7 +288,7 @@
     }
   }
   .ComposerBody-content {
-    margin-left: 90px;
+    margin-left: 85px;
 
     .minimized &, .fullScreen & {
       margin-left: 0;
@@ -312,7 +307,7 @@
 @media @desktop-up {
   .Composer:not(.fullScreen) {
     .App--index & {
-      margin-left: 205px;
+      margin-left: 220px;
       margin-right: -20px;
     }
     .App--discussion & {
@@ -331,20 +326,22 @@
 // ------------------------------------
 // Text Editor
 
-.TextEditor {
-  & textarea {
-    border-radius: 0;
-    padding: 0 0 10px;
-    border: 0;
-    resize: none;
-    color: @text-color;
-    font-size: 14px;
-    line-height: 1.7;
+.TextEditor textarea {
+  border-radius: 0;
+  padding: 0 0 10px;
+  border: 0;
+  resize: none;
+  color: @text-color;
+  font-size: 14px;
+  line-height: 1.7;
 
-    &, &:focus, &[disabled] {
-      background: none;
-      border: 0;
-    }
+  &, &:focus, &[disabled] {
+    background: none;
+    border: 0;
+  }
+
+  @media @phone {
+    font-size: 16px; // minimum font-size required to prevent page zoom on focus in iOS 10
   }
 }
 .TextEditor-controls {
@@ -359,7 +356,7 @@
 
 @media @tablet-up {
   .TextEditor-controls {
-    margin: 0 -20px 0 -110px;
+    margin: 0 -20px 0 -105px;
     padding: 10px 20px;
     border-top: 1px solid @control-bg;
 

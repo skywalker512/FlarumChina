@@ -38,11 +38,18 @@ class LessCompiler extends RevisionCompiler
      */
     public function compile()
     {
+        if (! count($this->files) || ! count($this->strings)) {
+            return;
+        }
+
         ini_set('xdebug.max_nesting_level', 200);
 
         $parser = new Less_Parser([
             'compress' => true,
-            'cache_dir' => $this->cachePath
+            'cache_dir' => $this->cachePath,
+            'import_dirs' => [
+                base_path().'/vendor/components/font-awesome/less' => '',
+            ],
         ]);
 
         try {

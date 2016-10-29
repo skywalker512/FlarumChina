@@ -44,7 +44,7 @@ export default class PermissionGrid extends Component {
             </tr>
             {section.children.map(child => (
               <tr className="PermissionGrid-child">
-                <th>{child.icon ? icon(child.icon) : ''}{child.label}</th>
+                <th>{icon(child.icon)}{child.label}</th>
                 {permissionCells(child)}
                 <td/>
               </tr>
@@ -119,7 +119,7 @@ export default class PermissionGrid extends Component {
       icon: 'i-cursor',
       label: app.translator.trans('core.admin.permissions.allow_renaming_label'),
       setting: () => {
-        const minutes = parseInt(app.settings.allow_renaming, 10);
+        const minutes = parseInt(app.data.settings.allow_renaming, 10);
 
         return SettingDropdown.component({
           defaultLabel: minutes
@@ -151,7 +151,7 @@ export default class PermissionGrid extends Component {
       icon: 'pencil',
       label: app.translator.trans('core.admin.permissions.allow_post_editing_label'),
       setting: () => {
-        const minutes = parseInt(app.settings.allow_post_editing, 10);
+        const minutes = parseInt(app.data.settings.allow_post_editing, 10);
 
         return SettingDropdown.component({
           defaultLabel: minutes
@@ -172,6 +172,12 @@ export default class PermissionGrid extends Component {
 
   moderateItems() {
     const items = new ItemList();
+
+    items.add('viewIpsPosts', {
+      icon: 'bullseye',
+      label: app.translator.trans('core.admin.permissions.view_post_ips_label'),
+      permission: 'discussion.viewIpsPosts'
+    }, 110);
 
     items.add('renameDiscussions', {
       icon: 'i-cursor',

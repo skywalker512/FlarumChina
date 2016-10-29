@@ -840,6 +840,8 @@ class FilesystemTest extends FilesystemTestCase
             array('/a/aab/bb/', '/a/aa/', '../aab/bb/'),
             array('/a/aab/bb/', '/', 'a/aab/bb/'),
             array('/a/aab/bb/', '/b/aab', '../../a/aab/bb/'),
+            array('/aab/bb', '/aa', '../aab/bb/'),
+            array('/aab', '/aa', '../aab/'),
         );
 
         if ('\\' === DIRECTORY_SEPARATOR) {
@@ -1101,13 +1103,19 @@ class FilesystemTest extends FilesystemTestCase
     {
         $filename = $this->workspace.DIRECTORY_SEPARATOR.'foo'.DIRECTORY_SEPARATOR.'baz.txt';
 
+        // skip mode check on Windows
+        if ('\\' !== DIRECTORY_SEPARATOR) {
+            $oldMask = umask(0002);
+        }
+
         $this->filesystem->dumpFile($filename, 'bar');
         $this->assertFileExists($filename);
         $this->assertSame('bar', file_get_contents($filename));
 
         // skip mode check on Windows
         if ('\\' !== DIRECTORY_SEPARATOR) {
-            $this->assertFilePermissions(666, $filename);
+            $this->assertFilePermissions(664, $filename);
+            umask($oldMask);
         }
     }
 

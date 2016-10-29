@@ -12,12 +12,14 @@ use s9e\TextFormatter\Plugins\ParserBase;
 class Parser extends ParserBase
 {
 	protected $hasEscapedChars;
-	protected $links;
+	protected $hasRefs;
+	protected $refs;
 	protected $text;
 	public function parse($text, array $matches)
 	{
 		$this->init($text);
 		$this->matchBlockLevelMarkup();
+		$this->matchLinkReferences();
 		$this->matchInlineCode();
 		$this->matchImages();
 		$this->matchLinks();
@@ -26,6 +28,30 @@ class Parser extends ParserBase
 		$this->matchEmphasis();
 		$this->matchForcedLineBreaks();
 		unset($this->text);
+	}
+	protected function addImageTag($startTagPos, $endTagPos, $endTagLen, $linkInfo, $alt)
+	{
+		$tag = $this->parser->addTagPair('IMG', $startTagPos, 2, $endTagPos, $endTagLen);
+		$this->setLinkAttributes($tag, $linkInfo, 'src');
+		$tag->setAttribute('alt', $this->decode($alt));
+		$this->overwrite($startTagPos, $endTagPos + $endTagLen - $startTagPos);
+	}
+	protected function addInlineCodeTags($left, $right)
+	{
+		$startTagPos = $left['pos'];
+		$startTagLen = $left['len'] + $left['trimAfter'];
+		$endTagPos   = $right['pos'] - $right['trimBefore'];
+		$endTagLen   = $right['len'] + $right['trimBefore'];
+		$this->parser->addTagPair('C', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
+		$this->overwrite($startTagPos, $endTagPos + $endTagLen - $startTagPos);
+	}
+	protected function addLinkTag($startTagPos, $endTagPos, $endTagLen, $linkInfo)
+	{
+		$tag = $this->parser->addTagPair('URL', $startTagPos, 1, $endTagPos, $endTagLen);
+		$this->setLinkAttributes($tag, $linkInfo, 'url');
+		$tag->setSortPriority(($endTagLen === 1) ? 1 : -1);
+		$this->overwrite($startTagPos, 1);
+		$this->overwrite($endTagPos,   $endTagLen);
 	}
 	protected function closeList(array $list, $textBoundary)
 	{
@@ -46,32 +72,28 @@ class Parser extends ParserBase
 	{
 		if ($this->config['decodeHtmlEntities'] && \strpos($str, '&') !== \false)
 			$str = \html_entity_decode($str, \ENT_QUOTES, 'UTF-8');
-		$str = \stripslashes(\str_replace("\x1A", '', $str));
+		$str = \str_replace("\x1A", '', $str);
 		if ($this->hasEscapedChars)
 			$str = \strtr(
 				$str,
 				array(
-					"\x1B0" => '!', "\x1B1" => '"', "\x1B2" => ')',
-					"\x1B3" => '*', "\x1B4" => '[', "\x1B5" => '\\',
-					"\x1B6" => ']', "\x1B7" => '^', "\x1B8" => '_',
-					"\x1B9" => '`', "\x1BA" => '~'
+					"\x1B0" => '!', "\x1B1" => '"', "\x1B2" => "'", "\x1B3" => '(',
+					"\x1B4" => ')', "\x1B5" => '*', "\x1B6" => '[', "\x1B7" => '\\',
+					"\x1B8" => ']', "\x1B9" => '^', "\x1BA" => '_', "\x1BB" => '`',
+					"\x1BC" => '~'
 				)
 			);
 		return $str;
-	}
-	protected function decodeQuotedString($str)
-	{
-		return $this->decode(\preg_replace('/^([\'"])(.*)\\1$/', '$2', \trim($str)));
 	}
 	protected function encode($str)
 	{
 		return \strtr(
 			$str,
 			array(
-				'\\!' => "\x1B0", '\\"' => "\x1B1", '\\)'  => "\x1B2",
-				'\\*' => "\x1B3", '\\[' => "\x1B4", '\\\\' => "\x1B5",
-				'\\]' => "\x1B6", '\\^' => "\x1B7", '\\_'  => "\x1B8",
-				'\\`' => "\x1B9", '\\~' => "\x1BA"
+				'\\!' => "\x1B0", '\\"' => "\x1B1", "\\'" => "\x1B2", '\\('  => "\x1B3",
+				'\\)' => "\x1B4", '\\*' => "\x1B5", '\\[' => "\x1B6", '\\\\' => "\x1B7",
+				'\\]' => "\x1B8", '\\^' => "\x1B9", '\\_' => "\x1BA", '\\`'  => "\x1BB",
+				'\\~' => "\x1BC"
 			)
 		);
 	}
@@ -80,13 +102,6 @@ class Parser extends ParserBase
 		$content = \substr($this->text, $startPos, $endPos - $startPos);
 		\preg_match('/[ \\t]*#*[ \\t]*$/', $content, $m);
 		return \strlen($m[0]);
-	}
-	protected function getReferenceLinkAttributes($label)
-	{
-		if (!isset($this->links))
-			$this->matchLinkReferences();
-		$label = \strtolower($label);
-		return (isset($this->links[$label])) ? $this->links[$label] : array();
 	}
 	protected function getSetextLines()
 	{
@@ -132,26 +147,53 @@ class Parser extends ParserBase
 		$blocks[] = $block;
 		return $blocks;
 	}
-	protected function getInlineLinkAttributes(array $m)
+	protected function getInlineCodeMarkers()
 	{
-		$attrValues = array($this->decode($m[3][0]));
-		if (!empty($m[4][0]))
+		$pos = \strpos($this->text, '`');
+		if ($pos === \false)
+			return array();
+		\preg_match_all(
+			'/(`+)(\\s*)[^\\x17`]*/',
+			\str_replace("\x1BB", '\\`', $this->text),
+			$matches,
+			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
+			$pos
+		);
+		$trimNext = 0;
+		$markers  = array();
+		foreach ($matches as $m)
 		{
-			$title = $this->decodeQuotedString($m[4][0]);
-			if ($title > '')
-				$attrValues[] = $title;
+			$markers[] = array(
+				'pos'        => $m[0][1],
+				'len'        => \strlen($m[1][0]),
+				'trimBefore' => $trimNext,
+				'trimAfter'  => \strlen($m[2][0]),
+				'next'       => $m[0][1] + \strlen($m[0][0])
+			);
+			$trimNext = \strlen($m[0][0]) - \strlen(\rtrim($m[0][0]));
 		}
-		return $attrValues;
+		return $markers;
+	}
+	protected function getLabels()
+	{
+		\preg_match_all(
+			'/\\[((?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*)\\]/',
+			$this->text,
+			$matches,
+			\PREG_OFFSET_CAPTURE
+		);
+		$labels = array();
+		foreach ($matches[1] as $m)
+			$labels[$m[1] - 1] = \strtolower($m[0]);
+		return $labels;
 	}
 	protected function ignoreEmphasis($matchPos, $matchLen)
 	{
-		if ($this->text[$matchPos] === '_' && $matchLen === 1 && $this->isSurroundedByAlnum($matchPos, $matchLen))
-			return \true;
-		return \false;
+		return ($this->text[$matchPos] === '_' && $matchLen === 1 && $this->isSurroundedByAlnum($matchPos, $matchLen));
 	}
 	protected function init($text)
 	{
-		if (\strpos($text, '\\') === \false || !\preg_match('/\\\\[!")*[\\\\\\]^_`~]/', $text))
+		if (\strpos($text, '\\') === \false || !\preg_match('/\\\\[!"\'()*[\\\\\\]^_`~]/', $text))
 			$this->hasEscapedChars = \false;
 		else
 		{
@@ -160,7 +202,6 @@ class Parser extends ParserBase
 		}
 		$text .= "\n\n\x17";
 		$this->text = $text;
-		unset($this->links);
 	}
 	protected function isAlnum($chr)
 	{
@@ -208,8 +249,9 @@ class Parser extends ParserBase
 					$quoteDepth = \min($quoteDepth, $codeTag->getAttribute('quoteDepth'));
 					$ignoreLen  = $this->computeQuoteIgnoreLen($m[1][0], $quoteDepth);
 				}
+				$this->overwrite($matchPos, $ignoreLen);
 			}
-			if ($quoteDepth < $quotesCnt && !$continuation && !$lineIsEmpty)
+			if ($quoteDepth < $quotesCnt && !$continuation)
 			{
 				$newContext = \true;
 				do
@@ -279,7 +321,7 @@ class Parser extends ParserBase
 			else
 			{
 				$hasListItem = !empty($m[4][0]);
-				if (!$indentWidth && !$continuation && !$hasListItem && !$lineIsEmpty)
+				if (!$indentWidth && !$continuation && !$hasListItem)
 					$listIndex = -1;
 				elseif ($continuation && !$hasListItem)
 					$listIndex = $listsCnt - 1;
@@ -450,93 +492,139 @@ class Parser extends ParserBase
 		$pos = \strpos($this->text, '![');
 		if ($pos === \false)
 			return;
+		if (\strpos($this->text, '](', $pos) !== \false)
+			$this->matchInlineImages();
+		if ($this->hasRefs)
+			$this->matchReferenceImages();
+	}
+	protected function matchInlineImages()
+	{
 		\preg_match_all(
-			'/!\\[([^\\x17]*?(?=] ?\\()|[^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]| ?\\(([^\\x17 ")]+)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\))?/',
+			'/!\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(((?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
 			$this->text,
 			$matches,
-			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
-			$pos
+			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER
 		);
 		foreach ($matches as $m)
 		{
-			$matchPos    = $m[0][1];
-			$matchLen    = \strlen($m[0][0]);
-			$contentLen  = \strlen($m[1][0]);
-			$startTagPos = $matchPos;
-			$startTagLen = 2;
-			$endTagPos   = $startTagPos + $startTagLen + $contentLen;
-			$endTagLen   = $matchLen - $startTagLen - $contentLen;
-			$tag = $this->parser->addTagPair('IMG', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-			$tag->setAttribute('alt', $this->decode($m[1][0]));
-			$this->setLinkAttributes($tag, $m, array('src', 'title'));
-			$this->overwrite($matchPos, $matchLen);
+			$linkInfo    = $m[1][0];
+			$startTagPos = $m[0][1];
+			$endTagLen   = 3 + \strlen($linkInfo);
+			$endTagPos   = $startTagPos + \strlen($m[0][0]) - $endTagLen;
+			$alt         = \substr($m[0][0], 2, \strlen($m[0][0]) - $endTagLen - 2);
+			$this->addImageTag($startTagPos, $endTagPos, $endTagLen, $linkInfo, $alt);
+		}
+	}
+	protected function matchReferenceImages()
+	{
+		\preg_match_all(
+			'/!\\[((?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*)\\](?: ?\\[([^\\x17[\\]]+)\\])?/',
+			$this->text,
+			$matches,
+			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER
+		);
+		foreach ($matches as $m)
+		{
+			$startTagPos = $m[0][1];
+			$endTagPos   = $startTagPos + 2 + \strlen($m[1][0]);
+			$endTagLen   = 1;
+			$alt         = $m[1][0];
+			$id          = $alt;
+			if (isset($m[2][0], $this->refs[$m[2][0]]))
+			{
+				$endTagLen = \strlen($m[0][0]) - \strlen($alt) - 2;
+				$id        = $m[2][0];
+			}
+			elseif (!isset($this->refs[$id]))
+				continue;
+			$this->addImageTag($startTagPos, $endTagPos, $endTagLen, $this->refs[$id], $alt);
 		}
 	}
 	protected function matchInlineCode()
 	{
-		$pos = \strpos($this->text, '`');
-		if ($pos === \false)
-			return;
+		$markers = $this->getInlineCodeMarkers();
+		$i       = -1;
+		$cnt     = \count($markers);
+		while (++$i < ($cnt - 1))
+		{
+			$pos = $markers[$i]['next'];
+			$j   = $i;
+			if ($this->text[$markers[$i]['pos']] !== '`')
+			{
+				++$markers[$i]['pos'];
+				--$markers[$i]['len'];
+			}
+			while (++$j < $cnt && $markers[$j]['pos'] === $pos)
+			{
+				if ($markers[$j]['len'] === $markers[$i]['len'])
+				{
+					$this->addInlineCodeTags($markers[$i], $markers[$j]);
+					$i = $j;
+					break;
+				}
+				$pos = $markers[$j]['next'];
+			}
+		}
+	}
+	protected function matchInlineLinks()
+	{
 		\preg_match_all(
-			'/((`+)(?!`)\\s*)(?:[^\\x17]*?[^`\\s])?(\\s*\\2)(?!`)/',
+			'/\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(((?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
 			$this->text,
 			$matches,
-			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
-			$pos
+			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER
 		);
 		foreach ($matches as $m)
 		{
-			$matchLen    = \strlen($m[0][0]);
-			$matchPos    = $m[0][1];
-			$startTagLen = \strlen($m[1][0]);
-			$endTagLen   = \strlen($m[3][0]);
-			$this->parser->addTagPair('C', $matchPos, $startTagLen, $matchPos + $matchLen - $endTagLen, $endTagLen);
-			$this->overwrite($matchPos, $matchLen);
+			$linkInfo    = $m[1][0];
+			$startTagPos = $m[0][1];
+			$endTagLen   = 3 + \strlen($linkInfo);
+			$endTagPos   = $startTagPos + \strlen($m[0][0]) - $endTagLen;
+			$this->addLinkTag($startTagPos, $endTagPos, $endTagLen, $linkInfo);
 		}
 	}
 	protected function matchLinkReferences()
 	{
-		$this->links = array();
-		$regexp = '/^(?:> ?)* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+)([^\\n\\x17]*)\\n?/m';
+		$this->hasRefs = \false;
+		$this->refs    = array();
+		if (\strpos($this->text, ']:') === \false)
+			return;
+		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+ *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\))?)[^\\x17\\n]*\\n?/m';
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
 			$this->parser->addIgnoreTag($m[0][1], \strlen($m[0][0]))->setSortPriority(-2);
-			$label = \strtolower($m[1][0]);
-			if (isset($this->links[$label]))
+			$id = \strtolower($m[1][0]);
+			if (isset($this->refs[$id]))
 				continue;
-			$this->links[$label] = array($this->decode($m[2][0]));
-			$title = $this->decodeQuotedString($m[3][0]);
-			if ($title > '')
-				$this->links[$label][] = $title;
+			$this->hasRefs   = \true;
+			$this->refs[$id] = $m[2][0];
 		}
 	}
 	protected function matchLinks()
 	{
-		$pos = \strpos($this->text, '[');
-		if ($pos === \false)
-			return;
-		\preg_match_all(
-			'/\\[([^\\x17]*?(?=]\\()|[^\\x17\\]]*)](?: ?\\[([^\\x17\\]]+)\\]|\\(([^\\x17 ()]+(?:\\([^\\x17 ()]+\\)[^\\x17 ()]*)*[^\\x17 )]*)( *(?:"[^\\x17"]*"|\'[^\\x17\']*\'|[^\\x17\\)]*))?\\))?/',
-			$this->text,
-			$matches,
-			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER,
-			$pos
-		);
-		foreach ($matches as $m)
+		if (\strpos($this->text, '](') !== \false)
+			$this->matchInlineLinks();
+		if ($this->hasRefs)
+			$this->matchReferenceLinks();
+	}
+	protected function matchReferenceLinks()
+	{
+		$labels = $this->getLabels();
+		foreach ($labels as $startTagPos => $id)
 		{
-			$matchPos    = $m[0][1];
-			$matchLen    = \strlen($m[0][0]);
-			$contentLen  = \strlen($m[1][0]);
-			$startTagPos = $matchPos;
-			$startTagLen = 1;
-			$endTagPos   = $startTagPos + $startTagLen + $contentLen;
-			$endTagLen   = $matchLen - $startTagLen - $contentLen;
-			$tag = $this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-			$this->setLinkAttributes($tag, $m, array('url', 'title'));
-			$tag->setSortPriority(-1);
-			$this->overwrite($startTagPos, $startTagLen);
-			$this->overwrite($endTagPos,   $endTagLen);
+			$labelPos  = $startTagPos + 2 + \strlen($id);
+			$endTagPos = $labelPos - 1;
+			$endTagLen = 1;
+			if ($this->text[$labelPos] === ' ')
+				++$labelPos;
+			if (isset($labels[$labelPos], $this->refs[$labels[$labelPos]]))
+			{
+				$id        = $labels[$labelPos];
+				$endTagLen = $labelPos + 2 + \strlen($id) - $endTagPos;
+			}
+			if (isset($this->refs[$id]))
+				$this->addLinkTag($startTagPos, $endTagPos, $endTagLen, $this->refs[$id]);
 		}
 	}
 	protected function matchStrikethrough()
@@ -633,16 +721,18 @@ class Parser extends ParserBase
 			$buffered += $remaining;
 		}
 	}
-	protected function setLinkAttributes(Tag $tag, array $m, array $attrNames)
+	protected function setLinkAttributes(Tag $tag, $linkInfo, $attrName)
 	{
-		if (isset($m[3]))
-			$attrValues = $this->getInlineLinkAttributes($m);
-		else
+		$url   = $linkInfo;
+		$title = '';
+		$pos   = \strpos($linkInfo, ' ');
+		if ($pos !== \false)
 		{
-			$label      = (isset($m[2])) ? $m[2][0] : $m[1][0];
-			$attrValues = $this->getReferenceLinkAttributes($label);
+			$url   = \substr($linkInfo, 0, $pos);
+			$title = \substr(\trim(\substr($linkInfo, $pos)), 1, -1);
 		}
-		foreach ($attrValues as $k => $attrValue)
-			$tag->setAttribute($attrNames[$k], $attrValue);
+		$tag->setAttribute($attrName, $this->decode($url));
+		if ($title > '')
+			$tag->setAttribute('title', $this->decode($title));
 	}
 }

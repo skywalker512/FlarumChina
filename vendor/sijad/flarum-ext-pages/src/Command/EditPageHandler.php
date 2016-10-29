@@ -64,6 +64,10 @@ class EditPageHandler
             $page->is_hidden = $attributes['isHidden'];
         }
 
+        if (isset($attributes['isHtml'])) {
+            $page->is_html = $attributes['isHtml'];
+        }
+
         $page->edit_time = time();
 
         $this->validator->assertValid($page->getDirty());

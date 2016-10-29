@@ -96,13 +96,13 @@ class Parameters
      * Get the limit.
      *
      * @param int|null $max
-     * @return string
+     * @return int|null
      */
     public function getLimit($max = null)
     {
-        $limit = $this->getPage('limit') ?: $this->getPage('size');
+        $limit = $this->getPage('limit') ?: $this->getPage('size') ?: null;
 
-        if ($max) {
+        if ($limit && $max) {
             $limit = min($max, $limit);
         }
 

@@ -37,10 +37,11 @@ export default class AvatarEditor extends Component {
     return (
       <div className={'AvatarEditor Dropdown ' + this.props.className + (this.loading ? ' loading' : '')}>
         {avatar(user)}
-        <a className="Dropdown-toggle"
+        <a className={ user.avatarUrl() ? "Dropdown-toggle" : "Dropdown-toggle AvatarEditor--noAvatar" }
+          title={app.translator.trans('core.forum.user.avatar_upload_tooltip')}
           data-toggle="dropdown"
           onclick={this.quickUpload.bind(this)}>
-          {this.loading ? LoadingIndicator.component() : icon('pencil')}
+          {this.loading ? LoadingIndicator.component() : (user.avatarUrl() ? icon('pencil') : icon('plus-circle'))}
         </a>
         <ul className="Dropdown-menu Menu">
           {listItems(this.controlItems().toArray())}
@@ -161,7 +162,7 @@ export default class AvatarEditor extends Component {
    * @param {Object} response
    * @protected
    */
-  failure() {
+  failure(response) {
     this.loading = false;
     m.redraw();
   }

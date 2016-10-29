@@ -169,7 +169,7 @@ class NotificationSyncer
      */
     protected function sendNotifications(BlueprintInterface $blueprint, array $recipients)
     {
-        $now = Carbon::now('utc')->toDateTimeString();
+        $now = Carbon::now()->toDateTimeString();
 
         event(new NotificationWillBeSent($blueprint, $recipients));
 

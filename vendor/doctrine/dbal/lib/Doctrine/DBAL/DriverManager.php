@@ -142,7 +142,7 @@ final class DriverManager
         }
 
         $params = self::parseDatabaseUrl($params);
-        
+
         // check for existing pdo object
         if (isset($params['pdo']) && ! $params['pdo'] instanceof \PDO) {
             throw DBALException::invalidPdoInstance();
@@ -213,6 +213,19 @@ final class DriverManager
     }
 
     /**
+     * Normalizes the given connection URL path.
+     *
+     * @param string $urlPath
+     *
+     * @return string The normalized connection URL path
+     */
+    private static function normalizeDatabaseUrlPath($urlPath)
+    {
+        // Trim leading slash from URL path.
+        return substr($urlPath, 1);
+    }
+
+    /**
      * Extracts parts from a database URL, if present, and returns an
      * updated list of parameters.
      *
@@ -227,23 +240,30 @@ final class DriverManager
         if (!isset($params['url'])) {
             return $params;
         }
-        
+
         // (pdo_)?sqlite3?:///... => (pdo_)?sqlite3?://localhost/... or else the URL will be invalid
         $url = preg_replace('#^((?:pdo_)?sqlite3?):///#', '$1://localhost/', $params['url']);
-        
-        $url = parse_url($url);
-        
+
+        // PHP < 5.4.8 doesn't parse schemeless urls properly.
+        // See: https://php.net/parse-url#refsect1-function.parse-url-changelog
+        if (PHP_VERSION_ID < 50408 && strpos($url, '//') === 0) {
+            $url = parse_url('fake:' . $url);
+
+            unset($url['scheme']);
+        } else {
+            $url = parse_url($url);
+        }
+
         if ($url === false) {
             throw new DBALException('Malformed parameter "url".');
         }
-        
-        if (isset($url['scheme'])) {
-            $params['driver'] = str_replace('-', '_', $url['scheme']); // URL schemes must not contain underscores, but dashes are ok
-            if (isset(self::$driverSchemeAliases[$params['driver']])) {
-                $params['driver'] = self::$driverSchemeAliases[$params['driver']]; // use alias like "postgres", else we just let checkParams decide later if the driver exists (for literal "pdo-pgsql" etc)
-            }
-        }
-        
+
+        // If we have a connection URL, we have to unset the default PDO instance connection parameter (if any)
+        // as we cannot merge connection details from the URL into the PDO instance (URL takes precedence).
+        unset($params['pdo']);
+
+        $params = self::parseDatabaseUrlScheme($url, $params);
+
         if (isset($url['host'])) {
             $params['host'] = $url['host'];
         }
@@ -256,21 +276,149 @@ final class DriverManager
         if (isset($url['pass'])) {
             $params['password'] = $url['pass'];
         }
-        
-        if (isset($url['path'])) {
-            if (!isset($url['scheme']) || (strpos($url['scheme'], 'sqlite') !== false && $url['path'] == ':memory:')) {
-                $params['dbname'] = $url['path']; // if the URL was just "sqlite::memory:", which parses to scheme and path only
-            } else {
-                $params['dbname'] = substr($url['path'], 1); // strip the leading slash from the URL
-            }
+
+        $params = self::parseDatabaseUrlPath($url, $params);
+        $params = self::parseDatabaseUrlQuery($url, $params);
+
+        return $params;
+    }
+
+    /**
+     * Parses the given connection URL and resolves the given connection parameters.
+     *
+     * Assumes that the connection URL scheme is already parsed and resolved into the given connection parameters
+     * via {@link parseDatabaseUrlScheme}.
+     *
+     * @param array $url    The URL parts to evaluate.
+     * @param array $params The connection parameters to resolve.
+     *
+     * @return array The resolved connection parameters.
+     *
+     * @see parseDatabaseUrlScheme
+     */
+    private static function parseDatabaseUrlPath(array $url, array $params)
+    {
+        if (! isset($url['path'])) {
+            return $params;
         }
-        
-        if (isset($url['query'])) {
-            $query = array();
-            parse_str($url['query'], $query); // simply ingest query as extra params, e.g. charset or sslmode
-            $params = array_merge($params, $query); // parse_str wipes existing array elements
+
+        $url['path'] = self::normalizeDatabaseUrlPath($url['path']);
+
+        // If we do not have a known DBAL driver, we do not know any connection URL path semantics to evaluate
+        // and therefore treat the path as regular DBAL connection URL path.
+        if (! isset($params['driver'])) {
+            return self::parseRegularDatabaseUrlPath($url, $params);
         }
-        
+
+        if (strpos($params['driver'], 'sqlite') !== false) {
+            return self::parseSqliteDatabaseUrlPath($url, $params);
+        }
+
+        return self::parseRegularDatabaseUrlPath($url, $params);
+    }
+
+    /**
+     * Parses the query part of the given connection URL and resolves the given connection parameters.
+     *
+     * @param array $url    The connection URL parts to evaluate.
+     * @param array $params The connection parameters to resolve.
+     *
+     * @return array The resolved connection parameters.
+     */
+    private static function parseDatabaseUrlQuery(array $url, array $params)
+    {
+        if (! isset($url['query'])) {
+            return $params;
+        }
+
+        $query = array();
+
+        parse_str($url['query'], $query); // simply ingest query as extra params, e.g. charset or sslmode
+
+        return array_merge($params, $query); // parse_str wipes existing array elements
+    }
+
+    /**
+     * Parses the given regular connection URL and resolves the given connection parameters.
+     *
+     * Assumes that the "path" URL part is already normalized via {@link normalizeDatabaseUrlPath}.
+     *
+     * @param array $url    The regular connection URL parts to evaluate.
+     * @param array $params The connection parameters to resolve.
+     *
+     * @return array The resolved connection parameters.
+     *
+     * @see normalizeDatabaseUrlPath
+     */
+    private static function parseRegularDatabaseUrlPath(array $url, array $params)
+    {
+        $params['dbname'] = $url['path'];
+
+        return $params;
+    }
+
+    /**
+     * Parses the given SQLite connection URL and resolves the given connection parameters.
+     *
+     * Assumes that the "path" URL part is already normalized via {@link normalizeDatabaseUrlPath}.
+     *
+     * @param array $url    The SQLite connection URL parts to evaluate.
+     * @param array $params The connection parameters to resolve.
+     *
+     * @return array The resolved connection parameters.
+     *
+     * @see normalizeDatabaseUrlPath
+     */
+    private static function parseSqliteDatabaseUrlPath(array $url, array $params)
+    {
+        if ($url['path'] === ':memory:') {
+            $params['memory'] = true;
+
+            return $params;
+        }
+
+        $params['path'] = $url['path']; // pdo_sqlite driver uses 'path' instead of 'dbname' key
+
+        return $params;
+    }
+
+    /**
+     * Parses the scheme part from given connection URL and resolves the given connection parameters.
+     *
+     * @param array $url    The connection URL parts to evaluate.
+     * @param array $params The connection parameters to resolve.
+     *
+     * @return array The resolved connection parameters.
+     *
+     * @throws DBALException if parsing failed or resolution is not possible.
+     */
+    private static function parseDatabaseUrlScheme(array $url, array $params)
+    {
+        if (isset($url['scheme'])) {
+            // The requested driver from the URL scheme takes precedence
+            // over the default custom driver from the connection parameters (if any).
+            unset($params['driverClass']);
+
+            // URL schemes must not contain underscores, but dashes are ok
+            $driver = str_replace('-', '_', $url['scheme']);
+
+            // The requested driver from the URL scheme takes precedence
+            // over the default driver from the connection parameters (if any).
+            $params['driver'] = isset(self::$driverSchemeAliases[$driver])
+                // use alias like "postgres", else we just let checkParams decide later
+                // if the driver exists (for literal "pdo-pgsql" etc)
+                ? self::$driverSchemeAliases[$driver]
+                : $driver;
+
+            return $params;
+        }
+
+        // If a schemeless connection URL is given, we require a default driver or default custom driver
+        // as connection parameter.
+        if (! isset($params['driverClass']) && ! isset($params['driver'])) {
+            throw DBALException::driverRequired($params['url']);
+        }
+
         return $params;
     }
 }

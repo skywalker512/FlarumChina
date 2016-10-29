@@ -27,7 +27,7 @@
   @text-color:                     #111;
   @link-color:                     saturate(@primary-color, 10%);
   @heading-color:                  @text-color;
-  @muted-color:                    hsl(@secondary-hue, min(25%, @secondary-sat), 55%);
+  @muted-color:                    hsl(@secondary-hue, min(20%, @secondary-sat), 50%);
   @muted-more-color:               #aaa;
   @shadow-color:                   rgba(0, 0, 0, 0.35);
 
@@ -37,17 +37,20 @@
   @control-danger-color:           #d66;
 
   @overlay-bg:                     fade(@secondary-color, 90%);
+
+  @code-bg:                        darken(@body-bg, 3%);
+  @code-color:                     lighten(@text-color, 30%);
 }
 .define-colors(true) {
   @primary-color:                  @config-primary-color;
   @secondary-color:                @config-secondary-color;
 
   @body-bg:                        hsl(@secondary-hue, min(20%, @secondary-sat), 10%);
-  @text-color:                     #ccc;
+  @text-color:                     #ddd;
   @link-color:                     saturate(@primary-color, 10%);
   @heading-color:                  @text-color;
-  @muted-color:                    hsl(@secondary-hue, min(20%, @secondary-sat), 35%);
-  @muted-more-color:               hsl(@secondary-hue, min(10%, @secondary-sat), 25%);
+  @muted-color:                    hsl(@secondary-hue, min(15%, @secondary-sat), 50%);
+  @muted-more-color:               hsl(@secondary-hue, min(10%, @secondary-sat), 40%);
   @shadow-color:                   rgba(0, 0, 0, 0.5);
 
   @control-bg:                     hsl(@secondary-hue, min(20%, @secondary-sat), 13%);
@@ -56,6 +59,9 @@
   @control-danger-color:           #a88;
 
   @overlay-bg:                     fade(darken(@body-bg, 5%), 90%);
+
+  @code-bg:                        darken(@body-bg, 3%);
+  @code-color:                     #fff;
 }
 
 @hero-bg:                          @control-bg;

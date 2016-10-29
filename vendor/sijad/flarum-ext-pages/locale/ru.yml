@@ -1,0 +1,49 @@
+sijad-pages:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These strings are used in the Edit Page modal dialog.
+    edit_page:
+      content_label: => sijad-pages.ref.content
+      content_placeholder: => sijad-pages.ref.content
+      delete_page_button: Удалить страницу
+      delete_page_confirmation: "Вы уверены, что хотите удалить эту страницу?"
+      hidden_label: Сохранить как черновик
+      html_label: Enable Html
+      slug_label: => sijad-pages.ref.slug
+      slug_placeholder: => sijad-pages.ref.slug
+      submit_button: => core.ref.save_changes
+      title: => sijad-pages.ref.create_page
+      title_label: => sijad-pages.ref.title
+      title_placeholder: => sijad-pages.ref.title
+      url_label: => sijad-pages.ref.url
+      url_placeholder: => sijad-pages.ref.url
+
+    # These strings are used in the pages page.
+    nav:
+      pages_button: => sijad-pages.ref.pages
+      pages_text: Создание пользовательских статических страниц.
+
+    # Strings in this namespace are referenced by two or more unique keys.
+    pages:
+      about_text: Создание и управление статическими страницами.
+      create_button: => sijad-pages.ref.create_page
+
+    # These strings are used in the pages list.
+    pages_list:
+      empty_text: Похоже, что страницы здесь нет.
+      title: => sijad-pages.ref.title
+
+  # These strings are used in the navigation bar.
+  ref:
+    content: Контент
+    create_page: Создать страницу
+    pages: Страницы
+    slug: URL
+    title: Заголовок
+    url: Url

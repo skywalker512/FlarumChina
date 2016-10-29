@@ -80,8 +80,28 @@ class Resource implements ElementInterface
             $array['relationships'] = $relationships;
         }
 
+        $links = [];
         if (! empty($this->links)) {
-            $array['links'] = $this->links;
+            $links = $this->links;
+        }
+        $serializerLinks = $this->serializer->getLinks($this->data);
+        if (! empty($serializerLinks)) {
+            $links = array_merge($serializerLinks, $links);
+        }
+        if (! empty($links)) {
+            $array['links'] = $links;
+        }
+
+        $meta = [];
+        if (! empty($this->meta)) {
+            $meta = $this->meta;
+        }
+        $serializerMeta = $this->serializer->getMeta($this->data);
+        if (! empty($serializerMeta)) {
+            $meta = array_merge($serializerMeta, $meta);
+        }
+        if (! empty($meta)) {
+            $array['meta'] = $meta;
         }
 
         return $array;
@@ -89,7 +109,7 @@ class Resource implements ElementInterface
 
     /**
      * Check whether or not this resource is an identifier (i.e. does it have
-     * any data attached?)
+     * any data attached?).
      *
      * @return bool
      */
@@ -213,6 +233,16 @@ class Resource implements ElementInterface
     }
 
     /**
+     * Get the resource relationships without considering requested ones.
+     *
+     * @return Relationship[]
+     */
+    public function getUnfilteredRelationships()
+    {
+        return $this->buildRelationships();
+    }
+
+    /**
      * Get the resource relationships as an array.
      *
      * @return array
@@ -241,7 +271,10 @@ class Resource implements ElementInterface
             $relationship = $this->serializer->getRelationship($this->data, $name);
 
             if ($relationship) {
-                $relationship->getData()->with($nested)->fields($this->fields);
+                $relationshipData = $relationship->getData();
+                if ($relationshipData instanceof ElementInterface) {
+                    $relationshipData->with($nested)->fields($this->fields);
+                }
 
                 $relationships[$name] = $relationship;
             }

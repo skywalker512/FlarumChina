@@ -22,6 +22,13 @@ export default class HeaderSecondary extends Component {
     );
   }
 
+  config(isInitialized, context) {
+    // Since this component is 'above' the content of the page (that is, it is a
+    // part of the global UI that persists between routes), we will flag the DOM
+    // to be retained across route changes.
+    context.retain = true;
+  }
+
   /**
    * Build an item list for the controls.
    *
@@ -32,14 +39,14 @@ export default class HeaderSecondary extends Component {
 
     items.add('search', app.search.render(), 30);
 
-    if (Object.keys(app.locales).length > 1) {
+    if (Object.keys(app.data.locales).length > 1) {
       const locales = [];
 
-      for (const locale in app.locales) {
+      for (const locale in app.data.locales) {
         locales.push(Button.component({
-          active: app.locale === locale,
-          children: app.locales[locale],
-          icon: app.locale === locale ? 'check' : true,
+          active: app.data.locale === locale,
+          children: app.data.locales[locale],
+          icon: app.data.locale === locale ? 'check' : true,
           onclick: () => {
             if (app.session.user) {
               app.session.user.savePreferences({locale}).then(() => window.location.reload());

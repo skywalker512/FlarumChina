@@ -12,12 +12,12 @@
 
 namespace Flagrow\ImageUpload\Listeners;
 
+use Cloudinary;
+use Flarum\Api\Serializer\ForumSerializer;
+use Flarum\Event\PrepareApiAttributes;
+use Flarum\Event\PrepareUnserializedSettings;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Events\Dispatcher;
-use Flarum\Event\PrepareApiAttributes;
-use Flarum\Api\Serializer\ForumSerializer;
-use Flarum\Event\PrepareUnserializedSettings;
-use Cloudinary;
 
 class LoadSettingsFromDatabase
 {

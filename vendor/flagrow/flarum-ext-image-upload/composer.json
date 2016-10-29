@@ -20,7 +20,7 @@
         "source": "https://github.com/flagrow/flarum-ext-image-upload"
     },
     "require": {
-        "flarum/core": "^0.1.0-beta.5",
+        "flarum/core": "^0.1.0-beta.6",
         "flarum/flarum-ext-markdown": "^0.1.0-beta.3"
     },
     "suggest": {

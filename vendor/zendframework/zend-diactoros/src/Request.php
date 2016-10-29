@@ -11,6 +11,7 @@ namespace Zend\Diactoros;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * HTTP Request encapsulation
@@ -24,7 +25,7 @@ class Request implements RequestInterface
     use MessageTrait, RequestTrait;
 
     /**
-     * @param null|string $uri URI for the request, if any.
+     * @param null|string|UriInterface $uri URI for the request, if any.
      * @param null|string $method HTTP method for the request, if any.
      * @param string|resource|StreamInterface $body Message body, if any.
      * @param array $headers Headers for the message, if any.

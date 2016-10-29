@@ -1,6 +1,8 @@
 'use strict';
 
 System.register('flarum/auth/github/main', ['flarum/extend', 'flarum/app', 'flarum/components/LogInButtons', 'flarum/components/LogInButton'], function (_export, _context) {
+  "use strict";
+
   var extend, app, LogInButtons, LogInButton;
   return {
     setters: [function (_flarumExtend) {

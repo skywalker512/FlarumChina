@@ -1,6 +1,8 @@
 'use strict';
 
 System.register('flarum/auth/twitter/components/TwitterSettingsModal', ['flarum/components/SettingsModal'], function (_export, _context) {
+  "use strict";
+
   var SettingsModal, TwitterSettingsModal;
   return {
     setters: [function (_flarumComponentsSettingsModal) {
@@ -59,6 +61,8 @@ System.register('flarum/auth/twitter/components/TwitterSettingsModal', ['flarum/
 'use strict';
 
 System.register('flarum/auth/twitter/main', ['flarum/app', 'flarum/auth/twitter/components/TwitterSettingsModal'], function (_export, _context) {
+  "use strict";
+
   var app, TwitterSettingsModal;
   return {
     setters: [function (_flarumApp) {

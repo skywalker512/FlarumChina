@@ -20,6 +20,6 @@ class AddPagesRoute
      */
     public function configureForumRoutes(ConfigureForumRoutes $event)
     {
-        $event->get('/p/{id:\d+(?:-[^/]*)?}', 'pages.page', 'Flarum\Forum\Controller\ClientController');
+        $event->get('/p/{id:\d+(?:-[^/]*)?}', 'pages.page');
     }
 }

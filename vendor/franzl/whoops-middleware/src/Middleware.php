@@ -15,7 +15,7 @@ class Middleware
         try {
             return $next($request, $response);
         } catch (\Exception $e) {
-            return WhoopsRunner::handle($e);
+            return WhoopsRunner::handle($e, $request);
         }
     }
 }

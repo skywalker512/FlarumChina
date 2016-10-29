@@ -39,6 +39,13 @@ var Infinity;
  * @const
  */
 var undefined;
+/** @typedef {?} */
+var symbol;
+/**
+ * @param {string} description
+ * @return {symbol}
+ */
+function Symbol(description) {}
 /**
  * @param {string} uri
  * @return {string}
@@ -73,6 +80,7 @@ function parseInt(num, base) {}
 /**
  * @constructor
  * @implements {IArrayLike<T>}
+ * @implements {Iterable<T>}
  * @param {...*} var_args
  * @return {!Array<?>}
  * @nosideeffects
@@ -122,7 +130,9 @@ Array.prototype.pop = function() {};
  */
 Array.prototype.push = function(var_args) {};
 /**
- * @this {IArrayLike<?>}
+ * @return {THIS} A reference to the original modified array.
+ * @this {THIS}
+ * @template THIS
  * @modifies {this}
  */
 Array.prototype.reverse = function() {};
@@ -180,7 +190,6 @@ Date.parse = function(date) {};
 /**
  * @constructor
  * @param {...*} var_args
- * @nosideeffects
  * @throws {Error}
  */
 function Function(var_args) {}
@@ -336,19 +345,6 @@ String.prototype.toLowerCase = function() {};
  * @nosideeffects
  */
 String.prototype.toUpperCase = function() {};
-/** @typedef {?} */
-var symbol;
-/**
- * @param {string} description
- * @return {symbol}
- */
-function Symbol(description) {}
-/**
- * @param {Node} externalNode
- * @param {boolean} deep
- * @return {Node}
- */
-Document.prototype.importNode = function(externalNode, deep) {};
 /**
  * @type {string}
  * @implicitCast
@@ -394,6 +390,7 @@ function DocumentFragment() {}
  * @constructor
  * @implements {IObject<(string|number), T>}
  * @implements {IArrayLike<T>}
+ * @implements {Iterable<T>}
  * @template T
  */
 function NamedNodeMap() {}
@@ -464,6 +461,7 @@ Node.prototype.removeChild = function(oldChild) {};
 /**
  * @constructor
  * @implements {IArrayLike<T>}
+ * @implements {Iterable<T>}
  * @template T
  */
 function NodeList() {}
@@ -480,6 +478,12 @@ function Element() {}
  * @constructor
  */
 function Window() {}
+/**
+ * @param {Node} externalNode
+ * @param {boolean} deep
+ * @return {Node}
+ */
+Document.prototype.importNode = function(externalNode, deep) {};
 /**
  * @constructor
  * @extends {Document}

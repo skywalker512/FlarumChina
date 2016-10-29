@@ -159,9 +159,9 @@ class BuiltInFilters
 		}
 		return self::rebuildUrl($p);
 	}
-	public static function parseUrl($url)
+	protected static function parseUrl($url)
 	{
-		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$)Di';
+		$regexp = '(^(?:([a-z][-+.\\w]*):)?(?://(?:([^:/?#]*)(?::([^/?#]*)?)?@)?(?:(\\[[a-f\\d:]+\\]|[^:/?#]+)(?::(\\d*))?)?(?![^/?#]))?([^?#]*)(\\?[^#]*)?(#.*)?$)Di';
 		\preg_match($regexp, $url, $m);
 		$parts  = array();
 		$tokens = array('scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment');
@@ -197,11 +197,7 @@ class BuiltInFilters
 			if ($p['port'] !== '')
 				$url .= ':' . $p['port'];
 		}
-		$path = $p['path'];
-		if ($p['query'] !== '')
-			$path .= '?' . $p['query'];
-		if ($p['fragment'] !== '')
-			$path .= '#' . $p['fragment'];
+		$path = $p['path'] . $p['query'] . $p['fragment'];
 		$path = \preg_replace_callback(
 			'/%.?[a-f]/',
 			function ($m)

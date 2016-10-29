@@ -131,8 +131,10 @@ if (typeof module != 'undefined' && typeof module.exports != 'undefined') {
 ;
 'use strict';
 
-System.register('flarum/mentions/addComposerAutocomplete', ['flarum/extend', 'flarum/components/ComposerBody', 'flarum/helpers/avatar', 'flarum/helpers/username', 'flarum/helpers/highlight', 'flarum/utils/string', 'flarum/mentions/components/AutocompleteDropdown'], function (_export, _context) {
-  var extend, ComposerBody, avatar, usernameHelper, highlight, truncate, AutocompleteDropdown;
+System.register('flarum/mentions/addComposerAutocomplete', ['flarum/extend', 'flarum/components/ComposerBody', 'flarum/helpers/avatar', 'flarum/helpers/username', 'flarum/helpers/highlight', 'flarum/utils/KeyboardNavigatable', 'flarum/utils/string', 'flarum/mentions/components/AutocompleteDropdown'], function (_export, _context) {
+  "use strict";
+
+  var extend, ComposerBody, avatar, usernameHelper, highlight, KeyboardNavigatable, truncate, AutocompleteDropdown;
   function addComposerAutocomplete() {
     extend(ComposerBody.prototype, 'config', function (original, isInitialized) {
       if (isInitialized) return;
@@ -158,7 +160,16 @@ System.register('flarum/mentions/addComposerAutocomplete', ['flarum/extend', 'fl
         dropdown.hide();
       };
 
-      $textarea.after($container).on('keydown', dropdown.navigate.bind(dropdown)).on('click keyup', function (e) {
+      this.navigator = new KeyboardNavigatable();
+      this.navigator.when(function () {
+        return dropdown.active;
+      }).onUp(function () {
+        return dropdown.navigate(-1);
+      }).onDown(function () {
+        return dropdown.navigate(1);
+      }).onSelect(dropdown.complete.bind(dropdown)).onCancel(dropdown.hide.bind(dropdown)).bindTo($textarea);
+
+      $textarea.after($container).on('click keyup', function (e) {
         var _this = this;
 
         // Up, down, enter, tab, escape, left, right.
@@ -300,8 +311,6 @@ System.register('flarum/mentions/addComposerAutocomplete', ['flarum/extend', 'fl
 
   return {
     setters: [function (_flarumExtend) {
-      /*global getCaretCoordinates*/
-
       extend = _flarumExtend.extend;
     }, function (_flarumComponentsComposerBody) {
       ComposerBody = _flarumComponentsComposerBody.default;
@@ -311,6 +320,8 @@ System.register('flarum/mentions/addComposerAutocomplete', ['flarum/extend', 'fl
       usernameHelper = _flarumHelpersUsername.default;
     }, function (_flarumHelpersHighlight) {
       highlight = _flarumHelpersHighlight.default;
+    }, function (_flarumUtilsKeyboardNavigatable) {
+      KeyboardNavigatable = _flarumUtilsKeyboardNavigatable.default;
     }, function (_flarumUtilsString) {
       truncate = _flarumUtilsString.truncate;
     }, function (_flarumMentionsComponentsAutocompleteDropdown) {
@@ -322,6 +333,8 @@ System.register('flarum/mentions/addComposerAutocomplete', ['flarum/extend', 'fl
 'use strict';
 
 System.register('flarum/mentions/addMentionedByList', ['flarum/extend', 'flarum/Model', 'flarum/models/Post', 'flarum/components/CommentPost', 'flarum/components/PostPreview', 'flarum/helpers/punctuateSeries', 'flarum/helpers/username', 'flarum/helpers/icon'], function (_export, _context) {
+  "use strict";
+
   var extend, Model, Post, CommentPost, PostPreview, punctuateSeries, username, icon;
   function addMentionedByList() {
     Post.prototype.mentionedBy = Model.hasMany('mentionedBy');
@@ -440,7 +453,7 @@ System.register('flarum/mentions/addMentionedByList', ['flarum/extend', 'flarum/
               'span',
               { className: 'Post-mentionedBy-summary' },
               icon('reply'),
-              app.translator.transChoice('flarum-mentions.forum.post.mentioned_by' + (replies[0] === app.session.user ? '_self' : '') + '_text', names.length, {
+              app.translator.transChoice('flarum-mentions.forum.post.mentioned_by' + (replies[0].user() === app.session.user ? '_self' : '') + '_text', names.length, {
                 count: names.length,
                 users: punctuateSeries(names)
               })
@@ -479,6 +492,8 @@ System.register('flarum/mentions/addMentionedByList', ['flarum/extend', 'flarum/
 'use strict';
 
 System.register('flarum/mentions/addPostMentionPreviews', ['flarum/extend', 'flarum/components/CommentPost', 'flarum/components/PostPreview', 'flarum/components/LoadingIndicator'], function (_export, _context) {
+  "use strict";
+
   var extend, CommentPost, PostPreview, LoadingIndicator;
   function addPostMentionPreviews() {
     extend(CommentPost.prototype, 'config', function () {
@@ -627,48 +642,84 @@ System.register('flarum/mentions/addPostMentionPreviews', ['flarum/extend', 'fla
 });;
 'use strict';
 
-System.register('flarum/mentions/addPostReplyAction', ['flarum/extend', 'flarum/components/Button', 'flarum/components/CommentPost', 'flarum/utils/DiscussionControls'], function (_export, _context) {
-  var extend, Button, CommentPost, DiscussionControls;
+System.register('flarum/mentions/addPostQuoteButton', ['flarum/extend', 'flarum/components/CommentPost', 'flarum/mentions/components/PostQuoteButton', 'flarum/mentions/utils/selectedText'], function (_export, _context) {
+  "use strict";
+
+  var extend, CommentPost, PostQuoteButton, selectedText;
+  function addPostQuoteButton() {
+    extend(CommentPost.prototype, 'config', function (original, isInitialized) {
+      var post = this.props.post;
+
+      if (isInitialized || post.isHidden() || app.session.user && !post.discussion().canReply()) return;
+
+      var $postBody = this.$('.Post-body');
+
+      // Wrap the quote button in a wrapper element so that we can render
+      // button into it.
+      var $container = $('<div class="Post-quoteButtonContainer"></div>');
+
+      var handler = function handler(e) {
+        setTimeout(function () {
+          var content = selectedText($postBody);
+          if (content) {
+            var button = new PostQuoteButton({ post: post, content: content });
+            m.render($container[0], button.render());
+
+            var rects = window.getSelection().getRangeAt(0).getClientRects();
+            var firstRect = rects[0];
+
+            if (e.clientY < firstRect.bottom && e.clientX - firstRect.right < firstRect.left - e.clientX) {
+              button.showStart(firstRect.left, firstRect.top);
+            } else {
+              var lastRect = rects[rects.length - 1];
+              button.showEnd(lastRect.right, lastRect.bottom);
+            }
+          }
+        }, 1);
+      };
+
+      this.$().after($container).on('mouseup', handler);
+
+      if ('ontouchstart' in window) {
+        document.addEventListener('selectionchange', handler, false);
+      }
+    });
+  }
+
+  _export('default', addPostQuoteButton);
+
+  return {
+    setters: [function (_flarumExtend) {
+      extend = _flarumExtend.extend;
+    }, function (_flarumComponentsCommentPost) {
+      CommentPost = _flarumComponentsCommentPost.default;
+    }, function (_flarumMentionsComponentsPostQuoteButton) {
+      PostQuoteButton = _flarumMentionsComponentsPostQuoteButton.default;
+    }, function (_flarumMentionsUtilsSelectedText) {
+      selectedText = _flarumMentionsUtilsSelectedText.default;
+    }],
+    execute: function () {}
+  };
+});;
+'use strict';
+
+System.register('flarum/mentions/addPostReplyAction', ['flarum/extend', 'flarum/components/Button', 'flarum/components/CommentPost', 'flarum/mentions/utils/reply'], function (_export, _context) {
+  "use strict";
+
+  var extend, Button, CommentPost, reply;
 
   _export('default', function () {
     extend(CommentPost.prototype, 'actionItems', function (items) {
+
       var post = this.props.post;
 
       if (post.isHidden() || app.session.user && !post.discussion().canReply()) return;
-
-      function insertMention(component, quote) {
-        var user = post.user();
-        var mention = '@' + (user ? user.username() : post.number()) + '#' + post.id() + ' ';
-
-        // If the composer is empty, then assume we're starting a new reply.
-        // In which case we don't want the user to have to confirm if they
-        // close the composer straight away.
-        if (!component.content()) {
-          component.props.originalContent = mention;
-        }
-
-        var cursorPosition = component.editor.getSelectionRange()[0];
-        var preceding = component.editor.value().slice(0, cursorPosition);
-        var precedingNewlines = preceding.length == 0 ? 0 : 3 - preceding.match(/(\n{0,2})$/)[0].length;
-
-        component.editor.insertAtCursor(Array(precedingNewlines).join('\n') + ( // Insert up to two newlines, depending on preceding whitespace
-        quote ? '> ' + mention + quote.trim().replace(/\n/g, '\n> ') + '\n\n' : mention));
-      }
 
       items.add('reply', Button.component({
         className: 'Button Button--link',
         children: app.translator.trans('flarum-mentions.forum.post.reply_link'),
         onclick: function onclick() {
-          var quote = window.getSelection().toString();
-
-          var component = app.composer.component;
-          if (component && component.props.post && component.props.post.discussion() === post.discussion()) {
-            insertMention(component, quote);
-          } else {
-            DiscussionControls.replyAction.call(post.discussion()).then(function (newComponent) {
-              return insertMention(newComponent, quote);
-            });
-          }
+          return reply(post);
         }
       }));
     });
@@ -681,8 +732,8 @@ System.register('flarum/mentions/addPostReplyAction', ['flarum/extend', 'flarum/
       Button = _flarumComponentsButton.default;
     }, function (_flarumComponentsCommentPost) {
       CommentPost = _flarumComponentsCommentPost.default;
-    }, function (_flarumUtilsDiscussionControls) {
-      DiscussionControls = _flarumUtilsDiscussionControls.default;
+    }, function (_flarumMentionsUtilsReply) {
+      reply = _flarumMentionsUtilsReply.default;
     }],
     execute: function () {}
   };
@@ -690,6 +741,8 @@ System.register('flarum/mentions/addPostReplyAction', ['flarum/extend', 'flarum/
 'use strict';
 
 System.register('flarum/mentions/components/AutocompleteDropdown', ['flarum/Component'], function (_export, _context) {
+  "use strict";
+
   var Component, AutocompleteDropdown;
   return {
     setters: [function (_flarumComponent) {
@@ -743,39 +796,20 @@ System.register('flarum/mentions/components/AutocompleteDropdown', ['flarum/Comp
           }
         }, {
           key: 'navigate',
-          value: function navigate(e) {
+          value: function navigate(delta) {
             var _this2 = this;
 
-            if (!this.active) return;
-
-            switch (e.which) {
-              case 40:case 38:
-                // Down/Up
-                this.keyWasJustPressed = true;
-                this.setIndex(this.index + (e.which === 40 ? 1 : -1), true);
-                clearTimeout(this.keyWasJustPressedTimeout);
-                this.keyWasJustPressedTimeout = setTimeout(function () {
-                  return _this2.keyWasJustPressed = false;
-                }, 500);
-                e.preventDefault();
-                break;
-
-              case 13:case 9:
-                // Enter/Tab
-                this.$('li').eq(this.index).find('button').click();
-                e.preventDefault();
-                break;
-
-              case 27:
-                // Escape
-                this.hide();
-                e.stopPropagation();
-                e.preventDefault();
-                break;
-
-              default:
-              // no default
-            }
+            this.keyWasJustPressed = true;
+            this.setIndex(this.index + delta, true);
+            clearTimeout(this.keyWasJustPressedTimeout);
+            this.keyWasJustPressedTimeout = setTimeout(function () {
+              return _this2.keyWasJustPressed = false;
+            }, 500);
+          }
+        }, {
+          key: 'complete',
+          value: function complete() {
+            this.$('li').eq(this.index).find('button').click();
           }
         }, {
           key: 'setIndex',
@@ -826,6 +860,8 @@ System.register('flarum/mentions/components/AutocompleteDropdown', ['flarum/Comp
 'use strict';
 
 System.register('flarum/mentions/components/MentionsUserPage', ['flarum/components/PostsUserPage'], function (_export, _context) {
+  "use strict";
+
   var PostsUserPage, MentionsUserPage;
   return {
     setters: [function (_flarumComponentsPostsUserPage) {
@@ -863,6 +899,8 @@ System.register('flarum/mentions/components/MentionsUserPage', ['flarum/componen
 'use strict';
 
 System.register('flarum/mentions/components/PostMentionedNotification', ['flarum/components/Notification', 'flarum/helpers/username', 'flarum/helpers/punctuateSeries'], function (_export, _context) {
+  "use strict";
+
   var Notification, username, punctuateSeries, PostMentionedNotification;
   return {
     setters: [function (_flarumComponentsNotification) {
@@ -923,7 +961,87 @@ System.register('flarum/mentions/components/PostMentionedNotification', ['flarum
 });;
 'use strict';
 
+System.register('flarum/mentions/components/PostQuoteButton', ['flarum/components/Button', 'flarum/utils/extract', 'flarum/mentions/utils/reply'], function (_export, _context) {
+  "use strict";
+
+  var Button, extract, reply, PostQuoteButton;
+  return {
+    setters: [function (_flarumComponentsButton) {
+      Button = _flarumComponentsButton.default;
+    }, function (_flarumUtilsExtract) {
+      extract = _flarumUtilsExtract.default;
+    }, function (_flarumMentionsUtilsReply) {
+      reply = _flarumMentionsUtilsReply.default;
+    }],
+    execute: function () {
+      PostQuoteButton = function (_Button) {
+        babelHelpers.inherits(PostQuoteButton, _Button);
+
+        function PostQuoteButton() {
+          babelHelpers.classCallCheck(this, PostQuoteButton);
+          return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(PostQuoteButton).apply(this, arguments));
+        }
+
+        babelHelpers.createClass(PostQuoteButton, [{
+          key: 'view',
+          value: function view() {
+            var _this2 = this;
+
+            var post = extract(this.props, 'post');
+            var content = extract(this.props, 'content');
+
+            this.props.className = 'Button PostQuoteButton';
+            this.props.icon = 'quote-left';
+            this.props.children = app.translator.trans('flarum-mentions.forum.post.quote_button');
+            this.props.onclick = function () {
+              _this2.hide();
+              reply(post, content);
+            };
+            this.props.onmousedown = function (e) {
+              return e.stopPropagation();
+            };
+
+            return babelHelpers.get(Object.getPrototypeOf(PostQuoteButton.prototype), 'view', this).call(this);
+          }
+        }, {
+          key: 'config',
+          value: function config(isInitialized) {
+            if (isInitialized) return;
+
+            $(document).on('mousedown', this.hide.bind(this));
+          }
+        }, {
+          key: 'showStart',
+          value: function showStart(left, top) {
+            var $this = this.$();
+
+            $this.show().css('left', left).css('top', $(window).scrollTop() + top - $this.outerHeight() - 5);
+          }
+        }, {
+          key: 'showEnd',
+          value: function showEnd(right, bottom) {
+            var $this = this.$();
+
+            $this.show().css('left', right - $this.outerWidth()).css('top', $(window).scrollTop() + bottom + 5);
+          }
+        }, {
+          key: 'hide',
+          value: function hide() {
+            this.$().hide();
+          }
+        }]);
+        return PostQuoteButton;
+      }(Button);
+
+      _export('default', PostQuoteButton);
+    }
+  };
+});;
+'use strict';
+
 System.register('flarum/mentions/components/UserMentionedNotification', ['flarum/components/Notification'], function (_export, _context) {
+  "use strict";
+
   var Notification, UserMentionedNotification;
   return {
     setters: [function (_flarumComponentsNotification) {
@@ -972,8 +1090,10 @@ System.register('flarum/mentions/components/UserMentionedNotification', ['flarum
 });;
 'use strict';
 
-System.register('flarum/mentions/main', ['flarum/extend', 'flarum/app', 'flarum/components/NotificationGrid', 'flarum/utils/string', 'flarum/mentions/addPostMentionPreviews', 'flarum/mentions/addMentionedByList', 'flarum/mentions/addPostReplyAction', 'flarum/mentions/addComposerAutocomplete', 'flarum/mentions/components/PostMentionedNotification', 'flarum/mentions/components/UserMentionedNotification', 'flarum/components/UserPage', 'flarum/components/LinkButton', 'flarum/mentions/components/MentionsUserPage'], function (_export, _context) {
-  var extend, app, NotificationGrid, getPlainContent, addPostMentionPreviews, addMentionedByList, addPostReplyAction, addComposerAutocomplete, PostMentionedNotification, UserMentionedNotification, UserPage, LinkButton, MentionsUserPage;
+System.register('flarum/mentions/main', ['flarum/extend', 'flarum/app', 'flarum/components/NotificationGrid', 'flarum/utils/string', 'flarum/mentions/addPostMentionPreviews', 'flarum/mentions/addMentionedByList', 'flarum/mentions/addPostReplyAction', 'flarum/mentions/addPostQuoteButton', 'flarum/mentions/addComposerAutocomplete', 'flarum/mentions/components/PostMentionedNotification', 'flarum/mentions/components/UserMentionedNotification', 'flarum/components/UserPage', 'flarum/components/LinkButton', 'flarum/mentions/components/MentionsUserPage'], function (_export, _context) {
+  "use strict";
+
+  var extend, app, NotificationGrid, getPlainContent, addPostMentionPreviews, addMentionedByList, addPostReplyAction, addPostQuoteButton, addComposerAutocomplete, PostMentionedNotification, UserMentionedNotification, UserPage, LinkButton, MentionsUserPage;
   return {
     setters: [function (_flarumExtend) {
       extend = _flarumExtend.extend;
@@ -989,6 +1109,8 @@ System.register('flarum/mentions/main', ['flarum/extend', 'flarum/app', 'flarum/
       addMentionedByList = _flarumMentionsAddMentionedByList.default;
     }, function (_flarumMentionsAddPostReplyAction) {
       addPostReplyAction = _flarumMentionsAddPostReplyAction.default;
+    }, function (_flarumMentionsAddPostQuoteButton) {
+      addPostQuoteButton = _flarumMentionsAddPostQuoteButton.default;
     }, function (_flarumMentionsAddComposerAutocomplete) {
       addComposerAutocomplete = _flarumMentionsAddComposerAutocomplete.default;
     }, function (_flarumMentionsComponentsPostMentionedNotification) {
@@ -1016,6 +1138,9 @@ System.register('flarum/mentions/main', ['flarum/extend', 'flarum/app', 'flarum/
         // Add a 'reply' control to the footer of each post. When clicked, it will
         // open up the composer and add a post mention to its contents.
         addPostReplyAction();
+
+        // Show a Quote button when Post text is selected
+        addPostQuoteButton();
 
         // After typing '@' in the composer, show a dropdown suggesting a bunch of
         // posts or users that the user could mention.
@@ -1054,5 +1179,80 @@ System.register('flarum/mentions/main', ['flarum/extend', 'flarum/app', 'flarum/
         getPlainContent.removeSelectors.push('a.PostMention');
       });
     }
+  };
+});;
+'use strict';
+
+System.register('flarum/mentions/utils/reply', ['flarum/utils/DiscussionControls'], function (_export, _context) {
+  "use strict";
+
+  var DiscussionControls;
+
+
+  function insertMention(post, component, quote) {
+    var user = post.user();
+    var mention = '@' + (user ? user.username() : post.number()) + '#' + post.id() + ' ';
+
+    // If the composer is empty, then assume we're starting a new reply.
+    // In which case we don't want the user to have to confirm if they
+    // close the composer straight away.
+    if (!component.content()) {
+      component.props.originalContent = mention;
+    }
+
+    var cursorPosition = component.editor.getSelectionRange()[0];
+    var preceding = component.editor.value().slice(0, cursorPosition);
+    var precedingNewlines = preceding.length == 0 ? 0 : 3 - preceding.match(/(\n{0,2})$/)[0].length;
+
+    component.editor.insertAtCursor(Array(precedingNewlines).join('\n') + ( // Insert up to two newlines, depending on preceding whitespace
+    quote ? '> ' + mention + quote.trim().replace(/\n/g, '\n> ') + '\n\n' : mention));
+  }
+
+  function reply(post, quote) {
+    var component = app.composer.component;
+    if (component && component.props.post && component.props.post.discussion() === post.discussion()) {
+      insertMention(post, component, quote);
+    } else {
+      DiscussionControls.replyAction.call(post.discussion()).then(function (newComponent) {
+        return insertMention(post, newComponent, quote);
+      });
+    }
+  }
+
+  _export('default', reply);
+
+  return {
+    setters: [function (_flarumUtilsDiscussionControls) {
+      DiscussionControls = _flarumUtilsDiscussionControls.default;
+    }],
+    execute: function () {}
+  };
+});;
+"use strict";
+
+System.register("flarum/mentions/utils/selectedText", [], function (_export, _context) {
+  "use strict";
+
+  function selectedText(body) {
+    var selection = window.getSelection();
+    if (selection.rangeCount) {
+      var range = selection.getRangeAt(0);
+      var parent = range.commonAncestorContainer;
+      if (body[0] === parent || $.contains(body[0], parent)) {
+        var clone = $("<div>").append(range.cloneContents());
+        clone.find('img.emoji').replaceWith(function () {
+          return this.alt;
+        });
+        return clone.text();
+      }
+    }
+    return "";
+  }
+
+  _export("default", selectedText);
+
+  return {
+    setters: [],
+    execute: function () {}
   };
 });

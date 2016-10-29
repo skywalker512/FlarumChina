@@ -11,7 +11,7 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
 	protected $attrName = 'url';
-	protected $matchWww = \false;
+	public $matchWww = \false;
 	protected $tagName = 'URL';
 	protected function setUp()
 	{
@@ -26,10 +26,10 @@ class Configurator extends ConfiguratorBase
 	{
 		$anchor = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes()) . '://';
 		if ($this->matchWww)
-			$anchor = '(?:' . $anchor . '|www\.)';
+			$anchor = '(?:' . $anchor . '|www\\.)';
 		$config = array(
 			'attrName'   => $this->attrName,
-			'regexp'     => '#' . $anchor . '\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
+			'regexp'     => '#\\b' . $anchor . '\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
 			'tagName'    => $this->tagName
 		);
 		if (!$this->matchWww)

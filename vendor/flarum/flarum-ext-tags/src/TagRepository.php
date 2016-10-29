@@ -17,6 +17,16 @@ use Illuminate\Database\Eloquent\Builder;
 class TagRepository
 {
     /**
+     * Get a new query builder for the tags table.
+     *
+     * @return Builder
+     */
+    public function query()
+    {
+        return Tag::query();
+    }
+
+    /**
      * Find a tag by ID, optionally making sure it is visible to a certain
      * user, or throw an exception.
      *
@@ -41,7 +51,7 @@ class TagRepository
      */
     public function all(User $user = null)
     {
-        $query = Tag::newQuery();
+        $query = Tag::query();
 
         return $this->scopeVisibleTo($query, $user)->get();
     }

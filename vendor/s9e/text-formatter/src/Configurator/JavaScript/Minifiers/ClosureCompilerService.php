@@ -16,6 +16,7 @@ class ClosureCompilerService extends OnlineMinifier
 	public $url = 'http://closure-compiler.appspot.com/compile';
 	public function __construct()
 	{
+		parent::__construct();
 		$this->externs = \file_get_contents(__DIR__ . '/../externs.service.js');
 	}
 	public function getCacheDifferentiator()
@@ -78,7 +79,7 @@ class ClosureCompilerService extends OnlineMinifier
 	}
 	protected function query($body)
 	{
-		return $this->getHttpClient()->post(
+		return $this->httpClient->post(
 			$this->url,
 			array('Content-Type: application/x-www-form-urlencoded'),
 			$body

@@ -116,7 +116,7 @@ class Api {
     $resource_type = \Cloudinary::option_get($options, "resource_type", "image");
     $type = \Cloudinary::option_get($options, "type", "upload");
     $uri = array("resources", $resource_type, $type);
-    return $this->call_api("delete", $uri, array_merge(array("public_ids"=>$public_ids), $this->only($options, array("keep_original", "invalidate"))), $options);      
+    return $this->call_api("delete", $uri, array_merge(array("public_ids"=>$public_ids), $this->only($options, array("keep_original", "invalidate", "transformation"))), $options);
   }
 
   function delete_resources_by_prefix($prefix, $options=array()) {
@@ -239,6 +239,62 @@ class Api {
     $params = array("folder"=>$name);
     return $this->call_api("post", $uri, array_merge($params, $this->only($options, array("template"))), $options);    
   }
+
+  /**
+   * List all streaming profiles associated with the current customer
+   * @param array $options options
+   * @return Api\Response An array with a "data" key for results
+   */
+  function list_streaming_profiles($options=array()) {
+    return $this->call_api("get", array("streaming_profiles"), array(), $options);
+  }
+
+  /**
+   * Get the information of a single streaming profile
+   * @param $name the name of the profile
+   * @param array $options other options
+   * @return Api\Response An array with a "data" key for results
+   */
+  function get_streaming_profile($name, $options=array()) {
+    $uri = array("streaming_profiles/" . $name);
+    return $this->call_api("get", $uri, array(), $options);
+  }
+
+  /**
+   * Delete a streaming profile information. Predefined profiles are restored to the default setting.
+   * @param $name the name of the streaming profile to delete
+   * @param array $options additional options
+   * @return Api\Response
+   */
+  function delete_streaming_profile($name, $options=array()) {
+    $uri = array("streaming_profiles/" . $name);
+    return $this->call_api("delete", $uri, array(), $options);
+  }
+
+  /**
+   * Update an existing streaming profile
+   * @param $name the name of the prodile
+   * @param array $options additional options
+   * @return Api\Response
+   */
+  function update_streaming_profile($name, $options=array()) {
+    $uri = array("streaming_profiles/" . $name);
+    $params = $this->prepare_streaming_profile_params($options);
+    return $this->call_api("put", $uri, $params, $options);
+  }
+
+  /**
+   * Create a new streaming profile
+   * @param $name the name of the new profile. if the name is of a predefined profile, the profile will be modified.
+   * @param array $options additional options
+   * @return Api\Response
+   */
+  function create_streaming_profile($name, $options = array()) {
+    $uri = array("streaming_profiles");
+    $params = $this->prepare_streaming_profile_params($options);
+    $params["name"] = $name;
+    return $this->call_api("post", $uri, $params, $options);
+  }
     
   function call_api($method, $uri, $params, &$options) {
     $prefix = \Cloudinary::option_get($options, "upload_prefix", \Cloudinary::config_get("upload_prefix", "https://api.cloudinary.com"));
@@ -357,6 +413,23 @@ class Api {
   
   protected function transformation_string($transformation) {
     return is_string($transformation) ? $transformation : \Cloudinary::generate_transformation_string($transformation);
+  }
+
+  /**
+   * Prepare streaming profile parameters for API calls
+   * @param $options the options passed to the API
+   * @return array A single profile parameters
+   */
+  protected function prepare_streaming_profile_params($options) {
+    $params = $this->only($options, array("display_name"));
+    if (isset($options['representations'])) {
+      $array_map = array_map(
+        function ($representation) {
+          return array("transformation" => \Cloudinary::generate_transformation_string($representation));
+        }, $options['representations']);
+      $params["representations"] = json_encode($array_map);
+    }
+    return $params;
   }
 }
 

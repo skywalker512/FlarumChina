@@ -285,6 +285,8 @@ class Filesystem
      *
      * @param string $filename Path to the file
      *
+     * @return bool
+     *
      * @throws IOException When windows path is longer than 258 characters
      */
     private function isReadable($filename)
@@ -367,10 +369,14 @@ class Filesystem
         }
 
         // Determine how deep the start path is relative to the common path (ie, "web/bundles" = 2 levels)
-        $depth = count($startPathArr) - $index;
+        if (count($startPathArr) === 1 && $startPathArr[0] === '') {
+            $depth = 0;
+        } else {
+            $depth = count($startPathArr) - $index;
+        }
 
         // When we need to traverse from the start, and we are starting from a root path, don't add '../'
-        if ('/' === $startPath[0] && 0 === $index && 1 === $depth) {
+        if ('/' === $startPath[0] && 0 === $index && 0 === $depth) {
             $traverser = '';
         } else {
             // Repeated "../" for each level need to reach the common path
@@ -554,8 +560,7 @@ class Filesystem
             throw new IOException(sprintf('Failed to write file "%s".', $filename), 0, null, $filename);
         }
 
-        // Ignore for filesystems that do not support umask
-        @chmod($tmpFile, 0666);
+        @chmod($tmpFile, 0666 & ~umask());
         $this->rename($tmpFile, $filename, true);
     }
 

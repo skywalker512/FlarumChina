@@ -12,6 +12,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\MinifierList;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+
 class FirstAvailable extends Minifier implements ArrayAccess
 {
 	public function __call($methodName, $args)

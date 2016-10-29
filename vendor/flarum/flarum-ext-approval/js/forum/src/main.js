@@ -2,13 +2,21 @@ import { extend, override } from 'flarum/extend';
 import app from 'flarum/app';
 import Discussion from 'flarum/models/Discussion';
 import Post from 'flarum/models/Post';
+import Badge from 'flarum/components/Badge';
 import DiscussionListItem from 'flarum/components/DiscussionListItem';
+import PostComponent from 'flarum/components/Post';
 import CommentPost from 'flarum/components/CommentPost';
 import Button from 'flarum/components/Button';
 import PostControls from 'flarum/utils/PostControls';
 
 app.initializers.add('flarum-approval', () => {
   Discussion.prototype.isApproved = Discussion.attribute('isApproved');
+
+  extend(Discussion.prototype, 'badges', function(items) {
+    if (!this.isApproved() && !items.has('hidden')) {
+      items.add('awaitingApproval', <Badge type="awaitingApproval" icon="gavel" label={app.translator.trans('flarum-approval.forum.badge.awaiting_approval_tooltip')}/>);
+    }
+  });
 
   Post.prototype.isApproved = Post.attribute('isApproved');
   Post.prototype.canApprove = Post.attribute('canApprove');
@@ -19,9 +27,9 @@ app.initializers.add('flarum-approval', () => {
     }
   });
 
-  extend(CommentPost.prototype, 'attrs', function(attrs) {
-    if (!this.props.post.isApproved() && !this.props.post.isHidden()) {
-      attrs.className += ' CommentPost--unapproved';
+  extend(PostComponent.prototype, 'attrs', function(attrs) {
+    if (!this.props.post.isApproved()) {
+      attrs.className += ' Post--unapproved';
     }
   });
 
@@ -31,7 +39,7 @@ app.initializers.add('flarum-approval', () => {
     }
   });
 
-  override(CommentPost.prototype, 'flagReason', function(original, flag) {
+  override(PostComponent.prototype, 'flagReason', function(original, flag) {
     if (flag.type() === 'approval') {
       return app.translator.trans('flarum-approval.forum.post.awaiting_approval_text');
     }
@@ -52,5 +60,9 @@ app.initializers.add('flarum-approval', () => {
 
   PostControls.approveAction = function() {
     this.save({isApproved: true});
+
+    if (this.number() === 1) {
+      this.discussion().pushAttributes({isApproved: true});
+    }
   };
 }, -10); // set initializer priority to run after reports

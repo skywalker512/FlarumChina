@@ -6,3 +6,45 @@ flagrow-image-upload:
             loading: Envoi
             success: Terminé
             error: Erreur
+    admin:
+        permissions:
+            upload_images_label: Ajouter des images
+        upload_methods:
+            local: Local
+            imgur: Imgur
+            cloudinary: Cloudinary
+        labels:
+            upload_method: Méthode d'envoi
+            preferences:
+                title: Préférences générales
+                max_file_size: Taille d'image maximale (en kilobytes)
+            resize:
+                title: Redimensionnement d'image
+                toggle: Basculer les redimensionnement
+                max_width: Largeur maximale de l'image
+                max_height: Hauteur maximale de l'image
+            imgur:
+                title: Paramètres Imgur
+                client_id: Client-ID
+            local:
+                title: Paramètres de stockage local
+                cdn_url: URL du Content Delivery (fichiers préfixes)
+            cloudinary:
+                title: Paramètres Cloudinary
+                cloud_name: Nom du Cloud
+                api_key: Clé Api
+                api_secret: Secret Api
+        buttons:
+            save: Sauvegarder les paramètres
+        help_texts:
+            description: >
+                Paramètrer les services d'envoi d'image et les préférences.
+            upload_method: >
+                Ici vous pouvez sélectionner la méthode que vous voulez utiliser
+                pour envoyer les images. Quand vous en sélectionnez une
+                la carte de paramétrage correspondante sera affichée.
+            resize: >
+                Choisissez si vous voulez redimensionner vos images avant
+                qu'elles soient envoyées. Vous pouvez choisir une largeur maximale
+                ainsi qu'une hauteur, en pixels. Le processus de redimensionnement garde
+                le rapport d'aspect des images.

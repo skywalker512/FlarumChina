@@ -2,16 +2,18 @@ import Page from 'flarum/components/Page';
 import Button from 'flarum/components/Button';
 import Switch from 'flarum/components/Switch';
 import EditCustomCssModal from 'flarum/components/EditCustomCssModal';
+import EditCustomHeaderModal from 'flarum/components/EditCustomHeaderModal';
+import UploadImageButton from 'flarum/components/UploadImageButton';
 import saveSettings from 'flarum/utils/saveSettings';
 
 export default class AppearancePage extends Page {
   init() {
     super.init();
 
-    this.primaryColor = m.prop(app.settings.theme_primary_color);
-    this.secondaryColor = m.prop(app.settings.theme_secondary_color);
-    this.darkMode = m.prop(app.settings.theme_dark_mode === '1');
-    this.coloredHeader = m.prop(app.settings.theme_colored_header === '1');
+    this.primaryColor = m.prop(app.data.settings.theme_primary_color);
+    this.secondaryColor = m.prop(app.data.settings.theme_secondary_color);
+    this.darkMode = m.prop(app.data.settings.theme_dark_mode === '1');
+    this.coloredHeader = m.prop(app.data.settings.theme_colored_header === '1');
   }
 
   view() {
@@ -50,6 +52,34 @@ export default class AppearancePage extends Page {
               })}
             </fieldset>
           </form>
+
+          <fieldset>
+            <legend>{app.translator.trans('core.admin.appearance.logo_heading')}</legend>
+            <div className="helpText">
+              {app.translator.trans('core.admin.appearance.logo_text')}
+            </div>
+            <UploadImageButton name="logo"/>
+          </fieldset>
+
+          <fieldset>
+            <legend>{app.translator.trans('core.admin.appearance.favicon_heading')}</legend>
+            <div className="helpText">
+              {app.translator.trans('core.admin.appearance.favicon_text')}
+            </div>
+            <UploadImageButton name="favicon"/>
+          </fieldset>
+
+          <fieldset>
+            <legend>{app.translator.trans('core.admin.appearance.custom_header_heading')}</legend>
+            <div className="helpText">
+              {app.translator.trans('core.admin.appearance.custom_header_text')}
+            </div>
+            {Button.component({
+              className: 'Button',
+              children: app.translator.trans('core.admin.appearance.edit_header_button'),
+              onclick: () => app.modal.show(new EditCustomHeaderModal())
+            })}
+          </fieldset>
 
           <fieldset>
             <legend>{app.translator.trans('core.admin.appearance.custom_styles_heading')}</legend>

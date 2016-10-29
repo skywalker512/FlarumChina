@@ -98,7 +98,7 @@ class Configurator implements ConfigProvider
 			$this->addHTML5Rules($options);
 		if ($options['returnRenderer'])
 		{
-			$renderer = $this->getRenderer();
+			$renderer = $this->rendering->getRenderer();
 			if (isset($options['finalizeRenderer']))
 				\call_user_func($options['finalizeRenderer'], $renderer);
 			$return['renderer'] = $renderer;
@@ -107,14 +107,10 @@ class Configurator implements ConfigProvider
 		{
 			$config = $this->asConfig();
 			if ($options['returnJS'])
-			{
-				$jsConfig = $config;
-				ConfigHelper::filterVariants($jsConfig, 'JS');
-				$return['js'] = $this->javascript->getParser($jsConfig);
-			}
+				$return['js'] = $this->javascript->getParser(ConfigHelper::filterConfig($config, 'JS'));
 			if ($options['returnParser'])
 			{
-				ConfigHelper::filterVariants($config);
+				$config = ConfigHelper::filterConfig($config, 'PHP');
 				if ($options['optimizeConfig'])
 					ConfigHelper::optimizeArray($config);
 				$parser = new Parser($config);
@@ -124,16 +120,6 @@ class Configurator implements ConfigProvider
 			}
 		}
 		return $return;
-	}
-	public function getParser()
-	{
-		$config = $this->asConfig();
-		ConfigHelper::filterVariants($config);
-		return new Parser($config);
-	}
-	public function getRenderer()
-	{
-		return $this->rendering->getRenderer();
 	}
 	public function loadBundle($bundleName)
 	{
@@ -351,6 +337,17 @@ interface ConfigProvider
 * @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
+namespace s9e\TextFormatter\Configurator;
+interface FilterableConfigValue
+{
+	public function filterConfig($target);
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
 namespace s9e\TextFormatter\Configurator\Helpers;
 use DOMAttr;
 use RuntimeException;
@@ -554,29 +551,25 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 use RuntimeException;
 use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
-use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
 abstract class ConfigHelper
 {
-	public static function filterVariants(&$config, $variant = \null)
+	public static function filterConfig(array $config, $target = 'PHP')
 	{
+		$filteredConfig = array();
 		foreach ($config as $name => $value)
 		{
-			while ($value instanceof Variant)
+			if ($value instanceof FilterableConfigValue)
 			{
-				$value = $value->get($variant);
-				if ($value === \null)
-				{
-					unset($config[$name]);
-					continue 2;
-				}
+				$value = $value->filterConfig($target);
+				if (!isset($value))
+					continue;
 			}
-			if ($value instanceof Dictionary && $variant !== 'JS')
-				$value = (array) $value;
-			if (\is_array($value) || $value instanceof Traversable)
-				self::filterVariants($value, $variant);
-			$config[$name] = $value;
+			if (\is_array($value))
+				$value = self::filterConfig($value, $target);
+			$filteredConfig[$name] = $value;
 		}
+		return $filteredConfig;
 	}
 	public static function generateQuickMatchFromList(array $strings)
 	{
@@ -1446,7 +1439,7 @@ class TemplateForensics
 			$this->rootNodes[] = $elName;
 			if (!isset(self::$htmlElements[$elName]))
 				$elName = 'span';
-			if ($this->hasProperty($elName, 'b', $node))
+			if ($this->elementIsBlock($elName, $node))
 				$this->isBlock = \true;
 			$this->rootBitfields[] = $this->getBitfield($elName, 'c', $node);
 		}
@@ -1538,9 +1531,27 @@ class TemplateForensics
 				$this->isFormattingElement = $isFormattingElement;
 		}
 	}
+	protected function elementIsBlock($elName, DOMElement $node)
+	{
+		$style = $this->getStyle($node);
+		if (\preg_match('(\\bdisplay\\s*:\\s*block)i', $style))
+			return \true;
+		if (\preg_match('(\\bdisplay\\s*:\\s*inline)i', $style))
+			return \false;
+		return $this->hasProperty($elName, 'b', $node);
+	}
 	protected function evaluate($query, DOMElement $node)
 	{
 		return $this->xpath->evaluate('boolean(' . $query . ')', $node);
+	}
+	protected function getStyle(DOMElement $node)
+	{
+		$style = $node->getAttribute('style');
+		$xpath = new DOMXPath($node->ownerDocument);
+		$query = 'xsl:attribute[@name="style"]';
+		foreach ($xpath->query($query, $node) as $attribute)
+			$style .= ';' . $attribute->textContent;
+		return $style;
 	}
 	protected function getXSLElements($elName)
 	{
@@ -1728,55 +1739,110 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 abstract class TemplateHelper
 {
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
-	public static function loadTemplate($template)
+	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
 	{
-		$dom = new DOMDocument;
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
-		$useErrors = \libxml_use_internal_errors(\true);
-		$success   = $dom->loadXML($xml);
-		\libxml_use_internal_errors($useErrors);
-		if ($success)
-			return $dom;
-		$tmp = \preg_replace('(&(?![A-Za-z0-9]+;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template);
-		$tmp = \preg_replace_callback(
-			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
-			function ($m)
-			{
-				return \html_entity_decode($m[0], \ENT_NOQUOTES, 'UTF-8');
-			},
-			$tmp
-		);
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $tmp . '</xsl:template>';
-		$useErrors = \libxml_use_internal_errors(\true);
-		$success   = $dom->loadXML($xml);
-		\libxml_use_internal_errors($useErrors);
-		if ($success)
-			return $dom;
-		if (\strpos($template, '<xsl:') !== \false)
+		$xpath = new DOMXPath($dom);
+		$nodes = array();
+		foreach ($xpath->query('//@*') as $attribute)
+			if (\preg_match($regexp, $attribute->name))
+				$nodes[] = $attribute;
+		foreach ($xpath->query('//xsl:attribute') as $attribute)
+			if (\preg_match($regexp, $attribute->getAttribute('name')))
+				$nodes[] = $attribute;
+		foreach ($xpath->query('//xsl:copy-of') as $node)
 		{
-			$error = \libxml_get_last_error();
-			throw new InvalidXslException($error->message);
+			$expr = $node->getAttribute('select');
+			if (\preg_match('/^@(\\w+)$/', $expr, $m)
+			 && \preg_match($regexp, $m[1]))
+				$nodes[] = $node;
 		}
-		$html = '<html><body><div>' . $template . '</div></body></html>';
-		$useErrors = \libxml_use_internal_errors(\true);
-		$dom->loadHTML($html);
-		\libxml_use_internal_errors($useErrors);
-		$xml = self::innerXML($dom->documentElement->firstChild->firstChild);
-		return self::loadTemplate($xml);
+		return $nodes;
 	}
-	public static function saveTemplate(DOMDocument $dom)
+	public static function getCSSNodes(DOMDocument $dom)
 	{
-		return self::innerXML($dom->documentElement);
+		$regexp = '/^style$/i';
+		$nodes  = \array_merge(
+			self::getAttributesByRegexp($dom, $regexp),
+			self::getElementsByRegexp($dom, '/^style$/i')
+		);
+		return $nodes;
 	}
-	protected static function innerXML(DOMElement $element)
+	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
 	{
-		$xml = $element->ownerDocument->saveXML($element);
-		$pos = 1 + \strpos($xml, '>');
-		$len = \strrpos($xml, '<') - $pos;
-		if ($len < 1)
-			return '';
-		$xml = \substr($xml, $pos, $len);
-		return $xml;
+		$xpath = new DOMXPath($dom);
+		$nodes = array();
+		foreach ($xpath->query('//*') as $element)
+			if (\preg_match($regexp, $element->localName))
+				$nodes[] = $element;
+		foreach ($xpath->query('//xsl:element') as $element)
+			if (\preg_match($regexp, $element->getAttribute('name')))
+				$nodes[] = $element;
+		foreach ($xpath->query('//xsl:copy-of') as $node)
+		{
+			$expr = $node->getAttribute('select');
+			if (\preg_match('/^\\w+$/', $expr)
+			 && \preg_match($regexp, $expr))
+				$nodes[] = $node;
+		}
+		return $nodes;
+	}
+	public static function getJSNodes(DOMDocument $dom)
+	{
+		$regexp = '/^(?>data-s9e-livepreview-postprocess$|on)/i';
+		$nodes  = \array_merge(
+			self::getAttributesByRegexp($dom, $regexp),
+			self::getElementsByRegexp($dom, '/^script$/i')
+		);
+		return $nodes;
+	}
+	public static function getMetaElementsRegexp(array $templates)
+	{
+		$exprs = array();
+		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . \implode('', $templates) . '</xsl:template>';
+		$dom = new DOMDocument;
+		$dom->loadXML($xsl);
+		$xpath = new DOMXPath($dom);
+		$query = '//xsl:*/@*[contains("matchselectest", name())]';
+		foreach ($xpath->query($query) as $attribute)
+			$exprs[] = $attribute->value;
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*';
+		foreach ($xpath->query($query) as $attribute)
+			foreach (AVTHelper::parse($attribute->value) as $token)
+				if ($token[0] === 'expression')
+					$exprs[] = $token[1];
+		$tagNames = array(
+			'e' => \true,
+			'i' => \true,
+			's' => \true
+		);
+		foreach (\array_keys($tagNames) as $tagName)
+			if (isset($templates[$tagName]) && $templates[$tagName] !== '')
+				unset($tagNames[$tagName]);
+		$regexp = '(\\b(?<![$@])(' . \implode('|', \array_keys($tagNames)) . ')(?!-)\\b)';
+		\preg_match_all($regexp, \implode("\n", $exprs), $m);
+		foreach ($m[0] as $tagName)
+			unset($tagNames[$tagName]);
+		if (empty($tagNames))
+			return '((?!))';
+		return '(<' . RegexpBuilder::fromList(\array_keys($tagNames)) . '>[^<]*</[^>]+>)';
+	}
+	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
+	{
+		$xpath = new DOMXPath($dom);
+		$nodes = array();
+		foreach (self::getAttributesByRegexp($dom, $regexp) as $attribute)
+			if ($attribute->nodeType === \XML_ATTRIBUTE_NODE)
+			{
+				if (\strtolower($attribute->parentNode->localName) === 'embed')
+					$nodes[] = $attribute;
+			}
+			elseif ($xpath->evaluate('ancestor::embed', $attribute))
+				$nodes[] = $attribute;
+		foreach ($dom->getElementsByTagName('object') as $object)
+			foreach ($object->getElementsByTagName('param') as $param)
+				if (\preg_match($regexp, $param->getAttribute('name')))
+					$nodes[] = $param;
+		return $nodes;
 	}
 	public static function getParametersFromXSL($xsl)
 	{
@@ -1815,83 +1881,9 @@ abstract class TemplateHelper
 		\sort($paramNames);
 		return $paramNames;
 	}
-	public static function getAttributesByRegexp(DOMDocument $dom, $regexp)
-	{
-		$xpath = new DOMXPath($dom);
-		$nodes = array();
-		foreach ($xpath->query('//@*') as $attribute)
-			if (\preg_match($regexp, $attribute->name))
-				$nodes[] = $attribute;
-		foreach ($xpath->query('//xsl:attribute') as $attribute)
-			if (\preg_match($regexp, $attribute->getAttribute('name')))
-				$nodes[] = $attribute;
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-			if (\preg_match('/^@(\\w+)$/', $expr, $m)
-			 && \preg_match($regexp, $m[1]))
-				$nodes[] = $node;
-		}
-		return $nodes;
-	}
-	public static function getElementsByRegexp(DOMDocument $dom, $regexp)
-	{
-		$xpath = new DOMXPath($dom);
-		$nodes = array();
-		foreach ($xpath->query('//*') as $element)
-			if (\preg_match($regexp, $element->localName))
-				$nodes[] = $element;
-		foreach ($xpath->query('//xsl:element') as $element)
-			if (\preg_match($regexp, $element->getAttribute('name')))
-				$nodes[] = $element;
-		foreach ($xpath->query('//xsl:copy-of') as $node)
-		{
-			$expr = $node->getAttribute('select');
-			if (\preg_match('/^\\w+$/', $expr)
-			 && \preg_match($regexp, $expr))
-				$nodes[] = $node;
-		}
-		return $nodes;
-	}
-	public static function getObjectParamsByRegexp(DOMDocument $dom, $regexp)
-	{
-		$xpath = new DOMXPath($dom);
-		$nodes = array();
-		foreach (self::getAttributesByRegexp($dom, $regexp) as $attribute)
-			if ($attribute->nodeType === \XML_ATTRIBUTE_NODE)
-			{
-				if (\strtolower($attribute->parentNode->localName) === 'embed')
-					$nodes[] = $attribute;
-			}
-			elseif ($xpath->evaluate('ancestor::embed', $attribute))
-				$nodes[] = $attribute;
-		foreach ($dom->getElementsByTagName('object') as $object)
-			foreach ($object->getElementsByTagName('param') as $param)
-				if (\preg_match($regexp, $param->getAttribute('name')))
-					$nodes[] = $param;
-		return $nodes;
-	}
-	public static function getCSSNodes(DOMDocument $dom)
-	{
-		$regexp = '/^style$/i';
-		$nodes  = \array_merge(
-			self::getAttributesByRegexp($dom, $regexp),
-			self::getElementsByRegexp($dom, '/^style$/i')
-		);
-		return $nodes;
-	}
-	public static function getJSNodes(DOMDocument $dom)
-	{
-		$regexp = '/^(?>data-s9e-livepreview-postprocess$|on)/i';
-		$nodes  = \array_merge(
-			self::getAttributesByRegexp($dom, $regexp),
-			self::getElementsByRegexp($dom, '/^script$/i')
-		);
-		return $nodes;
-	}
 	public static function getURLNodes(DOMDocument $dom)
 	{
-		$regexp = '/(?:^(?:background|c(?>ite|lassid|odebase)|data|href|i(?>con|tem(?>id|prop|type))|longdesc|manifest|p(?>luginspage|oster|rofile)|usemap|(?>form)?action)|src)$/i';
+		$regexp = '/(?>^(?>action|background|c(?>ite|lassid|odebase)|data|formaction|href|icon|longdesc|manifest|p(?>luginspage|oster|rofile)|usemap)|src)$/i';
 		$nodes  = self::getAttributesByRegexp($dom, $regexp);
 		foreach (self::getObjectParamsByRegexp($dom, '/^(?:dataurl|movie)$/i') as $param)
 		{
@@ -1900,6 +1892,79 @@ abstract class TemplateHelper
 				$nodes[] = $node;
 		}
 		return $nodes;
+	}
+	public static function highlightNode(DOMNode $node, $prepend, $append)
+	{
+		$uniqid = \uniqid('_');
+		if ($node instanceof DOMAttr)
+			$node->value .= $uniqid;
+		elseif ($node instanceof DOMElement)
+			$node->setAttribute($uniqid, '');
+		elseif ($node instanceof DOMCharacterData
+		     || $node instanceof DOMProcessingInstruction)
+			$node->data .= $uniqid;
+		$dom = $node->ownerDocument;
+		$dom->formatOutput = \true;
+		$docXml = self::innerXML($dom->documentElement);
+		$docXml = \trim(\str_replace("\n  ", "\n", $docXml));
+		$nodeHtml = \htmlspecialchars(\trim($dom->saveXML($node)));
+		$docHtml  = \htmlspecialchars($docXml);
+		$html = \str_replace($nodeHtml, $prepend . $nodeHtml . $append, $docHtml);
+		if ($node instanceof DOMAttr)
+		{
+			$node->value = \substr($node->value, 0, -\strlen($uniqid));
+			$html = \str_replace($uniqid, '', $html);
+		}
+		elseif ($node instanceof DOMElement)
+		{
+			$node->removeAttribute($uniqid);
+			$html = \str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
+		}
+		elseif ($node instanceof DOMCharacterData
+		     || $node instanceof DOMProcessingInstruction)
+		{
+			$node->data .= $uniqid;
+			$html = \str_replace($uniqid, '', $html);
+		}
+		return $html;
+	}
+	public static function loadTemplate($template)
+	{
+		$dom = self::loadTemplateAsXML($template);
+		if ($dom)
+			return $dom;
+		$dom = self::loadTemplateAsXML(self::fixEntities($template));
+		if ($dom)
+			return $dom;
+		if (\strpos($template, '<xsl:') !== \false)
+		{
+			$error = \libxml_get_last_error();
+			throw new InvalidXslException($error->message);
+		}
+		return self::loadTemplateAsHTML($template);
+	}
+	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
+	{
+		$tagNames = array();
+		$expr = 'name()';
+		foreach ($templates as $tagName => $template)
+		{
+			$elName = \strtolower(\preg_replace('/^[^:]+:/', '', $tagName));
+			if ($template === '<' . $elName . '><xsl:apply-templates/></' . $elName . '>')
+			{
+				$tagNames[] = $tagName;
+				if (\strpos($tagName, ':') !== \false)
+					$expr = 'local-name()';
+			}
+		}
+		if (\count($tagNames) < $minCount)
+			return;
+		$chars = \preg_replace('/[^A-Z]+/', '', \count_chars(\implode('', $tagNames), 3));
+		if (\is_string($chars) && $chars !== '')
+			$expr = 'translate(' . $expr . ",'" . $chars . "','" . \strtolower($chars) . "')";
+		$template = '<xsl:element name="{' . $expr . '}"><xsl:apply-templates/></xsl:element>';
+		foreach ($tagNames as $tagName)
+			$templates[$tagName] = $template;
 	}
 	public static function replaceTokens($template, $regexp, $fn)
 	{
@@ -1974,94 +2039,61 @@ abstract class TemplateHelper
 		}
 		return self::saveTemplate($dom);
 	}
-	public static function highlightNode(DOMNode $node, $prepend, $append)
+	public static function saveTemplate(DOMDocument $dom)
 	{
-		$uniqid = \uniqid('_');
-		if ($node instanceof DOMAttr)
-			$node->value .= $uniqid;
-		elseif ($node instanceof DOMElement)
-			$node->setAttribute($uniqid, '');
-		elseif ($node instanceof DOMCharacterData
-		     || $node instanceof DOMProcessingInstruction)
-			$node->data .= $uniqid;
-		$dom = $node->ownerDocument;
-		$dom->formatOutput = \true;
-		$docXml = self::innerXML($dom->documentElement);
-		$docXml = \trim(\str_replace("\n  ", "\n", $docXml));
-		$nodeHtml = \htmlspecialchars(\trim($dom->saveXML($node)));
-		$docHtml  = \htmlspecialchars($docXml);
-		$html = \str_replace($nodeHtml, $prepend . $nodeHtml . $append, $docHtml);
-		if ($node instanceof DOMAttr)
-		{
-			$node->value = \substr($node->value, 0, -\strlen($uniqid));
-			$html = \str_replace($uniqid, '', $html);
-		}
-		elseif ($node instanceof DOMElement)
-		{
-			$node->removeAttribute($uniqid);
-			$html = \str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
-		}
-		elseif ($node instanceof DOMCharacterData
-		     || $node instanceof DOMProcessingInstruction)
-		{
-			$node->data .= $uniqid;
-			$html = \str_replace($uniqid, '', $html);
-		}
-		return $html;
+		return self::innerXML($dom->documentElement);
 	}
-	public static function getMetaElementsRegexp(array $templates)
+	protected static function fixEntities($template)
 	{
-		$exprs = array();
-		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . \implode('', $templates) . '</xsl:template>';
-		$dom = new DOMDocument;
-		$dom->loadXML($xsl);
-		$xpath = new DOMXPath($dom);
-		$query = '//xsl:*/@*[contains("matchselectest", name())]';
-		foreach ($xpath->query($query) as $attribute)
-			$exprs[] = $attribute->value;
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*';
-		foreach ($xpath->query($query) as $attribute)
-			foreach (AVTHelper::parse($attribute->value) as $token)
-				if ($token[0] === 'expression')
-					$exprs[] = $token[1];
-		$tagNames = array(
-			'e' => \true,
-			'i' => \true,
-			's' => \true
-		);
-		foreach (\array_keys($tagNames) as $tagName)
-			if (isset($templates[$tagName]) && $templates[$tagName] !== '')
-				unset($tagNames[$tagName]);
-		$regexp = '(\\b(?<![$@])(' . \implode('|', \array_keys($tagNames)) . ')(?!-)\\b)';
-		\preg_match_all($regexp, \implode("\n", $exprs), $m);
-		foreach ($m[0] as $tagName)
-			unset($tagNames[$tagName]);
-		if (empty($tagNames))
-			return '((?!))';
-		return '(<' . RegexpBuilder::fromList(\array_keys($tagNames)) . '>[^<]*</[^>]+>)';
-	}
-	public static function replaceHomogeneousTemplates(array &$templates, $minCount = 3)
-	{
-		$tagNames = array();
-		$expr = 'name()';
-		foreach ($templates as $tagName => $template)
-		{
-			$elName = \strtolower(\preg_replace('/^[^:]+:/', '', $tagName));
-			if ($template === '<' . $elName . '><xsl:apply-templates/></' . $elName . '>')
+		return \preg_replace_callback(
+			'(&(?!quot;|amp;|apos;|lt;|gt;)\\w+;)',
+			function ($m)
 			{
-				$tagNames[] = $tagName;
-				if (\strpos($tagName, ':') !== \false)
-					$expr = 'local-name()';
-			}
-		}
-		if (\count($tagNames) < $minCount)
-			return;
-		$chars = \preg_replace('/[^A-Z]+/', '', \count_chars(\implode('', $tagNames), 3));
-		if (\is_string($chars) && $chars !== '')
-			$expr = 'translate(' . $expr . ",'" . $chars . "','" . \strtolower($chars) . "')";
-		$template = '<xsl:element name="{' . $expr . '}"><xsl:apply-templates/></xsl:element>';
-		foreach ($tagNames as $tagName)
-			$templates[$tagName] = $template;
+				return \html_entity_decode($m[0], \ENT_NOQUOTES, 'UTF-8');
+			},
+			\preg_replace('(&(?![A-Za-z0-9]+;|#\\d+;|#x[A-Fa-f0-9]+;))', '&amp;', $template)
+		);
+	}
+	protected static function innerXML(DOMElement $element)
+	{
+		$xml = $element->ownerDocument->saveXML($element);
+		$pos = 1 + \strpos($xml, '>');
+		$len = \strrpos($xml, '<') - $pos;
+		if ($len < 1)
+			return '';
+		$xml = \substr($xml, $pos, $len);
+		return $xml;
+	}
+	protected static function loadTemplateAsHTML($template)
+	{
+		$dom  = new DOMDocument;
+		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
+		$useErrors = \libxml_use_internal_errors(\true);
+		$dom->loadHTML($html);
+		self::removeInvalidAttributes($dom);
+		\libxml_use_internal_errors($useErrors);
+		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . self::innerXML($dom->documentElement->firstChild->firstChild) . '</xsl:template>';
+		$useErrors = \libxml_use_internal_errors(\true);
+		$dom->loadXML($xml);
+		\libxml_use_internal_errors($useErrors);
+		return $dom;
+	}
+	protected static function loadTemplateAsXML($template)
+	{
+		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
+		$useErrors = \libxml_use_internal_errors(\true);
+		$dom       = new DOMDocument;
+		$success   = $dom->loadXML($xml);
+		self::removeInvalidAttributes($dom);
+		\libxml_use_internal_errors($useErrors);
+		return ($success) ? $dom : \false;
+	}
+	protected static function removeInvalidAttributes(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+		foreach ($xpath->query('//@*') as $attribute)
+			if (!\preg_match('(^(?:[-\\w]+:)?(?!\\d)[-\\w]+$)D', $attribute->nodeName))
+				$attribute->parentNode->removeAttributeNode($attribute);
 	}
 }
 
@@ -2684,58 +2716,6 @@ class Template
 		$this->forensics    = \null;
 		$this->template     = (string) $template;
 		$this->isNormalized = \false;
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
-namespace s9e\TextFormatter\Configurator\Items;
-use InvalidArgumentException;
-class Variant
-{
-	protected $defaultValue;
-	protected $variants = array();
-	public function __construct($value = \null, array $variants = array())
-	{
-		if ($value instanceof self)
-		{
-			$this->defaultValue = $value->defaultValue;
-			$this->variants     = $value->variants;
-		}
-		else
-			$this->defaultValue = $value;
-		foreach ($variants as $k => $v)
-			$this->set($k, $v);
-	}
-	public function __toString()
-	{
-		return (string) $this->defaultValue;
-	}
-	public function get($variant = \null)
-	{
-		if (isset($variant) && isset($this->variants[$variant]))
-		{
-			list($isDynamic, $value) = $this->variants[$variant];
-			return ($isDynamic) ? \call_user_func($value) : $value;
-		}
-		return $this->defaultValue;
-	}
-	public function has($variant)
-	{
-		return isset($this->variants[$variant]);
-	}
-	public function set($variant, $value)
-	{
-		$this->variants[$variant] = array(\false, $value);
-	}
-	public function setDynamic($variant, $callback)
-	{
-		if (!\is_callable($callback))
-			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
-		$this->variants[$variant] = array(\true, $callback);
 	}
 }
 
@@ -3419,7 +3399,7 @@ class Quick
 			$php[] = '		self::$attributes = array();';
 		$regexp  = '(<(?:(?!/)(';
 		$regexp .= ($tagNames) ? RegexpBuilder::fromList($tagNames) : '(?!)';
-		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)';
+		$regexp .= ')(?: [^>]*)?>.*?</\\1|(/?(?!br/|p>)[^ />]+)[^>]*?(/)?)>)s';
 		$php[] = '		$html = preg_replace_callback(';
 		$php[] = '			' . \var_export($regexp, \true) . ',';
 		$php[] = "			array(\$this, 'quick'),";
@@ -3482,7 +3462,7 @@ class Quick
 			$php[] = '		if (isset(self::$dynamic[$id]))';
 			$php[] = '		{';
 			$php[] = '			list($match, $replace) = self::$dynamic[$id];';
-			$php[] = '			return preg_replace($match, $replace, $m[0], 1, $cnt);';
+			$php[] = '			return preg_replace($match, $replace, $m[0], 1);';
 			$php[] = '		}';
 			$php[] = '';
 		}
@@ -3526,15 +3506,12 @@ class Quick
 	}
 	protected static function export(array $arr)
 	{
+		$exportKeys = (\array_keys($arr) !== \range(0, \count($arr) - 1));
 		\ksort($arr);
 		$entries = array();
-		$naturalKey = 0;
 		foreach ($arr as $k => $v)
-		{
-			$entries[] = (($k === $naturalKey) ? '' : \var_export($k, \true) . '=>')
+			$entries[] = (($exportKeys) ? \var_export($k, \true) . '=>' : '')
 			           . ((\is_array($v)) ? self::export($v) : \var_export($v, \true));
-			$naturalKey = $k + 1;
-		}
 		return 'array(' . \implode(',', $entries) . ')';
 	}
 	public static function getRenderingStrategy($php)
@@ -4192,6 +4169,8 @@ class XPathConvertor
 			return '!empty($this->params[' . \var_export($m[1], \true) . '])';
 		if (\preg_match('#^not\\(\\$(\\w+)\\)$#', $expr, $m))
 			return 'empty($this->params[' . \var_export($m[1], \true) . '])';
+		if (\preg_match('#^([$@][-\\w]+)\\s*([<>])\\s*(\\d+)$#', $expr, $m))
+			return $this->convertXPath($m[1]) . $m[2] . $m[3];
 		if (!\preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
 			$expr = 'boolean(' . $expr . ')';
 		return $this->convertXPath($expr);
@@ -5382,7 +5361,6 @@ namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
 class ProgrammableCallback implements ConfigProvider
@@ -5454,8 +5432,7 @@ class ProgrammableCallback implements ConfigProvider
 				$config['params'][$k] = \null;
 		if (isset($config['params']))
 			$config['params'] = ConfigHelper::toArray($config['params'], \true, \true);
-		$config['js'] = new Variant;
-		$config['js']->set('JS', $this->js);
+		$config['js'] = new Code($this->js);
 		return $config;
 	}
 	protected function autoloadJS()
@@ -5488,26 +5465,19 @@ class ProgrammableCallback implements ConfigProvider
 namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
-use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
-class Regexp extends Variant implements ConfigProvider
+class Regexp implements ConfigProvider, FilterableConfigValue
 {
 	protected $isGlobal;
+	protected $jsRegexp;
 	protected $regexp;
 	public function __construct($regexp, $isGlobal = \false)
 	{
-		$_this = $this;
 		if (@\preg_match($regexp, '') === \false)
 			throw new InvalidArgumentException('Invalid regular expression ' . \var_export($regexp, \true));
-		parent::__construct($regexp);
-		$this->setDynamic(
-			'JS',
-			function () use ($_this)
-			{
-				return $_this->toJS();
-			}
-		);
 		$this->regexp   = $regexp;
 		$this->isGlobal = $isGlobal;
 	}
@@ -5519,9 +5489,19 @@ class Regexp extends Variant implements ConfigProvider
 	{
 		return $this;
 	}
+	public function filterConfig($target)
+	{
+		return ($target === 'JS') ? new Code($this->getJS()) : (string) $this;
+	}
 	public function getCaptureNames()
 	{
 		return RegexpParser::getCaptureNames($this->regexp);
+	}
+	public function getJS()
+	{
+		if (!isset($this->jsRegexp))
+			$this->jsRegexp = RegexpConvertor::toJS($this->regexp, $this->isGlobal);
+		return $this->jsRegexp;
 	}
 	public function getNamedCaptures()
 	{
@@ -5534,10 +5514,6 @@ class Regexp extends Variant implements ConfigProvider
 		foreach ($this->getNamedCapturesExpressions($regexpInfo['tokens']) as $name => $expr)
 			$captures[$name] = $start . $expr . $end;
 		return $captures;
-	}
-	public function toJS()
-	{
-		return RegexpConvertor::toJS($this->regexp, $this->isGlobal);
 	}
 	protected function getNamedCapturesExpressions(array $tokens)
 	{
@@ -5552,6 +5528,10 @@ class Regexp extends Variant implements ConfigProvider
 			$exprs[$token['name']] = $expr;
 		}
 		return $exprs;
+	}
+	public function setJS($jsRegexp)
+	{
+		$this->jsRegexp = $jsRegexp;
 	}
 }
 
@@ -5751,6 +5731,30 @@ class Tag implements ConfigProvider
 	public function unsetTemplate()
 	{
 		unset($this->template);
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\FilterableConfigValue;
+class Code implements FilterableConfigValue
+{
+	public $code;
+	public function __construct($code)
+	{
+		$this->code = $code;
+	}
+	public function __toString()
+	{
+		return (string) $this->code;
+	}
+	public function filterConfig($target)
+	{
+		return ($target === 'JS') ? $this : \null;
 	}
 }
 
@@ -7467,10 +7471,13 @@ class OptimizeChoose extends TemplateNormalization
 	}
 	protected function optimizeChooseElement()
 	{
-		$this->optimizeCommonFirstChild();
-		$this->optimizeCommonLastChild();
-		$this->optimizeCommonOnlyChild();
-		$this->optimizeEmptyOtherwise();
+		if ($this->hasOtherwise())
+		{
+			$this->optimizeCommonFirstChild();
+			$this->optimizeCommonLastChild();
+			$this->optimizeCommonOnlyChild();
+			$this->optimizeEmptyOtherwise();
+		}
 		if ($this->hasNoContent())
 			$this->choose->parentNode->removeChild($this->choose);
 		else
@@ -7478,21 +7485,18 @@ class OptimizeChoose extends TemplateNormalization
 	}
 	protected function optimizeCommonFirstChild()
 	{
-		if ($this->hasOtherwise())
-			while ($this->matchBranches('firstChild'))
-				$this->moveFirstChildBefore();
+		while ($this->matchBranches('firstChild'))
+			$this->moveFirstChildBefore();
 	}
 	protected function optimizeCommonLastChild()
 	{
-		if ($this->hasOtherwise())
-			while ($this->matchBranches('lastChild'))
-				$this->moveLastChildAfter();
+		while ($this->matchBranches('lastChild'))
+			$this->moveLastChildAfter();
 	}
 	protected function optimizeCommonOnlyChild()
 	{
-		if ($this->hasOtherwise())
-			while ($this->matchOnlyChild())
-				$this->reparentChild();
+		while ($this->matchOnlyChild())
+			$this->reparentChild();
 	}
 	protected function optimizeEmptyOtherwise()
 	{
@@ -7912,7 +7916,6 @@ use ArrayAccess;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Parser;
@@ -8053,6 +8056,10 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function closeParent($tagName)
 	{
 		return $this->addTargetedRule('closeParent', $tagName);
+	}
+	public function createChild($tagName)
+	{
+		return $this->addTargetedRule('createChild', $tagName);
 	}
 	public function createParagraphs($bool = \true)
 	{
@@ -8472,7 +8479,6 @@ namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class PluginCollection extends NormalizedCollection
 {
@@ -8521,11 +8527,6 @@ class PluginCollection extends NormalizedCollection
 				unset($pluginConfig['quickMatch']);
 			if (!isset($pluginConfig['regexp']))
 				unset($pluginConfig['regexpLimit']);
-			if (!isset($pluginConfig['parser']))
-			{
-				$pluginConfig['parser'] = new Variant;
-				$pluginConfig['parser']->setDynamic('JS', array($plugin, 'getJSParser'));
-			}
 			$className = 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
 			if ($pluginConfig['className'] === $className)
 				unset($pluginConfig['className']);

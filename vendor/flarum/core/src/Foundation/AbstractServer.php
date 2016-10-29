@@ -18,9 +18,24 @@ use Monolog\Logger;
 abstract class AbstractServer
 {
     /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
      * @var string
      */
-    protected $path;
+    protected $basePath;
+
+    /**
+     * @var string
+     */
+    protected $publicPath;
+
+    /**
+     * @var string
+     */
+    protected $storagePath;
 
     /**
      * @var array
@@ -28,13 +43,28 @@ abstract class AbstractServer
     protected $config;
 
     /**
-     * @param string $path
+     * @var callable[]
      */
-    public function __construct($path)
-    {
-        $this->path = $path;
+    protected $extendCallbacks = [];
 
-        if (file_exists($file = $this->path.'/config.php')) {
+    /**
+     * @param null $basePath
+     * @param null $publicPath
+     */
+    public function __construct($basePath = null, $publicPath = null)
+    {
+        if ($basePath === null) {
+            $basePath = getcwd();
+        }
+
+        if ($publicPath === null) {
+            $publicPath = $basePath;
+        }
+
+        $this->basePath = $basePath;
+        $this->publicPath = $publicPath;
+
+        if (file_exists($file = $this->basePath.'/config.php')) {
             $this->config = include $file;
         }
     }
@@ -42,17 +72,49 @@ abstract class AbstractServer
     /**
      * @return string
      */
-    public function getPath()
+    public function getBasePath()
     {
-        return $this->path;
+        return $this->basePath;
     }
 
     /**
-     * @param string $path
+     * @return string
      */
-    public function setPath($path)
+    public function getPublicPath()
     {
-        $this->path = $path;
+        return $this->publicPath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStoragePath()
+    {
+        return $this->storagePath;
+    }
+
+    /**
+     * @param $basePath
+     */
+    public function setBasePath($basePath)
+    {
+        $this->basePath = $basePath;
+    }
+
+    /**
+     * @param $publicPath
+     */
+    public function setPublicPath($publicPath)
+    {
+        $this->publicPath = $publicPath;
+    }
+
+    /**
+     * @param $storagePath
+     */
+    public function setStoragePath($storagePath)
+    {
+        $this->storagePath = $storagePath;
     }
 
     /**
@@ -72,13 +134,29 @@ abstract class AbstractServer
     }
 
     /**
+     * @param callable $callback
+     */
+    public function extend(callable $callback)
+    {
+        $this->extendCallbacks[] = $callback;
+    }
+
+    /**
      * @return Application
      */
     protected function getApp()
     {
+        if ($this->app !== null) {
+            return $this->app;
+        }
+
         date_default_timezone_set('UTC');
 
-        $app = new Application($this->path);
+        $app = new Application($this->basePath, $this->publicPath);
+
+        if ($this->storagePath) {
+            $app->useStoragePath($this->storagePath);
+        }
 
         $app->instance('env', 'production');
         $app->instance('flarum.config', $this->config);
@@ -86,11 +164,12 @@ abstract class AbstractServer
 
         $this->registerLogger($app);
 
+        $this->registerCache($app);
+
         $app->register('Flarum\Database\DatabaseServiceProvider');
         $app->register('Flarum\Settings\SettingsServiceProvider');
         $app->register('Flarum\Locale\LocaleServiceProvider');
         $app->register('Illuminate\Bus\BusServiceProvider');
-        $app->register('Illuminate\Cache\CacheServiceProvider');
         $app->register('Illuminate\Filesystem\FilesystemServiceProvider');
         $app->register('Illuminate\Hashing\HashServiceProvider');
         $app->register('Illuminate\Mail\MailServiceProvider');
@@ -113,10 +192,17 @@ abstract class AbstractServer
             $app->register('Flarum\Api\ApiServiceProvider');
             $app->register('Flarum\Forum\ForumServiceProvider');
             $app->register('Flarum\Admin\AdminServiceProvider');
+
+            foreach ($this->extendCallbacks as $callback) {
+                $app->call($callback);
+            }
+
             $app->register('Flarum\Extension\ExtensionServiceProvider');
         }
 
         $app->boot();
+
+        $this->app = $app;
 
         return $app;
     }
@@ -134,16 +220,6 @@ abstract class AbstractServer
             ],
             'mail' => [
                 'driver' => 'mail',
-            ],
-            'cache' => [
-                'default' => 'file',
-                'stores' => [
-                    'file' => [
-                        'driver' => 'file',
-                        'path'   => $app->storagePath().'/cache',
-                    ],
-                ],
-                'prefix' => 'flarum',
             ],
             'filesystems' => [
                 'default' => 'local',
@@ -173,5 +249,25 @@ abstract class AbstractServer
 
         $app->instance('log', $logger);
         $app->alias('log', 'Psr\Log\LoggerInterface');
+    }
+
+    /**
+     * @param Application $app
+     */
+    protected function registerCache(Application $app)
+    {
+        $app->singleton('cache.store', function ($app) {
+            return new \Illuminate\Cache\Repository($app->make('cache.filestore'));
+        });
+
+        $app->singleton('cache.filestore', function ($app) {
+            return new \Illuminate\Cache\FileStore(
+                new \Illuminate\Filesystem\Filesystem(),
+                $app->storagePath().'/cache'
+            );
+        });
+
+        $app->alias('cache.filestore', 'Illuminate\Contracts\Cache\Store');
+        $app->alias('cache.store', 'Illuminate\Contracts\Cache\Repository');
     }
 }

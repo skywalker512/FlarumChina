@@ -72,12 +72,26 @@ class Document implements JsonSerializable
 
             if ($includeParent) {
                 $included = $this->mergeResource($included, $resource);
+            } else {
+                $type = $resource->getType();
+                $id = $resource->getId();
             }
 
-            foreach ($resource->getRelationships() as $relationship) {
+            foreach ($resource->getUnfilteredRelationships() as $relationship) {
                 $includedElement = $relationship->getData();
 
+                if (! $includedElement instanceof ElementInterface) {
+                    continue;
+                }
+
                 foreach ($this->getIncluded($includedElement, true) as $child) {
+                    // If this resource is the same as the top-level "data"
+                    // resource, then we don't want it to show up again in the
+                    // "included" array.
+                    if (! $includeParent && $child->getType() === $type && $child->getId() === $id) {
+                        continue;
+                    }
+
                     $included = $this->mergeResource($included, $child);
                 }
             }
@@ -85,7 +99,7 @@ class Document implements JsonSerializable
 
         $flattened = [];
 
-        array_walk_recursive($included, function($a) use (&$flattened) {
+        array_walk_recursive($included, function ($a) use (&$flattened) {
             $flattened[] = $a;
         });
 

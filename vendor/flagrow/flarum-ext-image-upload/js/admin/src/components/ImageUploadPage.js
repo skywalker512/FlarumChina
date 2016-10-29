@@ -1,10 +1,10 @@
-import Component from 'flarum/Component';
-import Button from 'flarum/components/Button';
-import saveSettings from 'flarum/utils/saveSettings';
-import Alert from 'flarum/components/Alert';
-import FieldSet from 'flarum/components/FieldSet';
-import Select from 'flarum/components/Select';
-import Switch from 'flarum/components/Switch';
+import Component from "flarum/Component";
+import Button from "flarum/components/Button";
+import saveSettings from "flarum/utils/saveSettings";
+import Alert from "flarum/components/Alert";
+import FieldSet from "flarum/components/FieldSet";
+import Select from "flarum/components/Select";
+import Switch from "flarum/components/Switch";
 
 export default class ImageUploadPage extends Component {
 
@@ -40,7 +40,7 @@ export default class ImageUploadPage extends Component {
         this.settingsPrefix = 'flagrow.image-upload';
 
         // get the saved settings from the database
-        const settings = app.settings;
+        const settings = app.data.settings;
 
         // set the upload methods
         this.uploadMethodOptions = settings[this.addPrefix('availableUploadMethods')];
@@ -183,8 +183,8 @@ export default class ImageUploadPage extends Component {
     * @returns bool
     */
     changed() {
-        var fieldsCheck = this.fields.some(key => this.values[key]() !== app.settings[this.addPrefix(key)]);
-        var checkboxesCheck = this.checkboxes.some(key => this.values[key]() !== (app.settings[this.addPrefix(key)] == '1'));
+        var fieldsCheck = this.fields.some(key => this.values[key]() !== app.data.settings[this.addPrefix(key)]);
+        var checkboxesCheck = this.checkboxes.some(key => this.values[key]() !== (app.data.settings[this.addPrefix(key)] == '1'));
         return fieldsCheck || checkboxesCheck;
     }
 
@@ -212,15 +212,20 @@ export default class ImageUploadPage extends Component {
 
         // actually saves everything in the database
         saveSettings(settings)
-        .then(() => {
-            // on succes, show an alert
-            app.alerts.show(this.successAlert = new Alert({type: 'success', children: app.translator.trans('core.admin.basics.saved_message')}));
-        })
-        .finally(() => {
-            // return to the initial state and redraw the page
-            this.loading = false;
-            m.redraw();
-        });
+            .then(() => {
+                // on succes, show an alert
+                app.alerts.show(this.successAlert = new Alert({
+                    type: 'success',
+                    children: app.translator.trans('core.admin.basics.saved_message')
+                }));
+            })
+            .catch(() => {
+            })
+            .then(() => {
+                // return to the initial state and redraw the page
+                this.loading = false;
+                m.redraw();
+            });
     }
 
     /**

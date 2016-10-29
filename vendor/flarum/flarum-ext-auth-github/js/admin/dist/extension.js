@@ -1,6 +1,8 @@
 'use strict';
 
 System.register('flarum/auth/github/components/GithubSettingsModal', ['flarum/components/SettingsModal'], function (_export, _context) {
+  "use strict";
+
   var SettingsModal, GithubSettingsModal;
   return {
     setters: [function (_flarumComponentsSettingsModal) {
@@ -59,6 +61,8 @@ System.register('flarum/auth/github/components/GithubSettingsModal', ['flarum/co
 'use strict';
 
 System.register('flarum/auth/github/main', ['flarum/app', 'flarum/auth/github/components/GithubSettingsModal'], function (_export, _context) {
+  "use strict";
+
   var app, GithubSettingsModal;
   return {
     setters: [function (_flarumApp) {

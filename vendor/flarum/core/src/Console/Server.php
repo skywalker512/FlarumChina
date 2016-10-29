@@ -11,8 +11,8 @@
 
 namespace Flarum\Console;
 
-use Flarum\Console\Command\GenerateExtensionCommand;
 use Flarum\Console\Command\GenerateMigrationCommand;
+use Flarum\Debug\Console\CacheClearCommand;
 use Flarum\Debug\Console\InfoCommand;
 use Flarum\Foundation\AbstractServer;
 use Flarum\Install\Console\InstallCommand;
@@ -41,15 +41,20 @@ class Server extends AbstractServer
         $commands = [
             InstallCommand::class,
             MigrateCommand::class,
-            InfoCommand::class,
-            GenerateExtensionCommand::class,
             GenerateMigrationCommand::class,
         ];
+
+        if ($app->isInstalled()) {
+            $commands = array_merge($commands, [
+                InfoCommand::class,
+                CacheClearCommand::class
+            ]);
+        }
 
         foreach ($commands as $command) {
             $console->add($app->make(
                 $command,
-                ['config' => $app->make('flarum.config')]
+                ['config' => $app->isInstalled() ? $app->make('flarum.config') : []]
             ));
         }
 

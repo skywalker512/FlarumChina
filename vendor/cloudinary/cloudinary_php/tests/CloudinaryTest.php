@@ -111,6 +111,8 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
     // should use x, y, radius, prefix, gravity and quality from $options
     $options = array("x" => 1, "y" => 2, "radius" => 3, "gravity" => "center", "quality" => 0.4, "prefix" => "a", "opacity" => 20);
     $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "g_center,o_20,p_a,q_0.4,r_3,x_1,y_2/test");
+    $options = array("gravity" => "auto", "crop" => "crop", "width" => 0.5);
+    $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_crop,g_auto,w_0.5/test");
   }
 
     public function test_quality() {
@@ -333,6 +335,11 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
       $this->cloudinary_url_assertion("test", array( "width" => "auto:breakpoints", "crop" => 'fill' ), CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_fill,w_auto:breakpoints/test", array ('responsive' => true));
       $this->cloudinary_url_assertion("test", array( "width" => "auto:breakpoints_100_1900_20_15", "crop" => 'fill' ), CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_fill,w_auto:breakpoints_100_1900_20_15/test", array ('responsive' => true));
       $this->cloudinary_url_assertion("test", array( "width" => "auto:breakpoints:json", "crop" => 'fill' ), CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_fill,w_auto:breakpoints:json/test", array ('responsive' => true));
+  }
+  public function test_original_width_and_height() {
+    $options = array("crop" => "crop", "width"=> "ow", "height"=>"oh");
+    $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_crop,h_oh,w_ow/test");
+
   }
     public function shared_client_hints($options, $message = ''){
         $tag = cl_image_tag('sample.jpg', $options);

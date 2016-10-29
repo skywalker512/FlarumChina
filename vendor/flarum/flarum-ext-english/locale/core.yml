@@ -18,11 +18,18 @@ core:
       colored_header_label: Colored Header
       colors_heading: Colors
       colors_text: "Choose two colors to theme your forum with. The first will be used as a highlight color, while the second will be used to style background elements."
+      custom_header_heading: Custom Header
+      custom_header_text: "Add HTML to be displayed at the very top of the page, above Flarum's own header."
       custom_styles_heading: Custom Styles
       custom_styles_text: Customize your forum's appearance by adding your own LESS/CSS code to be applied on top of Flarum's default styles.
       dark_mode_label: Dark Mode
       edit_css_button: Edit Custom CSS
+      edit_header_button: Edit Custom Header
       enter_hex_message: Please enter a hexadecimal color code.
+      favicon_heading: Favicon
+      favicon_text: Upload an image to be displayed as the forum's shortcut icon.
+      logo_heading: Logo
+      logo_text: Upload an image to be displayed in place of the forum title.
       submit_button: => core.ref.save_changes
 
     # These translations are used in the Basics page.
@@ -69,11 +76,31 @@ core:
       submit_button: => core.ref.save_changes
       title: Create Group
 
+    # These translations are used in the Edit Custom Header modal dialog.
+    edit_header:
+      customize_text: "Add HTML to be displayed at the very top of the page, above Flarum's own header."
+      submit_button: => core.ref.save_changes
+      title: Edit Custom Header
+
+    # These translations are used in the email page of the admin interface.
+    email:
+      account_heading: SMTP Account
+      addresses_heading: Addresses
+      driver_label: Driver
+      encryption_label: Encryption
+      from_label: Sender
+      heading: => core.ref.email
+      host_label: Host
+      password_label: => core.ref.password
+      port_label: Port
+      server_heading: SMTP Server
+      submit_button: => core.ref.save_changes
+      text: Configure the SMTP settings and addresses your forum will use to send email.
+      username_label: => core.ref.username
+
     # These translations are used in the Extensions page.
     extensions:
       add_button: Add Extension
-      disable_button: Disable
-      enable_button: Enable
       settings_button: => core.ref.settings
       uninstall_button: Uninstall
 
@@ -93,6 +120,8 @@ core:
       basics_text: "Set your forum title, language, and other basic settings."
       dashboard_button: Dashboard
       dashboard_text: Your forum at a glance.
+      email_button: => core.ref.email
+      email_text: "Configure your forum's email settings."
       extensions_button: Extensions
       extensions_text: Add extra functionality to your forum and make it your own.
       permissions_button: Permissions
@@ -117,6 +146,7 @@ core:
       sign_up_label: Sign up
       start_discussions_label: Start discussions
       view_discussions_label: View discussions
+      view_post_ips_label: View post IP addresses
 
     # These translations are used in the dropdown menus on the Permissions page.
     permissions_controls:
@@ -133,13 +163,18 @@ core:
     settings:
       submit_button: => core.ref.save_changes
 
+    # These translations are used in image upload buttons.
+    upload_image:
+      remove_button: Remove
+      upload_button: Choose an Image...
+
   # Translations in this namespace are used by the forum user interface.
   forum:
 
     # These translations are used in the Change Email modal dialog.
     change_email:
       confirmation_message: => core.ref.confirmation_email_sent
-      confirm_password_label: Confirm Password
+      confirm_password_placeholder: => core.ref.confirm_password
       dismiss_button: => core.ref.okay
       incorrect_password_message: The password you entered is incorrect.
       submit_button: => core.ref.save_changes
@@ -206,6 +241,7 @@ core:
       email_label: => core.ref.email
       password_label: => core.ref.password
       submit_button: => core.ref.save_changes
+      title: Edit User
       username_label: => core.ref.username
 
     # These translations are used in the Forgot Password modal dialog.
@@ -265,6 +301,7 @@ core:
 
     # These translations are used by tooltips displayed for individual posts.
     post:
+      edited_text: Edited
       edited_tooltip: "{username} edited {ago}"
       number_tooltip: "Post #{number}"
 
@@ -284,7 +321,8 @@ core:
 
     # These translations are displayed between posts in the post stream.
     post_stream:
-      discussion_renamed_text: "{username} changed the title from {old} to {new}."
+      discussion_renamed_old_tooltip: 'The old title was: "{old}"'
+      discussion_renamed_text: "{username} changed the title to {new}."
       load_more_button: => core.ref.load_more
       reply_placeholder: => core.ref.write_a_reply
       time_lapsed_text: "{period} later"
@@ -323,6 +361,7 @@ core:
     user:
       avatar_remove_button: Remove
       avatar_upload_button: Upload
+      avatar_upload_tooltip: Upload a new avatar
       bio_placeholder: Write something about yourself
       discussions_link: => core.ref.discussions
       in_discussion_text: "In {discussion}"
@@ -374,19 +413,38 @@ core:
       three_text: "{first}, {second}, and {third}"
       two_text: "{first} and {second}"
 
-  # Translations in this namespace are used in basic HTML interface.
-  basic:
-    javascript_disabled_message: This site is best viewed in a modern browser with JavaScript enabled.
-    load_error_message: Something went wrong while trying to load the full version of this site.
-    loading_text: Loading...
-    next_page_button: Next Page
-    previous_page_button: Previous Page
+  # Translations in this namespace are used in views other than Flarum's normal JS client.
+  views:
+
+    # Translations in this namespace are displayed by the basic HTML content loader.
+    content:
+      javascript_disabled_message: This site is best viewed in a modern browser with JavaScript enabled.
+      load_error_message: Something went wrong while trying to load the full version of this site.
+      loading_text: Loading...
+
+    # Translations in this namespace are displayed in the basic HTML discussion view.
+    discussion:
+      next_page_button: => core.ref.next_page
+      previous_page_button: Previous Page
+
+    # Translations in this namespace are displayed by the basic HTML discussion index.
+    index:
+      all_discussions_heading: => core.ref.all_discussions
+      next_page_button: => core.ref.next_page
+
+    # Translations in this namespace are displayed by the Reset Password interface.
+    reset:
+      confirm_password_label: => core.ref.confirm_password
+      password_label: => core.ref.password
+      submit_button: Reset Password
+      title: => core.ref.reset_your_password
 
   # Translations in this namespace are used in emails sent by the forum.
   email:
 
     # These translations are used in emails sent when users register new accounts.
     activate_account:
+      subject: Activate Your New Account
       body: |
         Hey {username}!
 
@@ -396,10 +454,10 @@ core:
         {url}
 
         If you did not sign up, please ignore this email.
-      subject: Activate Your New Account
 
     # These translations are used in emails sent when users change their email address.
     confirm_email:
+      subject: Confirm Your New Email Address
       body: |
         Hey {username}!
 
@@ -409,10 +467,10 @@ core:
         {url}
 
         If this was not you, please ignore this email.
-      subject: Confirm Your New Email Address
 
     # These translations are used in emails sent when users ask to reset their passwords.
     reset_password:
+      subject: => core.ref.reset_your_password
       body: |
         Hey {username}!
 
@@ -422,7 +480,6 @@ core:
         {url}
 
         If you do not wish to change your password, just ignore this email and nothing will happen.
-      subject: Reset Your Password
 
   ##
   # REUSED TRANSLATIONS - These keys should not be used directly in code!
@@ -433,6 +490,7 @@ core:
     all_discussions: All Discussions
     change_email: Change Email
     change_password: Change Password
+    confirm_password: Confirm Password
     confirmation_email_sent: "We've sent a confirmation email to {email}. If it doesn't arrive soon, check your spam folder."
     delete: Delete
     delete_forever: Delete Forever
@@ -443,10 +501,12 @@ core:
     log_in: Log In
     log_out: Log Out
     mark_all_as_read: Mark All as Read
+    next_page: Next Page
     notifications: Notifications
     okay: OK                                     # Referenced by flarum-tags.yml
     password: Password
     reply: Reply                                 # Referenced by flarum-mentions.yml
+    reset_your_password: Reset Your Password
     restore: Restore
     save_changes: Save Changes                   # Referenced by flarum-suspend.yml, flarum-tags.yml
     settings: Settings

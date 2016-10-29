@@ -93,6 +93,7 @@ class FacebookUser implements ResourceOwnerInterface
      * Returns the "about me" bio for the user as a string if present.
      *
      * @return string|null
+     * @deprecated The bio field was removed in Graph v2.8
      */
     public function getBio()
     {
@@ -168,6 +169,32 @@ class FacebookUser implements ResourceOwnerInterface
     public function getTimezone()
     {
         return $this->getField('timezone');
+    }
+
+    /**
+     * Returns the lower bound of the user's age range
+     *
+     * @return integer|null
+     */
+    public function getMinAge()
+    {
+        if (isset($this->data['age_range']['min'])) {
+            return $this->data['age_range']['min'];
+        }
+        return null;
+    }
+
+    /**
+     * Returns the upper bound of the user's age range
+     *
+     * @return integer|null
+     */
+    public function getMaxAge()
+    {
+        if (isset($this->data['age_range']['max'])) {
+            return $this->data['age_range']['max'];
+        }
+        return null;
     }
 
     /**

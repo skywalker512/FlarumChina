@@ -43,7 +43,7 @@
         "jsthon/flarum-ext-simplified-chinese": "^0.1.0@beta",
         "sijad/flarum-ext-pages": "^0.1.0@beta",
         "sijad/flarum-ext-links": "^0.1.0@beta",
-        "flagrow/flarum-ext-image-upload": "^0.2.3",
+        "flagrow/flarum-ext-image-upload": "^0.3.0",
         "cloudinary/cloudinary_php": "^1.4",
         "s9e/flarum-ext-mediaembed": "^0.3.2",
         "sijad/flarum-ext-details": "^0.1.2",

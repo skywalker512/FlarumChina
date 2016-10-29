@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+use Flarum\Approval\Access;
 use Flarum\Approval\Listener;
 use Illuminate\Contracts\Events\Dispatcher;
 
@@ -18,4 +19,6 @@ return function (Dispatcher $events) {
     $events->subscribe(Listener\ApproveContent::class);
     $events->subscribe(Listener\HideUnapprovedContent::class);
     $events->subscribe(Listener\UnapproveNewContent::class);
+
+    $events->subscribe(Access\TagPolicy::class);
 };

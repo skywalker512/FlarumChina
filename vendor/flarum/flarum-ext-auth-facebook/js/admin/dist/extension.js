@@ -1,6 +1,8 @@
 'use strict';
 
 System.register('flarum/auth/facebook/components/FacebookSettingsModal', ['flarum/components/SettingsModal'], function (_export, _context) {
+  "use strict";
+
   var SettingsModal, FacebookSettingsModal;
   return {
     setters: [function (_flarumComponentsSettingsModal) {
@@ -59,6 +61,8 @@ System.register('flarum/auth/facebook/components/FacebookSettingsModal', ['flaru
 'use strict';
 
 System.register('flarum/auth/facebook/main', ['flarum/app', 'flarum/auth/facebook/components/FacebookSettingsModal'], function (_export, _context) {
+  "use strict";
+
   var app, FacebookSettingsModal;
   return {
     setters: [function (_flarumApp) {

@@ -20,9 +20,16 @@ core:
       colors_text: "选择两种颜色作为主题色。第一种将用于突出显示的颜色，第二种将作为背景等元素的色调。"
       custom_styles_heading: 自定义样式
       custom_styles_text: 添加 LESS/CSS 代码以生成自定义样式作为默认外观。
+      custom_header_heading: 修改Header内容
+      custom_header_text: "Header内容,将会在Flarum本身更高的地方显示"
       dark_mode_label: 夜间模式
       edit_css_button: 编辑样式代码
       enter_hex_message: 请输入一个十六进制颜色代码。
+      edit_header_button: 修改Header内容
+      favicon_heading: Favicon
+      favicon_text: 上传Favicon图标
+      logo_heading: Logo
+      logo_text: 上传logo
       submit_button: => core.ref.save_changes
 
     # These translations are used in the Basics page.
@@ -84,6 +91,23 @@ core:
     # These translations are used in the modal dialog displayed when loading extensions.
     loading:
       title: 请稍后...
+      
+    
+     # These translations are used in the email page of the admin interface.
+    email:
+      account_heading: SMTP 账户
+      addresses_heading: 发信地址
+      driver_label: 发送方式(mail[默认]或smtp[输入此下面的设置才生效])
+      encryption_label: 验证方式(若要使用SSL协议请输入ssl，若不需要请不填)
+      from_label: 发信人
+      heading: => core.ref.email
+      host_label: 服务器地址
+      password_label: => core.ref.password
+      port_label: 端口
+      server_heading: SMTP 服务器
+      submit_button: => core.ref.save_changes
+      text: 配置SMTP设置和地址将用于您的论坛发送电子邮件。
+      username_label: => core.ref.username
 
     # These translations are used in the navigation bar.
     nav:
@@ -93,6 +117,8 @@ core:
       basics_text: "修改你的站点名称、语言和其他设置。"
       dashboard_button: 主要概览
       dashboard_text: 各项数据，一目了然。
+      email_button: 邮件
+      email_text: "设置邮件服务器"
       extensions_button: 插件拓展
       extensions_text: 添加新的插件拓展到你的站点。
       permissions_button: 用户权限
@@ -117,6 +143,7 @@ core:
       sign_up_label: 注册账户
       start_discussions_label: 发布话题
       view_discussions_label: 浏览话题
+      view_post_ips_label: 查看发布者IP
 
     # These translations are used in the dropdown menus on the Permissions page.
     permissions_controls:
@@ -132,6 +159,11 @@ core:
     # These translations are used in the Settings modal dialog.
     settings:
       submit_button: => core.ref.save_changes
+    
+    # These translations are used in image upload buttons.
+    upload_image:
+      remove_button: 删除
+      upload_button: 选择一个图片
 
   # Translations in this namespace are used by the forum user interface.
   forum:
@@ -265,6 +297,7 @@ core:
 
     # These translations are used by tooltips displayed for individual posts.
     post:
+      edited_text: 已修改
       edited_tooltip: "{username} 编辑于 {ago}"
       number_tooltip: "发表 #{number}"
 
@@ -340,7 +373,7 @@ core:
       edit_button: => core.ref.edit
 
     # These translations are used in unverified user alert box.
-    user_confirmation:
+    user_email_confirmation:
       alert_message: core.ref.confirmation_email_sent
       resend_button: 重新发送确认邮件
       sent_message: 发送
@@ -374,13 +407,31 @@ core:
       three_text: "{first}, {second}, 还有 {third}"
       two_text: "{first} 和 {second}"
 
-  # Translations in this namespace are used in basic HTML interface.
-  basic:
-    javascript_disabled_message: 使用更先进的浏览器访问效果更佳。
-    load_error_message: 当前访问的是简约版，使用更先进的浏览器访问效果更佳。
-    loading_text: 正在载入
-    next_page_button: 下一页
-    previous_page_button: 上一页
+  # Translations in this namespace are used in views other than Flarum's normal JS client.
+  views:
+
+    # Translations in this namespace are displayed by the basic HTML content loader.
+    content:
+      javascript_disabled_message: 使用更先进的浏览器访问效果更佳。
+      load_error_message: 当前访问的是简约版，使用更先进的浏览器访问效果更佳。
+      loading_text: 正在载入
+
+    # Translations in this namespace are displayed in the basic HTML discussion view.
+    discussion:
+      next_page_button: 下一页
+      previous_page_button: 上一页
+
+    # Translations in this namespace are displayed by the basic HTML discussion index.
+    index:
+      all_discussions_heading: => core.ref.all_discussions
+      next_page_button: 下一页
+
+    # Translations in this namespace are displayed by the Reset Password interface.
+    reset:
+      confirm_password_label: => core.ref.confirm_password
+      password_label: => core.ref.password
+      submit_button: 重设密码
+      title: => core.ref.reset_your_password
 
   # Translations in this namespace are used in emails sent by the forum.
   email:
@@ -437,7 +488,7 @@ core:
     all_discussions: 所有话题
     change_email: 更换邮箱
     change_password: 更改密码
-    confirmation_email_sent: "我们已经发送了一封邮件至 {email}，请打开它并完成账号激活。"
+    confirmation_email_sent: "我们已经发送了一封邮件至 {email}，请打开它并完成账号激活"
     delete: 删除
     delete_forever: 永久删除
     discussions: 话题
@@ -447,6 +498,7 @@ core:
     log_in: 登入
     log_out: 登出
     mark_all_as_read: 标记所有为已读
+    next_page: 下一页
     notifications: 消息通知
     okay: 完成                                     # Referenced by flarum-tags.yml
     password: 密码

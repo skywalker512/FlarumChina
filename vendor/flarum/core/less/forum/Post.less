@@ -92,6 +92,7 @@
   line-height: 1.7;
   position: relative;
   overflow: auto;
+  overflow-wrap: break-word;
 
   p, ul, ol, blockquote {
     margin-bottom: 1em;
@@ -116,17 +117,33 @@
     border-bottom: 2px dotted @body-bg;
     margin: 1em 0;
   }
+  // Inline code
+  code {
+    font-family: source-code-pro, Monaco, Consolas, "Courier New", monospace;
+    padding: 5px;
+    background: @code-bg;
+    color: @code-color;
+    line-height: 1.3;
+    font-size: 90%;
+    border-radius: 4px
+  }
+  // Code blocks
   pre {
     border: 0;
     padding: 15px;
-    background: darken(@body-bg, 3%);
+    background: @code-bg;
     color: #666;
     font-size: 90%;
     border-radius: @border-radius;
+    overflow-wrap: normal;
 
-    .hljs {
+    code {
       padding: 0;
       background: none;
+      color: inherit;
+      line-height: inherit;
+      font-size: 100%;
+      border-radius: 0;
     }
   }
   h1 {
@@ -154,27 +171,19 @@
   .Post-header, .Post-header a, .PostUser h3, .PostUser h3 a {
     color: @muted-more-color;
   }
-  &:not(.revealContent) .Post-header {
-    margin-bottom: 0;
-  }
-  .Post-body, .Post-footer, h3 .Avatar, .PostUser-badges {
-    position: absolute;
-    visibility: hidden;
-    opacity: 0;
-    margin-top: -5px;
-    .transition(~"margin-top 0.2s, opacity 0.2s");
-  }
-  &.revealContent {
+  &:not(.revealContent) {
+    .Post-header {
+      margin-bottom: 0;
+    }
     .Post-body, .Post-footer, h3 .Avatar, .PostUser-badges {
-      position: static;
-      visibility: visible;
-      opacity: 0.5;
-      margin-top: 0;
+      display: none;
     }
   }
+  .Post-body, .Post-footer, h3 .Avatar, .PostUser-badges {
+    opacity: 0.5;
+  }
   .Post-header .Button--more {
-    background: fade(@muted-more-color, 30%);
-    color: @muted-more-color;
+    .Button--color(@muted-more-color, fade(@muted-more-color, 30%));
   }
 }
 .Post--loading {
@@ -184,7 +193,7 @@
   display: inline;
 }
 .PostMeta .Dropdown-menu {
-  width: 400px;
+  width: 420px;
   padding: 10px;
   color: @muted-color;
 
@@ -196,7 +205,7 @@
   color: @text-color;
   font-weight: bold;
 }
-.PostMeta-time {
+.PostMeta-time, .PostMeta-ip {
   margin-left: 5px;
 }
 .PostMeta-permalink {
@@ -209,6 +218,10 @@
   }
 }
 
+.PostEdited {
+  cursor: default;
+}
+
 .EventPost-icon {
   float: left;
 }
@@ -219,14 +232,12 @@
   a {
     font-weight: bold;
   }
+  .Post-footer {
+    margin-bottom: 0;
+  }
 }
 .EventPost-info {
   font-size: 14px;
-}
-
-.DiscussionRenamedPost-old, .DiscussionRenamedPost-new {
-  font-weight: normal;
-  font-style: italic;
 }
 
 .Post-footer, .Post-actions {
@@ -248,6 +259,7 @@
 }
 .Post-footer {
   margin-top: 5px;
+  margin-bottom: 20px;
 
   > ul {
     > li {
@@ -263,6 +275,7 @@
   margin-top: -5px;
   float: right;
   position: relative;
+
   .transition(opacity 0.2s);
 
   .EventPost &, .Post--hidden:not(.revealContent) & {
@@ -351,9 +364,12 @@
   .Post {
     padding-left: 20px + @avatar-column-width;
   }
+  .CommentPost:not(.Post--hidden), .ReplyPlaceholder {
+    min-height: 64px + 40px; // avatar height + padding
+  }
   .PostUser-avatar {
-    margin-left: -@avatar-column-width;
-    float: left;
+    left: -@avatar-column-width;
+    position: absolute;
     .Avatar--size(64px);
   }
   .PostUser-badges {
@@ -392,6 +408,7 @@
 
     .Post-header {
       padding-top: 18px;
+      position: relative;
     }
     .Avatar {
       margin-top: -18px;
@@ -399,5 +416,8 @@
     &:hover {
       border-color: @control-bg;
     }
+  }
+  .LoadingPost .Post-header {
+    position: relative;
   }
 }

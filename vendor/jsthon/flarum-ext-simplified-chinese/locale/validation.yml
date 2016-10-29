@@ -19,9 +19,11 @@ validation:
   different: ":attribute 与 :other 不一致"
   digits: ":attribute 只能是 :digits 位数"
   digits_between: ":attribute 只能是 :min 至 :max 位数"
+  dimensions: ":attribute 图片大小非法。"
   distinct: ":attribute 是一个重复的值"
   email: ":attribute 必须是有效的"
   exists: "选择的 :attribute 无效"
+  file: ":attribute 必须是文档。"
   filled: "不可以缺少:attribute"
   image: ":attribute 只能是图像"
   in: "选择的 :attribute 无效"
@@ -35,6 +37,7 @@ validation:
     string: ":attribute 不能超过 :max 个字符"
     array: ":attribute 不能超过 :max 个"
   mimes: ":attribute 文件类型必须是 :values"
+  mimetypes: ":attribute 必须是 :values 文档类型。"
   min:
     numeric: ":attribute 至少是 :min."
     file: ":attribute 至少有 :minKB"
@@ -60,7 +63,9 @@ validation:
   string: ":attribute 必须是一个字符串"
   timezone: ":attribute 必须是有效的"
   unique: ":attribute 已经存在"
+  uploaded: ":attribute 上传失败。"
   url: ":attribute 格式无效"
+  
 
   attributes:
     username: 用户名
@@ -70,6 +75,8 @@ validation:
     content: 内容
     name_singular: 单数名称
     name_plural: 复数名称
+    tag_count_primary: 主节点数量
+    tag_count_secondary: 次节点数量
 
   custom:
     username:

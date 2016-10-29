@@ -39,21 +39,15 @@ export default function listItems(items) {
       item.attrs.key = item.attrs.key || item.itemName;
     }
 
-    const space = new String(' ');
-    space.attrs = {key: '_space_'+item.itemName};
-
-    return [
-      isListItem
-        ? item
-        : <li className={classList([
-            (item.itemName ? 'item-' + item.itemName : ''),
-            className,
-            (active ? 'active' : '')
-          ])}
-            key={item.itemName}>
-            {item}
-          </li>,
-      space
-    ];
+    return isListItem
+      ? item
+      : <li className={classList([
+          (item.itemName ? 'item-' + item.itemName : ''),
+          className,
+          (active ? 'active' : '')
+        ])}
+          key={item.itemName}>
+          {item}
+        </li>;
   });
 }

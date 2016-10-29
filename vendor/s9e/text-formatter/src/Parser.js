@@ -710,7 +710,7 @@ function outputTag(tag)
 		attributeNames.forEach(
 			function(attrName)
 			{
-				output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName].toString()) + '"';
+				output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName].toString()).replace(/\n/g, '&#10;') + '"';
 			}
 		);
 
@@ -1256,6 +1256,31 @@ function closeParent(tag)
 }
 
 /**
+* Apply the createChild rules associated with given tag
+*
+* @param {!Tag} tag Tag
+*/
+function createChild(tag)
+{
+	if (!HINT.createChild)
+	{
+		return;
+	}
+
+	var tagConfig = tagsConfig[tag.getName()];
+	if (tagConfig.rules.createChild)
+	{
+		var priority = -1000,
+			_text    = text.substr(pos),
+			tagPos   = pos + _text.length - _text.replace(/^[ \n\r\t]+/, '').length;
+		tagConfig.rules.createChild.forEach(function(tagName)
+		{
+			addStartTag(tagName, tagPos, 0).setSortPriority(++priority);
+		});
+	}
+}
+
+/**
 * Apply fosterParent rules associated with given tag
 *
 * NOTE: this rule has the potential for creating an unbounded loop, either if a tag tries to
@@ -1662,6 +1687,9 @@ function processStartTag(tag)
 	// This tag is valid, output it and update the context
 	outputTag(tag);
 	pushContext(tag);
+
+	// Apply the createChild rules if applicable
+	createChild(tag);
 }
 
 /**

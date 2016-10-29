@@ -32,7 +32,7 @@ class ConfigureLocales
     /**
      * Load language pack resources from the given directory.
      *
-     * @param $directory
+     * @param string $directory
      */
     public function loadLanguagePackFrom($directory)
     {
@@ -61,6 +61,10 @@ class ConfigureLocales
 
         if (file_exists($file = $localeDir.'/config.js')) {
             $this->locales->addJsFile($locale, $file);
+        }
+
+        if (file_exists($file = $localeDir.'/config.css')) {
+            $this->locales->addCssFile($locale, $file);
         }
 
         foreach (new DirectoryIterator($localeDir) as $file) {

@@ -90,10 +90,15 @@ class RevisionCompiler implements CompilerInterface
                 unlink($file);
             }
 
-            $this->putRevision($current);
-
             $file = $this->path.'/'.substr_replace($this->filename, '-'.$current, -strlen($ext) - 1, 0);
-            file_put_contents($file, $this->compile());
+
+            if ($content = $this->compile()) {
+                $this->putRevision($current);
+
+                file_put_contents($file, $content);
+            } else {
+                return;
+            }
         }
 
         return $file;

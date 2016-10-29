@@ -3,6 +3,7 @@
 namespace Sijad\Pages\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
+use Sijad\Pages\Util\Html;
 
 class PageSerializer extends AbstractSerializer
 {
@@ -22,7 +23,7 @@ class PageSerializer extends AbstractSerializer
             'slug' => $page->slug,
             'time' => $page->time,
             'editTime' => $page->edit_time,
-            'contentHtml' => $page->content_html,
+            'contentHtml' => Html::render($page->content_html, $page)
         ];
 
         if ($this->actor->isAdmin()) {

@@ -35,8 +35,5 @@
         "psr-4": {
             "League\\OAuth2\\Client\\Test\\": "tests/src/"
         }
-    },
-    "branch-alias": {
-        "dev-master": "1.0.x-dev"
     }
 }

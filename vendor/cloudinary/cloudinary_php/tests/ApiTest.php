@@ -10,23 +10,28 @@ namespace Cloudinary {
   use Cloudinary;
   use Exception;
   use PHPUnit_Framework_TestCase;
-  const API_TEST_TAG = "api_test_tag";
 
 class ApiTest extends PHPUnit_Framework_TestCase {
+  static $api_test_tag = "cloudinary_php_test";
   static $initialized = FALSE;
   static $timestamp_tag;
-  const API_TEST = "api_test";
-  const API_TEST_2 = "api_test2";
-  const API_TEST_3 = "api_,test3";
-  const API_TEST_4 = "api_test4";
-  const API_TEST_5 = "api_test5";
+  static $api_test;
+  static $api_test_2;
+  static $api_test_3;
+  static $api_test_4;
+  static $api_test_5;
 
-  const API_TEST_UPLOAD_PRESET = "api_test_upload_preset";
-  const API_TEST_UPLOAD_PRESET_2 = "api_test_upload_preset2";
-  const API_TEST_UPLOAD_PRESET_3 = "api_test_upload_preset3";
+  static $api_test_upload_preset;
+  static $api_test_upload_preset_2;
+  static $api_test_upload_preset_3;
+
   const LOGO_PNG = "tests/logo.png";
   const LOGO_SIZE = 3381;
   const RAW_FILE = "tests/docx.docx";
+  static $api_test_transformation = "api_test_transformation";
+  static $api_test_transformation_2 = "api_test_transformation2";
+  static $api_test_transformation_3 = "api_test_transformation3";
+  const URL_QUERY_REGEX = "\??(\w+=\w*&?)*";
   /** @var  \Cloudinary\Api $api */
   private $api;
 
@@ -34,15 +39,23 @@ class ApiTest extends PHPUnit_Framework_TestCase {
   {
     Curl::$instance = new Curl();
     if (Cloudinary::config_get("api_secret")) {
+      $random_suffix = "_" . rand(11111, 99999);
+      self::$api_test_tag = self::$api_test_tag . "_". $random_suffix;
+      self::$api_test_upload_preset = "api_test_upload_preset" . $random_suffix;
+      self::$api_test_upload_preset_2 = "api_test_upload_preset2" . $random_suffix;
+      self::$api_test_upload_preset_3 = "api_test_upload_preset3" . $random_suffix;
 
-      $api = new Cloudinary\Api();
+      self::$api_test = "api_test" . $random_suffix;
+      self::$api_test_2 = "api_test2" . $random_suffix;
+      self::$api_test_3 = "api_test,3" . $random_suffix;
+      self::$api_test_4 = "api_test4" . $random_suffix;
+      self::$api_test_5 = "api_test5" . $random_suffix;
 
+      self::$api_test_transformation = "api_test_transformation" . $random_suffix;
+      self::$api_test_transformation_2 = "api_test_transformation2" . $random_suffix;
+      self::$api_test_transformation_3 = "api_test_transformation3" . $random_suffix;
 
-      self::delete_resources($api);
-      self::delete_transformations($api);
-      self::delete_presets($api);
-
-      self::$timestamp_tag = "api_test_tag_" . time();
+      self::$timestamp_tag = self::$api_test_tag . "_" . time();
       self::upload_sample_resources();
     } else {
       self::markTestSkipped('Please setup environment for Api test to run');
@@ -78,8 +91,8 @@ class ApiTest extends PHPUnit_Framework_TestCase {
   protected static function delete_resources($api)
   {
     try {
-      $api->delete_resources(array(self::API_TEST, self::API_TEST_2, self::API_TEST_3, self::API_TEST_5));
-      $api->delete_resources_by_tag(API_TEST_TAG);
+      $api->delete_resources(array(self::$api_test, self::$api_test_2, self::$api_test_3, self::$api_test_5));
+      $api->delete_resources_by_tag(self::$api_test_tag);
     } catch (Exception $e) {
     }
   }
@@ -90,9 +103,9 @@ class ApiTest extends PHPUnit_Framework_TestCase {
    */
   protected static function delete_transformations($api ){
     $transformations = array(
-        "api_test_transformation",
-        "api_test_transformation2",
-        "api_test_transformation3"
+        self::$api_test_transformation,
+        self::$api_test_transformation_2,
+        self::$api_test_transformation_3
     );
 
     foreach ($transformations as $t) {
@@ -111,9 +124,9 @@ class ApiTest extends PHPUnit_Framework_TestCase {
    * @param \Cloudinary\Api $api
    */
   protected static function delete_presets($api) {
-    $presets = array(self::API_TEST_UPLOAD_PRESET,
-      self::API_TEST_UPLOAD_PRESET_2,
-      self::API_TEST_UPLOAD_PRESET_3,
+    $presets = array(self::$api_test_upload_preset,
+      self::$api_test_upload_preset_2,
+      self::$api_test_upload_preset_3,
         "api_test_upload_preset4"
     );
     foreach ($presets as $p) {
@@ -132,9 +145,9 @@ class ApiTest extends PHPUnit_Framework_TestCase {
   protected static function upload_sample_resources()
   {
     Uploader::upload(self::LOGO_PNG,
-                                 array("public_id" => self::API_TEST, "tags" => array(API_TEST_TAG, self::$timestamp_tag), "context" => "key=value", "eager" => array("transformation" => array("width" => 100, "crop" => "scale"))));
+                                 array("public_id" => self::$api_test, "tags" => array(self::$api_test_tag, self::$timestamp_tag), "context" => "key=value", "eager" => array("transformation" => array("width" => 100, "crop" => "scale"))));
     Uploader::upload(self::LOGO_PNG,
-                                 array("public_id" => self::API_TEST_2, "tags" => array(API_TEST_TAG, self::$timestamp_tag), "context" => "key=value", "eager" => array("transformation" => array("width" => 100, "crop" => "scale"))));
+                                 array("public_id" => self::$api_test_2, "tags" => array(self::$api_test_tag, self::$timestamp_tag), "context" => "key=value", "eager" => array("transformation" => array("width" => 100, "crop" => "scale"))));
   }
 
 
@@ -163,10 +176,10 @@ class ApiTest extends PHPUnit_Framework_TestCase {
 
   function test02_resources() {
     // should allow listing resources
-    $result = $this->api->resources();
-    $resource = $this->find_by_attr($result["resources"], "public_id", self::API_TEST);
-    $this->assertNotEquals($resource, NULL);
-    $this->assertEquals($resource["type"], "upload");
+    Curl::mockApi($this);
+    $this->api->resources();
+    Curl::$instance->fields();
+    assertUrl($this, "/resources/image");
   }
 
   function test03_resources_cursor() {
@@ -184,170 +197,131 @@ class ApiTest extends PHPUnit_Framework_TestCase {
 
   function test04_resources_by_type() {
     // should allow listing resources by type
-    $result = $this->api->resources(array("type"=>"upload", "context" => true, "tags" => true));
-    $resource = $this->find_by_attr($result["resources"], "public_id", self::API_TEST);
-    $context_map = function($resource) {
-      if (array_key_exists("context", $resource) && array_key_exists("key", $resource["context"]["custom"])) {
-        return $resource["context"]["custom"]["key"];
-      } else {
-        return NULL;
-      }
-    };
-    $tags_map = function($resource) {
-        return $resource["tags"] == array(API_TEST_TAG, ApiTest::$timestamp_tag);
-    };
-    $context_values = array_map($context_map, $result["resources"]);
-    $tags = array_map($tags_map, $result["resources"]);
-    $this->assertNotEquals($resource, NULL);
-    $this->assertContains("value", $context_values);
-    $this->assertContains(TRUE, $tags);
+    Curl::mockApi($this);
+    $this->api->resources(array("type"=>"upload", "context" => true, "tags" => true));
+    assertUrl($this, "/resources/image/upload");
+    assertParam($this, "context", 1);
+    assertParam($this, "tags", 1);
   }
 
   function test05_resources_by_prefix() {
     // should allow listing resources by prefix
-    $result = $this->api->resources(array("type"=>"upload", "prefix"=> self::API_TEST, "context" => true, "tags" => true));
-    $func = function($resource) {
-        return $resource["public_id"];
-    };
-    $context_map = function($resource) {
-      if (array_key_exists("context", $resource)) {
-        return $resource["context"]["custom"]["key"];
-      } else {
-        return NULL;
-      }
-    };
-    $tags_map = function($resource) {
-        return $resource["tags"] == array(API_TEST_TAG, ApiTest::$timestamp_tag);
-    };
-    $context_values = array_map($context_map, $result["resources"]);
-    $tags = array_map($tags_map, $result["resources"]);
-    $public_ids = array_map($func, $result["resources"]);
-    $this->assertContains(self::API_TEST, $public_ids);
-    $this->assertContains(self::API_TEST_2, $public_ids);
-    $this->assertContains("value", $context_values);
-    $this->assertContains(TRUE, $tags);
+    Curl::mockApi($this);
+    $this->api->resources(array("type"=>"upload", "prefix"=> "api_test", "context" => true, "tags" => true));
+    assertUrl($this, "/resources/image/upload");
+    assertParam($this, "prefix", "api_test");
+    assertParam($this, "context", 1);
+    assertParam($this, "tags", 1);
   }
 
   function test_resources_by_public_ids() {
     // should allow listing resources by public ids
-    $result = $this->api->resources_by_ids(array(self::API_TEST, self::API_TEST_2, self::API_TEST_3), array("context" => true, "tags" => true));
-    $id_map = function($resource) {
-        return $resource["public_id"];
-    };
-    $context_map = function($resource) {
-        return $resource["context"]["custom"]["key"];
-    };
-    $tags_map = function($resource) {
-        return $resource["tags"] == array(API_TEST_TAG, ApiTest::$timestamp_tag);
-    };
-    $public_ids = array_map($id_map, $result["resources"]);
-    $context_values = array_map($context_map, $result["resources"]);
-    $tags = array_map($tags_map, $result["resources"]);
-    $this->assertContains(self::API_TEST, $public_ids);
-    $this->assertContains(self::API_TEST_2, $public_ids);
-    $this->assertContains("value", $context_values);
-    $this->assertNotContains(FALSE, $tags);
+    Curl::mockApi($this);
+    $public_ids = array(self::$api_test, self::$api_test_2, self::$api_test_3);
+    $this->api->resources_by_ids($public_ids, array("context" => true, "tags" => true));
+    assertParam($this, "public_ids", $public_ids);
+    assertParam($this, "context", 1);
+    assertParam($this, "tags", 1);
   }
 
     function test_resources_direction() {
         // should allow listing resources and specify direction
-        $resources = $this->api->resources_by_tag(ApiTest::$timestamp_tag,
-                                                  array( "type" => "upload", "direction" => "asc" ));
-        $asc_resources = $resources["resources"];
-        $resources = $this->api->resources_by_tag(ApiTest::$timestamp_tag,
-                                                  array( "type" => "upload", "direction" => "desc" ));
-        $desc_resources = $resources["resources"];
-        $this->assertEquals(array_reverse($asc_resources), $desc_resources);
-        $resources = $this->api->resources_by_tag(ApiTest::$timestamp_tag, array( "type" => "upload", "direction" => 1 ));
-        $asc_resources_alt = $resources["resources"];
-        $resources = $this->api->resources_by_tag(ApiTest::$timestamp_tag,
-                                                  array( "type" => "upload", "direction" => - 1 ));
-        $desc_resources_alt = $resources["resources"];
-        $this->assertEquals(array_reverse($asc_resources_alt), $desc_resources_alt);
-        $this->assertEquals($asc_resources_alt, $asc_resources);
+      Curl::mockApi($this);
+      $this->api->resources_by_tag("foobar",
+                                   array("type" => "upload", "direction" => "asc"));
+      assertGet($this);
+      assertUrl($this, "/resources/image/tags/foobar");
+      assertParam($this, "direction", "asc");
+      $this->api->resources_by_tag("foobar",
+                                   array("type" => "upload", "direction" => "desc"));
+      assertGet($this);
+      assertUrl($this, "/resources/image/tags/foobar");
+      assertParam($this, "direction", "desc");
     }
 
   function test06_resources_tag() {
     // should allow listing resources by tag
-    $result = $this->api->resources_by_tag(API_TEST_TAG);
-    $resource = $this->find_by_attr($result["resources"], "public_id", self::API_TEST);
-    $this->assertNotEquals($resource, NULL);
+    Curl::mockApi($this);
+    $this->api->resources_by_tag("foobar");
+    assertUrl($this, "/resources/image/tags/foobar");
+    assertGet($this);
   }
 
   function test07_resource_metadata() {
     // should allow get resource metadata
-    $resource = $this->api->resource(self::API_TEST);
+    $resource = $this->api->resource(self::$api_test);
     $this->assertNotEquals($resource, NULL);
-    $this->assertEquals($resource["public_id"], self::API_TEST);
+    $this->assertEquals($resource["public_id"], self::$api_test);
     $this->assertEquals($resource["bytes"], self::LOGO_SIZE);
     $this->assertEquals(count($resource["derived"]), 1);
   }
 
   function test08_delete_derived() {
     // should allow deleting derived resource
-    Uploader::upload(self::LOGO_PNG, array("public_id"=>self::API_TEST_3, "eager"=>array("transformation"=>array("width"=> 101,"crop" => "scale"))));
-    $resource = $this->api->resource(self::API_TEST_3);
-    $this->assertNotEquals($resource, NULL);
-    $this->assertEquals(count($resource["derived"]), 1);
-    $derived_resource_id = $resource["derived"][0]["id"];
+    // Following commented code provided as reference
+
+//    Uploader::upload(self::LOGO_PNG, array("public_id"=>self::$api_test_3, "eager"=>array("transformation"=>array("width"=> 101,"crop" => "scale"))));
+//    $resource = $this->api->resource(self::$api_test_3);
+//    $this->assertNotEquals($resource, NULL);
+//    $this->assertEquals(count($resource["derived"]), 1);
+//    $derived_resource_id = $resource["derived"][0]["id"];
+
+    $derived_resource_id = "foobar";
+    Curl::mockApi($this);
     $this->api->delete_derived_resources(array($derived_resource_id));
-    $resource = $this->api->resource(self::API_TEST_3);
-    $this->assertNotEquals($resource, NULL);
-    $this->assertEquals(count($resource["derived"]), 0);
+    assertDelete($this);
+    assertUrl($this, "/derived_resources");
+    assertParam($this, "derived_resource_ids[0]", $derived_resource_id);
+
+//    $resource = $this->api->resource(self::$api_test_3);
+//    $this->assertNotEquals($resource, NULL);
+//    $this->assertEquals(count($resource["derived"]), 0);
   }
 
-  /**
-   * @expectedException \Cloudinary\Api\NotFound
-   */
   function test09_delete_resources() {
     // should allow deleting resources
-    Uploader::upload(self::LOGO_PNG, array("public_id"=> self::API_TEST_3));
-    $resource = $this->api->resource(self::API_TEST_3);
-    $this->assertNotEquals($resource, NULL);
-    $this->api->delete_resources(array("apit_test", self::API_TEST_2, self::API_TEST_3));
-    $this->api->resource(self::API_TEST_3);
+
+    Curl::mockApi($this);
+    $this->api->delete_resources(array("apit_test", self::$api_test_2, self::$api_test_3), array("transformation"=>"c_crop,w_100"));
+    assertUrl($this, "/resources/image/upload");
+    $this->assertEquals("DELETE", Curl::$instance->http_method(), "http method should be DELETE");
+    assertParam($this, "public_ids[0]", "apit_test");
+    assertParam($this, "transformation", "c_crop,w_100");
+
   }
 
-  /**
-   * @expectedException \Cloudinary\Api\NotFound
-   */
   function test09a_delete_resources_by_prefix() {
     // should allow deleting resources
-    $id = "api_test_by_prefix";
-    Uploader::upload(self::LOGO_PNG, array("public_id"=> $id));
-    $resource = $this->api->resource($id);
-    $this->assertNotEquals($resource, NULL);
-    $this->api->delete_resources_by_prefix(substr($id, 0,-4));
-    $this->api->resource($id);
+    Curl::mockApi($this);
+    $this->api->delete_resources_by_prefix("fooba");
+    assertUrl($this, "/resources/image/upload");
+    assertDelete($this);
+    assertParam($this, "prefix", "fooba");
   }
 
-  /**
-   * @expectedException \Cloudinary\Api\NotFound
-   */
   function test09b_delete_resources_by_tag() {
     // should allow deleting resources
-    Uploader::upload(self::LOGO_PNG, array("public_id"=> self::API_TEST_4, "tags"=>array("api_test_tag_for_delete")));
-    $resource = $this->api->resource(self::API_TEST_4);
-    $this->assertNotEquals($resource, NULL);
+    Curl::mockApi($this);
     $this->api->delete_resources_by_tag("api_test_tag_for_delete");
-    $this->api->resource(self::API_TEST_4);
+    assertUrl($this, "/resources/image/tags/api_test_tag_for_delete");
+    assertDelete($this);
   }
 
   function test10_tags() {
     // should allow listing tags
-    $result = $this->api->tags();
-    $tags = $result["tags"];
-    $this->assertContains(API_TEST_TAG, $tags);
+    Curl::mockApi($this);
+    $this->api->tags();
+    assertUrl($this, "/tags/image");
+    assertGet($this);
   }
 
   function test11_tags_prefix() {
     // should allow listing tag by prefix
-    $result = $this->api->tags(array("prefix"=> substr(API_TEST_TAG, 0, -2)));
-    $tags = $result["tags"];
-    $this->assertContains(API_TEST_TAG, $tags);
-    $result = $this->api->tags(array("prefix"=>"api_test_no_such_tag"));
-    $tags = $result["tags"];
-    $this->assertEquals(count($tags), 0);
+    Curl::mockApi($this);
+    $this->api->tags(array("prefix" => "fooba"));
+    assertUrl($this, "/tags/image");
+    assertGet($this);
+    assertParam($this, "prefix", "fooba");
   }
 
   function test12_transformations() {
@@ -360,10 +334,12 @@ class ApiTest extends PHPUnit_Framework_TestCase {
   }
 
   function test_transformation_cursor() {
-    Curl::mock($this);
+    Curl::mockApi($this);
     $this->api->transformation("c_scale,w_100", array( "next_cursor"=>"234123132345"));
-    $this->assertContains("next_cursor=234123132345", Curl::$instance->url, "api->transformation should pass the next_cursor paramter");
+    assertUrl($this, "/transformations/c_scale,w_100");
+    assertParam($this, "next_cursor", "234123132345", "api->transformation should pass the next_cursor paramter");
   }
+
   function test13_transformation_metadata() {
     // should allow getting transformation metadata
     $transformation = $this->api->transformation("c_scale,w_100");
@@ -376,31 +352,28 @@ class ApiTest extends PHPUnit_Framework_TestCase {
 
   function test14_transformation_update() {
     // should allow updating transformation allowed_for_strict
-    $this->api->update_transformation("c_scale,w_100", array("allowed_for_strict"=>TRUE));
-    $transformation = $this->api->transformation("c_scale,w_100");
-    $this->assertNotEquals($transformation, NULL);
-    $this->assertEquals($transformation["allowed_for_strict"], TRUE);
-    $this->api->update_transformation("c_scale,w_100", array("allowed_for_strict"=>FALSE));
-    $transformation = $this->api->transformation("c_scale,w_100");
-    $this->assertNotEquals($transformation, NULL);
-    $this->assertEquals($transformation["allowed_for_strict"], FALSE);
+    Curl::mockApi($this);
+    $this->api->update_transformation("c_scale,w_100", array("allowed_for_strict" => TRUE));
+    assertUrl($this, "/transformations/c_scale,w_100");
+    assertPut($this);
+    assertParam($this, "allowed_for_strict", 1);
   }
 
   function test15_transformation_create() {
     // should allow creating named transformation
-    $this->api->create_transformation("api_test_transformation", array("crop" => "scale", "width" => 102));
-    $transformation = $this->api->transformation("api_test_transformation");
-    $this->assertNotEquals($transformation, NULL);
-    $this->assertEquals($transformation["allowed_for_strict"], TRUE);
-    $this->assertEquals($transformation["info"], array(array("crop"=> "scale", "width"=> 102)));
-    $this->assertEquals($transformation["used"], FALSE);
+    Curl::mockApi($this);
+    $this->api->create_transformation(self::$api_test_transformation, array("crop" => "scale", "width" => 102));
+    assertUrl($this, "/transformations/" . self::$api_test_transformation);
+    assertPost($this);
+    assertParam($this, "transformation", "c_scale,w_102");
+
   }
 
   function test15a_transformation_unsafe_update() {
     // should allow unsafe update of named transformation
-    $this->api->create_transformation("api_test_transformation3", array("crop" => "scale", "width" => 102));
-    $this->api->update_transformation("api_test_transformation3", array("unsafe_update"=>array("crop"=>"scale", "width"=>103)));
-    $transformation = $this->api->transformation("api_test_transformation3");
+    $this->api->create_transformation(self::$api_test_transformation_3, array("crop" => "scale", "width" => 102));
+    $this->api->update_transformation(self::$api_test_transformation_3, array("unsafe_update"=>array("crop"=>"scale", "width"=>103)));
+    $transformation = $this->api->transformation(self::$api_test_transformation_3);
     $this->assertNotEquals($transformation, NULL);
     $this->assertEquals($transformation["info"], array(array("crop"=> "scale", "width"=> 103)));
     $this->assertEquals($transformation["used"], FALSE);
@@ -408,29 +381,18 @@ class ApiTest extends PHPUnit_Framework_TestCase {
 
   function test16a_transformation_delete() {
     // should allow deleting named transformation
-    $this->api->create_transformation("api_test_transformation2", array("crop" => "scale", "width" => 103));
-    $this->api->transformation("api_test_transformation2");
-    $this->api->delete_transformation("api_test_transformation2");
-  }
-
-  /**
-   * @expectedException \Cloudinary\Api\NotFound
-   */
-  function test16b_transformation_delete() {
-    $this->api->transformation("api_test_transformation2");
+    $this->api->create_transformation(self::$api_test_transformation_2, array("crop" => "scale", "width" => 103));
+    $this->api->transformation(self::$api_test_transformation_2);
+    $this->api->delete_transformation(self::$api_test_transformation_2);
   }
 
   function test17a_transformation_delete_implicit() {
     // should allow deleting implicit transformation
-    $this->api->transformation("c_scale,w_100");
+    Curl::mockApi($this);
     $this->api->delete_transformation("c_scale,w_100");
-  }
+    assertUrl($this, "/transformations/c_scale,w_100");
+    assertDelete($this);
 
-  /**
-   * @expectedException \Cloudinary\Api\NotFound
-   */
-  function test17b_transformation_delete_implicit() {
-    $this->api->transformation("c_scale,w_100");
   }
 
   function test18_usage() {
@@ -442,12 +404,12 @@ class ApiTest extends PHPUnit_Framework_TestCase {
   function test19_delete_derived() {
     // should allow deleting all resources
     $this->markTestSkipped("Not enabled by default - remove this line to test");
-    Uploader::upload(self::LOGO_PNG, array("public_id"=> self::API_TEST_5, "eager"=>array("transformation"=>array("width"=> 101,"crop" => "scale"))));
-    $resource = $this->api->resource(self::API_TEST_5);
+    Uploader::upload(self::LOGO_PNG, array("public_id"=> self::$api_test_5, "eager"=>array("transformation"=>array("width"=> 101,"crop" => "scale"))));
+    $resource = $this->api->resource(self::$api_test_5);
     $this->assertNotEquals($resource, NULL);
     $this->assertEquals(count($resource["derived"]), 1);
     $this->api->delete_all_resources(array("keep_original" => True));
-    $resource = $this->api->resource(self::API_TEST_5);
+    $resource = $this->api->resource(self::$api_test_5);
     $this->assertNotEquals($resource, NULL);
     $this->assertEquals(count($resource["derived"]), 0);
   }
@@ -480,7 +442,7 @@ class ApiTest extends PHPUnit_Framework_TestCase {
    */
   function test23_categorization() {
     // should support requesting categorization
-    $this->api->update(self::API_TEST, array("categorization" => "illegal"));
+    $this->api->update(self::$api_test, array("categorization" => "illegal"));
   }
 
   /**
@@ -489,7 +451,7 @@ class ApiTest extends PHPUnit_Framework_TestCase {
    */
   function test24_detection() {
     // should support requesting detection
-    $this->api->update(self::API_TEST, array("detection" => "illegal"));
+    $this->api->update(self::$api_test, array("detection" => "illegal"));
   }
 
   /**
@@ -498,45 +460,45 @@ class ApiTest extends PHPUnit_Framework_TestCase {
    */
   function test25_background_removal() {
     // should support requesting background_removal
-    $this->api->update(self::API_TEST, array("background_removal" => "illegal"));
+    $this->api->update(self::$api_test, array("background_removal" => "illegal"));
   }
 
-  /**
-   * @expectedException \Cloudinary\Api\BadRequest
-   * @expectedExceptionMessage Must use
-   */
   function test26_auto_tagging() {
     // should support requesting auto_tagging
-    $this->api->update(self::API_TEST, array("auto_tagging" => 0.5));
+    Curl::mockApi($this);
+    $this->api->update("foobar", array("auto_tagging" => 0.5));
+    assertUrl($this, "/resources/image/upload/foobar");
+    assertPost($this);
+    assertParam($this, "auto_tagging", 0.5);
   }
 
   function test27_start_at() {
       // should allow listing resources by start date
-      sleep(2);
-      $dateTime = new \DateTime();
-      $start_at = $dateTime->format(\DateTime::ISO8601);
-      sleep(2);
-      $response = Uploader::upload(self::LOGO_PNG);
-      $api_repsonse = $this->api->resources(array("type"=>"upload", "start_at"=>$start_at, "direction"=>"asc"));
-      $resources = $api_repsonse["resources"];
-      $this->assertEquals(count($resources), 1);
-      $this->assertEquals($resources[0]["public_id"], $response["public_id"]);
+    Curl::mockApi($this);
+    $dateTime = new \DateTime();
+    $start_at = $dateTime->format(\DateTime::ISO8601);
+    $this->api->resources(array("type"=>"upload", "start_at"=>$start_at, "direction"=>"asc"));
+    assertUrl($this, "/resources/image/upload");
+    assertParam($this, "start_at", $start_at);
+    assertParam($this, "direction", "asc");
   }
 
-  function test28_create_list_upload_presets() {
-      // should allow creating and listing upload_presets
-      $this->api->create_upload_preset(array("name"=> self::API_TEST_UPLOAD_PRESET, "folder"=>"folder"));
-      $this->api->create_upload_preset(array("name"=> self::API_TEST_UPLOAD_PRESET_2, "folder"=>"folder2"));
-      $this->api->create_upload_preset(array("name"=> self::API_TEST_UPLOAD_PRESET_3, "folder"=>"folder3"));
-      $api_response = $this->api->upload_presets();
-      $presets = $api_response["presets"];
-      $this->api->delete_upload_preset(self::API_TEST_UPLOAD_PRESET);
-      $this->api->delete_upload_preset(self::API_TEST_UPLOAD_PRESET_2);
-      $this->api->delete_upload_preset(self::API_TEST_UPLOAD_PRESET_3);
-      $this->assertGreaterThanOrEqual(3, count($presets));
-      $this->assertEquals($presets[0]["name"], self::API_TEST_UPLOAD_PRESET_3);
-      $this->assertEquals($presets[1]["name"], self::API_TEST_UPLOAD_PRESET_2);
-      $this->assertEquals($presets[2]["name"], self::API_TEST_UPLOAD_PRESET);
+  function test28_create_upload_presets() {
+    // should allow creating and listing upload_presets
+    Curl::mockApi($this);
+    $this->api->create_upload_preset(array("name" => self::$api_test_upload_preset, "folder" => "folder"));
+    assertUrl($this, "/upload_presets");
+    assertPost($this);
+    assertParam($this, "name", self::$api_test_upload_preset);
+    assertParam($this, "folder", "folder");
+  }
+  
+  function test28a_list_upload_presets() {
+    // should allow creating and listing upload_presets
+    Curl::mockApi($this);
+    $this->api->upload_presets();
+    assertUrl($this, "/upload_presets");
+    assertGet($this);
   }
 
   function test29_get_upload_presets() {
@@ -556,26 +518,20 @@ class ApiTest extends PHPUnit_Framework_TestCase {
 
   function test30_delete_upload_presets() {
       // should allow deleting upload_presets
-      $this->api->create_upload_preset(array("name"=>"api_test_upload_preset4", "folder"=>"folder"));
-      $this->api->upload_preset("api_test_upload_preset4");
-      $this->api->delete_upload_preset("api_test_upload_preset4");
-      try {
-        $this->api->upload_preset("api_test_upload_preset4");
-        $this->fail();
-      } catch (Api\NotFound $expected) {
-      }
+    Curl::mockApi($this);
+    $this->api->delete_upload_preset(self::$api_test_upload_preset);
+    assertUrl($this, "/upload_presets/" . self::$api_test_upload_preset);
+    assertDelete($this);
   }
 
   function test31_update_upload_presets() {
-      // should allow getting a single upload_preset
-      $result = $this->api->create_upload_preset(array("folder"=>"folder"));
-      $name = $result["name"];
-      $preset = $this->api->upload_preset($name);
-      $this->api->update_upload_preset($name, array_merge($preset["settings"], array("colors"=>TRUE, "unsigned"=>TRUE, "disallow_public_id"=>TRUE)));
-      $preset = $this->api->upload_preset($name);
-      $this->api->delete_upload_preset($name);
-      $this->assertEquals($preset["unsigned"], TRUE);
-      $this->assertEquals($preset["settings"], array("folder"=>"folder", "colors"=>TRUE, "disallow_public_id"=>TRUE));
+    Curl::mockApi($this);
+    $this->api->update_upload_preset("foobar", array("colors" => TRUE, "unsigned" => TRUE, "disallow_public_id" => TRUE));
+    assertPut($this);
+    assertUrl($this, "/upload_presets/foobar");
+    assertParam($this, "colors", 1);
+    assertParam($this, "unsigned", 1);
+    assertParam($this, "disallow_public_id", 1);
   }
 
   function test32_folder_listing() {
@@ -600,43 +556,126 @@ class ApiTest extends PHPUnit_Framework_TestCase {
   }
 
   function test34_restore() {
-    Uploader::upload(self::LOGO_PNG, array("public_id" => "api_test_restore", "backup"=>TRUE));
-    $resource = $this->api->resource("api_test_restore");
-    $this->assertNotEquals($resource, NULL);
-    $this->assertEquals($resource["bytes"], self::LOGO_SIZE);
-    $this->api->delete_resources(array("api_test_restore"));
-    $resource = $this->api->resource("api_test_restore");
-    $this->assertNotEquals($resource, NULL);
-    $this->assertEquals($resource["bytes"], 0);
-    $this->assertEquals($resource["placeholder"], TRUE);
-    $response = $this->api->restore(array("api_test_restore"));
-    $info = $response["api_test_restore"];
-    $this->assertNotEquals($info, NULL);
-    $this->assertEquals($info["bytes"], self::LOGO_SIZE);
-    $resource = $this->api->resource("api_test_restore");
-    $this->assertNotEquals($resource, NULL);
-    $this->assertEquals($resource["bytes"], self::LOGO_SIZE);
+    Curl::mockApi($this);
+    $this->api->restore(array("api_test_restore"));
+    assertPost($this);
+    assertUrl($this, "/resources/image/upload/restore");
+    assertParam($this, "public_ids[0]", "api_test_restore");
+    
   }
 
   function test35_upload_mapping() {
-    try{$this->api->delete_upload_mapping("api_test_upload_mapping");} catch (Exception $e) {}
-    $this->api->create_upload_mapping("api_test_upload_mapping", array("template"=>"http://cloudinary.com"));
-    $result = $this->api->upload_mapping("api_test_upload_mapping");
-    $this->assertEquals($result["template"], "http://cloudinary.com");
-    $this->api->update_upload_mapping("api_test_upload_mapping", array("template"=>"http://res.cloudinary.com"));
-    $result = $this->api->upload_mapping("api_test_upload_mapping");
-    $this->assertEquals($result["template"], "http://res.cloudinary.com");
-    $result = $this->api->upload_mappings();
-    $this->assertContains(array("folder"=>"api_test_upload_mapping","template"=>"http://res.cloudinary.com"), $result["mappings"]);
-    $this->api->delete_upload_mapping("api_test_upload_mapping");
-    $result = $this->api->upload_mappings();
-    $this->assertNotContains("api_test_upload_mapping", $result["mappings"]);
-  }
-  function test_update_parameters(){
-    Curl::mock($this);
+    Curl::mockApi($this);
 
-    $this->api->update(self::API_TEST, array("auto_tagging" => 0.5));
-    $fields = Curl::$instance->parameters[CURLOPT_POSTFIELDS];
+    $this->api->create_upload_mapping("api_test_upload_mapping", array("template"=>"http://cloudinary.com"));
+    assertUrl($this, "/upload_mappings");
+    assertPost($this);
+    assertParam($this, "folder", "api_test_upload_mapping");
+    assertParam($this, "template", "http://cloudinary.com");
+
+    $result = $this->api->upload_mapping("api_test_upload_mapping");
+    assertUrl($this, "/upload_mappings");
+    assertGet($this);
+    assertParam($this, "folder", "api_test_upload_mapping");
+
+    $this->api->update_upload_mapping("api_test_upload_mapping", array("template"=>"http://res.cloudinary.com"));
+    assertUrl($this, "/upload_mappings");
+    assertPut($this);
+    assertParam($this, "folder", "api_test_upload_mapping");
+    assertParam($this, "template", "http://res.cloudinary.com");
+
+    $this->api->delete_upload_mapping("api_test_upload_mapping");
+    assertUrl($this, "/upload_mappings");
+    assertDelete($this);
+    assertParam($this, "folder", "api_test_upload_mapping");
+
+  }
+
+  static $predefined_profiles = array("4k", "full_hd", "hd", "sd", "full_hd_wifi", "full_hd_lean", "hd_lean");
+
+  function test_create_streaming_profile() {
+
+    $name = self::$api_test . "_streaming_profile";
+    $result = $this->api->create_streaming_profile($name, array(
+      "representations"=> array(
+        array( "transformation" => array("bit_rate"=>"5m", "height"=>1200, "width"=>1200, "crop"=>"limit")))));
+    $this->assertArrayHasKey("representations",
+                          $result["data"]);
+    $reps = $result["data"]["representations"];
+    $this->assertTrue(is_array($reps));
+    // "transformation is returned as an array
+    $this->assertTrue(is_array($reps[0]["transformation"]));
+
+    $tr = $reps[0]["transformation"][0];
+    $expected = array("bit_rate" => "5m", "height" => 1200, "width" => 1200, "crop" => "limit");
+    $this->assertEquals($expected, $tr);
+
+  }
+
+  function test_update_delete_streaming_profile() {
+
+    $name = self::$api_test . "_streaming_profile_delete";
+    try {
+      $result = $this->api->create_streaming_profile($name, array(
+        "representations"=> array(
+          array( "transformation" => array("bit_rate"=>"5m", "height"=>1200, "width"=>1200, "crop"=>"limit")))));
+    } catch (Cloudinary\Api\AlreadyExists $e) {
+
+    }
+    $result = $this->api->update_streaming_profile($name, array(
+      "representations"=> array(
+        array( "transformation" => array("bit_rate"=>"5m", "height"=>1000, "width"=>1000, "crop"=>"scale")))));
+    $this->assertArrayHasKey("representations",
+                          $result["data"]);
+    $reps = $result["data"]["representations"];
+    $this->assertTrue(is_array($reps));
+    // "transformation is returned as an array
+    $this->assertTrue(is_array($reps[0]["transformation"]));
+
+    $tr = $reps[0]["transformation"][0];
+    $expected = array("bit_rate" => "5m", "height" => 1000, "width" => 1000, "crop" => "scale");
+    $this->assertEquals($expected, $tr);
+
+    $result = $this->api->delete_streaming_profile($name);
+    $result = $this->api->list_streaming_profiles($name);
+    $this->assertArrayNotHasKey($name,array_map(function($profile){
+      return $profile["name"];
+    }, $result["data"]));
+  }
+
+  function test_get_streaming_profile() {
+
+    $result = $this->api->get_streaming_profile(self::$predefined_profiles[0]);
+    $this->assertArrayHasKey("representations",
+                          $result["data"]);
+    $reps = $result["data"]["representations"];
+    $this->assertTrue(is_array($reps));
+    // "transformation is returned as an array
+    $this->assertTrue(is_array($reps[0]["transformation"]));
+
+    $tr = $reps[0]["transformation"][0];
+    $this->assertArrayHasKey("bit_rate", $tr);
+    $this->assertArrayHasKey("height", $tr);
+    $this->assertArrayHasKey("width", $tr);
+    $this->assertArrayHasKey("crop", $tr);
+  }
+
+  function test_list_streaming_profile() {
+
+    $result = $this->api->list_streaming_profiles();
+    $names = array_map(function ($profile) {
+      return $profile["name"];
+    }, $result["data"]);
+    $this->assertEmpty(array_diff(self::$predefined_profiles, $names));
+  }
+
+  function test_update_parameters(){
+    Curl::mockApi($this);
+
+    $this->api->update(self::$api_test, array("auto_tagging" => 0.5));
+    assertUrl($this, '/resources/image/upload/' . self::$api_test);
+    assertParam($this, "auto_tagging", 0.5);
+    $fields = Curl::$instance->fields();
     $this->assertArrayNotHasKey("face_coordinates", $fields, "update() should not send empty parameters");
     $this->assertArrayNotHasKey("tags", $fields, "update() should not send empty parameters");
     $this->assertArrayNotHasKey("context", $fields, "update() should not send empty parameters");

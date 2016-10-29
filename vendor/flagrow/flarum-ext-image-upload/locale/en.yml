@@ -45,6 +45,6 @@ flagrow-image-upload:
                 relative setting card is going to be displayed.
             resize: >
                 Choose whether you want to resize your images before
-                they get uploaded. You can choose a maxiumum width
+                they get uploaded. You can choose a maximum width
                 and height, in pixels. The resizing process keeps the
                 aspect ratio of the images.

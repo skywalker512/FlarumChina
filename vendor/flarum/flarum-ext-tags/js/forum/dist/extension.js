@@ -1,6 +1,8 @@
 'use strict';
 
 System.register('flarum/tags/addTagComposer', ['flarum/extend', 'flarum/components/IndexPage', 'flarum/components/DiscussionComposer', 'flarum/tags/components/TagDiscussionModal', 'flarum/tags/helpers/tagsLabel'], function (_export, _context) {
+  "use strict";
+
   var extend, override, IndexPage, DiscussionComposer, TagDiscussionModal, tagsLabel;
 
   _export('default', function () {
@@ -88,6 +90,8 @@ System.register('flarum/tags/addTagComposer', ['flarum/extend', 'flarum/componen
 'use strict';
 
 System.register('flarum/tags/addTagControl', ['flarum/extend', 'flarum/utils/DiscussionControls', 'flarum/components/Button', 'flarum/tags/components/TagDiscussionModal'], function (_export, _context) {
+  "use strict";
+
   var extend, DiscussionControls, Button, TagDiscussionModal;
 
   _export('default', function () {
@@ -121,6 +125,8 @@ System.register('flarum/tags/addTagControl', ['flarum/extend', 'flarum/utils/Dis
 'use strict';
 
 System.register('flarum/tags/addTagFilter', ['flarum/extend', 'flarum/components/IndexPage', 'flarum/components/DiscussionList', 'flarum/tags/components/TagHero'], function (_export, _context) {
+  "use strict";
+
   var extend, override, IndexPage, DiscussionList, TagHero;
 
   _export('default', function () {
@@ -186,6 +192,8 @@ System.register('flarum/tags/addTagFilter', ['flarum/extend', 'flarum/components
 'use strict';
 
 System.register('flarum/tags/addTagLabels', ['flarum/extend', 'flarum/components/DiscussionListItem', 'flarum/components/DiscussionPage', 'flarum/components/DiscussionHero', 'flarum/tags/helpers/tagsLabel', 'flarum/tags/utils/sortTags'], function (_export, _context) {
+  "use strict";
+
   var extend, DiscussionListItem, DiscussionPage, DiscussionHero, tagsLabel, sortTags;
 
   _export('default', function () {
@@ -247,6 +255,8 @@ System.register('flarum/tags/addTagLabels', ['flarum/extend', 'flarum/components
 'use strict';
 
 System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/IndexPage', 'flarum/components/Separator', 'flarum/components/LinkButton', 'flarum/tags/components/TagLinkButton', 'flarum/tags/components/TagsPage', 'flarum/tags/utils/sortTags'], function (_export, _context) {
+  "use strict";
+
   var extend, IndexPage, Separator, LinkButton, TagLinkButton, TagsPage, sortTags;
 
   _export('default', function () {
@@ -320,6 +330,8 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
 'use strict';
 
 System.register('flarum/tags/components/DiscussionTaggedPost', ['flarum/components/EventPost', 'flarum/helpers/punctuateSeries', 'flarum/tags/helpers/tagsLabel'], function (_export, _context) {
+  "use strict";
+
   var EventPost, punctuateSeries, tagsLabel, DiscussionTaggedPost;
   return {
     setters: [function (_flarumComponentsEventPost) {
@@ -406,8 +418,10 @@ System.register('flarum/tags/components/DiscussionTaggedPost', ['flarum/componen
 });;
 'use strict';
 
-System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components/Modal', 'flarum/components/DiscussionPage', 'flarum/components/Button', 'flarum/helpers/highlight', 'flarum/utils/classList', 'flarum/utils/extractText', 'flarum/tags/helpers/tagLabel', 'flarum/tags/helpers/tagIcon', 'flarum/tags/utils/sortTags'], function (_export, _context) {
-  var Modal, DiscussionPage, Button, highlight, classList, extractText, tagLabel, tagIcon, sortTags, TagDiscussionModal;
+System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components/Modal', 'flarum/components/DiscussionPage', 'flarum/components/Button', 'flarum/helpers/highlight', 'flarum/utils/classList', 'flarum/utils/extractText', 'flarum/utils/KeyboardNavigatable', 'flarum/tags/helpers/tagLabel', 'flarum/tags/helpers/tagIcon', 'flarum/tags/utils/sortTags'], function (_export, _context) {
+  "use strict";
+
+  var Modal, DiscussionPage, Button, highlight, classList, extractText, KeyboardNavigatable, tagLabel, tagIcon, sortTags, TagDiscussionModal;
   return {
     setters: [function (_flarumComponentsModal) {
       Modal = _flarumComponentsModal.default;
@@ -421,6 +435,8 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
       classList = _flarumUtilsClassList.default;
     }, function (_flarumUtilsExtractText) {
       extractText = _flarumUtilsExtractText.default;
+    }, function (_flarumUtilsKeyboardNavigatable) {
+      KeyboardNavigatable = _flarumUtilsKeyboardNavigatable.default;
     }, function (_flarumTagsHelpersTagLabel) {
       tagLabel = _flarumTagsHelpersTagLabel.default;
     }, function (_flarumTagsHelpersTagIcon) {
@@ -440,11 +456,23 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
         babelHelpers.createClass(TagDiscussionModal, [{
           key: 'init',
           value: function init() {
+            var _this2 = this;
+
             babelHelpers.get(Object.getPrototypeOf(TagDiscussionModal.prototype), 'init', this).call(this);
 
-            this.tags = sortTags(app.store.all('tags').filter(function (tag) {
-              return tag.canStartDiscussion();
-            }));
+            this.tags = app.store.all('tags');
+
+            if (this.props.discussion) {
+              this.tags = this.tags.filter(function (tag) {
+                return tag.canAddToDiscussion() || _this2.props.discussion.tags().indexOf(tag) !== -1;
+              });
+            } else {
+              this.tags = this.tags.filter(function (tag) {
+                return tag.canStartDiscussion();
+              });
+            }
+
+            this.tags = sortTags(this.tags);
 
             this.selected = [];
             this.filter = m.prop('');
@@ -461,6 +489,15 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
             this.maxPrimary = app.forum.attribute('maxPrimaryTags');
             this.minSecondary = app.forum.attribute('minSecondaryTags');
             this.maxSecondary = app.forum.attribute('maxSecondaryTags');
+
+            this.navigator = new KeyboardNavigatable();
+            this.navigator.onUp(function () {
+              return _this2.setIndex(_this2.getCurrentNumericIndex() - 1, true);
+            }).onDown(function () {
+              return _this2.setIndex(_this2.getCurrentNumericIndex() + 1, true);
+            }).onSelect(this.select.bind(this)).onRemove(function () {
+              return _this2.selected.splice(_this2.selected.length - 1, 1);
+            });
           }
         }, {
           key: 'primaryCount',
@@ -537,7 +574,7 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
         }, {
           key: 'content',
           value: function content() {
-            var _this2 = this;
+            var _this3 = this;
 
             var tags = this.tags;
             var filter = this.filter().toLowerCase();
@@ -548,20 +585,20 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
             // makes it impossible to select a child if its parent hasn't been selected.
             tags = tags.filter(function (tag) {
               var parent = tag.parent();
-              return parent === false || _this2.selected.indexOf(parent) !== -1;
+              return parent === false || _this3.selected.indexOf(parent) !== -1;
             });
 
             // If the number of selected primary/secondary tags is at the maximum, then
             // we'll filter out all other tags of that type.
-            if (primaryCount >= app.forum.attribute('maxPrimaryTags')) {
+            if (primaryCount >= this.maxPrimary) {
               tags = tags.filter(function (tag) {
-                return !tag.isPrimary() || _this2.selected.indexOf(tag) !== -1;
+                return !tag.isPrimary() || _this3.selected.indexOf(tag) !== -1;
               });
             }
 
-            if (secondaryCount >= app.forum.attribute('maxSecondaryTags')) {
+            if (secondaryCount >= this.maxSecondary) {
               tags = tags.filter(function (tag) {
-                return tag.isPrimary() || _this2.selected.indexOf(tag) !== -1;
+                return tag.isPrimary() || _this3.selected.indexOf(tag) !== -1;
               });
             }
 
@@ -594,8 +631,8 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
                         return m(
                           'span',
                           { className: 'TagsInput-tag', onclick: function onclick() {
-                              _this2.removeTag(tag);
-                              _this2.onready();
+                              _this3.removeTag(tag);
+                              _this3.onready();
                             } },
                           tagLabel(tag)
                         );
@@ -605,12 +642,12 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
                       placeholder: extractText(this.getInstruction(primaryCount, secondaryCount)),
                       value: this.filter(),
                       oninput: m.withAttr('value', this.filter),
-                      onkeydown: this.onkeydown.bind(this),
+                      onkeydown: this.navigator.navigate.bind(this.navigator),
                       onfocus: function onfocus() {
-                        return _this2.focused = true;
+                        return _this3.focused = true;
                       },
                       onblur: function onblur() {
-                        return _this2.focused = false;
+                        return _this3.focused = false;
                       } })
                   )
                 ),
@@ -633,7 +670,7 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
                 'ul',
                 { className: 'TagDiscussionModal-list SelectTagList' },
                 tags.filter(function (tag) {
-                  return filter || !tag.parent() || _this2.selected.indexOf(tag.parent()) !== -1;
+                  return filter || !tag.parent() || _this3.selected.indexOf(tag.parent()) !== -1;
                 }).map(function (tag) {
                   return m(
                     'li',
@@ -642,14 +679,14 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
                         pinned: tag.position() !== null,
                         child: !!tag.parent(),
                         colored: !!tag.color(),
-                        selected: _this2.selected.indexOf(tag) !== -1,
-                        active: _this2.index === tag
+                        selected: _this3.selected.indexOf(tag) !== -1,
+                        active: _this3.index === tag
                       }),
                       style: { color: tag.color() },
                       onmouseover: function onmouseover() {
-                        return _this2.index = tag;
+                        return _this3.index = tag;
                       },
-                      onclick: _this2.toggleTag.bind(_this2, tag)
+                      onclick: _this3.toggleTag.bind(_this3, tag)
                     },
                     tagIcon(tag),
                     m(
@@ -686,38 +723,15 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
             this.onready();
           }
         }, {
-          key: 'onkeydown',
-          value: function onkeydown(e) {
-            switch (e.which) {
-              case 40:
-              case 38:
-                // Down/Up
-                e.preventDefault();
-                this.setIndex(this.getCurrentNumericIndex() + (e.which === 40 ? 1 : -1), true);
-                break;
-
-              case 13:
-                // Return
-                e.preventDefault();
-                if (e.metaKey || e.ctrlKey || this.selected.indexOf(this.index) !== -1) {
-                  if (this.selected.length) {
-                    this.$('form').submit();
-                  }
-                } else {
-                  this.getItem(this.index)[0].dispatchEvent(new Event('click'));
-                }
-                break;
-
-              case 8:
-                // Backspace
-                if (e.target.selectionStart === 0 && e.target.selectionEnd === 0) {
-                  e.preventDefault();
-                  this.selected.splice(this.selected.length - 1, 1);
-                }
-                break;
-
-              default:
-              // no default
+          key: 'select',
+          value: function select(e) {
+            // Ctrl + Enter submits the selection, just Enter completes the current entry
+            if (e.metaKey || e.ctrlKey || this.selected.indexOf(this.index) !== -1) {
+              if (this.selected.length) {
+                this.$('form').submit();
+              }
+            } else {
+              this.getItem(this.index)[0].dispatchEvent(new Event('click'));
             }
           }
         }, {
@@ -806,6 +820,8 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
 'use strict';
 
 System.register('flarum/tags/components/TagHero', ['flarum/Component'], function (_export, _context) {
+  "use strict";
+
   var Component, TagHero;
   return {
     setters: [function (_flarumComponent) {
@@ -861,6 +877,8 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component'], function
 'use strict';
 
 System.register('flarum/tags/components/TagLinkButton', ['flarum/components/LinkButton', 'flarum/tags/helpers/tagIcon'], function (_export, _context) {
+  "use strict";
+
   var LinkButton, tagIcon, TagLinkButton;
   return {
     setters: [function (_flarumComponentsLinkButton) {
@@ -913,6 +931,8 @@ System.register('flarum/tags/components/TagLinkButton', ['flarum/components/Link
 'use strict';
 
 System.register('flarum/tags/components/TagsPage', ['flarum/Component', 'flarum/components/IndexPage', 'flarum/helpers/listItems', 'flarum/helpers/humanTime', 'flarum/helpers/icon', 'flarum/tags/helpers/tagLabel', 'flarum/tags/utils/sortTags'], function (_export, _context) {
+  "use strict";
+
   var Component, IndexPage, listItems, humanTime, icon, tagLabel, sortTags, TagsPage;
   return {
     setters: [function (_flarumComponent) {
@@ -1063,6 +1083,8 @@ System.register('flarum/tags/components/TagsPage', ['flarum/Component', 'flarum/
 'use strict';
 
 System.register('flarum/tags/helpers/tagIcon', [], function (_export, _context) {
+  "use strict";
+
   function tagIcon(tag) {
     var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -1088,6 +1110,8 @@ System.register('flarum/tags/helpers/tagIcon', [], function (_export, _context) 
 'use strict';
 
 System.register('flarum/tags/helpers/tagLabel', ['flarum/utils/extract'], function (_export, _context) {
+  "use strict";
+
   var extract;
   function tagLabel(tag) {
     var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
@@ -1132,6 +1156,8 @@ System.register('flarum/tags/helpers/tagLabel', ['flarum/utils/extract'], functi
 'use strict';
 
 System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flarum/tags/helpers/tagLabel', 'flarum/tags/utils/sortTags'], function (_export, _context) {
+  "use strict";
+
   var extract, tagLabel, sortTags;
   function tagsLabel(tags) {
     var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
@@ -1174,6 +1200,8 @@ System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flaru
 'use strict';
 
 System.register('flarum/tags/main', ['flarum/Model', 'flarum/models/Discussion', 'flarum/components/IndexPage', 'flarum/tags/models/Tag', 'flarum/tags/components/TagsPage', 'flarum/tags/components/DiscussionTaggedPost', 'flarum/tags/addTagList', 'flarum/tags/addTagFilter', 'flarum/tags/addTagLabels', 'flarum/tags/addTagControl', 'flarum/tags/addTagComposer'], function (_export, _context) {
+  "use strict";
+
   var Model, Discussion, IndexPage, Tag, TagsPage, DiscussionTaggedPost, addTagList, addTagFilter, addTagLabels, addTagControl, addTagComposer;
   return {
     setters: [function (_flarumModel) {
@@ -1228,6 +1256,8 @@ System.register('flarum/tags/main', ['flarum/Model', 'flarum/models/Discussion',
 'use strict';
 
 System.register('flarum/tags/models/Tag', ['flarum/Model', 'flarum/utils/mixin', 'flarum/utils/computed'], function (_export, _context) {
+  "use strict";
+
   var Model, mixin, computed, Tag;
   return {
     setters: [function (_flarumModel) {
@@ -1268,6 +1298,7 @@ System.register('flarum/tags/models/Tag', ['flarum/Model', 'flarum/utils/mixin',
 
         isRestricted: Model.attribute('isRestricted'),
         canStartDiscussion: Model.attribute('canStartDiscussion'),
+        canAddToDiscussion: Model.attribute('canAddToDiscussion'),
 
         isPrimary: computed('position', 'parent', function (position, parent) {
           return position !== null && parent === false;
@@ -1281,6 +1312,8 @@ System.register('flarum/tags/models/Tag', ['flarum/Model', 'flarum/utils/mixin',
 "use strict";
 
 System.register("flarum/tags/utils/sortTags", [], function (_export, _context) {
+  "use strict";
+
   function sortTags(tags) {
     return tags.slice(0).sort(function (a, b) {
       var aPos = a.position();

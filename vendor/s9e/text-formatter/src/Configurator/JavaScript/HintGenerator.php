@@ -52,6 +52,7 @@ class HintGenerator
 	{
 		$this->hints['closeAncestor']   = 0;
 		$this->hints['closeParent']     = 0;
+		$this->hints['createChild']     = 0;
 		$this->hints['fosterParent']    = 0;
 		$this->hints['requireAncestor'] = 0;
 		$flags = 0;

@@ -1,11 +1,12 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 require 'main.php';
 ?>
 <!DOCTYPE HTML>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>PhotoAlbum - Upload page</title>
+    <title>PhotoAlbum - Upload page2</title>
 
 	<link href="style.css" media="all" rel="stylesheet" />
 
@@ -13,11 +14,11 @@ require 'main.php';
      href="<?php echo cloudinary_url("http://cloudinary.com/favicon.png",
            array("type" => "fetch")); ?>" />
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="lib/jquery.ui.widget.js"></script>
-    <script src="lib/jquery.iframe-transport.js"></script>
-    <script src="lib/jquery.fileupload.js"></script>
-    <script src="lib/jquery.cloudinary.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.12.5/js/vendor/jquery.ui.widget.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.12.5/js/jquery.iframe-transport.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.12.5/js/jquery.fileupload.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-jquery-file-upload/2.1.2/cloudinary-jquery-file-upload.js"></script>
     <?php echo cloudinary_js_config(); ?>
   </head>
   
@@ -95,7 +96,7 @@ require 'main.php';
     
     <script>
       function prettydump(obj) {
-        ret = ""
+        ret = "";
         $.each(obj, function(key, value) {
           ret += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
         });
@@ -104,14 +105,14 @@ require 'main.php';
       
       $(function() {
         $('.cloudinary-fileupload')
-        .fileupload({ 
+        .cloudinary_fileupload({
           dropZone: '#direct_upload',
           start: function () {
             $('.status_value').text('Starting direct upload...');
           },
           progress: function () {
             $('.status_value').text('Uploading...');
-          },
+          }
         })
         .on('cloudinarydone', function (e, data) {
             $('.status_value').text('Idle');

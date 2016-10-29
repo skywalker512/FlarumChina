@@ -146,6 +146,7 @@ class Parser extends ParserBase
 	protected static function wget($url, $cacheDir = \null)
 	{
 		$prefix = '';
+		$url    = \preg_replace('(#.*)s', '', $url);
 		if (isset($cacheDir) && \file_exists($cacheDir))
 		{
 			$cacheFile = $cacheDir . '/http.' . \crc32($url);

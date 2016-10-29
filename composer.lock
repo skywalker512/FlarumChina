@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3a9565124d97acd6a71635c0a5f51253",
-    "content-hash": "e09ef73cc435143b19dba8e1f3a332f5",
+    "hash": "a0b3039b513f9648b18bf402b46a72a4",
+    "content-hash": "c5816a19f99b815a2ac610ea4ba4a726",
     "packages": [
         {
             "name": "cloudinary/cloudinary_php",
-            "version": "1.4.0",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cloudinary/cloudinary_php.git",
-                "reference": "64a3efeda2cb3b27928cc9a50eb52fcfbfca7507"
+                "reference": "327f2db5767ceb8a19d51785e1b60e86674a6a2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cloudinary/cloudinary_php/zipball/64a3efeda2cb3b27928cc9a50eb52fcfbfca7507",
-                "reference": "64a3efeda2cb3b27928cc9a50eb52fcfbfca7507",
+                "url": "https://api.github.com/repos/cloudinary/cloudinary_php/zipball/327f2db5767ceb8a19d51785e1b60e86674a6a2e",
+                "reference": "327f2db5767ceb8a19d51785e1b60e86674a6a2e",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,42 @@
                 "image management",
                 "sdk"
             ],
-            "time": "2016-06-22 15:44:06"
+            "time": "2016-10-27 22:02:47"
+        },
+        {
+            "name": "components/font-awesome",
+            "version": "4.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/font-awesome.git",
+                "reference": "885308b939369d147bec93174722786bc2c4eedd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/font-awesome/zipball/885308b939369d147bec93174722786bc2c4eedd",
+                "reference": "885308b939369d147bec93174722786bc2c4eedd",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "styles": [
+                        "css/font-awesome.css"
+                    ],
+                    "files": [
+                        "css/font-awesome.min.css",
+                        "css/font-awesome.css.map",
+                        "fonts/*"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT",
+                "OFL-1.1"
+            ],
+            "description": "The iconic font designed for use with Twitter Bootstrap.",
+            "time": "2016-10-25 10:56:23"
         },
         {
             "name": "danielstjules/stringy",
@@ -169,35 +204,35 @@
         },
         {
             "name": "doctrine/annotations",
-            "version": "v1.2.7",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "f25c8aab83e0c3e976fd7d19875f198ccf2f7535"
+                "reference": "30e07cf03edc3cd3ef579d0dd4dd8c58250799a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/f25c8aab83e0c3e976fd7d19875f198ccf2f7535",
-                "reference": "f25c8aab83e0c3e976fd7d19875f198ccf2f7535",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/30e07cf03edc3cd3ef579d0dd4dd8c58250799a5",
+                "reference": "30e07cf03edc3cd3ef579d0dd4dd8c58250799a5",
                 "shasum": ""
             },
             "require": {
                 "doctrine/lexer": "1.*",
-                "php": ">=5.3.2"
+                "php": "^5.6 || ^7.0"
             },
             "require-dev": {
                 "doctrine/cache": "1.*",
-                "phpunit/phpunit": "4.*"
+                "phpunit/phpunit": "^5.6.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3.x-dev"
+                    "dev-master": "1.4.x-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Doctrine\\Common\\Annotations\\": "lib/"
+                "psr-4": {
+                    "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -233,7 +268,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2015-08-31 12:32:49"
+            "time": "2016-10-24 11:45:47"
         },
         {
             "name": "doctrine/cache",
@@ -446,16 +481,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "v2.5.4",
+            "version": "v2.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "abbdfd1cff43a7b99d027af3be709bc8fc7d4769"
+                "reference": "9f8c05cd5225a320d56d4bfdb4772f10d045a0c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/abbdfd1cff43a7b99d027af3be709bc8fc7d4769",
-                "reference": "abbdfd1cff43a7b99d027af3be709bc8fc7d4769",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/9f8c05cd5225a320d56d4bfdb4772f10d045a0c9",
+                "reference": "9f8c05cd5225a320d56d4bfdb4772f10d045a0c9",
                 "shasum": ""
             },
             "require": {
@@ -464,7 +499,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "4.*",
-                "symfony/console": "2.*"
+                "symfony/console": "2.*||^3.0"
             },
             "suggest": {
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
@@ -513,7 +548,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2016-01-05 22:11:12"
+            "time": "2016-09-09 19:13:33"
         },
         {
             "name": "doctrine/inflector",
@@ -638,37 +673,40 @@
         },
         {
             "name": "filp/whoops",
-            "version": "1.1.10",
+            "version": "2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "72538eeb70bbfb11964412a3d098d109efd012f7"
+                "reference": "3f5cbd0e6a2fc17bc40b0238025ef1ff4c8c3efa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/72538eeb70bbfb11964412a3d098d109efd012f7",
-                "reference": "72538eeb70bbfb11964412a3d098d109efd012f7",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/3f5cbd0e6a2fc17bc40b0238025ef1ff4c8c3efa",
+                "reference": "3f5cbd0e6a2fc17bc40b0238025ef1ff4c8c3efa",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^5.5.9 || ^7.0"
             },
             "require-dev": {
-                "mockery/mockery": "0.9.*"
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "^4.8 || ^5.0",
+                "symfony/var-dumper": "^2.6 || ^3.0"
+            },
+            "suggest": {
+                "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
+                "whoops/soap": "Formats errors as SOAP responses"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2-dev"
+                    "dev-master": "2.0-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Whoops": "src/"
-                },
-                "classmap": [
-                    "src/deprecated"
-                ]
+                "psr-4": {
+                    "Whoops\\": "src/Whoops/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -682,34 +720,33 @@
                 }
             ],
             "description": "php error handling for cool kids",
-            "homepage": "https://github.com/filp/whoops",
+            "homepage": "https://filp.github.io/whoops/",
             "keywords": [
                 "error",
                 "exception",
                 "handling",
                 "library",
-                "silex-provider",
                 "whoops",
                 "zf2"
             ],
-            "time": "2015-06-29 05:42:04"
+            "time": "2016-10-11 15:32:23"
         },
         {
             "name": "flagrow/flarum-ext-image-upload",
-            "version": "0.2.3",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flagrow/flarum-ext-image-upload.git",
-                "reference": "e52469d7b6c1525e8ce769f500875e339a5c1d96"
+                "reference": "0392a9bbe50b0d988b3b8232e5bca208dfd87475"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flagrow/flarum-ext-image-upload/zipball/e52469d7b6c1525e8ce769f500875e339a5c1d96",
-                "reference": "e52469d7b6c1525e8ce769f500875e339a5c1d96",
+                "url": "https://api.github.com/repos/flagrow/flarum-ext-image-upload/zipball/0392a9bbe50b0d988b3b8232e5bca208dfd87475",
+                "reference": "0392a9bbe50b0d988b3b8232e5bca208dfd87475",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5",
+                "flarum/core": "^0.1.0-beta.6",
                 "flarum/flarum-ext-markdown": "^0.1.0-beta.3"
             },
             "suggest": {
@@ -757,26 +794,27 @@
                 "imgur",
                 "upload"
             ],
-            "time": "2016-05-18 12:09:21"
+            "time": "2016-10-24 11:10:17"
         },
         {
             "name": "flarum/core",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/core.git",
-                "reference": "d1c25a4bad129792307a687a7f541b9d445a3156"
+                "reference": "46bb66dd946249a2cedf6505af20682d8eb47975"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/core/zipball/d1c25a4bad129792307a687a7f541b9d445a3156",
-                "reference": "d1c25a4bad129792307a687a7f541b9d445a3156",
+                "url": "https://api.github.com/repos/flarum/core/zipball/46bb66dd946249a2cedf6505af20682d8eb47975",
+                "reference": "46bb66dd946249a2cedf6505af20682d8eb47975",
                 "shasum": ""
             },
             "require": {
-                "dflydev/fig-cookies": "^1.0",
+                "components/font-awesome": "^4.6",
+                "dflydev/fig-cookies": "^1.0.2",
                 "doctrine/dbal": "^2.5",
-                "franzl/whoops-middleware": "^0.2.0",
+                "franzl/whoops-middleware": "^0.4.0",
                 "illuminate/bus": "5.1.*",
                 "illuminate/cache": "5.1.*",
                 "illuminate/config": "5.1.*",
@@ -799,12 +837,12 @@
                 "oyejorge/less.php": "~1.5",
                 "php": ">=5.5.9",
                 "psr/http-message": "^1.0",
-                "s9e/text-formatter": "^0.4.12",
+                "s9e/text-formatter": "^0.6.1",
                 "symfony/console": "^2.7",
                 "symfony/http-foundation": "^2.7",
                 "symfony/translation": "^2.7",
                 "symfony/yaml": "^2.7",
-                "tobscure/json-api": "^0.2.0",
+                "tobscure/json-api": "^0.3.0",
                 "zendframework/zend-diactoros": "^1.1",
                 "zendframework/zend-stratigility": "^1.1"
             },
@@ -846,25 +884,25 @@
                 "discussion",
                 "forum"
             ],
-            "time": "2016-03-29 07:54:23"
+            "time": "2016-10-19 10:41:30"
         },
         {
             "name": "flarum/flarum-ext-akismet",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-akismet.git",
-                "reference": "95fa9f76f0226861dfad2e8788b6be6ad0ba306c"
+                "reference": "556b0ed5feade265b4ea9684bddbb01917099ee6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-akismet/zipball/95fa9f76f0226861dfad2e8788b6be6ad0ba306c",
-                "reference": "95fa9f76f0226861dfad2e8788b6be6ad0ba306c",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-akismet/zipball/556b0ed5feade265b4ea9684bddbb01917099ee6",
+                "reference": "556b0ed5feade265b4ea9684bddbb01917099ee6",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5",
-                "flarum/flarum-ext-approval": "^0.1.0-beta.5",
+                "flarum/core": "^0.1.0-beta.6",
+                "flarum/flarum-ext-approval": "^0.1.0-beta.6",
                 "tijsverkoyen/akismet": "^1.1"
             },
             "type": "flarum-extension",
@@ -901,25 +939,25 @@
             "keywords": [
                 "moderation"
             ],
-            "time": "2016-03-29 08:10:26"
+            "time": "2016-10-19 10:42:05"
         },
         {
             "name": "flarum/flarum-ext-approval",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-approval.git",
-                "reference": "aac8fe7bbf312f6f8bbbf4b484a5226ff2db25d4"
+                "reference": "8a764870324f16486ea3923c1d50fcb0d47ab201"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-approval/zipball/aac8fe7bbf312f6f8bbbf4b484a5226ff2db25d4",
-                "reference": "aac8fe7bbf312f6f8bbbf4b484a5226ff2db25d4",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-approval/zipball/8a764870324f16486ea3923c1d50fcb0d47ab201",
+                "reference": "8a764870324f16486ea3923c1d50fcb0d47ab201",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5",
-                "flarum/flarum-ext-flags": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6",
+                "flarum/flarum-ext-flags": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -954,24 +992,24 @@
             "keywords": [
                 "moderation"
             ],
-            "time": "2016-03-29 08:12:01"
+            "time": "2016-10-19 10:42:14"
         },
         {
             "name": "flarum/flarum-ext-auth-facebook",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-auth-facebook.git",
-                "reference": "059d7b29b67c7b379c62830f3943b474d8f5d03c"
+                "reference": "ac3591b7a32b7c6788620e80f48359ffc51d71a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-auth-facebook/zipball/059d7b29b67c7b379c62830f3943b474d8f5d03c",
-                "reference": "059d7b29b67c7b379c62830f3943b474d8f5d03c",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-auth-facebook/zipball/ac3591b7a32b7c6788620e80f48359ffc51d71a2",
+                "reference": "ac3591b7a32b7c6788620e80f48359ffc51d71a2",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5",
+                "flarum/core": "^0.1.0-beta.6",
                 "league/oauth2-facebook": "~1.0"
             },
             "type": "flarum-extension",
@@ -1007,24 +1045,24 @@
             "keywords": [
                 "Authentication"
             ],
-            "time": "2016-03-29 08:12:41"
+            "time": "2016-10-19 10:42:20"
         },
         {
             "name": "flarum/flarum-ext-auth-github",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-auth-github.git",
-                "reference": "67e420b9fdb6689df807d5dd783083b2f9346ccc"
+                "reference": "14722724e5e0f8de3e5c115f8aa8d39118d05b1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-auth-github/zipball/67e420b9fdb6689df807d5dd783083b2f9346ccc",
-                "reference": "67e420b9fdb6689df807d5dd783083b2f9346ccc",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-auth-github/zipball/14722724e5e0f8de3e5c115f8aa8d39118d05b1f",
+                "reference": "14722724e5e0f8de3e5c115f8aa8d39118d05b1f",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5",
+                "flarum/core": "^0.1.0-beta.6",
                 "league/oauth2-github": "^0.2.0"
             },
             "type": "flarum-extension",
@@ -1060,24 +1098,24 @@
             "keywords": [
                 "Authentication"
             ],
-            "time": "2016-03-29 08:13:34"
+            "time": "2016-10-19 10:42:27"
         },
         {
             "name": "flarum/flarum-ext-auth-twitter",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-auth-twitter.git",
-                "reference": "bc5d2f5addc83a9de8c4be5ec3384f119f767d57"
+                "reference": "23118d40d3a31d7dbdcf9734d9b8b8dca2358e80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-auth-twitter/zipball/bc5d2f5addc83a9de8c4be5ec3384f119f767d57",
-                "reference": "bc5d2f5addc83a9de8c4be5ec3384f119f767d57",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-auth-twitter/zipball/23118d40d3a31d7dbdcf9734d9b8b8dca2358e80",
+                "reference": "23118d40d3a31d7dbdcf9734d9b8b8dca2358e80",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5",
+                "flarum/core": "^0.1.0-beta.6",
                 "league/oauth1-client": "^1.6"
             },
             "type": "flarum-extension",
@@ -1113,7 +1151,7 @@
             "keywords": [
                 "Authentication"
             ],
-            "time": "2016-03-29 08:13:52"
+            "time": "2016-10-19 10:42:36"
         },
         {
             "name": "flarum/flarum-ext-bbcode",
@@ -1169,20 +1207,20 @@
         },
         {
             "name": "flarum/flarum-ext-emoji",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-emoji.git",
-                "reference": "52e09692dcc34a8822e01d1fa51108c880d1144d"
+                "reference": "733f40f2af313412fa4ce32d187dd7e7b5ce3828"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-emoji/zipball/52e09692dcc34a8822e01d1fa51108c880d1144d",
-                "reference": "52e09692dcc34a8822e01d1fa51108c880d1144d",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-emoji/zipball/733f40f2af313412fa4ce32d187dd7e7b5ce3828",
+                "reference": "733f40f2af313412fa4ce32d187dd7e7b5ce3828",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -1216,24 +1254,24 @@
             "keywords": [
                 "formatting"
             ],
-            "time": "2016-03-29 08:15:00"
+            "time": "2016-10-19 10:42:56"
         },
         {
             "name": "flarum/flarum-ext-english",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-english.git",
-                "reference": "13d85f852b37632024a845dad60c3e6360df094b"
+                "reference": "0ac610a95dab87cfbd83ee09c254b14881d49f52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-english/zipball/13d85f852b37632024a845dad60c3e6360df094b",
-                "reference": "13d85f852b37632024a845dad60c3e6360df094b",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-english/zipball/0ac610a95dab87cfbd83ee09c254b14881d49f52",
+                "reference": "0ac610a95dab87cfbd83ee09c254b14881d49f52",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -1262,24 +1300,24 @@
             "keywords": [
                 "locale"
             ],
-            "time": "2016-03-29 08:15:31"
+            "time": "2016-10-19 10:43:02"
         },
         {
             "name": "flarum/flarum-ext-flags",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-flags.git",
-                "reference": "a5e9119dca0e34ba35b70bd3e480bf1665ed567b"
+                "reference": "b4da3df0faf5890d58a7de1e1496981f252a331e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-flags/zipball/a5e9119dca0e34ba35b70bd3e480bf1665ed567b",
-                "reference": "a5e9119dca0e34ba35b70bd3e480bf1665ed567b",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-flags/zipball/b4da3df0faf5890d58a7de1e1496981f252a331e",
+                "reference": "b4da3df0faf5890d58a7de1e1496981f252a331e",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -1314,24 +1352,24 @@
             "keywords": [
                 "moderation"
             ],
-            "time": "2016-03-29 08:16:04"
+            "time": "2016-10-19 10:43:08"
         },
         {
             "name": "flarum/flarum-ext-likes",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-likes.git",
-                "reference": "1cb59a60e5c3e3733896fee8cc9d40302fb4e57d"
+                "reference": "b5fc66af26af088ec3db846748e72dd9ccbaaa8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-likes/zipball/1cb59a60e5c3e3733896fee8cc9d40302fb4e57d",
-                "reference": "1cb59a60e5c3e3733896fee8cc9d40302fb4e57d",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-likes/zipball/b5fc66af26af088ec3db846748e72dd9ccbaaa8c",
+                "reference": "b5fc66af26af088ec3db846748e72dd9ccbaaa8c",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -1366,24 +1404,24 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-03-29 08:16:33"
+            "time": "2016-10-19 10:43:14"
         },
         {
             "name": "flarum/flarum-ext-lock",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-lock.git",
-                "reference": "6d8b6a08e473d295d4795faac3220233e7916d7c"
+                "reference": "038f1a2408214d999b08c46846aa1dc492452be7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-lock/zipball/6d8b6a08e473d295d4795faac3220233e7916d7c",
-                "reference": "6d8b6a08e473d295d4795faac3220233e7916d7c",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-lock/zipball/038f1a2408214d999b08c46846aa1dc492452be7",
+                "reference": "038f1a2408214d999b08c46846aa1dc492452be7",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -1418,7 +1456,7 @@
             "keywords": [
                 "moderation"
             ],
-            "time": "2016-03-29 08:17:00"
+            "time": "2016-10-19 10:43:19"
         },
         {
             "name": "flarum/flarum-ext-markdown",
@@ -1477,20 +1515,20 @@
         },
         {
             "name": "flarum/flarum-ext-mentions",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-mentions.git",
-                "reference": "57e946b64d6687e4f77841ae168727e62a6ce829"
+                "reference": "9031a3163735da4ba520f07f886e47f09b60097f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-mentions/zipball/57e946b64d6687e4f77841ae168727e62a6ce829",
-                "reference": "57e946b64d6687e4f77841ae168727e62a6ce829",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-mentions/zipball/9031a3163735da4ba520f07f886e47f09b60097f",
+                "reference": "9031a3163735da4ba520f07f886e47f09b60097f",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -1525,24 +1563,24 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-03-29 08:17:56"
+            "time": "2016-10-19 10:43:31"
         },
         {
             "name": "flarum/flarum-ext-pusher",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-pusher.git",
-                "reference": "0c5ecd7c541ef3411a1f3ec0dc414ed85ba9d777"
+                "reference": "77ad23b242994e923da1542839d37d960a8fdc43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-pusher/zipball/0c5ecd7c541ef3411a1f3ec0dc414ed85ba9d777",
-                "reference": "0c5ecd7c541ef3411a1f3ec0dc414ed85ba9d777",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-pusher/zipball/77ad23b242994e923da1542839d37d960a8fdc43",
+                "reference": "77ad23b242994e923da1542839d37d960a8fdc43",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5",
+                "flarum/core": "^0.1.0-beta.6",
                 "pusher/pusher-php-server": "^2.2"
             },
             "type": "flarum-extension",
@@ -1581,24 +1619,24 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-03-29 08:18:31"
+            "time": "2016-10-19 10:43:35"
         },
         {
             "name": "flarum/flarum-ext-sticky",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-sticky.git",
-                "reference": "cd08462ed513ad95f73ed82b8c705f3470025ef9"
+                "reference": "33fc5aaa8af7b8302152383c832197e0313e7d4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-sticky/zipball/cd08462ed513ad95f73ed82b8c705f3470025ef9",
-                "reference": "cd08462ed513ad95f73ed82b8c705f3470025ef9",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-sticky/zipball/33fc5aaa8af7b8302152383c832197e0313e7d4b",
+                "reference": "33fc5aaa8af7b8302152383c832197e0313e7d4b",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -1633,24 +1671,24 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-03-29 08:18:57"
+            "time": "2016-10-19 10:43:40"
         },
         {
             "name": "flarum/flarum-ext-subscriptions",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-subscriptions.git",
-                "reference": "50c3a94dda0564daeb95182a519544ccf610537e"
+                "reference": "1102fdc5dcdded2c932b06f3976bec9ceb866daf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-subscriptions/zipball/50c3a94dda0564daeb95182a519544ccf610537e",
-                "reference": "50c3a94dda0564daeb95182a519544ccf610537e",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-subscriptions/zipball/1102fdc5dcdded2c932b06f3976bec9ceb866daf",
+                "reference": "1102fdc5dcdded2c932b06f3976bec9ceb866daf",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -1685,24 +1723,24 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-03-29 08:19:21"
+            "time": "2016-10-19 10:43:45"
         },
         {
             "name": "flarum/flarum-ext-suspend",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-suspend.git",
-                "reference": "2b2f237d17f2ac55e89b308ee75a94c452fa41e5"
+                "reference": "2c39cd92be80374a7dbdd763fc68d20154eddc63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-suspend/zipball/2b2f237d17f2ac55e89b308ee75a94c452fa41e5",
-                "reference": "2b2f237d17f2ac55e89b308ee75a94c452fa41e5",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-suspend/zipball/2c39cd92be80374a7dbdd763fc68d20154eddc63",
+                "reference": "2c39cd92be80374a7dbdd763fc68d20154eddc63",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -1737,24 +1775,24 @@
             "keywords": [
                 "moderation"
             ],
-            "time": "2016-03-29 08:19:50"
+            "time": "2016-10-19 10:43:51"
         },
         {
             "name": "flarum/flarum-ext-tags",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flarum/flarum-ext-tags.git",
-                "reference": "cc9f4721430036d021414bbf1e45203e59a5d4a7"
+                "reference": "85ae39d1b79643a6b350e1ee67928d494c31a474"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-tags/zipball/cc9f4721430036d021414bbf1e45203e59a5d4a7",
-                "reference": "cc9f4721430036d021414bbf1e45203e59a5d4a7",
+                "url": "https://api.github.com/repos/flarum/flarum-ext-tags/zipball/85ae39d1b79643a6b350e1ee67928d494c31a474",
+                "reference": "85ae39d1b79643a6b350e1ee67928d494c31a474",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -1789,25 +1827,28 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-03-29 08:20:22"
+            "time": "2016-10-19 10:41:56"
         },
         {
             "name": "franzl/whoops-middleware",
-            "version": "0.2.0",
+            "version": "0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/franzliedke/whoops-middleware.git",
-                "reference": "b7630ee687a6f49192b6b56d4795d36000120cd7"
+                "reference": "625a80d90b22c38d8a9372187e76ae5f844e4412"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/franzliedke/whoops-middleware/zipball/b7630ee687a6f49192b6b56d4795d36000120cd7",
-                "reference": "b7630ee687a6f49192b6b56d4795d36000120cd7",
+                "url": "https://api.github.com/repos/franzliedke/whoops-middleware/zipball/625a80d90b22c38d8a9372187e76ae5f844e4412",
+                "reference": "625a80d90b22c38d8a9372187e76ae5f844e4412",
                 "shasum": ""
             },
             "require": {
-                "filp/whoops": "^1.1",
-                "zendframework/zend-diactoros": "^1.1@dev"
+                "filp/whoops": "^1.1 || ^2.0",
+                "zendframework/zend-diactoros": "^1.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.0.*"
             },
             "type": "library",
             "autoload": {
@@ -1816,116 +1857,20 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2015-10-31 11:25:43"
-        },
-        {
-            "name": "guzzle/guzzle",
-            "version": "v3.9.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/guzzle3.git",
-                "reference": "0645b70d953bc1c067bbc8d5bc53194706b628d9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/0645b70d953bc1c067bbc8d5bc53194706b628d9",
-                "reference": "0645b70d953bc1c067bbc8d5bc53194706b628d9",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.3.3",
-                "symfony/event-dispatcher": "~2.1"
-            },
-            "replace": {
-                "guzzle/batch": "self.version",
-                "guzzle/cache": "self.version",
-                "guzzle/common": "self.version",
-                "guzzle/http": "self.version",
-                "guzzle/inflection": "self.version",
-                "guzzle/iterator": "self.version",
-                "guzzle/log": "self.version",
-                "guzzle/parser": "self.version",
-                "guzzle/plugin": "self.version",
-                "guzzle/plugin-async": "self.version",
-                "guzzle/plugin-backoff": "self.version",
-                "guzzle/plugin-cache": "self.version",
-                "guzzle/plugin-cookie": "self.version",
-                "guzzle/plugin-curlauth": "self.version",
-                "guzzle/plugin-error-response": "self.version",
-                "guzzle/plugin-history": "self.version",
-                "guzzle/plugin-log": "self.version",
-                "guzzle/plugin-md5": "self.version",
-                "guzzle/plugin-mock": "self.version",
-                "guzzle/plugin-oauth": "self.version",
-                "guzzle/service": "self.version",
-                "guzzle/stream": "self.version"
-            },
-            "require-dev": {
-                "doctrine/cache": "~1.3",
-                "monolog/monolog": "~1.0",
-                "phpunit/phpunit": "3.7.*",
-                "psr/log": "~1.0",
-                "symfony/class-loader": "~2.1",
-                "zendframework/zend-cache": "2.*,<2.3",
-                "zendframework/zend-log": "2.*,<2.3"
-            },
-            "suggest": {
-                "guzzlehttp/guzzle": "Guzzle 5 has moved to a new package name. The package you have installed, Guzzle 3, is deprecated."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.9-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Guzzle": "src/",
-                    "Guzzle\\Tests": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                },
-                {
-                    "name": "Guzzle Community",
-                    "homepage": "https://github.com/guzzle/guzzle/contributors"
-                }
-            ],
-            "description": "PHP HTTP client. This library is deprecated in favor of https://packagist.org/packages/guzzlehttp/guzzle",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "client",
-                "curl",
-                "framework",
-                "http",
-                "http client",
-                "rest",
-                "web service"
-            ],
-            "abandoned": "guzzlehttp/guzzle",
-            "time": "2015-03-18 18:23:50"
+            "time": "2016-04-27 14:08:29"
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.2.1",
+            "version": "6.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "3f808fba627f2c5b69e2501217bf31af349c1427"
+                "reference": "ebf29dee597f02f09f4d5bbecc68230ea9b08f60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/3f808fba627f2c5b69e2501217bf31af349c1427",
-                "reference": "3f808fba627f2c5b69e2501217bf31af349c1427",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/ebf29dee597f02f09f4d5bbecc68230ea9b08f60",
+                "reference": "ebf29dee597f02f09f4d5bbecc68230ea9b08f60",
                 "shasum": ""
             },
             "require": {
@@ -1974,7 +1919,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-07-15 17:22:37"
+            "time": "2016-10-08 15:01:37"
         },
         {
             "name": "guzzlehttp/promises",
@@ -2087,16 +2032,16 @@
         },
         {
             "name": "illuminate/bus",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/bus.git",
-                "reference": "32a190fcc3f3ce487045b5eabd2ce839b9080a98"
+                "reference": "6637c1347dc3c57c2808705e7fe80ac733c73939"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/bus/zipball/32a190fcc3f3ce487045b5eabd2ce839b9080a98",
-                "reference": "32a190fcc3f3ce487045b5eabd2ce839b9080a98",
+                "url": "https://api.github.com/repos/illuminate/bus/zipball/6637c1347dc3c57c2808705e7fe80ac733c73939",
+                "reference": "6637c1347dc3c57c2808705e7fe80ac733c73939",
                 "shasum": ""
             },
             "require": {
@@ -2132,16 +2077,16 @@
         },
         {
             "name": "illuminate/cache",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/cache.git",
-                "reference": "f337b2c3f55f301039483f83bead2c8c4d4681e4"
+                "reference": "d499f629bdefc9d14882b423137ead66bb7f3350"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/cache/zipball/f337b2c3f55f301039483f83bead2c8c4d4681e4",
-                "reference": "f337b2c3f55f301039483f83bead2c8c4d4681e4",
+                "url": "https://api.github.com/repos/illuminate/cache/zipball/d499f629bdefc9d14882b423137ead66bb7f3350",
+                "reference": "d499f629bdefc9d14882b423137ead66bb7f3350",
                 "shasum": ""
             },
             "require": {
@@ -2178,20 +2123,20 @@
             ],
             "description": "The Illuminate Cache package.",
             "homepage": "http://laravel.com",
-            "time": "2016-02-05 14:57:16"
+            "time": "2016-08-02 07:48:05"
         },
         {
             "name": "illuminate/config",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/config.git",
-                "reference": "de6c1cc0f2745645dec3f8bab0e43a3aa141d12d"
+                "reference": "b0bb52f9004a09920cf235b3ed1481355360b70f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/config/zipball/de6c1cc0f2745645dec3f8bab0e43a3aa141d12d",
-                "reference": "de6c1cc0f2745645dec3f8bab0e43a3aa141d12d",
+                "url": "https://api.github.com/repos/illuminate/config/zipball/b0bb52f9004a09920cf235b3ed1481355360b70f",
+                "reference": "b0bb52f9004a09920cf235b3ed1481355360b70f",
                 "shasum": ""
             },
             "require": {
@@ -2227,16 +2172,16 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "91e10d009af0afd95d729bdec7acf9958ae95277"
+                "reference": "237de3cedbca9b753f2ee69bc7145ae159b8cc96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/91e10d009af0afd95d729bdec7acf9958ae95277",
-                "reference": "91e10d009af0afd95d729bdec7acf9958ae95277",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/237de3cedbca9b753f2ee69bc7145ae159b8cc96",
+                "reference": "237de3cedbca9b753f2ee69bc7145ae159b8cc96",
                 "shasum": ""
             },
             "require": {
@@ -2266,20 +2211,20 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-07 20:20:37"
+            "time": "2016-06-14 13:37:44"
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "e2b71fdbeeb3438748dca5f497e205888788a883"
+                "reference": "6e828a355b7a467232efad3dbe76df17463178e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/e2b71fdbeeb3438748dca5f497e205888788a883",
-                "reference": "e2b71fdbeeb3438748dca5f497e205888788a883",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/6e828a355b7a467232efad3dbe76df17463178e3",
+                "reference": "6e828a355b7a467232efad3dbe76df17463178e3",
                 "shasum": ""
             },
             "require": {
@@ -2312,16 +2257,16 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "42e0edf2da29373d8f73dfc9dddb03bafb6586d8"
+                "reference": "d4cd215d18b3ed848384a45764ae71ec89a47f07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/42e0edf2da29373d8f73dfc9dddb03bafb6586d8",
-                "reference": "42e0edf2da29373d8f73dfc9dddb03bafb6586d8",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/d4cd215d18b3ed848384a45764ae71ec89a47f07",
+                "reference": "d4cd215d18b3ed848384a45764ae71ec89a47f07",
                 "shasum": ""
             },
             "require": {
@@ -2368,20 +2313,20 @@
                 "orm",
                 "sql"
             ],
-            "time": "2016-02-24 14:58:10"
+            "time": "2016-08-10 12:23:17"
         },
         {
             "name": "illuminate/events",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/events.git",
-                "reference": "34e549cd4dcccd210324ebd4ea5f530bd7c3bbb1"
+                "reference": "b498088237eb9f6be9725e807e8e01d2631777e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/events/zipball/34e549cd4dcccd210324ebd4ea5f530bd7c3bbb1",
-                "reference": "34e549cd4dcccd210324ebd4ea5f530bd7c3bbb1",
+                "url": "https://api.github.com/repos/illuminate/events/zipball/b498088237eb9f6be9725e807e8e01d2631777e9",
+                "reference": "b498088237eb9f6be9725e807e8e01d2631777e9",
                 "shasum": ""
             },
             "require": {
@@ -2417,16 +2362,16 @@
         },
         {
             "name": "illuminate/filesystem",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
-                "reference": "9371a2893ef759b585f27d7c3bf8e2b54268ec46"
+                "reference": "f109f5fb12eef0211cdaff226bef51e18ec8c147"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/9371a2893ef759b585f27d7c3bf8e2b54268ec46",
-                "reference": "9371a2893ef759b585f27d7c3bf8e2b54268ec46",
+                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/f109f5fb12eef0211cdaff226bef51e18ec8c147",
+                "reference": "f109f5fb12eef0211cdaff226bef51e18ec8c147",
                 "shasum": ""
             },
             "require": {
@@ -2463,20 +2408,20 @@
             ],
             "description": "The Illuminate Filesystem package.",
             "homepage": "http://laravel.com",
-            "time": "2016-02-16 14:02:58"
+            "time": "2016-05-28 21:16:16"
         },
         {
             "name": "illuminate/hashing",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/hashing.git",
-                "reference": "6c2e1658d57b1d5cc60a397d3cd0d64c61c2062f"
+                "reference": "c2965ffab42f4e34ea243f669439f5f7f08223ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/hashing/zipball/6c2e1658d57b1d5cc60a397d3cd0d64c61c2062f",
-                "reference": "6c2e1658d57b1d5cc60a397d3cd0d64c61c2062f",
+                "url": "https://api.github.com/repos/illuminate/hashing/zipball/c2965ffab42f4e34ea243f669439f5f7f08223ad",
+                "reference": "c2965ffab42f4e34ea243f669439f5f7f08223ad",
                 "shasum": ""
             },
             "require": {
@@ -2511,16 +2456,16 @@
         },
         {
             "name": "illuminate/mail",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/mail.git",
-                "reference": "a4b3bd4f8301ac22d31f1e82698803fdf693bc01"
+                "reference": "2d36d016f366d8d381d9c2c3cc164469d66ac9f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/mail/zipball/a4b3bd4f8301ac22d31f1e82698803fdf693bc01",
-                "reference": "a4b3bd4f8301ac22d31f1e82698803fdf693bc01",
+                "url": "https://api.github.com/repos/illuminate/mail/zipball/2d36d016f366d8d381d9c2c3cc164469d66ac9f4",
+                "reference": "2d36d016f366d8d381d9c2c3cc164469d66ac9f4",
                 "shasum": ""
             },
             "require": {
@@ -2533,7 +2478,8 @@
             },
             "suggest": {
                 "aws/aws-sdk-php": "Required to use the SES mail driver (~3.0).",
-                "guzzlehttp/guzzle": "Required to use the Mailgun and Mandrill mail drivers (~5.3|~6.0)."
+                "guzzlehttp/guzzle": "Required to use the Mailgun and Mandrill mail drivers (~5.3|~6.0).",
+                "jeremeamia/superclosure": "Required to be able to serialize closures (~2.0)."
             },
             "type": "library",
             "extra": {
@@ -2558,20 +2504,20 @@
             ],
             "description": "The Illuminate Mail package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-05 16:21:24"
+            "time": "2016-08-04 14:14:51"
         },
         {
             "name": "illuminate/pipeline",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pipeline.git",
-                "reference": "2725b0523b50415e1d20aea7297d205f65b53e27"
+                "reference": "ce96681a13cc7005954a14b3f6ee93ac54aa2ded"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/pipeline/zipball/2725b0523b50415e1d20aea7297d205f65b53e27",
-                "reference": "2725b0523b50415e1d20aea7297d205f65b53e27",
+                "url": "https://api.github.com/repos/illuminate/pipeline/zipball/ce96681a13cc7005954a14b3f6ee93ac54aa2ded",
+                "reference": "ce96681a13cc7005954a14b3f6ee93ac54aa2ded",
                 "shasum": ""
             },
             "require": {
@@ -2606,16 +2552,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "96e4fa331ed8bad83314a6bdb26a998970a0d8c2"
+                "reference": "510163046dc50a467621448d6905f0c819ee8b4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/96e4fa331ed8bad83314a6bdb26a998970a0d8c2",
-                "reference": "96e4fa331ed8bad83314a6bdb26a998970a0d8c2",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/510163046dc50a467621448d6905f0c819ee8b4a",
+                "reference": "510163046dc50a467621448d6905f0c819ee8b4a",
                 "shasum": ""
             },
             "require": {
@@ -2623,11 +2569,11 @@
                 "doctrine/inflector": "~1.0",
                 "ext-mbstring": "*",
                 "illuminate/contracts": "5.1.*",
+                "paragonie/random_compat": "~1.4",
                 "php": ">=5.5.9"
             },
             "suggest": {
                 "jeremeamia/superclosure": "Required to be able to serialize closures (~2.0).",
-                "paragonie/random_compat": "Provides a compatible interface like PHP7's random_bytes() in PHP 5 projects (~1.1).",
                 "symfony/var-dumper": "Improves the dd function (2.7.*)."
             },
             "type": "library",
@@ -2656,20 +2602,20 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
-            "time": "2016-02-15 19:41:59"
+            "time": "2016-06-11 16:44:59"
         },
         {
             "name": "illuminate/validation",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/validation.git",
-                "reference": "ca27ece6bbb01b7bee9b2f1b51a50aff2f77edd1"
+                "reference": "aff98791ccfc8a129a19b83fdc257510bdaf1c3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/validation/zipball/ca27ece6bbb01b7bee9b2f1b51a50aff2f77edd1",
-                "reference": "ca27ece6bbb01b7bee9b2f1b51a50aff2f77edd1",
+                "url": "https://api.github.com/repos/illuminate/validation/zipball/aff98791ccfc8a129a19b83fdc257510bdaf1c3f",
+                "reference": "aff98791ccfc8a129a19b83fdc257510bdaf1c3f",
                 "shasum": ""
             },
             "require": {
@@ -2706,20 +2652,20 @@
             ],
             "description": "The Illuminate Validation package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-09 15:24:53"
+            "time": "2016-05-28 21:16:16"
         },
         {
             "name": "illuminate/view",
-            "version": "v5.1.31",
+            "version": "v5.1.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/view.git",
-                "reference": "3aaf10a4cefa68b61c3947606c7a7bb78ddd1e80"
+                "reference": "8dc810083f5c0dc889757d62be65a7307d92a30b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/view/zipball/3aaf10a4cefa68b61c3947606c7a7bb78ddd1e80",
-                "reference": "3aaf10a4cefa68b61c3947606c7a7bb78ddd1e80",
+                "url": "https://api.github.com/repos/illuminate/view/zipball/8dc810083f5c0dc889757d62be65a7307d92a30b",
+                "reference": "8dc810083f5c0dc889757d62be65a7307d92a30b",
                 "shasum": ""
             },
             "require": {
@@ -2728,7 +2674,8 @@
                 "illuminate/events": "5.1.*",
                 "illuminate/filesystem": "5.1.*",
                 "illuminate/support": "5.1.*",
-                "php": ">=5.5.9"
+                "php": ">=5.5.9",
+                "symfony/debug": "2.7.*"
             },
             "type": "library",
             "extra": {
@@ -2753,20 +2700,20 @@
             ],
             "description": "The Illuminate View package.",
             "homepage": "http://laravel.com",
-            "time": "2016-02-02 16:42:48"
+            "time": "2016-07-18 11:06:23"
         },
         {
             "name": "intervention/image",
-            "version": "2.3.7",
+            "version": "2.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "22088b04728a039bd1fc32f7e79a89a118b78698"
+                "reference": "4064a980324f6c3bfa2bd981dfb247afa705ec3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/22088b04728a039bd1fc32f7e79a89a118b78698",
-                "reference": "22088b04728a039bd1fc32f7e79a89a118b78698",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/4064a980324f6c3bfa2bd981dfb247afa705ec3c",
+                "reference": "4064a980324f6c3bfa2bd981dfb247afa705ec3c",
                 "shasum": ""
             },
             "require": {
@@ -2815,34 +2762,35 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2016-04-26 14:08:40"
+            "time": "2016-09-01 17:04:03"
         },
         {
             "name": "ircmaxell/random-lib",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ircmaxell/RandomLib.git",
-                "reference": "13efa4368bb2ac88bb3b1459b487d907de4dbf7c"
+                "reference": "e9e0204f40e49fa4419946c677eccd3fa25b8cf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ircmaxell/RandomLib/zipball/13efa4368bb2ac88bb3b1459b487d907de4dbf7c",
-                "reference": "13efa4368bb2ac88bb3b1459b487d907de4dbf7c",
+                "url": "https://api.github.com/repos/ircmaxell/RandomLib/zipball/e9e0204f40e49fa4419946c677eccd3fa25b8cf4",
+                "reference": "e9e0204f40e49fa4419946c677eccd3fa25b8cf4",
                 "shasum": ""
             },
             "require": {
-                "ircmaxell/security-lib": "1.0.*@dev",
+                "ircmaxell/security-lib": "^1.1",
                 "php": ">=5.3.2"
             },
             "require-dev": {
-                "mikey179/vfsstream": "1.1.*",
-                "phpunit/phpunit": "3.7.*"
+                "friendsofphp/php-cs-fixer": "^1.11",
+                "mikey179/vfsstream": "^1.6",
+                "phpunit/phpunit": "^4.8|^5.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -2869,20 +2817,20 @@
                 "random-numbers",
                 "random-strings"
             ],
-            "time": "2015-01-15 16:31:45"
+            "time": "2016-09-07 15:52:06"
         },
         {
             "name": "ircmaxell/security-lib",
-            "version": "1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ircmaxell/SecurityLib.git",
-                "reference": "80934de3c482dcafb46b5756e59ebece082b6dc7"
+                "reference": "f3db6de12c20c9bcd1aa3db4353a1bbe0e44e1b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ircmaxell/SecurityLib/zipball/80934de3c482dcafb46b5756e59ebece082b6dc7",
-                "reference": "80934de3c482dcafb46b5756e59ebece082b6dc7",
+                "url": "https://api.github.com/repos/ircmaxell/SecurityLib/zipball/f3db6de12c20c9bcd1aa3db4353a1bbe0e44e1b5",
+                "reference": "f3db6de12c20c9bcd1aa3db4353a1bbe0e44e1b5",
                 "shasum": ""
             },
             "require": {
@@ -2892,6 +2840,11 @@
                 "mikey179/vfsstream": "1.1.*"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "SecurityLib": "lib"
@@ -2909,8 +2862,8 @@
                 }
             ],
             "description": "A Base Security Library",
-            "homepage": "https://github.com/ircmaxell/PHP-SecurityLib",
-            "time": "2013-04-30 18:00:34"
+            "homepage": "https://github.com/ircmaxell/SecurityLib",
+            "time": "2015-03-20 14:31:23"
         },
         {
             "name": "jsthon/flarum-ext-simplified-chinese",
@@ -2963,20 +2916,20 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.25",
+            "version": "1.0.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "a76afa4035931be0c78ca8efc6abf3902362f437"
+                "reference": "1b5c4a0031697f46e779a9d1b309c2e1b24daeab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a76afa4035931be0c78ca8efc6abf3902362f437",
-                "reference": "a76afa4035931be0c78ca8efc6abf3902362f437",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/1b5c4a0031697f46e779a9d1b309c2e1b24daeab",
+                "reference": "1b5c4a0031697f46e779a9d1b309c2e1b24daeab",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.5.9"
             },
             "conflict": {
                 "league/flysystem-sftp": "<1.0.6"
@@ -3042,30 +2995,30 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2016-07-18 12:22:57"
+            "time": "2016-10-19 20:38:46"
         },
         {
             "name": "league/oauth1-client",
-            "version": "1.6.1",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth1-client.git",
-                "reference": "cef3ceda13c78f89c323e4d5e6301c0eb7cea422"
+                "reference": "fca5f160650cb74d23fc11aa570dd61f86dcf647"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth1-client/zipball/cef3ceda13c78f89c323e4d5e6301c0eb7cea422",
-                "reference": "cef3ceda13c78f89c323e4d5e6301c0eb7cea422",
+                "url": "https://api.github.com/repos/thephpleague/oauth1-client/zipball/fca5f160650cb74d23fc11aa570dd61f86dcf647",
+                "reference": "fca5f160650cb74d23fc11aa570dd61f86dcf647",
                 "shasum": ""
             },
             "require": {
-                "guzzle/guzzle": "3.*",
-                "php": ">=5.3.0"
+                "guzzlehttp/guzzle": "^6.0",
+                "php": ">=5.5.0"
             },
             "require-dev": {
-                "mockery/mockery": "~0.9",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "~2.0"
+                "mockery/mockery": "^0.9",
+                "phpunit/phpunit": "^4.0",
+                "squizlabs/php_codesniffer": "^2.0"
             },
             "type": "library",
             "extra": {
@@ -3105,7 +3058,7 @@
                 "tumblr",
                 "twitter"
             ],
-            "time": "2015-10-23 04:02:07"
+            "time": "2016-08-17 00:36:58"
         },
         {
             "name": "league/oauth2-client",
@@ -3172,16 +3125,16 @@
         },
         {
             "name": "league/oauth2-facebook",
-            "version": "1.4.1",
+            "version": "1.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-facebook.git",
-                "reference": "c7ea7041b597a4d215abe49cf82dbede6eaed1c1"
+                "reference": "c1af92b501649f99bd7670abd0c8153bed8d3d47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth2-facebook/zipball/c7ea7041b597a4d215abe49cf82dbede6eaed1c1",
-                "reference": "c7ea7041b597a4d215abe49cf82dbede6eaed1c1",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-facebook/zipball/c1af92b501649f99bd7670abd0c8153bed8d3d47",
+                "reference": "c1af92b501649f99bd7670abd0c8153bed8d3d47",
                 "shasum": ""
             },
             "require": {
@@ -3219,7 +3172,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2016-03-28 17:44:07"
+            "time": "2016-10-21 00:54:37"
         },
         {
             "name": "league/oauth2-github",
@@ -3279,16 +3232,16 @@
         },
         {
             "name": "matthiasmullie/minify",
-            "version": "1.3.35",
+            "version": "1.3.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matthiasmullie/minify.git",
-                "reference": "3253a81d07cd01afcb651e309900d8ad58a052da"
+                "reference": "1a6cb6b457690034bde461593edb510949bdd6e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/3253a81d07cd01afcb651e309900d8ad58a052da",
-                "reference": "3253a81d07cd01afcb651e309900d8ad58a052da",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/1a6cb6b457690034bde461593edb510949bdd6e7",
+                "reference": "1a6cb6b457690034bde461593edb510949bdd6e7",
                 "shasum": ""
             },
             "require": {
@@ -3331,7 +3284,7 @@
                 "minifier",
                 "minify"
             ],
-            "time": "2016-06-09 19:35:54"
+            "time": "2016-10-27 22:32:49"
         },
         {
             "name": "matthiasmullie/path-converter",
@@ -3613,17 +3566,65 @@
             "time": "2015-12-30 05:47:36"
         },
         {
-            "name": "psr/http-message",
-            "version": "1.0",
+            "name": "paragonie/random_compat",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-fig/http-message.git",
-                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298"
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
-                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c7e26a21ba357863de030f0b9e701c7d04593774",
+                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*|5.*"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/random.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+            "keywords": [
+                "csprng",
+                "pseudorandom",
+                "random"
+            ],
+            "time": "2016-03-18 20:34:03"
+        },
+        {
+            "name": "psr/http-message",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
                 "shasum": ""
             },
             "require": {
@@ -3651,6 +3652,7 @@
                 }
             ],
             "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
             "keywords": [
                 "http",
                 "http-message",
@@ -3659,26 +3661,34 @@
                 "request",
                 "response"
             ],
-            "time": "2015-05-04 20:22:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "psr/log",
-            "version": "1.0.0",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.3.0"
+            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Psr\\Log\\": ""
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3692,25 +3702,26 @@
                 }
             ],
             "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
             "keywords": [
                 "log",
                 "psr",
                 "psr-3"
             ],
-            "time": "2012-12-21 11:40:51"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "pusher/pusher-php-server",
-            "version": "v2.4.2",
+            "version": "v2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pusher/pusher-http-php.git",
-                "reference": "1120029fa16bfc92da06971df4a370a1b69c74c1"
+                "reference": "cdc11530c6f97eab76850d8ead6c513eeeccc37a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/1120029fa16bfc92da06971df4a370a1b69c74c1",
-                "reference": "1120029fa16bfc92da06971df4a370a1b69c74c1",
+                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/cdc11530c6f97eab76850d8ead6c513eeeccc37a",
+                "reference": "cdc11530c6f97eab76850d8ead6c513eeeccc37a",
                 "shasum": ""
             },
             "require": {
@@ -3741,7 +3752,7 @@
                 "rest",
                 "trigger"
             ],
-            "time": "2016-07-04 13:08:05"
+            "time": "2016-08-23 09:07:29"
         },
         {
             "name": "s9e/flarum-ext-mediaembed",
@@ -3790,16 +3801,16 @@
         },
         {
             "name": "s9e/text-formatter",
-            "version": "0.4.12",
+            "version": "0.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/s9e/TextFormatter.git",
-                "reference": "7033b824b2ea06046f98420f250d5db84c695288"
+                "reference": "99d6b5799387dddfdd00b5a76bb83a15dda586e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/s9e/TextFormatter/zipball/7033b824b2ea06046f98420f250d5db84c695288",
-                "reference": "7033b824b2ea06046f98420f250d5db84c695288",
+                "url": "https://api.github.com/repos/s9e/TextFormatter/zipball/99d6b5799387dddfdd00b5a76bb83a15dda586e3",
+                "reference": "99d6b5799387dddfdd00b5a76bb83a15dda586e3",
                 "shasum": ""
             },
             "require": {
@@ -3846,7 +3857,7 @@
                 "parser",
                 "shortcodes"
             ],
-            "time": "2016-03-20 10:22:44"
+            "time": "2016-08-09 14:16:45"
         },
         {
             "name": "sijad/flarum-ext-details",
@@ -3959,20 +3970,20 @@
         },
         {
             "name": "sijad/flarum-ext-pages",
-            "version": "0.1.0-beta.1",
+            "version": "0.1.0-beta.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sijad/flarum-ext-pages.git",
-                "reference": "3f3ac925d0314e4dbfb9aa2fde5d1dcbd689f380"
+                "reference": "ea54b0a0440663856911e845530caf82b71ded8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sijad/flarum-ext-pages/zipball/3f3ac925d0314e4dbfb9aa2fde5d1dcbd689f380",
-                "reference": "3f3ac925d0314e4dbfb9aa2fde5d1dcbd689f380",
+                "url": "https://api.github.com/repos/sijad/flarum-ext-pages/zipball/ea54b0a0440663856911e845530caf82b71ded8c",
+                "reference": "ea54b0a0440663856911e845530caf82b71ded8c",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
@@ -4005,7 +4016,7 @@
                 "page",
                 "static"
             ],
-            "time": "2016-04-18 18:30:17"
+            "time": "2016-10-23 14:52:44"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -4062,20 +4073,21 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.8.9",
+            "version": "v2.8.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "36e62335caca8a6e909c5c5bac4a8128149911c9"
+                "reference": "7350016c8abcab897046f1aead2b766b84d3eff8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/36e62335caca8a6e909c5c5bac4a8128149911c9",
-                "reference": "36e62335caca8a6e909c5c5bac4a8128149911c9",
+                "url": "https://api.github.com/repos/symfony/console/zipball/7350016c8abcab897046f1aead2b766b84d3eff8",
+                "reference": "7350016c8abcab897046f1aead2b766b84d3eff8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.9",
+                "symfony/debug": "~2.7,>=2.7.2|~3.0.0",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "require-dev": {
@@ -4118,45 +4130,42 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-30 07:20:35"
+            "time": "2016-10-06 01:43:09"
         },
         {
-            "name": "symfony/event-dispatcher",
-            "version": "v2.8.9",
+            "name": "symfony/debug",
+            "version": "v2.7.20",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "889983a79a043dfda68f38c38b6dba092dd49cd8"
+                "url": "https://github.com/symfony/debug.git",
+                "reference": "659f346c4a81aae6524b6d7043bcfbcfc5a3d67e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/889983a79a043dfda68f38c38b6dba092dd49cd8",
-                "reference": "889983a79a043dfda68f38c38b6dba092dd49cd8",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/659f346c4a81aae6524b6d7043bcfbcfc5a3d67e",
+                "reference": "659f346c4a81aae6524b6d7043bcfbcfc5a3d67e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.3.9",
+                "psr/log": "~1.0"
+            },
+            "conflict": {
+                "symfony/http-kernel": ">=2.3,<2.3.24|~2.4.0|>=2.5,<2.5.9|>=2.6,<2.6.2"
             },
             "require-dev": {
-                "psr/log": "~1.0",
-                "symfony/config": "~2.0,>=2.0.5|~3.0.0",
-                "symfony/dependency-injection": "~2.6|~3.0.0",
-                "symfony/expression-language": "~2.6|~3.0.0",
-                "symfony/stopwatch": "~2.3|~3.0.0"
-            },
-            "suggest": {
-                "symfony/dependency-injection": "",
-                "symfony/http-kernel": ""
+                "symfony/class-loader": "~2.2",
+                "symfony/http-kernel": "~2.3.24|~2.5.9|~2.6,>=2.6.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "2.7-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Symfony\\Component\\EventDispatcher\\": ""
+                    "Symfony\\Component\\Debug\\": ""
                 },
                 "exclude-from-classmap": [
                     "/Tests/"
@@ -4176,22 +4185,22 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Symfony EventDispatcher Component",
+            "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-28 16:56:28"
+            "time": "2016-09-06 07:26:07"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.7.16",
+            "version": "v2.7.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "864a73cc1b5f7a597ce8f74ae31851ffc83d7353"
+                "reference": "be6a0cebb24ee147b21ce35952ed1b999cca3291"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/864a73cc1b5f7a597ce8f74ae31851ffc83d7353",
-                "reference": "864a73cc1b5f7a597ce8f74ae31851ffc83d7353",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/be6a0cebb24ee147b21ce35952ed1b999cca3291",
+                "reference": "be6a0cebb24ee147b21ce35952ed1b999cca3291",
                 "shasum": ""
             },
             "require": {
@@ -4227,20 +4236,20 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-26 04:40:54"
+            "time": "2016-09-16 16:53:37"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.7.16",
+            "version": "v2.7.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "8ea4e8784404851b18c828e92140eaaab1f61719"
+                "reference": "6a0838a26d54eff153b825e1550c1f6fa05a0941"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/8ea4e8784404851b18c828e92140eaaab1f61719",
-                "reference": "8ea4e8784404851b18c828e92140eaaab1f61719",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/6a0838a26d54eff153b825e1550c1f6fa05a0941",
+                "reference": "6a0838a26d54eff153b825e1550c1f6fa05a0941",
                 "shasum": ""
             },
             "require": {
@@ -4283,7 +4292,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-30 07:17:26"
+            "time": "2016-10-24 14:36:35"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -4346,16 +4355,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v2.7.16",
+            "version": "v2.7.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "7dfe708755d2d11c87c49eb82465ae6fa3c331b1"
+                "reference": "f99349cca3041a7397ddc234c12c508cd483d9f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/7dfe708755d2d11c87c49eb82465ae6fa3c331b1",
-                "reference": "7dfe708755d2d11c87c49eb82465ae6fa3c331b1",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/f99349cca3041a7397ddc234c12c508cd483d9f7",
+                "reference": "f99349cca3041a7397ddc234c12c508cd483d9f7",
                 "shasum": ""
             },
             "require": {
@@ -4405,20 +4414,20 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-30 07:17:26"
+            "time": "2016-10-16 20:09:53"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.9",
+            "version": "v2.8.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "0ceab136f43ed9d3e97b3eea32a7855dc50c121d"
+                "reference": "396784cd06b91f3db576f248f2402d547a077787"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/0ceab136f43ed9d3e97b3eea32a7855dc50c121d",
-                "reference": "0ceab136f43ed9d3e97b3eea32a7855dc50c121d",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/396784cd06b91f3db576f248f2402d547a077787",
+                "reference": "396784cd06b91f3db576f248f2402d547a077787",
                 "shasum": ""
             },
             "require": {
@@ -4454,7 +4463,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-17 09:06:15"
+            "time": "2016-10-21 20:59:10"
         },
         {
             "name": "tijsverkoyen/akismet",
@@ -4497,23 +4506,23 @@
         },
         {
             "name": "tobscure/json-api",
-            "version": "v0.2.1",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tobscure/json-api.git",
-                "reference": "1e5a14d368746d6c9bb769f63ada5a31c94c1d15"
+                "reference": "663d1c1299d4363758e8e440e5849134f218f45c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tobscure/json-api/zipball/1e5a14d368746d6c9bb769f63ada5a31c94c1d15",
-                "reference": "1e5a14d368746d6c9bb769f63ada5a31c94c1d15",
+                "url": "https://api.github.com/repos/tobscure/json-api/zipball/663d1c1299d4363758e8e440e5849134f218f45c",
+                "reference": "663d1c1299d4363758e8e440e5849134f218f45c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.9"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.0"
+                "phpunit/phpunit": "^4.8 || ^5.0"
             },
             "type": "library",
             "extra": {
@@ -4543,7 +4552,7 @@
                 "jsonapi",
                 "standard"
             ],
-            "time": "2015-11-02 12:50:22"
+            "time": "2016-03-31 09:25:28"
         },
         {
             "name": "vingle/flarum-configure-smtp",
@@ -4645,16 +4654,16 @@
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "1.3.5",
+            "version": "1.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "b1d59735b672865dbeb930805029c24f226e3e77"
+                "reference": "969ff423d3f201da3ff718a5831bb999bb0669b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/b1d59735b672865dbeb930805029c24f226e3e77",
-                "reference": "b1d59735b672865dbeb930805029c24f226e3e77",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/969ff423d3f201da3ff718a5831bb999bb0669b0",
+                "reference": "969ff423d3f201da3ff718a5831bb999bb0669b0",
                 "shasum": ""
             },
             "require": {
@@ -4665,7 +4674,7 @@
                 "psr/http-message-implementation": "~1.0.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.6",
+                "phpunit/phpunit": "^4.6 || ^5.5",
                 "squizlabs/php_codesniffer": "^2.3.1"
             },
             "type": "library",
@@ -4691,7 +4700,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2016-03-17 18:02:05"
+            "time": "2016-10-11 13:25:21"
         },
         {
             "name": "zendframework/zend-escaper",
@@ -4849,16 +4858,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.1.3",
+            "version": "v3.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "bb29adceb552d202b6416ede373529338136e84f"
+                "reference": "0565b61bf098cb4dc09f4f103f033138ae4f42c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/bb29adceb552d202b6416ede373529338136e84f",
-                "reference": "bb29adceb552d202b6416ede373529338136e84f",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/0565b61bf098cb4dc09f4f103f033138ae4f42c6",
+                "reference": "0565b61bf098cb4dc09f4f103f033138ae4f42c6",
                 "shasum": ""
             },
             "require": {
@@ -4894,20 +4903,20 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-20 05:44:26"
+            "time": "2016-10-18 04:30:12"
         },
         {
             "name": "symfony/process",
-            "version": "v3.1.3",
+            "version": "v3.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "04c2dfaae4ec56a5c677b0c69fac34637d815758"
+                "reference": "66de154ae86b1a07001da9fbffd620206e4faf94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/04c2dfaae4ec56a5c677b0c69fac34637d815758",
-                "reference": "04c2dfaae4ec56a5c677b0c69fac34637d815758",
+                "url": "https://api.github.com/repos/symfony/process/zipball/66de154ae86b1a07001da9fbffd620206e4faf94",
+                "reference": "66de154ae86b1a07001da9fbffd620206e4faf94",
                 "shasum": ""
             },
             "require": {
@@ -4943,7 +4952,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-28 11:13:48"
+            "time": "2016-09-29 14:13:09"
         }
     ],
     "aliases": [],

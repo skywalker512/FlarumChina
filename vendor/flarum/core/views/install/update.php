@@ -1,6 +1,6 @@
-<h2>Update Flarum</h2>
+<h2>升级 Flarum</h2>
 
-<p>Enter your database password to update Flarum. Before you proceed, you should <strong>back up your database</strong>. If you have any trouble, get help on the <a href="http://flarum.org/docs/updating" target="_blank">Flarum website</a>.</p>
+<p>请输入mysql用户密码<strong>在升级前请备份数据库</strong>. 若有麻烦请到 <a href="http://discuss.flarum.ga" target="_blank">FlarumChina</a>.</p>
 
 <form method="post">
   <div id="error" style="display:none"></div>
@@ -17,7 +17,7 @@
   </div>
 </form>
 
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
 <script>
 $(function() {
   $('form :input:first').select();

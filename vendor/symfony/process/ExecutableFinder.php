@@ -60,7 +60,7 @@ class ExecutableFinder
                 if (@is_dir($path)) {
                     $dirs[] = $path;
                 } else {
-                    if (basename($path) == $name && is_executable($path)) {
+                    if (basename($path) == $name && @is_executable($path)) {
                         return $path;
                     }
                 }
@@ -79,7 +79,7 @@ class ExecutableFinder
         }
         foreach ($suffixes as $suffix) {
             foreach ($dirs as $dir) {
-                if (is_file($file = $dir.DIRECTORY_SEPARATOR.$name.$suffix) && ('\\' === DIRECTORY_SEPARATOR || is_executable($file))) {
+                if (@is_file($file = $dir.DIRECTORY_SEPARATOR.$name.$suffix) && ('\\' === DIRECTORY_SEPARATOR || is_executable($file))) {
                     return $file;
                 }
             }

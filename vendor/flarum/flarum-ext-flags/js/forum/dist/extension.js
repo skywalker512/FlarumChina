@@ -1,6 +1,8 @@
 'use strict';
 
 System.register('flarum/flags/addFlagControl', ['flarum/extend', 'flarum/app', 'flarum/utils/PostControls', 'flarum/components/Button', 'flarum/flags/components/FlagPostModal'], function (_export, _context) {
+  "use strict";
+
   var extend, app, PostControls, Button, FlagPostModal;
 
   _export('default', function () {
@@ -35,6 +37,8 @@ System.register('flarum/flags/addFlagControl', ['flarum/extend', 'flarum/app', '
 'use strict';
 
 System.register('flarum/flags/addFlagsDropdown', ['flarum/extend', 'flarum/app', 'flarum/components/HeaderSecondary', 'flarum/flags/components/FlagsDropdown'], function (_export, _context) {
+  "use strict";
+
   var extend, app, HeaderSecondary, FlagsDropdown;
 
   _export('default', function () {
@@ -60,17 +64,19 @@ System.register('flarum/flags/addFlagsDropdown', ['flarum/extend', 'flarum/app',
 });;
 'use strict';
 
-System.register('flarum/flags/addFlagsToPosts', ['flarum/extend', 'flarum/app', 'flarum/components/CommentPost', 'flarum/components/Button', 'flarum/helpers/punctuate', 'flarum/helpers/username', 'flarum/utils/ItemList', 'flarum/utils/PostControls'], function (_export, _context) {
-  var extend, app, CommentPost, Button, punctuate, username, ItemList, PostControls;
+System.register('flarum/flags/addFlagsToPosts', ['flarum/extend', 'flarum/app', 'flarum/components/Post', 'flarum/components/Button', 'flarum/utils/ItemList', 'flarum/utils/PostControls'], function (_export, _context) {
+  "use strict";
+
+  var extend, app, Post, Button, ItemList, PostControls;
 
   _export('default', function () {
-    extend(CommentPost.prototype, 'attrs', function (attrs) {
+    extend(Post.prototype, 'attrs', function (attrs) {
       if (this.props.post.flags().length) {
         attrs.className += ' Post--flagged';
       }
     });
 
-    CommentPost.prototype.dismissFlag = function (data) {
+    Post.prototype.dismissFlag = function (data) {
       var post = this.props.post;
 
       delete post.data.relationships.flags;
@@ -106,7 +112,7 @@ System.register('flarum/flags/addFlagsToPosts', ['flarum/extend', 'flarum/app', 
       });
     };
 
-    CommentPost.prototype.flagActionItems = function () {
+    Post.prototype.flagActionItems = function () {
       var _this = this;
 
       var items = new ItemList();
@@ -123,14 +129,22 @@ System.register('flarum/flags/addFlagsToPosts', ['flarum/extend', 'flarum/app', 
         });
       });
 
-      items.merge(controls);
+      items.add('controls', m(
+        'div',
+        { className: 'ButtonGroup' },
+        controls.toArray()
+      ));
 
-      items.add('dismiss', m(Button, { className: 'Button Button--icon Button--link', icon: 'times', onclick: this.dismissFlag.bind(this), title: app.translator.trans('flarum-flags.forum.post.dismiss_flag_tooltip') }), -100);
+      items.add('dismiss', m(
+        Button,
+        { className: 'Button', icon: 'eye-slash', onclick: this.dismissFlag.bind(this) },
+        app.translator.trans('flarum-flags.forum.post.dismiss_flag_button')
+      ), -100);
 
       return items;
     };
 
-    extend(CommentPost.prototype, 'content', function (vdom) {
+    extend(Post.prototype, 'content', function (vdom) {
       var _this2 = this;
 
       var post = this.props.post;
@@ -162,7 +176,7 @@ System.register('flarum/flags/addFlagsToPosts', ['flarum/extend', 'flarum/app', 
       ));
     });
 
-    CommentPost.prototype.flagReason = function (flag) {
+    Post.prototype.flagReason = function (flag) {
       if (flag.type() === 'user') {
         var user = flag.user();
         var reason = flag.reason();
@@ -182,14 +196,10 @@ System.register('flarum/flags/addFlagsToPosts', ['flarum/extend', 'flarum/app', 
       extend = _flarumExtend.extend;
     }, function (_flarumApp) {
       app = _flarumApp.default;
-    }, function (_flarumComponentsCommentPost) {
-      CommentPost = _flarumComponentsCommentPost.default;
+    }, function (_flarumComponentsPost) {
+      Post = _flarumComponentsPost.default;
     }, function (_flarumComponentsButton) {
       Button = _flarumComponentsButton.default;
-    }, function (_flarumHelpersPunctuate) {
-      punctuate = _flarumHelpersPunctuate.default;
-    }, function (_flarumHelpersUsername) {
-      username = _flarumHelpersUsername.default;
     }, function (_flarumUtilsItemList) {
       ItemList = _flarumUtilsItemList.default;
     }, function (_flarumUtilsPostControls) {
@@ -201,6 +211,8 @@ System.register('flarum/flags/addFlagsToPosts', ['flarum/extend', 'flarum/app', 
 'use strict';
 
 System.register('flarum/flags/components/FlagList', ['flarum/Component', 'flarum/components/LoadingIndicator', 'flarum/helpers/avatar', 'flarum/helpers/username', 'flarum/helpers/icon', 'flarum/helpers/humanTime'], function (_export, _context) {
+  "use strict";
+
   var Component, LoadingIndicator, avatar, username, icon, humanTime, FlagList;
   return {
     setters: [function (_flarumComponent) {
@@ -278,13 +290,7 @@ System.register('flarum/flags/components/FlagList', ['flarum/Component', 'flarum
                         m(
                           'span',
                           { className: 'Notification-content' },
-                          username(post.user()),
-                          ' in ',
-                          m(
-                            'em',
-                            null,
-                            post.discussion().title()
-                          )
+                          app.translator.trans('flarum-flags.forum.flagged_posts.item_text', { username: username(post.user()), em: m('em', null), discussion: post.discussion().title() })
                         ),
                         humanTime(flag.time()),
                         m(
@@ -336,6 +342,8 @@ System.register('flarum/flags/components/FlagList', ['flarum/Component', 'flarum
 'use strict';
 
 System.register('flarum/flags/components/FlagPostModal', ['flarum/components/Modal', 'flarum/components/Button'], function (_export, _context) {
+  "use strict";
+
   var Modal, Button, FlagPostModal;
   return {
     setters: [function (_flarumComponentsModal) {
@@ -509,6 +517,8 @@ System.register('flarum/flags/components/FlagPostModal', ['flarum/components/Mod
 'use strict';
 
 System.register('flarum/flags/components/FlagsDropdown', ['flarum/components/NotificationsDropdown', 'flarum/flags/components/FlagList'], function (_export, _context) {
+  "use strict";
+
   var NotificationsDropdown, FlagList, FlagsDropdown;
   return {
     setters: [function (_flarumComponentsNotificationsDropdown) {
@@ -566,6 +576,8 @@ System.register('flarum/flags/components/FlagsDropdown', ['flarum/components/Not
 'use strict';
 
 System.register('flarum/flags/components/FlagsPage', ['flarum/components/Page', 'flarum/flags/components/FlagList'], function (_export, _context) {
+  "use strict";
+
   var Page, FlagList, FlagsPage;
   return {
     setters: [function (_flarumComponentsPage) {
@@ -614,6 +626,8 @@ System.register('flarum/flags/components/FlagsPage', ['flarum/components/Page', 
 'use strict';
 
 System.register('flarum/flags/main', ['flarum/app', 'flarum/Model', 'flarum/flags/models/Flag', 'flarum/flags/components/FlagsPage', 'flarum/flags/addFlagControl', 'flarum/flags/addFlagsDropdown', 'flarum/flags/addFlagsToPosts'], function (_export, _context) {
+  "use strict";
+
   var app, Model, Flag, FlagsPage, addFlagControl, addFlagsDropdown, addFlagsToPosts;
   return {
     setters: [function (_flarumApp) {
@@ -651,6 +665,8 @@ System.register('flarum/flags/main', ['flarum/app', 'flarum/Model', 'flarum/flag
 'use strict';
 
 System.register('flarum/flags/models/Flag', ['flarum/Model', 'flarum/utils/mixin'], function (_export, _context) {
+  "use strict";
+
   var Model, mixin, Flag;
   return {
     setters: [function (_flarumModel) {

@@ -86,6 +86,13 @@ class ParametersTest extends AbstractTestCase
         $this->assertEquals(100, $parameters->getLimit());
     }
 
+    public function testGetLimitReturnsNullWhenNotSet()
+    {
+        $parameters = new Parameters(['page' => ['offset' => 50]]);
+
+        $this->assertNull($parameters->getLimit());
+    }
+
     public function testGetFieldsReturnsAllFields()
     {
         $parameters = new Parameters(['fields' => ['posts' => 'title,content', 'users' => 'name']]);

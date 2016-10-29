@@ -48,20 +48,54 @@ abstract class AbstractSerializer implements SerializerInterface
 
     /**
      * {@inheritdoc}
+     */
+    public function getLinks($model)
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMeta($model)
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @throws LogicException
      */
     public function getRelationship($model, $name)
     {
-        if (method_exists($this, $name)) {
-            $relationship = $this->$name($model);
+        $method = $this->getRelationshipMethodName($name);
+
+        if (method_exists($this, $method)) {
+            $relationship = $this->$method($model);
 
             if ($relationship !== null && ! ($relationship instanceof Relationship)) {
-                throw new LogicException('Relationship method must return null or an instance of '
-                    .Relationship::class);
+                throw new LogicException('Relationship method must return null or an instance of Tobscure\JsonApi\Relationship');
             }
 
             return $relationship;
         }
+    }
+
+    /**
+     * Get the serializer method name for the given relationship.
+     *
+     * kebab-case is converted into camelCase.
+     *
+     * @param string $name
+     * @return string
+     */
+    private function getRelationshipMethodName($name)
+    {
+        if (stripos($name, '-')) {
+            $name = lcfirst(implode('', array_map('ucfirst', explode('-', $name))));
+        }
+
+        return $name;
     }
 }

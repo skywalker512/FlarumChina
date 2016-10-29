@@ -10,6 +10,8 @@
 
 namespace Flarum\Approval\Listener;
 
+use Flarum\Core\Post;
+use Flarum\Event\ConfigureModelDefaultAttributes;
 use Flarum\Event\PostWillBeSaved;
 use Flarum\Flags\Flag;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -21,7 +23,18 @@ class UnapproveNewContent
      */
     public function subscribe(Dispatcher $events)
     {
+        $events->listen(ConfigureModelDefaultAttributes::class, [$this, 'approveByDefault']);
         $events->listen(PostWillBeSaved::class, [$this, 'unapproveNewPosts']);
+    }
+
+    /**
+     * @param ConfigureModelDefaultAttributes $event
+     */
+    public function approveByDefault(ConfigureModelDefaultAttributes $event)
+    {
+        if ($event->isModel(Post::class)) {
+            $event->attributes['is_approved'] = true;
+        }
     }
 
     /**
@@ -32,7 +45,9 @@ class UnapproveNewContent
         $post = $event->post;
 
         if (! $post->exists) {
-            if ($event->actor->can('replyWithoutApproval', $post->discussion)) {
+            $ability = $post->discussion->number_index == 0 ? 'startWithoutApproval' : 'replyWithoutApproval';
+
+            if ($event->actor->can($ability, $post->discussion)) {
                 if ($post->is_approved === null) {
                     $post->is_approved = true;
                 }

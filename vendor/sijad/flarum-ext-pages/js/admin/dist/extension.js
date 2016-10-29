@@ -65,6 +65,7 @@ System.register('sijad/pages/components/EditPageModal', ['flarum/components/Moda
             this.slug = m.prop(this.page.slug() || '');
             this.pageContent = m.prop(this.page.content() || '');
             this.isHidden = m.prop(this.page.isHidden() && true);
+            this.isHtml = m.prop(this.page.isHtml() && true);
           }
         }, {
           key: 'className',
@@ -141,6 +142,20 @@ System.register('sijad/pages/components/EditPageModal', ['flarum/components/Moda
                 m(
                   'div',
                   { className: 'Form-group' },
+                  m(
+                    'div',
+                    null,
+                    m(
+                      'label',
+                      { className: 'checkbox' },
+                      m('input', { type: 'checkbox', value: '1', checked: this.isHtml(), onchange: m.withAttr('checked', this.isHtml) }),
+                      app.translator.trans('sijad-pages.admin.edit_page.html_label')
+                    )
+                  )
+                ),
+                m(
+                  'div',
+                  { className: 'Form-group' },
                   Button.component({
                     type: 'submit',
                     className: 'Button Button--primary EditPageModal-save',
@@ -169,7 +184,8 @@ System.register('sijad/pages/components/EditPageModal', ['flarum/components/Moda
               title: this.pageTitle(),
               slug: this.slug(),
               content: this.pageContent(),
-              isHidden: this.isHidden()
+              isHidden: this.isHidden(),
+              isHtml: this.isHtml()
             }, { errorHandler: this.onerror.bind(this) }).then(this.hide.bind(this)).catch(function () {
               _this3.loading = false;
               m.redraw();
@@ -589,7 +605,8 @@ System.register('sijad/pages/models/Page', ['flarum/Model', 'flarum/utils/mixin'
         contentHtml: Model.attribute('contentHtml'),
         contentPlain: computed('contentHtml', getPlainContent),
         slug: Model.attribute('slug'),
-        isHidden: Model.attribute('isHidden')
+        isHidden: Model.attribute('isHidden'),
+        isHtml: Model.attribute('isHtml')
       }));
 
       _export('default', Page);

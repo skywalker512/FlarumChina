@@ -1,4 +1,5 @@
 import EventPost from 'flarum/components/EventPost';
+import extractText from 'flarum/utils/extractText';
 
 /**
  * The `DiscussionRenamedPost` component displays a discussion event post
@@ -13,8 +14,11 @@ export default class DiscussionRenamedPost extends EventPost {
     return 'pencil';
   }
 
-  descriptionKey() {
-    return 'core.forum.post_stream.discussion_renamed_text';
+  description(data) {
+    const renamed = app.translator.trans('core.forum.post_stream.discussion_renamed_text', data);
+    const oldName = app.translator.trans('core.forum.post_stream.discussion_renamed_old_tooltip', data);
+
+    return <span title={extractText(oldName)}>{renamed}</span>;
   }
 
   descriptionData() {
@@ -23,7 +27,7 @@ export default class DiscussionRenamedPost extends EventPost {
     const newTitle = post.content()[1];
 
     return {
-      'old': <strong className="DiscussionRenamedPost-old">{oldTitle}</strong>,
+      'old': oldTitle,
       'new': <strong className="DiscussionRenamedPost-new">{newTitle}</strong>
     };
   }

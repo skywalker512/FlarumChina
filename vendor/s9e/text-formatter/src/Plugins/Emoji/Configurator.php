@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Plugins\Emoji;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Regexp;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
@@ -107,7 +106,7 @@ class Configurator extends ConfiguratorBase
 	{
 		$src  = '//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/';
 		$src .= "<xsl:if test=\"contains(@seq, '-20e3') or @seq = 'a9' or @seq = 'ae'\">00</xsl:if>";
-		$src .= "<xsl:value-of select=\"translate(@seq, 'abcdef', 'ABCDEF')\"/>";
+		$src .= '<xsl:value-of select="@seq"/>';
 		$src .= '.' . $this->imageType;
 		return $src;
 	}
@@ -121,7 +120,7 @@ class Configurator extends ConfiguratorBase
 	}
 	protected function getTemplate()
 	{
-		$template = '<img alt="{.}" title="{.}" class="emoji" draggable="false"';
+		$template = '<img alt="{.}" class="emoji" draggable="false"';
 		if ($this->forceImageSize)
 			$template .= ' width="' . $this->imageSize . '" height="' . $this->imageSize . '"';
 		$template .= '><xsl:attribute name="src">';

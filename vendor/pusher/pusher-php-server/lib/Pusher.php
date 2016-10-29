@@ -58,7 +58,7 @@ class PusherInstance
 
 class Pusher
 {
-    public static $VERSION = '2.4.2';
+    public static $VERSION = '2.5.0-rc3';
 
     private $settings = array(
         'scheme' => 'http',
@@ -87,6 +87,8 @@ class Pusher
      *	timeout - the http timeout
      *	encrypted - quick option to use scheme of https and port 443.
      *	cluster - cluster name to connect to.
+     *  notification_host - host to connect to for native notifications.
+     *  notification_scheme - scheme for the notification_host.
      * @param string $host [optional] - deprecated
      * @param int $port [optional] - deprecated
      * @param int $timeout [optional] - deprecated
@@ -145,6 +147,20 @@ class Pusher
             if (isset($this->settings[$key])) {
                 $this->settings[$key] = $value;
             }
+        }
+
+        // Set the native notification host
+        if (isset($options['notification_host'])) {
+            $this->settings['notification_host'] = $options['notification_host'];
+        } else {
+            $this->settings['notification_host'] = 'nativepush-cluster1.pusher.com';
+        }
+
+        // Set scheme for native notifications
+        if (isset($options['notification_scheme'])) {
+            $this->settings['notification_scheme'] = $options['notification_scheme'];
+        } else {
+            $this->settings['notification_scheme'] = 'https';
         }
 
         // handle the case when 'host' and 'cluster' are specified in the options.
@@ -258,8 +274,10 @@ class Pusher
     /**
      * Utility function used to create the curl object with common settings.
      */
-    private function create_curl($s_url, $request_method = 'GET', $query_params = array())
+    private function create_curl($domain, $s_url, $request_method = 'GET', $query_params = array())
     {
+        $full_url = '';
+
         // Create the signed signature...
         $signed_query = self::build_auth_query_string(
             $this->settings['auth_key'],
@@ -268,9 +286,7 @@ class Pusher
             $s_url,
             $query_params);
 
-        $full_url = $this->settings['scheme'].'://'.
-                                $this->settings['host'].':'.
-                                $this->settings['port'].$s_url.'?'.$signed_query;
+        $full_url = $domain.$s_url.'?'.$signed_query;
 
         $this->log('create_curl( '.$full_url.' )');
 
@@ -292,7 +308,11 @@ class Pusher
 
         // Set cURL opts and execute request
         curl_setopt($ch, CURLOPT_URL, $full_url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Expect:'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+          'Content-Type: application/json',
+          'Expect:',
+          'X-Pusher-Library: pusher-http-php '.self::$VERSION,
+        ));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->settings['timeout']);
         if ($request_method === 'POST') {
@@ -328,6 +348,26 @@ class Pusher
         }
 
         return $response;
+    }
+
+    /**
+     * Build the notification domain.
+     *
+     * @return string
+     */
+    private function notification_domain()
+    {
+        return $this->settings['notification_scheme'].'://'.$this->settings['notification_host'];
+    }
+
+    /**
+     * Build the ddn domain.
+     *
+     * @return string
+     */
+    private function ddn_domain()
+    {
+        return $this->settings['scheme'].'://'.$this->settings['host'].':'.$this->settings['port'];
     }
 
     /**
@@ -440,7 +480,7 @@ class Pusher
 
         $query_params['body_md5'] = md5($post_value);
 
-        $ch = $this->create_curl($s_url, 'POST', $query_params);
+        $ch = $this->create_curl($this->ddn_domain(), $s_url, 'POST', $query_params);
 
         $this->log('trigger POST: '.$post_value);
 
@@ -487,7 +527,7 @@ class Pusher
 
         $query_params['body_md5'] = md5($post_value);
 
-        $ch = $this->create_curl($s_url, 'POST', $query_params);
+        $ch = $this->create_curl($this->ddn_domain(), $s_url, 'POST', $query_params);
 
         $this->log('trigger POST: '.$post_value);
 
@@ -561,7 +601,7 @@ class Pusher
     {
         $s_url = $this->settings['base_path'].$path;
 
-        $ch = $this->create_curl($s_url, 'GET', $params);
+        $ch = $this->create_curl($this->ddn_domain(), $s_url, 'GET', $params);
 
         $response = $this->exec_curl($ch);
 
@@ -619,5 +659,53 @@ class Pusher
         }
 
         return $this->socket_auth($channel, $socket_id, json_encode($user_data));
+    }
+
+    /**
+     * Send a native notification via the Push Notifications Api.
+     *
+     * @param array $interests
+     * @param array $payload
+     * @param bool $debug
+     *
+     * @throws PusherException if validation fails.
+     *
+     * @return bool|string
+     **/
+    public function notify($interests, $data = array(), $debug = false)
+    {
+        $query_params = array();
+
+        if (is_string($interests)) {
+            $this->log('->notify received string interests "'.$interests.'". Converting to array.');
+            $interests = array($interests);
+        }
+
+        if (count($interests) === 0) {
+            throw new PusherException('$interests array must not be empty');
+        }
+
+        $data['interests'] = $interests;
+
+        $post_value = json_encode($data);
+
+        $query_params['body_md5'] = md5($post_value);
+
+        $notification_path = '/server_api/v1'.$this->settings['base_path'].'/notifications';
+        $ch = $this->create_curl($this->notification_domain(), $notification_path, 'POST', $query_params);
+
+        $this->log('trigger POST (Native notifications): '.$post_value);
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_value);
+
+        $response = $this->exec_curl($ch);
+
+        if ($response['status'] === 200 && $debug === false) {
+            return true;
+        } elseif ($debug === true || $this->settings['debug'] === true) {
+            return $response;
+        } else {
+            return false;
+        }
     }
 }

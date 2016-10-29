@@ -69,6 +69,7 @@
 }
 .Post-mentionedBy {
   position: relative;
+  display: inline-block;
 }
 .Post-mentionedBy-summary {
   cursor: pointer;
@@ -85,4 +86,8 @@
   padding-top: 0 !important;
   font-weight: bold !important;
   white-space: normal !important;
+}
+.PostQuoteButton {
+  position: absolute;
+  .Button--color(@tooltip-color, @tooltip-bg);
 }

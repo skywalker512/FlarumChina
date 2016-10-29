@@ -11,5 +11,6 @@ export default class Page extends mixin(Model, {
   contentHtml: Model.attribute('contentHtml'),
   contentPlain: computed('contentHtml', getPlainContent),
   slug: Model.attribute('slug'),
-  isHidden: Model.attribute('isHidden')
+  isHidden: Model.attribute('isHidden'),
+  isHtml: Model.attribute('isHtml')
 }) {}

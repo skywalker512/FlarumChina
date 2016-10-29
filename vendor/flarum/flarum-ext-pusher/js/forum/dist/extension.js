@@ -1,6 +1,8 @@
 'use strict';
 
 System.register('flarum/pusher/main', ['flarum/extend', 'flarum/app', 'flarum/components/DiscussionList', 'flarum/components/DiscussionPage', 'flarum/components/IndexPage', 'flarum/components/Button'], function (_export, _context) {
+  "use strict";
+
   var extend, app, DiscussionList, DiscussionPage, IndexPage, Button;
   return {
     setters: [function (_flarumExtend) {
@@ -74,7 +76,7 @@ System.register('flarum/pusher/main', ['flarum/extend', 'flarum/app', 'flarum/co
             });
 
             extend(context, 'onunload', function () {
-              return channels.main.unbind();
+              return channels.main.unbind('newPost');
             });
           });
         });
@@ -151,7 +153,7 @@ System.register('flarum/pusher/main', ['flarum/extend', 'flarum/app', 'flarum/co
             });
 
             extend(context, 'onunload', function () {
-              return channels.main.unbind();
+              return channels.main.unbind('newPost');
             });
           });
         });

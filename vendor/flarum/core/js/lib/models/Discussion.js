@@ -1,5 +1,4 @@
 import Model from 'flarum/Model';
-import mixin from 'flarum/utils/mixin';
 import computed from 'flarum/utils/computed';
 import ItemList from 'flarum/utils/ItemList';
 import Badge from 'flarum/components/Badge';
@@ -31,7 +30,7 @@ Object.assign(Discussion.prototype, {
 
   hideTime: Model.attribute('hideTime', Model.transformDate),
   hideUser: Model.hasOne('hideUser'),
-  isHidden: computed('hideTime', 'commentsCount', (hideTime, commentsCount) => !!hideTime || commentsCount === 0),
+  isHidden: computed('hideTime', hideTime => !!hideTime),
 
   canReply: Model.attribute('canReply'),
   canRename: Model.attribute('canRename'),

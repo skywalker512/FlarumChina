@@ -10,6 +10,7 @@
 
 namespace Flarum\Core\Command;
 
+use Exception;
 use Flarum\Core\Access\AssertPermissionTrait;
 use Flarum\Core\Repository\UserRepository;
 use Flarum\Core\Support\DispatchEventsTrait;
@@ -84,43 +85,52 @@ class UploadAvatarHandler
         $tmpFile = tempnam($this->app->storagePath().'/tmp', 'avatar');
         $command->file->moveTo($tmpFile);
 
-        $file = new UploadedFile(
-            $tmpFile,
-            $command->file->getClientFilename(),
-            $command->file->getClientMediaType(),
-            $command->file->getSize(),
-            $command->file->getError(),
-            true
-        );
+        try {
+            $file = new UploadedFile(
+                $tmpFile,
+                $command->file->getClientFilename(),
+                $command->file->getClientMediaType(),
+                $command->file->getSize(),
+                $command->file->getError(),
+                true
+            );
 
-        $this->validator->assertValid(['avatar' => $file]);
+            $this->validator->assertValid(['avatar' => $file]);
 
-        $manager = new ImageManager;
-        $manager->make($tmpFile)->fit(100, 100)->save();
+            $manager = new ImageManager;
 
-        $this->events->fire(
-            new AvatarWillBeSaved($user, $actor, $tmpFile)
-        );
+            // Explicitly tell Intervention to encode the image as JSON (instead of having to guess from the extension)
+            $encodedImage = $manager->make($tmpFile)->fit(100, 100)->encode('jpg', 100);
+            file_put_contents($tmpFile, $encodedImage);
 
-        $mount = new MountManager([
-            'source' => new Filesystem(new Local(pathinfo($tmpFile, PATHINFO_DIRNAME))),
-            'target' => $this->uploadDir,
-        ]);
+            $this->events->fire(
+                new AvatarWillBeSaved($user, $actor, $tmpFile)
+            );
 
-        if ($user->avatar_path && $mount->has($file = "target://$user->avatar_path")) {
-            $mount->delete($file);
+            $mount = new MountManager([
+                'source' => new Filesystem(new Local(pathinfo($tmpFile, PATHINFO_DIRNAME))),
+                'target' => $this->uploadDir,
+            ]);
+
+            if ($user->avatar_path && $mount->has($file = "target://$user->avatar_path")) {
+                $mount->delete($file);
+            }
+
+            $uploadName = Str::lower(Str::quickRandom()).'.jpg';
+
+            $user->changeAvatarPath($uploadName);
+
+            $mount->move('source://'.pathinfo($tmpFile, PATHINFO_BASENAME), "target://$uploadName");
+
+            $user->save();
+
+            $this->dispatchEventsFor($user, $actor);
+
+            return $user;
+        } catch (Exception $e) {
+            @unlink($tmpFile);
+
+            throw $e;
         }
-
-        $uploadName = Str::lower(Str::quickRandom()).'.jpg';
-
-        $user->changeAvatarPath($uploadName);
-
-        $mount->move('source://'.pathinfo($tmpFile, PATHINFO_BASENAME), "target://$uploadName");
-
-        $user->save();
-
-        $this->dispatchEventsFor($user, $actor);
-
-        return $user;
     }
 }

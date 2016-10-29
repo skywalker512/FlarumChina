@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/cloudinary/cloudinary_php.svg)](https://travis-ci.org/cloudinary/cloudinary_php) [![license](https://img.shields.io/github/license/cloudinary/cloudinary_php.svg?maxAge=2592000)]() [![Packagist](https://img.shields.io/packagist/v/cloudinary/cloudinary_php.svg?maxAge=2592000)]() [![Packagist](https://img.shields.io/packagist/dt/cloudinary/cloudinary_php.svg?maxAge=2592000)]()
+
 Cloudinary
 ==========
 
@@ -172,7 +174,7 @@ Optional parameters:
 
 ### Testing
 
-To run the PHPUnit test suite you must first set the evnironment variable containing your Cloudinary URL. This can be obtained via Cloudinary's Management Console.
+To run the PHPUnit test suite you must first set the environment variable containing your Cloudinary URL. This can be obtained via Cloudinary's Management Console.
 
     export CLOUDINARY_URL=cloudinary://123456789012345:abcdeghijklmnopqrstuvwxyz12@n07t21i7
 

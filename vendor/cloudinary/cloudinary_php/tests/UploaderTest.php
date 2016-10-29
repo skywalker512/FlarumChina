@@ -14,15 +14,35 @@ namespace Cloudinary {
 
     const TEST_ICO = "tests/favicon.ico";
 
+    public $url_prefix;
+    public static function setUpBeforeClass() {
+      Curl::$instance = new Curl();
+    }
     public function setUp() {
           \Cloudinary::reset_config();
           if (!Cloudinary::config_get("api_secret")) {
-            $this->markTestSkipped('Please setup environment for Upload test to run');
+              $this->markTestSkipped('Please setup environment for Upload test to run');
           }
+          $this->url_prefix = Cloudinary::config_get("upload_prefix", "https://api.cloudinary.com");
+
       }
-  
-      public function test_upload() {
+
+      public function tearDown() {
+          Curl::$instance = new Curl();
+      }
+
+    public function test_upload() {
           $result = Uploader::upload(self::LOGO_PNG);
+          print_r($result);
+    switch ($result["resource_type"]) {
+      case "image":
+        // generate image tag
+        break;
+      case "video":
+        // generate video tag
+        break;
+    }
+
           $this->assertEquals($result["width"], 241);
           $this->assertEquals($result["height"], 51);
           $expected_signature = Cloudinary::api_sign_request(array("public_id"=>$result["public_id"], "version"=>$result["version"]), Cloudinary::config_get("api_secret"));
@@ -30,32 +50,27 @@ namespace Cloudinary {
       }
   
       public function test_rename() {
-          $result = Uploader::upload(self::LOGO_PNG);
-          Uploader::rename($result["public_id"], $result["public_id"]."2");
-          $api = new \Cloudinary\Api();      
-          $this->assertNotNull($api->resource($result["public_id"]."2"));
-  
-          $result2 = Uploader::upload(self::TEST_ICO);
-          $error_thrown = FALSE;
-          try {
-            Uploader::rename($result2["public_id"], $result["public_id"]."2");
-            $error_thrown = TRUE;
-          } catch (Exception $e) {}
-          $this->assertFalse($error_thrown);
-          Uploader::rename($result2["public_id"], $result["public_id"]."2", array("overwrite"=>TRUE));
-          $resource = $api->resource($result["public_id"]."2");
-          $this->assertEquals($resource["format"], "ico");        
+        Curl::mockUpload($this);
+        Uploader::rename("foobar", "foobar2", array("overwrite" => TRUE));
+        assertUrl($this, "/image/rename");
+        assertParam($this, "overwrite", 1);
+        assertParam($this, "from_public_id", "foobar");
+        assertParam($this, "to_public_id", "foobar2");
       }
   
       public function test_explicit() {
-          $this->markTestSkipped("Not enabled by default - remove this line to test");
-          $result = Uploader::explicit("cloudinary", array("type"=>"twitter_name", "eager"=>array("crop"=>"scale", "width"=>"2.0")));
-          $url = cloudinary_url("cloudinary", array("type"=>"twitter_name", "crop"=>"scale", "width"=>"2.0", "format"=>"png", "version"=>$result["version"]));
-          $this->assertEquals($result["eager"][0]["url"], $url);
+        Curl::mockUpload($this);
+
+        Uploader::explicit("cloudinary", array("type"=>"twitter_name", "eager"=>array("crop"=>"scale", "width"=>"2.0")));
+        $fields = Curl::$instance->fields();
+        $this->assertArraySubset(array("type"=>"twitter_name", "eager"=> "c_scale,w_2.0"),$fields);
       }
   
       public function test_eager() {
-          Uploader::upload(self::LOGO_PNG, array("eager"=>array("crop"=>"scale", "width"=>"2.0")));
+        Curl::mockUpload($this);
+        Uploader::upload(self::LOGO_PNG, array("eager"=>array("crop"=>"scale", "width"=>"2.0")));
+        $fields = Curl::$instance->fields();
+        $this->assertArraySubset(array("eager"=> "c_scale,w_2.0"),$fields);
       }
   
       public function test_headers() {
@@ -72,16 +87,27 @@ namespace Cloudinary {
       public function test_tags() {
           $api = new \Cloudinary\Api();      
           $result = Uploader::upload(self::LOGO_PNG);
-          Uploader::add_tag("tag1", $result["public_id"]);
-          Uploader::add_tag("tag2", $result["public_id"]);
-          $info = $api->resource($result["public_id"]);
-          $this->assertEquals($info["tags"], array("tag1", "tag2"));
-          Uploader::remove_tag("tag1", $result["public_id"]);
-          $info = $api->resource($result["public_id"]);
-          $this->assertEquals($info["tags"], array("tag2"));
-          Uploader::replace_tag("tag3", $result["public_id"]);
-          $info = $api->resource($result["public_id"]);
-          $this->assertEquals($info["tags"], array("tag3"));
+        Curl::mockUpload($this);
+        Uploader::add_tag("tag1", "foobar");
+        assertUrl($this, "/image/tags");
+        assertPost($this);
+        assertParam($this, "public_ids[0]", "foobar");
+        assertParam($this, "command", "add");
+        assertParam($this, "tag", "tag1");
+
+        Uploader::remove_tag("tag1", "foobar");
+        assertUrl($this, "/image/tags");
+        assertPost($this);
+        assertParam($this, "public_ids[0]", "foobar");
+        assertParam($this, "command", "remove");
+        assertParam($this, "tag", "tag1");
+
+        Uploader::replace_tag("tag3", "foobar");
+        assertUrl($this, "/image/tags");
+        assertPost($this);
+        assertParam($this, "public_ids[0]", "foobar");
+        assertParam($this, "command", "replace");
+        assertParam($this, "tag", "tag3");
       }
   
       /**
@@ -159,12 +185,12 @@ namespace Cloudinary {
   
           $form = cl_form_tag("http://callback.com", array("public_id"=>"hello", "form"=>array("class"=>"uploader")));
           $this->assertRegExp(<<<TAG
-/<form enctype='multipart\/form-data' action='https:\/\/api.cloudinary.com\/v1_1\/test123\/image\/upload' method='POST' class='uploader'>
+#<form enctype='multipart\/form-data' action='{$this->url_prefix}\/v1_1\/test123\/image\/upload' method='POST' class='uploader'>
 <input name='timestamp' type='hidden' value='\d+'\/>
 <input name='public_id' type='hidden' value='hello'\/>
 <input name='signature' type='hidden' value='[0-9a-f]+'\/>
 <input name='api_key' type='hidden' value='1234'\/>
-<\/form>/
+<\/form>#
 TAG
 , $form);
       }
@@ -172,7 +198,7 @@ TAG
           Cloudinary::config(array("cloud_name"=>"test123", "secure_distribution" => NULL, "private_cdn" => FALSE, "api_key" => "1234"));
   
           $tag = cl_image_upload_tag("image", array("public_id"=>"hello", "html"=>array("class"=>"uploader")));
-          $this->assertRegExp("/<input class='uploader cloudinary-fileupload' data-cloudinary-field='image' data-form-data='{\"timestamp\":\d+,\"public_id\":\"hello\",\"signature\":\"[0-9a-f]+\",\"api_key\":\"1234\"}' data-url='https:\/\/api.cloudinary.com\/v1_1\/test123\/auto\/upload' name='file' type='file'\/>/", $tag);
+          $this->assertRegExp("#<input class='uploader cloudinary-fileupload' data-cloudinary-field='image' data-form-data='{\"timestamp\":\d+,\"public_id\":\"hello\",\"signature\":\"[0-9a-f]+\",\"api_key\":\"1234\"}' data-url='{$this->url_prefix}\/v1_1\/test123\/auto\/upload' name='file' type='file'\/>#", $tag);
       }
     
       function test_manual_moderation() {
@@ -264,27 +290,7 @@ TAG
           $api->delete_upload_preset($preset["name"]);
   
       }
-  
-      function test_overwrite_upload() {
-          $api = new \Cloudinary\Api();
-          $public_id = "api_test_overwrite";
-  
-          $api->delete_resources($public_id);
-  
-          $resource = Uploader::upload(self::LOGO_PNG, array("public_id"=> $public_id));
-          $this->assertArrayHasKey("etag", $resource, "Should return an etag when uploading a new resource");
-  
-          $resource = Uploader::upload(self::LOGO_PNG, array("public_id"=> $public_id, "overwrite" => false));
-          $this->assertArrayNotHasKey("etag", $resource, "Should not return an etag when uploading a existing resource with overwrite=false");
-          $this->assertArrayHasKey("existing", $resource, "Should return 'existing' when uploading a existing resource with overwrite=false");
-  
-          $resource = Uploader::upload(self::LOGO_PNG, array("public_id"=> $public_id, "overwrite" => true));
-          $this->assertArrayHasKey("etag", $resource, "Should return an etag when uploading an existing resource with overwrite=true");
-  
-          $api->delete_resources($public_id);
-  
-      }
-  
+
       /**
        * @expectedException Cloudinary\Error
        * @expectedExceptionMessage timed out
@@ -295,7 +301,9 @@ TAG
           Cloudinary::config(array( "timeout" => 1 ));
           $this->assertEquals(Cloudinary::config_get("timeout"), 1);
           try {
-              Uploader::upload(self::LOGO_PNG);
+            // Use a lengthy PNG transformation
+            $transformation = array("crop" => "scale", "width" => "2.0", "angle" => 33);
+            Uploader::upload(self::LOGO_PNG, array("eager"=>array("transformation"=>array($transformation, $transformation))));
           } catch ( Exception $e ) {
               // Finally not supported in PHP 5.3
               Cloudinary::config(array( "timeout", $timeout ));

@@ -625,7 +625,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * Reload a fresh model instance from the database.
      *
      * @param  array  $with
-     * @return $this|null
+     * @return static|null
      */
     public function fresh(array $with = [])
     {
@@ -796,11 +796,11 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         list($type, $id) = $this->getMorphs($name, $type, $id);
 
         // If the type value is null it is probably safe to assume we're eager loading
-        // the relationship. When that is the case we will pass in a dummy query as
-        // there are multiple types in the morph and we can't use single queries.
-        if (is_null($class = $this->$type)) {
+        // the relationship. In this case we'll just pass in a dummy query where we
+        // need to remove any eager loads that may already be defined on a model.
+        if (empty($class = $this->$type)) {
             return new MorphTo(
-                $this->newQuery(), $this, $id, null, $type, $name
+                $this->newQuery()->setEagerLoads([]), $this, $id, null, $type, $name
             );
         }
 
@@ -1387,7 +1387,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     public function update(array $attributes = [])
     {
         if (! $this->exists) {
-            return $this->newQuery()->update($attributes);
+            return false;
         }
 
         return $this->fill($attributes)->save();
@@ -2266,11 +2266,11 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
         static::unguard();
 
-        $result = $callback();
-
-        static::reguard();
-
-        return $result;
+        try {
+            return $callback();
+        } finally {
+            static::reguard();
+        }
     }
 
     /**
@@ -3397,15 +3397,22 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     }
 
     /**
-     * Determine if an attribute exists on the model.
+     * Determine if an attribute or relation exists on the model.
      *
      * @param  string  $key
      * @return bool
      */
     public function __isset($key)
     {
-        return (isset($this->attributes[$key]) || isset($this->relations[$key])) ||
-                ($this->hasGetMutator($key) && ! is_null($this->getAttributeValue($key)));
+        if (isset($this->attributes[$key]) || isset($this->relations[$key])) {
+            return true;
+        }
+
+        if (method_exists($this, $key) && $this->$key && isset($this->relations[$key])) {
+            return true;
+        }
+
+        return $this->hasGetMutator($key) && ! is_null($this->getAttributeValue($key));
     }
 
     /**

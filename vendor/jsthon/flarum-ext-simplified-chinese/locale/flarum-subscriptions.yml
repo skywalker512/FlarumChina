@@ -28,7 +28,7 @@ flarum-subscriptions:
 
     # These translations are used in the Settings page.
     settings:
-      forum_follow_after_reply_label: 自动关注我回复的话题
+      follow_after_reply_label: 自动关注我回复的内容
       notify_new_post_label: 关注的话题被回复
 
     # These translations are used in the subscription menu displayed to the right of the post stream.

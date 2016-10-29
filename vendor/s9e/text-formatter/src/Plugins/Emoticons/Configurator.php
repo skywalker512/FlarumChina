@@ -12,7 +12,7 @@ use Iterator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
-use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -105,10 +105,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$lpos = 6 + \strlen($this->notAfter);
 			$rpos = \strrpos($regexp, '/');
 			$jsRegexp = RegexpConvertor::toJS('/' . \substr($regexp, $lpos, $rpos - $lpos) . '/', \true);
-			$config['regexp'] = new Variant($regexp);
-			$config['regexp']->set('JS', $jsRegexp);
-			$config['notAfter'] = new Variant;
-			$config['notAfter']->set('JS', RegexpConvertor::toJS('/' . $this->notAfter . '/'));
+			$config['regexp'] = new Regexp($regexp);
+			$config['regexp']->setJS($jsRegexp);
+			$config['notAfter'] = new Regexp('/' . $this->notAfter . '/');
 		}
 		if ($this->quickMatch === \false)
 			$config['quickMatch'] = ConfigHelper::generateQuickMatchFromList($codes);

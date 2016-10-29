@@ -143,7 +143,7 @@ class BBCodeMonkey
 		{
 			$pos   = \strpos($definition, '=');
 			$name  = \substr($definition, 0, $pos);
-			$value = \substr($definition, 1 + $pos);
+			$value = \preg_replace('(^"(.*?)")s', '$1', \substr($definition, 1 + $pos));
 			$value = \preg_replace_callback(
 				'#(\\{(?>HASHMAP|MAP|PARSE|REGEXP)=)([A-Za-z0-9+/]+=*)#',
 				function ($m)
