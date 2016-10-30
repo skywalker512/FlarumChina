@@ -374,7 +374,7 @@ core:
 
     # These translations are used in unverified user alert box.
     user_email_confirmation:
-      alert_message: core.ref.confirmation_email_sent
+      alert_message: => core.ref.confirmation_email_sent
       resend_button: 重新发送确认邮件
       sent_message: 发送
 
