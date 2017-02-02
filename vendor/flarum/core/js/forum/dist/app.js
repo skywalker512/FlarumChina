@@ -26539,7 +26539,7 @@ System.register('flarum/components/Search', ['flarum/Component', 'flarum/compone
               search.searchTimeout = setTimeout(function () {
                 if (search.searched.indexOf(query) !== -1) return;
 
-                if (query.length >= 3) {
+                if (query.length >= 1) {
                   search.sources.map(function (source) {
                     if (!source.search) return;
 
