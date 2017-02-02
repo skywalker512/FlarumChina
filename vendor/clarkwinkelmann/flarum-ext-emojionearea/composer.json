@@ -1,0 +1,25 @@
+{
+    "name": "clarkwinkelmann/flarum-ext-emojionearea",
+    "description": "Add EmojiOne Area emoji picker to Flarum",
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Clark Winkelmann",
+            "email": "clark.winkelmann@gmail.com",
+            "homepage": "https://clarkwinkelmann.com/"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/clarkwinkelmann/flarum-ext-emojionearea/issues",
+        "source": "https://github.com/clarkwinkelmann/flarum-ext-emojionearea"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Emoji Picker"
+        }
+    }
+}

@@ -1,0 +1,16 @@
+antoinefr-money:
+  admin:
+    settings:
+      title: Settings
+      moneyforpost: Money given for a new post
+      moneyfordiscussion: Money given for a new discussion
+      moneyname: Name of the money (ex: points)
+    permissions:
+      edit_money_label: Edit money
+  forum:
+    user_controls:
+      money_button: Edit money
+    modal:
+      title: "{username}'s money"
+      current: Current :
+      submit_button: => core.ref.save_changes

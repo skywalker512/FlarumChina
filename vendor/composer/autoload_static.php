@@ -31,8 +31,13 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
             'Zend\\Escaper\\' => 13,
             'Zend\\Diactoros\\' => 15,
         ),
+        'X' => 
+        array (
+            'XEngine\\MarkdownEditor\\' => 23,
+        ),
         'W' => 
         array (
+            'WiwatSrt\\BestAnswer\\' => 20,
             'Whoops\\' => 7,
         ),
         'V' => 
@@ -137,6 +142,11 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         array (
             'Carbon\\' => 7,
         ),
+        'A' => 
+        array (
+            'Avatar4eg\\UsersList\\' => 20,
+            'AntoineFr\\Money\\' => 16,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -155,6 +165,14 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         'Zend\\Diactoros\\' => 
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-diactoros/src',
+        ),
+        'XEngine\\MarkdownEditor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/xengine/flarum-ext-markdown-editor/src',
+        ),
+        'WiwatSrt\\BestAnswer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wiwatsrt/flarum-ext-best-answer/src',
         ),
         'Whoops\\' => 
         array (
@@ -437,6 +455,14 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         'Carbon\\' => 
         array (
             0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
+        ),
+        'Avatar4eg\\UsersList\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/avatar4eg/flarum-ext-users-list/src',
+        ),
+        'AntoineFr\\Money\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/antoinefr/flarum-ext-money/src',
         ),
     );
 

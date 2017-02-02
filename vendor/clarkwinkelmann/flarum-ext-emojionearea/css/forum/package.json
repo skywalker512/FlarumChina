@@ -1,0 +1,7 @@
+{
+    "private": true,
+    "devDependencies": {
+        "gulp": "^3.8.11",
+        "emojionearea": "^3.1.5"
+    }
+}

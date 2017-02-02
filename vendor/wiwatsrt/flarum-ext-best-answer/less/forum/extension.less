@@ -1,0 +1,45 @@
+.Post--bestAnswer {
+  .item-isBestAnswer {
+    background: #58a400;
+    float: right;
+    border: 0 none !important;
+    border-radius: 4px;
+    color: white;
+    padding: 2px 5px;
+  }
+  .item-isBestAnswer::before {
+    content: "\f00c";
+    font-family: FontAwesome;
+    padding-right: 4px;
+  }
+}
+.Badge--bestAnswer {
+  background-color: #58a400;
+}
+.Post-footer{
+  .item-bestAnswerPost {
+    padding: 10px;
+    background-color: rgba(88, 164, 0, 0.23);
+    margin-top: 25px;
+
+    .Post-body {
+      color: #111;
+    }
+
+    a .icon {
+      display: inline-block;
+    }
+
+    .PostUser-badges, .PostUser-avatar {
+      display: none;
+    }
+    .item-bestAnswerButton a {
+      background: #58a400;
+      float: right;
+      border: 0 none !important;
+      border-radius: 4px;
+      color: white;
+      padding: 2px 5px;
+    }
+  }
+}

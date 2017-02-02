@@ -1,0 +1,24 @@
+{
+    "name": "xengine/flarum-ext-markdown-editor",
+    "description": "WYSIWYG Editor for Flarum",
+    "authors": [
+        {
+            "name": "XEngine",
+            "email": "tidusdragonh3art@gmail.com"
+        }
+    ],
+    "type": "flarum-extension",
+    "require": {
+        "flarum/core": "^0.1.0-beta.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "XEngine\\MarkdownEditor\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Markdown Editor"
+        }
+    }
+}

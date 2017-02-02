@@ -1,0 +1,12 @@
+flarum-best-answer:
+    admin:
+        permissions:
+            best_answer: => flarum-best-answer.ref.best_answer
+    forum:
+        this_best_answer: "La meilleure réponse"
+        remove_best_answer: "Supprimer la meilleure réponse"
+        header_best_answer: "Meilleure réponse selon le créateur de la discussion"
+        best_answer_button: => flarum-best-answer.ref.best_answer
+        best_answer: => flarum-best-answer.ref.best_answer
+    ref:
+      best_answer: 'Meilleure réponse'

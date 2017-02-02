@@ -1,0 +1,31 @@
+{
+  "name": "avatar4eg/flarum-ext-users-list",
+  "description": "Add users list in admin panel.",
+  "type": "flarum-extension",
+  "keywords": ["users", "admin"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Nikolai Morozov",
+      "email": "avanmorozov@gmail.com"
+    }
+  ],
+  "require": {
+    "flarum/core": "^0.1.0-beta.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Avatar4eg\\UsersList\\": "src/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "Users list",
+      "icon": {
+        "name": "users",
+        "backgroundColor": "#FFFFFF",
+        "color": "#000000"
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+avatar4eg-users-list:
+  admin:
+    nav:
+      users_button: => avatar4eg-users-list.ref.users_title
+      users_text: Список пользователей форума.
+    page:
+      about_text:  Список зарегистрированных пользователей форума.
+      online_text: => core.forum.user.online_text
+      load_more_button: => core.ref.load_more
+      list_title: => avatar4eg-users-list.ref.users_title
+      mail_all_button: Сообщение всем пользователям
+    modal_mail:
+      title_text: Сообщение для
+      title_all_text: всех участников форума
+      email_label: Кому
+      subject_label: Тема
+      default_subject: => avatar4eg-users-list.ref.default_subject
+      message_label: Сообщение
+      submit_button: Отправить
+
+  email:
+    default_subject: => avatar4eg-users-list.ref.default_subject
+
+  ref:
+    default_subject: Сообщение от администрации форума
+    users_title: Пользователи

@@ -1,0 +1,16 @@
+antoinefr-money:
+  admin:
+    settings:
+      title: Paramètres
+      moneyforpost: Argent donné pour un nouveau post
+      moneyfordiscussion: Argent donné pour une nouvelle discussion
+      moneyname: Nom de la monnaie (ex: points)
+    permissions:
+      edit_money_label: Modifier la monnaie
+  forum:
+    user_controls:
+      money_button: Modifier la monnaie
+    modal:
+      title: "Monnaie de {username}"
+      current: Actuellement :
+      submit_button: => core.ref.save_changes

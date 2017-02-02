@@ -5126,6 +5126,230 @@
             "image",
             "imgur",
             "upload"
+        ],
+        "abandoned": "flagrow/upload"
+    },
+    {
+        "name": "wiwatsrt/flarum-ext-best-answer",
+        "version": "v0.1.0-beta.5",
+        "version_normalized": "0.1.0.0-beta5",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/wiwatsrt/flarum-ext-best-answer.git",
+            "reference": "bc8232749ade9dc0686ba329bfe4be1f0179c83b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/wiwatsrt/flarum-ext-best-answer/zipball/bc8232749ade9dc0686ba329bfe4be1f0179c83b",
+            "reference": "bc8232749ade9dc0686ba329bfe4be1f0179c83b",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.5"
+        },
+        "time": "2016-11-11 01:16:51",
+        "type": "flarum-extension",
+        "extra": {
+            "branch-alias": {
+                "dev-develop": "0.1.x-dev"
+            },
+            "flarum-extension": {
+                "title": "Best Answer",
+                "icon": {
+                    "name": "commenting-o",
+                    "backgroundColor": "#EE8208",
+                    "color": "#fff"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "WiwatSrt\\BestAnswer\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Wiwat Srisattha",
+                "email": "wiwat@srisattha.com"
+            }
+        ],
+        "description": "Best Answer fot Flarum.",
+        "keywords": [
+            "best-answer",
+            "flarum"
+        ]
+    },
+    {
+        "name": "clarkwinkelmann/flarum-ext-emojionearea",
+        "version": "v0.1.1",
+        "version_normalized": "0.1.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/clarkwinkelmann/flarum-ext-emojionearea.git",
+            "reference": "5314f18b26e9299e052e264dbbaec2557c187728"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/clarkwinkelmann/flarum-ext-emojionearea/zipball/5314f18b26e9299e052e264dbbaec2557c187728",
+            "reference": "5314f18b26e9299e052e264dbbaec2557c187728",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6"
+        },
+        "time": "2017-02-01 21:38:37",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Emoji Picker"
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Clark Winkelmann",
+                "email": "clark.winkelmann@gmail.com",
+                "homepage": "https://clarkwinkelmann.com/"
+            }
+        ],
+        "description": "Add EmojiOne Area emoji picker to Flarum"
+    },
+    {
+        "name": "xengine/flarum-ext-markdown-editor",
+        "version": "1.3.1",
+        "version_normalized": "1.3.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/XEngine/flarum-ext-markdown-editor.git",
+            "reference": "55639b2881420c76ff2a34916b19e4e270ddf776"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/XEngine/flarum-ext-markdown-editor/zipball/55639b2881420c76ff2a34916b19e4e270ddf776",
+            "reference": "55639b2881420c76ff2a34916b19e4e270ddf776",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.5"
+        },
+        "time": "2016-11-04 07:20:12",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Markdown Editor"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "XEngine\\MarkdownEditor\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "authors": [
+            {
+                "name": "XEngine",
+                "email": "tidusdragonh3art@gmail.com"
+            }
+        ],
+        "description": "WYSIWYG Editor for Flarum"
+    },
+    {
+        "name": "antoinefr/flarum-ext-money",
+        "version": "v0.3.0",
+        "version_normalized": "0.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/AntoineFr/flarum-ext-money.git",
+            "reference": "c9788a5dec01101e3b9ca3b97c245378d49fc982"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/AntoineFr/flarum-ext-money/zipball/c9788a5dec01101e3b9ca3b97c245378d49fc982",
+            "reference": "c9788a5dec01101e3b9ca3b97c245378d49fc982",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6"
+        },
+        "time": "2017-01-22 12:12:24",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Money",
+                "icon": {
+                    "name": "money"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "AntoineFr\\Money\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "description": "Give money to your users for different actions."
+    },
+    {
+        "name": "avatar4eg/flarum-ext-users-list",
+        "version": "0.1.1",
+        "version_normalized": "0.1.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Avatar4eg/flarum-ext-users-list.git",
+            "reference": "ed9b1a02832fb00031ab1c0030b18071751464c4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Avatar4eg/flarum-ext-users-list/zipball/ed9b1a02832fb00031ab1c0030b18071751464c4",
+            "reference": "ed9b1a02832fb00031ab1c0030b18071751464c4",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.5"
+        },
+        "time": "2016-09-16 08:42:06",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Users list",
+                "icon": {
+                    "name": "users",
+                    "backgroundColor": "#FFFFFF",
+                    "color": "#000000"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Avatar4eg\\UsersList\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nikolai Morozov",
+                "email": "avanmorozov@gmail.com"
+            }
+        ],
+        "description": "Add users list in admin panel.",
+        "keywords": [
+            "Users",
+            "admin"
         ]
     }
 ]

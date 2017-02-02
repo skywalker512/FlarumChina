@@ -10,6 +10,8 @@ return array(
     'Zend\\Stratigility\\' => array($vendorDir . '/zendframework/zend-stratigility/src'),
     'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper/src'),
     'Zend\\Diactoros\\' => array($vendorDir . '/zendframework/zend-diactoros/src'),
+    'XEngine\\MarkdownEditor\\' => array($vendorDir . '/xengine/flarum-ext-markdown-editor/src'),
+    'WiwatSrt\\BestAnswer\\' => array($vendorDir . '/wiwatsrt/flarum-ext-best-answer/src'),
     'Whoops\\' => array($vendorDir . '/filp/whoops/src/Whoops'),
     'Vingle\\Share\\Social\\' => array($vendorDir . '/vingle/flarum-share-social/src'),
     'Vingle\\Configure\\Smtp\\' => array($vendorDir . '/vingle/flarum-configure-smtp/src'),
@@ -80,4 +82,6 @@ return array(
     'Doctrine\\Common\\' => array($vendorDir . '/doctrine/common/lib/Doctrine/Common'),
     'Dflydev\\FigCookies\\' => array($vendorDir . '/dflydev/fig-cookies/src/Dflydev/FigCookies'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
+    'Avatar4eg\\UsersList\\' => array($vendorDir . '/avatar4eg/flarum-ext-users-list/src'),
+    'AntoineFr\\Money\\' => array($vendorDir . '/antoinefr/flarum-ext-money/src'),
 );

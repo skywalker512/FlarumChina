@@ -1,0 +1,62 @@
+/**
+ * This file is part of clarkwinkelmann/flarum-ext-emojionearea
+ * See README.md for details and license
+ */
+
+.Button-emojionearea {
+    position: relative;
+
+    // The standalone editor is placed inside the button
+    // and stretched using absolute positionning
+    .Button-emojioneareaContainer {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        .emojionearea.emojionearea-standalone {
+            display: block;
+            border: none;
+            position: absolute !important;
+            background: none;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            // The part of the standalone editor that receive the emoji is not used here,
+            // all hooking is done through javascript
+            .emojionearea-editor {
+                display: none;
+            }
+
+            // Make the original open and close buttons invlsible but take the whole place so they can be clicked
+            .emojionearea-button {
+                opacity: 0;
+
+                > div {
+                    width: auto;
+                    height: auto;
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                }
+            }
+
+            .emojionearea-picker.emojionearea-picker-position-top {
+                // opposite of original
+                right: auto;
+                left: -11px; // Adjusted for the tip of the triangle to be centered
+
+                .emojionearea-wrapper:after {
+                    // opposite of original
+                    right: auto;
+                    left: 20px;
+                }
+            }
+        }
+    }
+}
