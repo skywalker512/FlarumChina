@@ -747,6 +747,27 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
         throw $e;
     }
 
+    /**
+     * @expectedException \Symfony\Component\Process\Exception\ProcessTimedOutException
+     * @expectedExceptionMessage exceeded the timeout of 0.1 seconds.
+     */
+    public function testIterateOverProcessWithTimeout()
+    {
+        $process = $this->getProcess(self::$phpBin.' -r "sleep(30);"');
+        $process->setTimeout(0.1);
+        $start = microtime(true);
+        try {
+            $process->start();
+            foreach ($process as $buffer);
+            $this->fail('A RuntimeException should have been raised');
+        } catch (RuntimeException $e) {
+        }
+
+        $this->assertLessThan(15, microtime(true) - $start);
+
+        throw $e;
+    }
+
     public function testCheckTimeoutOnNonStartedProcess()
     {
         $process = $this->getProcess('echo foo');
@@ -1360,6 +1381,40 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('', $p1->getOutput());
         $this->assertSame('', $p2->getErrorOutput());
         $this->assertSame('456', $p2->getOutput());
+    }
+
+    public function testInheritEnvEnabled()
+    {
+        $process = $this->getProcess(self::$phpBin.' -r '.escapeshellarg('echo serialize($_SERVER);'), null, array('BAR' => 'BAZ'));
+
+        putenv('FOO=BAR');
+
+        $this->assertSame($process, $process->inheritEnvironmentVariables(1));
+        $this->assertTrue($process->areEnvironmentVariablesInherited());
+
+        $process->run();
+
+        $expected = array('BAR' => 'BAZ', 'FOO' => 'BAR');
+        $env = array_intersect_key(unserialize($process->getOutput()), $expected);
+
+        $this->assertEquals($expected, $env);
+    }
+
+    public function testInheritEnvDisabled()
+    {
+        $process = $this->getProcess(self::$phpBin.' -r '.escapeshellarg('echo serialize($_SERVER);'), null, array('BAR' => 'BAZ'));
+
+        putenv('FOO=BAR');
+
+        $this->assertFalse($process->areEnvironmentVariablesInherited());
+
+        $process->run();
+
+        $expected = array('BAR' => 'BAZ', 'FOO' => 'BAR');
+        $env = array_intersect_key(unserialize($process->getOutput()), $expected);
+        unset($expected['FOO']);
+
+        $this->assertSame($expected, $env);
     }
 
     /**

@@ -35,7 +35,7 @@ class MemcacheSessionHandlerTest extends \PHPUnit_Framework_TestCase
         }
 
         parent::setUp();
-        $this->memcache = $this->getMock('Memcache');
+        $this->memcache = $this->getMockBuilder('Memcache')->getMock();
         $this->storage = new MemcacheSessionHandler(
             $this->memcache,
             array('prefix' => self::PREFIX, 'expiretime' => self::TTL)
@@ -56,12 +56,6 @@ class MemcacheSessionHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testCloseSession()
     {
-        $this->memcache
-            ->expects($this->once())
-            ->method('close')
-            ->will($this->returnValue(true))
-        ;
-
         $this->assertTrue($this->storage->close());
     }
 

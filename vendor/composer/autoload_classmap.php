@@ -9,6 +9,7 @@ return array(
     'AkismetTest' => $vendorDir . '/tijsverkoyen/akismet/tests/AkismetTest.php',
     'Cloudinary' => $vendorDir . '/cloudinary/cloudinary_php/src/Cloudinary.php',
     'CloudinaryField' => $vendorDir . '/cloudinary/cloudinary_php/src/CloudinaryField.php',
+    'Cloudinary\\Akamai' => $vendorDir . '/cloudinary/cloudinary_php/src/Akamai.php',
     'Cloudinary\\Api' => $vendorDir . '/cloudinary/cloudinary_php/src/Api.php',
     'Cloudinary\\Api\\AlreadyExists' => $vendorDir . '/cloudinary/cloudinary_php/src/Api.php',
     'Cloudinary\\Api\\AuthorizationRequired' => $vendorDir . '/cloudinary/cloudinary_php/src/Api.php',

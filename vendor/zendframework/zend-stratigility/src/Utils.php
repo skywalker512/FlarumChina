@@ -13,6 +13,7 @@ use Exception;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionFunction;
 use ReflectionMethod;
+use Throwable;
 
 /**
  * Utility methods
@@ -76,7 +77,7 @@ abstract class Utils
      */
     public static function getStatusCode($error, ResponseInterface $response)
     {
-        if ($error instanceof Exception
+        if (($error instanceof Throwable || $error instanceof Exception)
             && ($error->getCode() >= 400 && $error->getCode() < 600)
         ) {
             return $error->getCode();

@@ -92,13 +92,34 @@ class SymfonyQuestionHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertOutputContains('Can I have a backslash? [\]', $output);
     }
 
-    public function testAskEscapeLabel()
+    public function testAskEscapeAndFormatLabel()
+    {
+        $helper = new SymfonyQuestionHelper();
+        $helper->setInputStream($this->getInputStream('Foo\\Bar'));
+        $helper->ask($this->createInputInterfaceMock(), $output = $this->createOutputInterface(), new Question('Do you want to use Foo\\Bar <comment>or</comment> Foo\\Baz\\?', 'Foo\\Baz'));
+
+        $this->assertOutputContains('Do you want to use Foo\\Bar or Foo\\Baz\\? [Foo\\Baz]:', $output);
+    }
+
+    public function testLabelTrailingBackslash()
     {
         $helper = new SymfonyQuestionHelper();
         $helper->setInputStream($this->getInputStream('sure'));
-        $helper->ask($this->createInputInterfaceMock(), $output = $this->createOutputInterface(), new Question('Do you want a \?'));
+        $helper->ask($this->createInputInterfaceMock(), $output = $this->createOutputInterface(), new Question('Question with a trailing \\'));
 
-        $this->assertOutputContains('Do you want a \?', $output);
+        $this->assertOutputContains('Question with a trailing \\', $output);
+    }
+
+    /**
+     * @expectedException        \Symfony\Component\Console\Exception\RuntimeException
+     * @expectedExceptionMessage Aborted
+     */
+    public function testAskThrowsExceptionOnMissingInput()
+    {
+        $dialog = new SymfonyQuestionHelper();
+
+        $dialog->setInputStream($this->getInputStream(''));
+        $dialog->ask($this->createInputInterfaceMock(), $this->createOutputInterface(), new Question('What\'s your name?'));
     }
 
     protected function getInputStream($input)
@@ -120,7 +141,7 @@ class SymfonyQuestionHelperTest extends \PHPUnit_Framework_TestCase
 
     protected function createInputInterfaceMock($interactive = true)
     {
-        $mock = $this->getMock('Symfony\Component\Console\Input\InputInterface');
+        $mock = $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock();
         $mock->expects($this->any())
             ->method('isInteractive')
             ->will($this->returnValue($interactive));

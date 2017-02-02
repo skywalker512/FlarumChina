@@ -2,6 +2,88 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.3.11 - TBD
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
+## 1.3.10 - 2017-01-23
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#226](https://github.com/zendframework/zend-diactoros/pull/226) fixed an
+  issue with the `SapiStreamEmitter` causing the response body to be cast
+  to `(string)` and also be read as a readable stream, potentially producing
+  double output.
+
+## 1.3.9 - 2017-01-17
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#223](https://github.com/zendframework/zend-diactoros/issues/223)
+  [#224](https://github.com/zendframework/zend-diactoros/pull/224) fixed an issue
+  with the `SapiStreamEmitter` consuming too much memory when producing output
+  for readable bodies.
+
+## 1.3.8 - 2017-01-05
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#222](https://github.com/zendframework/zend-diactoros/pull/222) fixes the
+  `SapiStreamEmitter`'s handling of the `Content-Range` header to properly only
+  emit a range of bytes if the header value is in the form `bytes {first-last}/length`.
+  This allows using other range units, such as `items`, without incorrectly
+  emitting truncated content.
+
 ## 1.3.7 - 2016-10-11
 
 ### Added

@@ -1,4 +1,40 @@
 
+1.6.0 / 2017-01-30
+==================
+
+New functionality and features
+------------------------------
+
+  * Add Akamai token generator
+
+Other Changes
+-------------
+
+  * Revert using VERSION to set USER_AGENT. Fixes #58.
+  * Fix USER_AGENT version.
+
+1.5.0 / 2017-01-19
+==================
+
+New functionality and features
+------------------------------
+
+  * New `add_context` & `remove_all_context` API
+  * support suffix url for private images
+  * Escape ‘|' and ‘=‘ characters in context values
+  * Support ‘iw’ and ‘ih’ transformation parameters for indicating initial width or height
+  * Support `to_type` parameter in `rename`
+
+Other Changes
+-------------
+
+  * Fix folder listing test
+  * Add test for {effect: art:incognito}
+  * expending retrieved list of transformation to allow test to pass properly
+  * Add test case for 'to_type' + fix face_coordintes exceeding image boundaries
+  * Fix typo in the archive `expires_at` parameter
+  * Remove `$name` from call to `list_streaming_profiles`
+
 1.4.2 / 2016-10-28
 ==================
 

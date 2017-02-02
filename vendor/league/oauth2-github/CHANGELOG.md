@@ -1,6 +1,24 @@
 # Changelog
 All Notable changes to `oauth2-github` will be documented in this file
 
+## 0.2.2 - 2016-11-21
+
+### Added
+- Update base package version from 1.0 to 1.4
+- Update GithubResourceOwner to utilize ArrayAccessorTrait from base package
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Removed
+- Nothing
+
+### Security
+- Nothing
+
 ## 0.2.1 - 2016-04-13
 
 ### Added

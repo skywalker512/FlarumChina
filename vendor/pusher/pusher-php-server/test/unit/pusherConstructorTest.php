@@ -81,8 +81,8 @@
         {
             $options = array(
                 'encrytped' => true,
-                'host' => 'test.com',
-                'port' => '3000',
+                'host'      => 'test.com',
+                'port'      => '3000',
             );
             $pusher = new Pusher('app_key', 'app_secret', 'app_id', $options);
 
@@ -119,7 +119,7 @@
         {
             $options = array(
                 'cluster' => 'eu',
-                'host' => 'api.staging.pusher.com',
+                'host'    => 'api.staging.pusher.com',
             );
             $pusher = new Pusher('app_key', 'app_secret', 'app_id', $options);
 
@@ -137,5 +137,17 @@
 
             $settings = $pusher->getSettings();
             $this->assertEquals('api.staging.pusher.com', $settings['host']);
+        }
+
+        public function testCurlOptionsCanBeSet()
+        {
+            $curl_opts = array(CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4);
+            $options = array(
+                'curl_options' => $curl_opts,
+            );
+            $pusher = new Pusher('app_key', 'app_secret', 'app_id', $options);
+
+            $settings = $pusher->getSettings();
+            $this->assertEquals($curl_opts, $settings['curl_options']);
         }
     }

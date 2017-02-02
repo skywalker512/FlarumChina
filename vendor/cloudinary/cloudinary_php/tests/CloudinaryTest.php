@@ -336,11 +336,12 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
       $this->cloudinary_url_assertion("test", array( "width" => "auto:breakpoints_100_1900_20_15", "crop" => 'fill' ), CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_fill,w_auto:breakpoints_100_1900_20_15/test", array ('responsive' => true));
       $this->cloudinary_url_assertion("test", array( "width" => "auto:breakpoints:json", "crop" => 'fill' ), CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_fill,w_auto:breakpoints:json/test", array ('responsive' => true));
   }
-  public function test_original_width_and_height() {
-    $options = array("crop" => "crop", "width"=> "ow", "height"=>"oh");
-    $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_crop,h_oh,w_ow/test");
 
+  public function test_initial_width_and_height() {
+    $options = array("crop" => "crop", "width"=> "iw", "height"=>"ih");
+    $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_crop,h_ih,w_iw/test");
   }
+
     public function shared_client_hints($options, $message = ''){
         $tag = cl_image_tag('sample.jpg', $options);
         $this->assertEquals("<img src='http://res.cloudinary.com/test/image/upload/c_scale,dpr_auto,w_auto/sample.jpg' />", $tag, $message);
@@ -393,6 +394,11 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
     // should support width=auto
     $tag = cl_image_tag("hello", array("dpr"=>"auto", "format"=>"png"));
     $this->assertEquals("<img class='cld-hidpi' data-src='http://res.cloudinary.com/test123/image/upload/dpr_auto/hello.png'/>", $tag);
+  }
+
+  public function test_e_art_incognito() {
+    $tag = cl_image_tag("hello", array("effect"=>"art:incognito", "format"=>"png"));
+    $this->assertEquals("<img src='http://res.cloudinary.com/test123/image/upload/e_art:incognito/hello.png' />", $tag);
   }
 
   public function test_folder_version() {
@@ -501,6 +507,17 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
   public function test_url_suffix_for_raw(){
     //should support url_suffix for raw uploads
     $this->cloudinary_url_assertion("test", array("url_suffix"=>"hello", "private_cdn"=>TRUE, "resource_type"=>"raw"), "http://test123-res.cloudinary.com/files/test/hello");
+  }
+
+  public function test_url_suffix_for_private(){
+    //should support url_suffix for private uploads
+    $this->cloudinary_url_assertion("test",
+      array("url_suffix"=>"hello", "private_cdn"=>TRUE, "resource_type"=>"image", "type" => "private"),
+      "http://test123-res.cloudinary.com/private_images/test/hello");
+
+    $this->cloudinary_url_assertion("test",
+      array("url_suffix"=>"hello", "private_cdn"=>TRUE, "format" => "jpg", "resource_type"=>"image", "type" => "private"),
+      "http://test123-res.cloudinary.com/private_images/test/hello.jpg");
   }
 
   public function test_allow_use_root_path_in_shared() {
@@ -908,6 +925,55 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
 
   }
 
+
+  public function test_akamai_token() {
+  	\Cloudinary::config(array("akamai_key"=>"00112233FF99"));
+	  $token = Cloudinary::generate_akamai_token(
+		  array(
+			  "start_time" => 1111111111,
+			  "acl"        => '/image/*',
+			  "window"     => 300
+		  ) );
+	  $this->assertEquals(
+		  '__cld_token__=st=1111111111~exp=1111111411~acl=/image/*~' .
+		  'hmac=0854e8b6b6a46471a80b2dc28c69bd352d977a67d031755cc6f3486c121b43af',
+		  $token,
+		  "should generate an Akamai token with start_time and window" );
+	  $first_exp = time() + 300;
+	  $token = Cloudinary::generate_akamai_token(
+		  array(
+			  "acl"        => '*',
+			  "window"     => 300
+		  ) );
+	  $second_exp = time() + 300;
+	  preg_match('/exp=(\d+)/', $token, $matches);
+	  $this->assertNotEmpty($matches);
+	  $this->assertNotEmpty($matches[1]);
+	  $expiration = 0+ $matches[1];
+	  $this->assertGreaterThanOrEqual($first_exp, $expiration);
+	  $this->assertLessThanOrEqual($second_exp, $expiration);
+  }
+  public function test_accepts_key() {
+	$this->assertEquals('__cld_token__=exp=10000000~acl=*~' .
+	                   'hmac=030eafb6b19e499659d699b3d43e7595e35e3c0060e8a71904b3b8c8759f4890',
+	                   Cloudinary::generate_akamai_token(
+	                   	array(
+		                    "acl"        => '*',
+		                    "end_time"     => 10000000,
+		                    "key"        => '00aabbff'
+	                    )
+	                   ));
+  }
+	/**
+	 * @expectedException \Cloudinary\Error
+	 */
+  public function test_requires_end_time_or_window() {
+	  \Cloudinary::config(array("akamai_key"=>"00112233FF99"));
+	  Cloudinary::generate_akamai_token(
+		  array(
+			  "acl"        => '*'
+		  ) );
+  }
 
   private function cloudinary_url_assertion($source, $options, $expected, $expected_options = array()) {
     $url = Cloudinary::cloudinary_url($source, $options);

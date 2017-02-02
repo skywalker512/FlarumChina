@@ -8,6 +8,7 @@ Creating an application consists of 3 steps:
 
 ```php
 use Zend\Stratigility\MiddlewarePipe;
+use Zend\Stratigility\NoopFinalHandler;
 use Zend\Diactoros\Server;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -20,7 +21,7 @@ $server = Server::createServer($app,
   $_COOKIE,
   $_FILES
 );
-$server->listen();
+$server->listen(new NoopFinalHandler());
 ```
 
 The above example is useless by itself until you pipe middleware into the application.

@@ -17,10 +17,10 @@ flagrow-image-upload:
             upload_method: Méthode d'envoi
             preferences:
                 title: Préférences générales
-                max_file_size: Taille d'image maximale (en kilobytes)
+                max_file_size: Taille d'image maximale (en kilooctets)
             resize:
                 title: Redimensionnement d'image
-                toggle: Basculer les redimensionnement
+                toggle: Basculer les redimensionnements
                 max_width: Largeur maximale de l'image
                 max_height: Hauteur maximale de l'image
             imgur:
@@ -28,7 +28,7 @@ flagrow-image-upload:
                 client_id: Client-ID
             local:
                 title: Paramètres de stockage local
-                cdn_url: URL du Content Delivery (fichiers préfixes)
+                cdn_url: URL du réseau de diffusion de contenu (fichiers préfixes)
             cloudinary:
                 title: Paramètres Cloudinary
                 cloud_name: Nom du Cloud
@@ -38,13 +38,13 @@ flagrow-image-upload:
             save: Sauvegarder les paramètres
         help_texts:
             description: >
-                Paramètrer les services d'envoi d'image et les préférences.
+                Paramétrer les services d'envoi d'images et les préférences.
             upload_method: >
                 Ici vous pouvez sélectionner la méthode que vous voulez utiliser
-                pour envoyer les images. Quand vous en sélectionnez une
+                pour envoyer les images. Quand vous en sélectionnez une,
                 la carte de paramétrage correspondante sera affichée.
             resize: >
                 Choisissez si vous voulez redimensionner vos images avant
-                qu'elles soient envoyées. Vous pouvez choisir une largeur maximale
-                ainsi qu'une hauteur, en pixels. Le processus de redimensionnement garde
-                le rapport d'aspect des images.
+                qu'elles soient envoyées. Vous pouvez choisir une largeur
+                et une hauteur maximales, en pixels. Le processus de redimensionnement
+                garde le rapport d'aspect des images.

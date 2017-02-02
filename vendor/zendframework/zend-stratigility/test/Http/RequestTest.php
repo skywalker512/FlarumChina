@@ -16,11 +16,32 @@ use Zend\Stratigility\Http\Request;
 
 class RequestTest extends TestCase
 {
+    public $errorHandler;
+
     public function setUp()
     {
+        $this->restoreErrorHandler();
+        $this->errorHandler = function ($errno, $errstr) {
+            return (false !== strstr($errstr, Request::class . ' is now deprecated'));
+        };
+        set_error_handler($this->errorHandler, E_USER_DEPRECATED);
+
         $psrRequest     = new PsrRequest([], [], 'http://example.com/', 'GET', 'php://memory');
         $this->original = $psrRequest;
         $this->request  = new Request($this->original);
+    }
+
+    public function tearDown()
+    {
+        $this->restoreErrorHandler();
+    }
+
+    public function restoreErrorHandler()
+    {
+        if ($this->errorHandler) {
+            restore_error_handler();
+            $this->errorHandler = null;
+        }
     }
 
     public function testCallingSetUriSetsUriInRequestAndOriginalRequestInClone()
@@ -63,7 +84,7 @@ class RequestTest extends TestCase
 
     public function testDecoratorProxiesToAllMethods()
     {
-        $stream = $this->getMock('Psr\Http\Message\StreamInterface');
+        $stream = $this->getMockBuilder('Psr\Http\Message\StreamInterface')->getMock();
         $psrRequest = new PsrRequest([], [], 'http://example.com', 'POST', $stream, [
             'Accept' => 'application/xml',
             'X-URL' => 'http://example.com/foo',

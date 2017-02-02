@@ -18,6 +18,11 @@ use Psr\Http\Message\StreamInterface;
  *
  * Adds in write, end, and isComplete from RequestInterface in order
  * to provide a common interface for all PSR HTTP implementations.
+ *
+ * @deprecated since 1.3.0; to be removed with 2.0.0. Track the original
+ *     response via a request attribute or via a service instead; you
+ *     can use Zend\Stratigility\Middleware\OriginalMessages to do so. We
+ *     recommend that you use only the methods defined in PSR-7.
  */
 class Response implements
     PsrResponseInterface,
@@ -48,6 +53,17 @@ class Response implements
      */
     public function getOriginalResponse()
     {
+        trigger_error(sprintf(
+            '%s is now deprecated. Please register %s as your outermost middleware, '
+            . 'and pull the original response via the request "originalResponse" '
+            . 'attribute. %s will no longer be available starting in Stratigility 2.0.0. '
+            . 'Please see '
+            . 'https://docs.zendframework.com/zend-stratigility/migration/to-v2/#original-request-response-and-uri '
+            . 'for full details.',
+            __CLASS__,
+            \Zend\Stratigility\Middleware\OriginalMessages::class,
+            __METHOD__
+        ), E_USER_DEPRECATED);
         return $this->psrResponse;
     }
 
@@ -62,6 +78,16 @@ class Response implements
      */
     public function write($data)
     {
+        trigger_error(sprintf(
+            '%s is now deprecated; use $response->getBody()->write(). '
+            . '%s will no longer be available starting in Stratigility 2.0.0. '
+            . 'Please see '
+            . 'https://docs.zendframework.com/zend-stratigility/migration/to-v2/#deprecated-functionality '
+            . 'for full details.',
+            __CLASS__,
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
         if ($this->complete) {
             throw $this->responseIsAlreadyCompleted(__METHOD__);
         }
@@ -84,6 +110,16 @@ class Response implements
      */
     public function end($data = null)
     {
+        trigger_error(sprintf(
+            '%s is now deprecated; use $response->getBody()->write(). '
+            . '%s will no longer be available starting in Stratigility 2.0.0. '
+            . 'Please see '
+            . 'https://docs.zendframework.com/zend-stratigility/migration/to-v2/#deprecated-functionality '
+            . 'for full details.',
+            __CLASS__,
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
         if ($this->complete) {
             return $this;
         }
@@ -106,6 +142,16 @@ class Response implements
      */
     public function isComplete()
     {
+        trigger_error(sprintf(
+            '%s is now deprecated; use $response->getBody()->write(). '
+            . '%s will no longer be available starting in Stratigility 2.0.0. '
+            . 'Please see '
+            . 'https://docs.zendframework.com/zend-stratigility/migration/to-v2/#deprecated-functionality '
+            . 'for full details.',
+            __CLASS__,
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
         return $this->complete;
     }
 

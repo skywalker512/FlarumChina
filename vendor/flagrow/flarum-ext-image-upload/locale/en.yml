@@ -21,7 +21,7 @@ flagrow-image-upload:
             resize:
                 title: Image resize
                 toggle: Toggle the resize
-                max_width: Maxiumum image width
+                max_width: Maximum image width
                 max_height: Maximum image height
             imgur:
                 title: Imgur settings

@@ -11,6 +11,8 @@ namespace ZendTest\Stratigility;
 
 use Exception;
 use PHPUnit_Framework_TestCase as TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Zend\Diactoros\ServerRequest as PsrRequest;
 use Zend\Diactoros\Response as PsrResponse;
@@ -22,6 +24,8 @@ use Zend\Stratigility\Http\Response;
 
 class FinalHandlerTest extends TestCase
 {
+    public $errorHandler;
+
     /**
      * @var Escaper
      */
@@ -44,11 +48,37 @@ class FinalHandlerTest extends TestCase
 
     public function setUp()
     {
+        $this->restoreErrorHandler();
+        $this->errorHandler = function ($errno, $errstr) {
+            if (false !== strstr($errstr, Request::class . ' is now deprecated')) {
+                return true;
+            }
+            if (false !== strstr($errstr, Response::class . ' is now deprecated')) {
+                return true;
+            }
+
+            return false;
+        };
+        set_error_handler($this->errorHandler, E_USER_DEPRECATED);
+
         $psrRequest     = new PsrRequest([], [], 'http://example.com/', 'GET', 'php://memory');
         $this->escaper  = new Escaper();
         $this->request  = new Request($psrRequest);
         $this->response = new Response(new PsrResponse());
         $this->final    = new FinalHandler();
+    }
+
+    public function tearDown()
+    {
+        $this->restoreErrorHandler();
+    }
+
+    public function restoreErrorHandler()
+    {
+        if ($this->errorHandler) {
+            restore_error_handler();
+            $this->errorHandler = null;
+        }
     }
 
     public function testInvokingWithErrorAndNoStatusCodeSetsStatusTo500()
@@ -246,15 +276,16 @@ class FinalHandlerTest extends TestCase
     {
         $error = new Exception('Exception message', 501);
 
+        $body = $this->prophesize(StreamInterface::class);
+        $body->write('Not Implemented')->shouldBeCalled();
+
         $response = $this->prophesize('Zend\Stratigility\Http\Response');
         $response->getStatusCode()->willReturn(200);
         $response->withStatus(501, '')->will(function () use ($response) {
             return $response->reveal();
         });
         $response->getReasonPhrase()->willReturn('Not Implemented');
-        $response->write('Not Implemented')->will(function () use ($response) {
-            return $response->reveal();
-        });
+        $response->getBody()->will([$body, 'reveal']);
 
         $final = new FinalHandler([], new Response(new PsrResponse()));
         $this->assertSame($response->reveal(), $final(
@@ -281,7 +312,7 @@ class FinalHandlerTest extends TestCase
             $error
         );
 
-        $this->assertInstanceOf('Zend\Stratigility\Http\Response', $test);
+        $this->assertInstanceOf(ResponseInterface::class, $test);
         $this->assertSame(501, $test->getStatusCode());
         $this->assertSame('Not Implemented', $test->getReasonPhrase());
 
@@ -297,6 +328,7 @@ class FinalHandlerTest extends TestCase
     {
         $body     = $this->prophesize('Psr\Http\Message\StreamInterface');
         $body->getSize()->willReturn(0)->shouldBeCalledTimes(2);
+        $body->write("Cannot GET /foo\n")->shouldBeCalled();
 
         $response = $this->prophesize('Zend\Stratigility\Http\Response');
         $response->getBody()->will(function () use ($body) {
@@ -305,14 +337,10 @@ class FinalHandlerTest extends TestCase
         $response->withStatus(404)->will(function () use ($response) {
             return $response->reveal();
         });
-        $response
-            ->write("Cannot GET /foo\n")
-            ->will(function () use ($response) {
-                return $response->reveal();
-            })
-            ->shouldBeCalled();
+        $response->getBody()->will([$body, 'reveal']);
 
         $request = $this->prophesize('Zend\Diactoros\ServerRequest');
+        $request->getAttribute('originalRequest', false)->willReturn(false);
         $request->getUri()->willReturn('/foo');
         $request->getMethod()->willReturn('GET');
 
@@ -331,6 +359,7 @@ class FinalHandlerTest extends TestCase
         $response = new PsrResponse();
 
         $request = $this->prophesize('Zend\Diactoros\ServerRequest');
+        $request->getAttribute('originalRequest', false)->willReturn(false);
         $request->getUri()->willReturn('/foo');
         $request->getMethod()->willReturn('GET');
 
@@ -339,7 +368,7 @@ class FinalHandlerTest extends TestCase
             $request->reveal(),
             $response
         );
-        $this->assertInstanceOf('Zend\Stratigility\Http\Response', $test);
+        $this->assertInstanceOf(ResponseInterface::class, $test);
         $this->assertSame(404, $test->getStatusCode());
 
         $body = $test->getBody();

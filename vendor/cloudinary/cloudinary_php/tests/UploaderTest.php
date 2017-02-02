@@ -58,6 +58,15 @@ namespace Cloudinary {
         assertParam($this, "to_public_id", "foobar2");
       }
   
+      public function test_rename_to_type() {
+        Curl::mockUpload($this);
+        Uploader::rename("foobar", "foobar", array("to_type" => "private"));
+        assertUrl($this, "/image/rename");
+        assertParam($this, "to_type", "private");
+        assertParam($this, "from_public_id", "foobar");
+        assertParam($this, "to_public_id", "foobar");
+      }
+
       public function test_explicit() {
         Curl::mockUpload($this);
 
@@ -158,7 +167,7 @@ namespace Cloudinary {
       
       public function test_face_coordinates() {
           //should allow sending face and custom coordinates
-          $face_coordinates = array(array(120, 30, 109, 150), array(121, 31, 110, 151));
+          $face_coordinates = array(array(120, 30, 109, 51), array(121, 31, 110, 51));
           $result = Uploader::upload(self::LOGO_PNG, array("face_coordinates" => $face_coordinates, "faces" => TRUE));
           $this->assertEquals($face_coordinates, $result["faces"]);
   
@@ -173,11 +182,37 @@ namespace Cloudinary {
       
       public function test_context() {
           //should allow sending context
-          $context = array("caption" => "some caption", "alt" => "alternative");
+          $context = array("caption" => "cap=caps", "alt" => "alternative|alt=a");
           $result = Uploader::upload(self::LOGO_PNG, array("context" => $context));
+
           $api = new \Cloudinary\Api();
-          $info = $api->resource($result["public_id"], array("context" => true));
-          $this->assertEquals(array("custom" => $context), $info["context"]);
+          $info = $api->resource($result["public_id"]);
+          $this->assertEquals($context, $info["context"]["custom"]);
+
+          $fields = Curl::$instance->parameters[CURLOPT_POSTFIELDS];
+          $this->assertEquals('caption=cap\=caps|alt=alternative\|alt\=a', $fields['context']);
+      }
+
+      public function test_context_api() {
+        $api = new \Cloudinary\Api();
+        $result = Uploader::upload(self::LOGO_PNG);
+        Uploader::add_context('alt=testAlt|custom=testCustom', $result['public_id']);
+        // fwrite(STDERR, print_r($result['public_id'], TRUE));
+        assertUrl($this, "/image/context");
+        assertPost($this);
+        assertParam($this, "public_ids[0]", $result['public_id']);
+        assertParam($this, "command", "add");
+        assertParam($this, "context", "alt=testAlt|custom=testCustom");
+
+        $info = $api->resource($result["public_id"]);
+        $this->assertEquals(array("custom" => array("alt" => "testAlt", "custom" => "testCustom")), $info["context"]);
+
+        Uploader::remove_all_context($result['public_id']);
+        assertUrl($this, "/image/context");
+        assertGet($this);
+
+        $info = $api->resource($result["public_id"]);
+        $this->assertEquals(false, isset($info["context"]));
       }
       
       public function test_cl_form_tag() {

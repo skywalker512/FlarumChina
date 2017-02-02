@@ -17,6 +17,9 @@ namespace Zend\Stratigility\Http;
  * - Write to the content
  * - End the response (mark it complete)
  * - Determine if the response is complete
+ *
+ * @deprecated since 1.3.0; to be removed with 2.0.0. Do not use the methods
+ *     defined in this interface; use only those defined in PSR-7.
  */
 interface ResponseInterface
 {

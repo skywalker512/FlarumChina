@@ -86,6 +86,7 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         'I' => 
         array (
             'Intervention\\Image\\' => 19,
+            'Interop\\Http\\Middleware\\' => 24,
             'Illuminate\\View\\' => 16,
             'Illuminate\\Validation\\' => 22,
             'Illuminate\\Support\\' => 19,
@@ -269,8 +270,8 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         'League\\OAuth2\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/oauth2-client/src',
-            1 => __DIR__ . '/..' . '/league/oauth2-github/src',
-            2 => __DIR__ . '/..' . '/league/oauth2-facebook/src',
+            1 => __DIR__ . '/..' . '/league/oauth2-facebook/src',
+            2 => __DIR__ . '/..' . '/league/oauth2-github/src',
         ),
         'League\\OAuth1\\' => 
         array (
@@ -283,6 +284,10 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         'Intervention\\Image\\' => 
         array (
             0 => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image',
+        ),
+        'Interop\\Http\\Middleware\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/http-interop/http-middleware/src',
         ),
         'Illuminate\\View\\' => 
         array (
@@ -513,6 +518,7 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         'AkismetTest' => __DIR__ . '/..' . '/tijsverkoyen/akismet/tests/AkismetTest.php',
         'Cloudinary' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Cloudinary.php',
         'CloudinaryField' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/CloudinaryField.php',
+        'Cloudinary\\Akamai' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Akamai.php',
         'Cloudinary\\Api' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Api.php',
         'Cloudinary\\Api\\AlreadyExists' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Api.php',
         'Cloudinary\\Api\\AuthorizationRequired' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Api.php',

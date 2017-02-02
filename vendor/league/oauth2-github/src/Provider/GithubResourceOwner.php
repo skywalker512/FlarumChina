@@ -1,7 +1,11 @@
 <?php namespace League\OAuth2\Client\Provider;
 
+use League\OAuth2\Client\Tool\ArrayAccessorTrait;
+
 class GithubResourceOwner implements ResourceOwnerInterface
 {
+    use ArrayAccessorTrait;
+
     /**
      * Domain
      *
@@ -33,7 +37,7 @@ class GithubResourceOwner implements ResourceOwnerInterface
      */
     public function getId()
     {
-        return $this->response['id'] ?: null;
+        return $this->getValueByKey($this->response, 'id');
     }
 
     /**
@@ -43,7 +47,7 @@ class GithubResourceOwner implements ResourceOwnerInterface
      */
     public function getEmail()
     {
-        return $this->response['email'] ?: null;
+        return $this->getValueByKey($this->response, 'email');
     }
 
     /**
@@ -53,7 +57,7 @@ class GithubResourceOwner implements ResourceOwnerInterface
      */
     public function getName()
     {
-        return $this->response['name'] ?: null;
+        return $this->getValueByKey($this->response, 'name');
     }
 
     /**
@@ -63,7 +67,7 @@ class GithubResourceOwner implements ResourceOwnerInterface
      */
     public function getNickname()
     {
-        return $this->response['login'] ?: null;
+        return $this->getValueByKey($this->response, 'login');
     }
 
     /**
@@ -73,7 +77,9 @@ class GithubResourceOwner implements ResourceOwnerInterface
      */
     public function getUrl()
     {
-        return trim($this->domain.'/'.$this->getNickname()) ?: null;
+        $urlParts = array_filter([$this->domain, $this->getNickname()]);
+
+        return count($urlParts) ? implode('/', $urlParts) : null;
     }
 
     /**
