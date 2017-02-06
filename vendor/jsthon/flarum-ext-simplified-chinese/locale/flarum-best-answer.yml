@@ -1,0 +1,12 @@
+flarum-best-answer:
+    admin:
+        permissions:
+            best_answer: => flarum-best-answer.ref.best_answer
+    forum:
+        this_best_answer: "这是最佳回复"
+        remove_best_answer: "移除最佳回复"
+        header_best_answer: "最佳回复 - 楼主的选择"
+        best_answer_button: => flarum-best-answer.ref.best_answer
+        best_answer: => flarum-best-answer.ref.best_answer
+    ref:
+      best_answer: '最佳回复'
