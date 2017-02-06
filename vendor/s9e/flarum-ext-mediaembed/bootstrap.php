@@ -35,7 +35,7 @@ function subscribe(Dispatcher $events)
                     'iframe'  => [
                         'width'  => 720,
                         'height' => 405,
-                        'src'    => '/assets/youku/index.html#{@id}'
+                        'src'    => 'https://players.youku.com/embed/{@id}'
                     ]
                 ]
             );
@@ -47,7 +47,7 @@ function subscribe(Dispatcher $events)
                     'flash'  => [
                         'width'  => 760,
                         'height' => 450,
-                        'src'    => 'https://static-s.bilibili.com/miniloader.swf?aid={@id}'
+                        'src'    => '//static.hdslb.com/miniloader.swf?aid={@id}'
                     ]
                 ]
             );
