@@ -343,6 +343,7 @@ class InstallCommand extends AbstractCommand
             'flarum-auth-github',
             'flarum-auth-twitter',
             'flarum-pusher',
+            'antoinefr-money',
         ];
 
         foreach ($extensions->getExtensions() as $name => $extension) {
