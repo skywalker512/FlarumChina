@@ -13,11 +13,13 @@ issyrocks12-filter:
             placeholder: 要过滤的字符串
             filter_title: 要过滤的字符串
             email_label: 邮箱设置
-            switch: 当贴文被过滤时发信
+            switch: 
+              email: 当贴文被过滤时发信
+              merge: 自动和并问题帖
             email_subject: 主题
             email_body: 正文
         nav:
-            text: 过滤器
+              text: 过滤器
             desc: 依照关键字过滤贴文
         email:
             default_subject: 您最新发布的贴文已被移除
