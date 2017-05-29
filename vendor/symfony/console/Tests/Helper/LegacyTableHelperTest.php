@@ -11,13 +11,14 @@
 
 namespace Symfony\Component\Console\Tests\Helper;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\Console\Output\StreamOutput;
 
 /**
  * @group legacy
  */
-class LegacyTableHelperTest extends \PHPUnit_Framework_TestCase
+class LegacyTableHelperTest extends TestCase
 {
     protected $stream;
 
@@ -33,7 +34,7 @@ class LegacyTableHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testRenderProvider
+     * @dataProvider renderProvider
      */
     public function testRender($headers, $rows, $layout, $expected)
     {
@@ -49,7 +50,7 @@ class LegacyTableHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testRenderProvider
+     * @dataProvider renderProvider
      */
     public function testRenderAddRows($headers, $rows, $layout, $expected)
     {
@@ -65,7 +66,7 @@ class LegacyTableHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testRenderProvider
+     * @dataProvider renderProvider
      */
     public function testRenderAddRowsOneByOne($headers, $rows, $layout, $expected)
     {
@@ -82,7 +83,7 @@ class LegacyTableHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->getOutputContent($output));
     }
 
-    public function testRenderProvider()
+    public function renderProvider()
     {
         $books = array(
             array('99921-58-10-7', 'Divine Comedy', 'Dante Alighieri'),

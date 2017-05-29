@@ -1,0 +1,36 @@
+wiseclock-post-copyright:
+  forum:
+    composer:
+      authorized: 允許授權轉貼
+      sourced: 允許規範轉貼
+      paid: 允許付費轉貼
+      prohibited: 禁止轉貼
+      none: 不設定著作權
+    post:
+      authorized: 本文章允許經授權的轉貼
+      sourced: 本文章允許規範轉貼
+      paid: 本文章允許付費轉貼
+      prohibited: 本文章禁止轉貼
+  admin:
+    settings:
+      title: 貼文著作權設定
+      ui:
+        title: 介面
+        primary_color: 使用突出色調著作权下拉框
+        discussions_only: 不對回貼設定著作權
+        copyright: 著作權行字首
+        align_right: 著作權行居右對齊
+      edit:
+        title: 修改
+        allow_trespass: 允許編輯他人貼文時修改其著作權
+      defaults:
+        title: 預設著作权開關
+        help: 開關自帶的著作权列表
+        authorized: 允許授權轉貼
+        sourced: 允許規範轉貼
+        paid: 允許付費轉貼
+        prohibited: 禁止轉貼
+      addition:
+        title: 附加著作权
+        help: "依據格式 <code>key,menu,ui</code> 新增自訂著作权，使用半形逗號隔開。每一行都代表一個著作权選項：key是著作权選項的唯一標識，menu是編輯器內下拉框的選項，ui是每個貼文最下面的著作权申明語句。一行符合標準的選項如下："
+        notes: "如果你想使用半形逗號，請別忘了轉義：<code>\\,</code>。"

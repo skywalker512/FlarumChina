@@ -158,6 +158,9 @@ System.register('flarum/pusher/main', ['flarum/extend', 'flarum/app', 'flarum/co
           });
         });
 
+        extend(IndexPage.prototype, 'actionItems', function (items) {
+          items.remove('refresh');
+        });
 
         app.pusher.then(function (channels) {
           if (channels.user) {

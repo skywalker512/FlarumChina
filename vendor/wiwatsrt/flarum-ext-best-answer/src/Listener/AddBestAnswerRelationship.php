@@ -54,7 +54,7 @@ class AddBestAnswerRelationship
     public function prepareApiAttributes(PrepareApiAttributes $event)
     {
         if ($event->isSerializer(DiscussionSerializer::class)) {
-            $event->attributes['canSelectBestAnswer'] = (bool) $event->actor->can('canSelectBestAnswer', $event->model);
+            $event->attributes['canSelectBestAnswer'] = (bool) $event->actor->can('selectBestAnswer', $event->model);
             $event->attributes['startUserId'] = $event->model->start_user_id;
         }
     }
@@ -64,7 +64,7 @@ class AddBestAnswerRelationship
      */
     public function includeBestAnswerPost(ConfigureApiController $event)
     {
-        if ($event->isController(Controller\ShowDiscussionController::class)) {
+        if ($event->isController(Controller\ListDiscussionsController::class) || $event->isController(Controller\ShowDiscussionController::class)) {
             $event->addInclude('bestAnswerPost');
         }
     }

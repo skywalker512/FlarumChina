@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -133,7 +134,8 @@ class InstallCommand extends AbstractCommand
                     'host' => 'required',
                     'database' => 'required|string',
                     'username' => 'required|string',
-                    'prefix' => 'alpha_dash|max:10'
+                    'prefix' => 'alpha_dash|max:10',
+                    'port'   => 'integer|min:1|max:65535',
                 ]
             );
 
@@ -157,7 +159,7 @@ class InstallCommand extends AbstractCommand
                 throw new Exception('You must enter a valid email.');
             }
 
-            if (! $admin['username'] || preg_match('/[^a-z0-9_-]/i', $admin['username'])) {
+            if (! $admin['username'] || preg_match('/[^-_a-zA-Z0-9\x7f-\xff]/i', $admin['username'])) {
                 throw new Exception('Username can only contain letters, numbers, underscores, and dashes.');
             }
 
@@ -203,6 +205,7 @@ class InstallCommand extends AbstractCommand
                 'charset'   => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'prefix'    => $dbConfig['prefix'],
+                'port'      => $dbConfig['port'],
                 'strict'    => false
             ],
             'url'   => $this->baseUrl,

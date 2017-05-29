@@ -1,6 +1,6 @@
 {
     "name": "cloudinary/cloudinary_php",
-    "version": "1.6.0",
+    "version": "1.8.0",
     "description": "Cloudinary PHP SDK",
     "keywords": ["cloudinary", "sdk", "cloud", "image management", "cdn"],
     "type": "library",
@@ -18,7 +18,7 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.7.*"
+        "phpunit/phpunit": "5.7.*"
     },
     "support": {
       "email": "info@cloudinary.com",

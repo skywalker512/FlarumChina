@@ -1,0 +1,12 @@
+flarum-best-answer:
+    admin:
+        permissions:
+            best_answer: => flarum-best-answer.ref.best_answer
+    forum:
+        this_best_answer: "Это лучший ответ"
+        remove_best_answer: "Удалить текущий лучший ответ"
+        header_best_answer: "Лучший ответ — выбор владельца темы"
+        best_answer_button: => flarum-best-answer.ref.best_answer
+        best_answer: => flarum-best-answer.ref.best_answer
+    ref:
+      best_answer: 'Лучший Ответ'

@@ -10,29 +10,33 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 abstract class BaseCommand extends Command
 {
-
     /**
      * @var \Symfony\Component\Console\Input\InputInterface
      */
     protected $input;
 
     /**
-     * @var \Symfony\Component\Console\Style\StyleInterface
+     * @var \Symfony\Component\Console\Output\OutputInterface
      */
     protected $output;
+
+    /**
+     * @var \Symfony\Component\Console\Style\StyleInterface
+     */
+    protected $io;
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
-        $this->output = new SymfonyStyle($input, $output);
+        $this->output = $output;
+        $this->io = new SymfonyStyle($input, $output);
 
         try {
             $this->fire();
         } catch (Exception $e) {
-            $this->output->error($e->getMessage());
+            $this->io->error($e->getMessage());
         }
     }
 
     abstract protected function fire();
-
 }

@@ -1,6 +1,6 @@
 {
 	"name": "oyejorge/less.php",
-	"description": "PHP port of the Javascript version of LESS http://lesscss.org",
+	"description": "PHP port of the Javascript version of LESS http://lesscss.org (Originally maintained by Josh Schmidt)",
 	"keywords": [ "less", "css", "php", "stylesheet", "less.js", "lesscss" ],
 	"homepage": "http://lessphp.gpeasy.com",
 	"license": "Apache-2.0",
@@ -22,10 +22,12 @@
 		"PHP" : ">=5.3"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "~4.8.18"
+		"phpunit/phpunit": "~4.8.24"
 	},
 	"scripts": {
-		"test": "phpunit"
+		"test": [
+			"phpunit"
+		]
 	},
 	"autoload": {
 		"psr-0": { "Less": "lib/" },

@@ -1,30 +1,32 @@
 ![Flarum](http://flarum.org/img/logo.png)
 
-**[Flarum](http://flarum.org) 是一个免费的开源的论坛软件** 诞生于 PHP 和 [Mithril.js](http://mithril.js.org). 她是一个:
+**[Flarum](http://flarum.org) is free, open-source forum software** built with PHP and [Mithril.js](http://mithril.js.org). It is:
 
-* **简单**, 她拥有响应的用户界面，惊叹触摸设备使用体验
-* **快速**, 只有 ～130KB js，瞬间加载完成 
-* **可扩展的**, 你可以调整她的使用场景
+* **Simple**, with a responsive UI that is optimized for touch devices
+* **Fast**, with a total JS payload size of ~130 KB gzipped
+* **Extensible**, so you can tailor it to your use-case
 
 ![screenshot](http://flarum.org/img/screenshot.png)
 
-## 安装
+## Installation
 
-> **Flarum 处于测试阶段请勿在生产环境下使用.**
+> **Flarum is currently in beta and should not be used in production.** It is being developed openly on GitHub. Check out the [Roadmap](http://flarum.org/roadmap) to follow along with our progress.
 
-> 点击 [Roadmap](http://flarum.org/roadmap) 查看我们的发展情况.
+You must have SSH access to a server with **PHP 5.5+** and **MySQL 5.5+**, and install [Composer](https://getcomposer.org).
 
-你的服务器必须满足 **PHP 5.5+** 和 **MySQL 5.5+** 的要求.
+```
+composer create-project flarum/flarum . --stability=beta
+```
 
-### 请点击[Releases](https://github.com/skywalker512/FlarumChina/releases)**下载最新版本以完成安装**
+Read the [Installation Guide](http://flarum.org/docs/installation) for more information.
 
-## 支持
+## Support
 
-请参阅 [FAQ](http://flarum.org/docs/faq), [Documentation](http://flarum.org/docs), 或在此提问 [Community Forum](http://discuss.flarum.org) & [Gitter Chat](https://gitter.im/flarum/flarum).
+Refer to the [FAQ](http://flarum.org/docs/faq), [Documentation](http://flarum.org/docs), and ask questions on the [Community Forum](http://discuss.flarum.org) or [Gitter Chat](https://gitter.im/flarum/flarum).
 
-## 贡献
+## Contributing
 
-flarum是开源的，我们期待您的帮助建设！请阅读 [Contributing Guide](https://github.com/flarum/flarum/blob/master/CONTRIBUTING.md) 以了解如何帮助.
+Flarum is open-source and we would love your help building it! Please read the [Contributing Guide](https://github.com/flarum/flarum/blob/master/CONTRIBUTING.md) to learn how you can help.
 
 ## License
 

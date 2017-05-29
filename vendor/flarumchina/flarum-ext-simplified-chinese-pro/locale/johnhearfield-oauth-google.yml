@@ -1,0 +1,14 @@
+# https://github.com/johnhearfield/flarum-ext-oauth-google/blob/master/locale/en.yml
+
+johnhearfield-oauth-google:
+
+  admin:
+    google_settings:
+      title: "Google 设置"
+      client_id_label: "Client ID"
+      client_secret_label: "Client Secret"
+      hosted_domain_label: "网域"
+
+  forum:
+    log_in:
+      with_google_button: "通过 Google 帐号登录"

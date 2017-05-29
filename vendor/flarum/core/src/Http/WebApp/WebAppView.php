@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -13,6 +14,7 @@ namespace Flarum\Http\WebApp;
 use Flarum\Api\Client;
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Asset\CompilerInterface;
+use Flarum\Foundation\Application;
 use Flarum\Locale\JsCompiler;
 use Flarum\Locale\LocaleManager;
 use Illuminate\View\Factory;
@@ -30,21 +32,35 @@ class WebAppView
      *
      * @var null|string
      */
-    protected $title;
+    public $title;
 
     /**
      * The description of the document, displayed in a <meta> tag.
      *
      * @var null|string
      */
-    protected $description;
+    public $description;
+
+    /**
+     * The language of the document, displayed as the value of the attribute `dir` in the <html> tag.
+     *
+     * @var null|string
+     */
+    public $language;
+
+    /**
+     * The text direction of the document, displayed as the value of the attribute `dir` in the <html> tag.
+     *
+     * @var null|string
+     */
+    public $direction;
 
     /**
      * The path to the client layout view to display.
      *
      * @var string
      */
-    protected $layout;
+    public $layout;
 
     /**
      * The SEO content of the page, displayed within the layout in <noscript>
@@ -52,14 +68,16 @@ class WebAppView
      *
      * @var string
      */
-    protected $content;
+    public $content;
 
     /**
      * An API response to be preloaded into the page.
      *
+     * This should be a JSON-API document.
+     *
      * @var null|array|object
      */
-    protected $document;
+    public $document;
 
     /**
      * Other variables to preload into the page.
@@ -88,6 +106,13 @@ class WebAppView
      * @var array
      */
     protected $foot = [];
+
+    /**
+     * A map of <link> tags to be generated.
+     *
+     * @var array
+     */
+    protected $links = [];
 
     /**
      * @var CompilerInterface
@@ -135,14 +160,20 @@ class WebAppView
     protected $userSerializer;
 
     /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
      * @param string $layout
      * @param WebAppAssets $assets
      * @param Client $api
      * @param Factory $view
      * @param LocaleManager $locales
      * @param AbstractSerializer $userSerializer
+     * @param Application $app
      */
-    public function __construct($layout, WebAppAssets $assets, Client $api, Factory $view, LocaleManager $locales, AbstractSerializer $userSerializer)
+    public function __construct($layout, WebAppAssets $assets, Client $api, Factory $view, LocaleManager $locales, AbstractSerializer $userSerializer, Application $app)
     {
         $this->layout = $layout;
         $this->api = $api;
@@ -150,6 +181,7 @@ class WebAppView
         $this->view = $view;
         $this->locales = $locales;
         $this->userSerializer = $userSerializer;
+        $this->app = $app;
 
         $this->addHeadString('<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,600">', 'font');
 
@@ -167,36 +199,6 @@ class WebAppView
         foreach ($this->locales->getCssFiles($locale) as $file) {
             $this->localeCss->addFile($file);
         }
-    }
-
-    /**
-     * The title of the document, to be displayed in the <title> tag.
-     *
-     * @param null|string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * Set the SEO content of the page, to be displayed in <noscript> tags.
-     *
-     * @param null|string $content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
-
-    /**
-     * Set the name of the client layout view to display.
-     *
-     * @param string $layout
-     */
-    public function setLayout($layout)
-    {
-        $this->layout = $layout;
     }
 
     /**
@@ -225,14 +227,28 @@ class WebAppView
     }
 
     /**
-     * Set an API response to be preloaded into the page. This should be a
-     * JSON-API document.
+     * Configure a <link> tag.
      *
-     * @param null|array|object $document
+     * @param string $relation
+     * @param string $target
      */
-    public function setDocument($document)
+    public function link($relation, $target)
     {
-        $this->document = $document;
+        $this->links[$relation] = $target;
+    }
+
+    /**
+     * Configure the canonical URL for this page.
+     *
+     * This will signal to search engines what URL should be used for this
+     * content, if it can be found under multiple addresses. This is an
+     * important tool to tackle duplicate content.
+     *
+     * @param string $url
+     */
+    public function setCanonicalUrl($url)
+    {
+        $this->link('canonical', $url);
     }
 
     /**
@@ -269,12 +285,14 @@ class WebAppView
         $this->view->share('translator', $this->locales->getTranslator());
         $this->view->share('allowJs', ! array_get($request->getQueryParams(), 'nojs'));
         $this->view->share('forum', array_get($forum, 'data'));
-        $this->view->share('debug', array_get($forum, 'data.attributes.debug'));
+        $this->view->share('debug', $this->app->inDebugMode());
 
         $view = $this->view->file(__DIR__.'/../../../views/app.blade.php');
 
         $view->title = $this->buildTitle(array_get($forum, 'data.attributes.title'));
-        $view->description = $this->description;
+        $view->description = $this->description ?: array_get($forum, 'data.attributes.description');
+        $view->language = $this->language ?: $this->locales->getLocale();
+        $view->direction = $this->direction ?: 'ltr';
 
         $view->modules = $this->modules;
         $view->payload = $this->buildPayload($request, $forum);
@@ -285,7 +303,7 @@ class WebAppView
         $view->cssUrls = $this->buildCssUrls($baseUrl);
         $view->jsUrls = $this->buildJsUrls($baseUrl);
 
-        $view->head = implode("\n", $this->head);
+        $view->head = $this->buildHeadContent();
         $view->foot = implode("\n", $this->foot);
 
         return $view->render();
@@ -349,6 +367,17 @@ class WebAppView
         return array_map(function ($file) use ($baseUrl) {
             return $baseUrl.str_replace(public_path(), '', $file);
         }, array_filter($files));
+    }
+
+    protected function buildHeadContent()
+    {
+        $html = implode("\n", $this->head);
+
+        foreach ($this->links as $rel => $href) {
+            $html .= "\n<link rel=\"$rel\" href=\"$href\" />";
+        }
+
+        return $html;
     }
 
     /**

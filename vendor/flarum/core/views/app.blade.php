@@ -1,11 +1,14 @@
 <!doctype html>
-<html>
+<html dir="{{ $direction }}" lang="{{ $language }}">
   <head>
     <meta charset="utf-8">
     <title>{{ $title }}</title>
     <meta name="description" content="{{ $description }}">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
     <meta name="theme-color" content="{{ array_get($forum, 'attributes.themePrimaryColor') }}">
+    @if (! $allowJs)
+      <meta name="robots" content="noindex" />
+    @endif
 
     @foreach ($cssUrls as $url)
       <link rel="stylesheet" href="{{ $url }}">

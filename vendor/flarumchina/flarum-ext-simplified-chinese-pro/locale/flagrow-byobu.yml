@@ -1,0 +1,37 @@
+# https://github.com/flagrow/byobu/blob/master/locale/en.yml
+
+flagrow-byobu:
+  forum:
+    badges:
+      is_private:
+        tooltip: 私密贴文
+    buttons:
+      add_recipients: 参与者
+      submit: 好
+      edit_recipients: 编辑参与者
+      send_pd: "给 {username} 一个信息"
+    labels:
+      recipients: "仅 {count} 人可见"
+      user_deleted: --已删除--
+    nav:
+      private_discussions: 私密贴文
+    input:
+      search_recipients: 输入 ID 前三个字符进行搜索
+    search:
+      headings:
+        groups: 用户群组
+    modal:
+      titles:
+        update_recipients: 更新私密贴文「{title}」的参与者
+        add_recipients: 添加参与者到私密贴文
+    post:
+      recipients_modified:
+        added_and_removed: "{username} 添加「{added}」并移除「{removed}」"
+        added: "{username} 添加「{added}」"
+        removed: "{username} 移除「{removed}」"
+  admin:
+    permission:
+      create_private_discussions_with_users: 创建私密贴文并可添加参与者
+      create_private_discussions_with_groups: 创建私密贴文并可添加群组
+      edit_user_recipients: 编辑参与私密讨论的参与者
+      edit_group_recipients: 编辑参与私密讨论的群组

@@ -1,0 +1,36 @@
+wiseclock-post-copyright:
+  forum:
+    composer:
+      authorized: Allow authorized repost
+      sourced: Allow sourced repost
+      paid: Allow paid repost
+      prohibited: No repost allowed
+      none: Copyright free
+    post:
+      authorized: Authorized reproduction allowed
+      sourced: Sourced reproduction allowed
+      paid: Paid reproduction allowed
+      prohibited: Reproduction prohibited
+  admin:
+    settings:
+      title: Post Copyright Settings
+      ui:
+        title: UI
+        primary_color: Use primary color for composer dropdown
+        discussions_only: Set copyright per discussion only
+        copyright: Copyright line prefix
+        align_right: Right align copyright line
+      edit:
+        title: Trespass
+        allow_trespass: Allow editing of other users' post copyright
+      defaults:
+        title: Default copyright switch
+        help: Toggles the default options.
+        authorized: Allow authorized repost
+        sourced: Allow sourced repost
+        paid: Allow paid repost
+        prohibited: No repost allowed
+      addition:
+        title: Additional Options
+        help: "Add your desired options following the format <code>key,menu,ui</code> separated by half-width comma. Each line represents one option.  Key is the unique id of the option; menu is the string displayed in the composer dropdown list; and ui is the string at the very bottom of each post.  A valid line would be similar to this:"
+        notes: "If you want to use comma in your string, be sure to escape it: <code>\\,</code>."

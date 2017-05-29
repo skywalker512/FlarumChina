@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -19,6 +20,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Server;
 use Zend\Stratigility\MiddlewareInterface;
+use Zend\Stratigility\NoopFinalHandler;
 
 abstract class AbstractServer extends BaseAbstractServer
 {
@@ -31,7 +33,7 @@ abstract class AbstractServer extends BaseAbstractServer
             $_POST,
             $_COOKIE,
             $_FILES
-        )->listen();
+        )->listen(new NoopFinalHandler());
     }
 
     /**
@@ -39,10 +41,10 @@ abstract class AbstractServer extends BaseAbstractServer
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
-     * @param callable|null $out
+     * @param callable $out
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $out = null)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $out)
     {
         $app = $this->getApp();
 

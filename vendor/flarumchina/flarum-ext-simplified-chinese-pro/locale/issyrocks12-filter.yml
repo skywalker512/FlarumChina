@@ -1,0 +1,29 @@
+# https://github.com/issyrocks12/flarum-ext-filter/blob/master/locale/en.yml
+
+issyrocks12-filter:
+    forum:
+        flagger_name: 自动审查
+        flaged_text: 包含已封锁的字符串
+    admin:
+        title: 过滤器
+        help: 输入字符串，以半角逗号或空格分割。
+        email_help: 被举报的邮件正文，接受 HTML 或纯文本。
+        filter_label: 要过滤的字符串
+        input:
+            placeholder: 要过滤的字符串
+            filter_title: 要过滤的字符串
+            email_label: 邮箱设置
+            switch: 当贴文被过滤时发信
+            email_subject: 主题
+            email_body: 正文
+        nav:
+            text: 过滤器
+            desc: 依照关键字过滤贴文
+        email:
+            default_subject: 您最新发布的贴文已被移除
+            default_text: |
+                非常抱歉，由于您的贴文中包含我们不希望展示的内容，因此您的贴文被移除。
+
+                如果您认为这是一个错误，请同我们联系，我们的管理员将会进行人工审核，如果审核通过，您的贴文将被复原。
+
+                感谢您的理解。

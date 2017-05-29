@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -58,6 +59,7 @@ class InstallController implements ControllerInterface
             'username' => array_get($input, 'mysqlUsername'),
             'password' => array_get($input, 'mysqlPassword'),
             'prefix'   => array_get($input, 'tablePrefix'),
+            'port'     => array_get($input, 'mysqlPort'),
         ]);
 
         $data->setAdminUser([

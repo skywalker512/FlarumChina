@@ -85,7 +85,7 @@ Object.assign(User.prototype, {
   calculateAvatarColor() {
     const image = new Image();
     const user = this;
-    
+
     image.crossOrigin="";
 
     image.onload = function() {
@@ -111,5 +111,3 @@ Object.assign(User.prototype, {
     return this.save({preferences});
   }
 });
-
-export default User;

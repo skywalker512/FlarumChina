@@ -4,20 +4,17 @@ namespace Studio\Console;
 
 use Studio\Parts\ConsoleInput;
 use Studio\Shell\Shell;
-use Studio\Config\Config;
 use Studio\Creator\CreatorInterface;
 use Studio\Creator\GitRepoCreator;
 use Studio\Creator\GitSubmoduleCreator;
 use Studio\Creator\SkeletonCreator;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 class CreateCommand extends BaseCommand
 {
-
-    protected $config;
-
     protected $partClasses = [
         'Studio\Parts\Base\Part',
         'Studio\Parts\Composer\Part',
@@ -31,13 +28,6 @@ class CreateCommand extends BaseCommand
      */
     protected $partInput;
 
-
-    public function __construct(Config $config)
-    {
-        parent::__construct();
-
-        $this->config = $config;
-    }
 
     protected function configure()
     {
@@ -65,19 +55,25 @@ class CreateCommand extends BaseCommand
 
     protected function fire()
     {
-        $this->partInput = new ConsoleInput($this->output);
+        $this->partInput = new ConsoleInput($this->io);
 
         $creator = $this->makeCreator($this->input);
 
         $package = $creator->create();
-        $this->config->addPackage($package);
 
         $path = $package->getPath();
-        $this->output->success("Package directory $path created.");
+        $this->io->success("Package directory $path created.");
 
-        $this->output->note('Running composer install for new package...');
+        $this->io->note('Running composer install for new package...');
         Shell::run('composer install --prefer-dist', $package->getPath());
-        $this->output->success('Package successfully created.');
+        $this->io->success('Package successfully created.');
+
+        if ($this->shouldLoadNewPackage()) {
+            $this->getApplication()->find('load')->run(
+                new ArrayInput(['path' => $path]),
+                $this->output
+            );
+        }
     }
 
     /**
@@ -120,4 +116,17 @@ class CreateCommand extends BaseCommand
         }, $this->partClasses);
     }
 
+    protected function shouldLoadNewPackage()
+    {
+        if (!file_exists('composer.json')) {
+            return false;
+        } else if (!file_exists('studio.json')) {
+            return $this->io->confirm(
+                'Do you want to load this package in the surrounding Composer package using Studio?',
+                true
+            );
+        } else {
+            return true;
+        }
+    }
 }

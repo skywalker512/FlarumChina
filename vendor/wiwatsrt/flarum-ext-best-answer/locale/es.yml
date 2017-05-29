@@ -1,0 +1,12 @@
+flarum-best-answer:
+    admin:
+        permissions:
+            best_answer: => flarum-best-answer.ref.best_answer
+    forum:
+        this_best_answer: "Marcar como mejor respuesta"
+        remove_best_answer: "Desmarcar respuesta"
+        header_best_answer: "Marcada por el dueño de la discusión como mejor respuesta"
+        best_answer_button: => flarum-best-answer.ref.best_answer
+        best_answer: => flarum-best-answer.ref.best_answer
+    ref:
+      best_answer: 'Mejor respuesta'

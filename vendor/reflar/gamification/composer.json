@@ -1,0 +1,49 @@
+{
+    "name": "reflar/gamification",
+    "description": "Manage your users with style",
+    "keywords": [
+        "misc",
+        "settings",
+        "flarum",
+        "reflar",
+        "points",
+        "gamification"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christian Lopez",
+            "email": "ralkage@reflar.email",
+            "homepage": "https://reflar.io"
+        },
+
+        {
+          "name": "Charlie K",
+          "email": "issyrocks12@reflar.email",
+          "homepage": "https://reflar.io"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ReFlar/gamification/issues",
+        "source": "https://github.com/ReFlar/gamification"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6"
+    },
+      "autoload": {
+        "psr-4": {
+            "Reflar\\gamification\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "ReFlar Gamification",
+            "icon": {
+                "name": "thumbs-up",
+                "backgroundColor": "#263238",
+                "color": "#fff"
+            }
+        }
+    }
+}

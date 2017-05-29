@@ -4,21 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bbb4311c884f0e935fb9e6a11e6c1c84",
-    "content-hash": "deb84dc24296531a1241c910f972004e",
+    "content-hash": "0469b6be74fc41fe4a16ba40c5bdba7f",
     "packages": [
         {
             "name": "antoinefr/flarum-ext-money",
-            "version": "v0.3.0",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AntoineFr/flarum-ext-money.git",
-                "reference": "c9788a5dec01101e3b9ca3b97c245378d49fc982"
+                "reference": "a7d73a0b4f74bd4e54d1a11cb15b8996cd9404fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AntoineFr/flarum-ext-money/zipball/c9788a5dec01101e3b9ca3b97c245378d49fc982",
-                "reference": "c9788a5dec01101e3b9ca3b97c245378d49fc982",
+                "url": "https://api.github.com/repos/AntoineFr/flarum-ext-money/zipball/a7d73a0b4f74bd4e54d1a11cb15b8996cd9404fe",
+                "reference": "a7d73a0b4f74bd4e54d1a11cb15b8996cd9404fe",
                 "shasum": ""
             },
             "require": {
@@ -40,57 +39,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Give money to your users for different actions.",
-            "time": "2017-01-22 12:12:24"
-        },
-        {
-            "name": "avatar4eg/flarum-ext-users-list",
-            "version": "0.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Avatar4eg/flarum-ext-users-list.git",
-                "reference": "ed9b1a02832fb00031ab1c0030b18071751464c4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Avatar4eg/flarum-ext-users-list/zipball/ed9b1a02832fb00031ab1c0030b18071751464c4",
-                "reference": "ed9b1a02832fb00031ab1c0030b18071751464c4",
-                "shasum": ""
-            },
-            "require": {
-                "flarum/core": "^0.1.0-beta.5"
-            },
-            "type": "flarum-extension",
-            "extra": {
-                "flarum-extension": {
-                    "title": "Users list",
-                    "icon": {
-                        "name": "users",
-                        "backgroundColor": "#FFFFFF",
-                        "color": "#000000"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Avatar4eg\\UsersList\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nikolai Morozov",
-                    "email": "avanmorozov@gmail.com"
-                }
-            ],
-            "description": "Add users list in admin panel.",
-            "keywords": [
-                "Users",
-                "admin"
-            ],
-            "time": "2016-09-16 08:42:06"
+            "time": "2017-02-27T17:02:33+00:00"
         },
         {
             "name": "clarkwinkelmann/flarum-ext-emojionearea",
@@ -127,20 +76,20 @@
                 }
             ],
             "description": "Add EmojiOne Area emoji picker to Flarum",
-            "time": "2017-02-01 21:38:37"
+            "time": "2017-02-01T21:38:37+00:00"
         },
         {
             "name": "cloudinary/cloudinary_php",
-            "version": "1.6.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cloudinary/cloudinary_php.git",
-                "reference": "a72d12e560cfb2f189e035bd9ab1ac125c751f71"
+                "reference": "641b0901ca616c540b773abb802987a502aa8b89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cloudinary/cloudinary_php/zipball/a72d12e560cfb2f189e035bd9ab1ac125c751f71",
-                "reference": "a72d12e560cfb2f189e035bd9ab1ac125c751f71",
+                "url": "https://api.github.com/repos/cloudinary/cloudinary_php/zipball/641b0901ca616c540b773abb802987a502aa8b89",
+                "reference": "641b0901ca616c540b773abb802987a502aa8b89",
                 "shasum": ""
             },
             "require": {
@@ -149,7 +98,7 @@
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.7.*"
+                "phpunit/phpunit": "5.7.*"
             },
             "type": "library",
             "autoload": {
@@ -179,7 +128,7 @@
                 "image management",
                 "sdk"
             ],
-            "time": "2017-01-30 15:19:14"
+            "time": "2017-05-03T14:29:33+00:00"
         },
         {
             "name": "components/font-awesome",
@@ -214,7 +163,266 @@
                 "OFL-1.1"
             ],
             "description": "The iconic font designed for use with Twitter Bootstrap.",
-            "time": "2016-10-25 10:56:23"
+            "time": "2016-10-25T10:56:23+00:00"
+        },
+        {
+            "name": "composer/ca-bundle",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/ca-bundle.git",
+                "reference": "b17e6153cb7f33c7e44eb59578dc12eee5dc8e12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/b17e6153cb7f33c7e44eb59578dc12eee5dc8e12",
+                "reference": "b17e6153cb7f33c7e44eb59578dc12eee5dc8e12",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "ext-pcre": "*",
+                "php": "^5.3.2 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5",
+                "psr/log": "^1.0",
+                "symfony/process": "^2.5 || ^3.0"
+            },
+            "suggest": {
+                "symfony/process": "This is necessary to reliably check whether openssl_x509_parse is vulnerable on older php versions, but can be ignored on PHP 5.5.6+"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\CaBundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "Lets you find a path to the system CA bundle, and includes a fallback to the Mozilla CA bundle.",
+            "keywords": [
+                "cabundle",
+                "cacert",
+                "certificate",
+                "ssl",
+                "tls"
+            ],
+            "time": "2017-03-06T11:59:08+00:00"
+        },
+        {
+            "name": "composer/composer",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/composer.git",
+                "reference": "489e09ee6c3ba431fbeeef9147afdaeb6f91b647"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/composer/zipball/489e09ee6c3ba431fbeeef9147afdaeb6f91b647",
+                "reference": "489e09ee6c3ba431fbeeef9147afdaeb6f91b647",
+                "shasum": ""
+            },
+            "require": {
+                "composer/ca-bundle": "^1.0",
+                "composer/semver": "^1.0",
+                "composer/spdx-licenses": "^1.0",
+                "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
+                "php": "^5.3.2 || ^7.0",
+                "psr/log": "^1.0",
+                "seld/cli-prompt": "^1.0",
+                "seld/jsonlint": "^1.4",
+                "seld/phar-utils": "^1.0",
+                "symfony/console": "^2.7 || ^3.0",
+                "symfony/filesystem": "^2.7 || ^3.0",
+                "symfony/finder": "^2.7 || ^3.0",
+                "symfony/process": "^2.7 || ^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5 || ^5.0.5",
+                "phpunit/phpunit-mock-objects": "^2.3 || ^3.0"
+            },
+            "suggest": {
+                "ext-openssl": "Enabling the openssl extension allows you to access https URLs for repositories and packages",
+                "ext-zip": "Enabling the zip extension allows you to unzip archives",
+                "ext-zlib": "Allow gzip compression of HTTP requests"
+            },
+            "bin": [
+                "bin/composer"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\": "src/Composer"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nils Adermann",
+                    "email": "naderman@naderman.de",
+                    "homepage": "http://www.naderman.de"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "Composer helps you declare, manage and install dependencies of PHP projects, ensuring you have the right stack everywhere.",
+            "homepage": "https://getcomposer.org/",
+            "keywords": [
+                "autoload",
+                "dependency",
+                "package"
+            ],
+            "time": "2017-05-17T06:17:53+00:00"
+        },
+        {
+            "name": "composer/semver",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/semver.git",
+                "reference": "c7cb9a2095a074d131b65a8a0cd294479d785573"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/semver/zipball/c7cb9a2095a074d131b65a8a0cd294479d785573",
+                "reference": "c7cb9a2095a074d131b65a8a0cd294479d785573",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.2 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5 || ^5.0.5",
+                "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Semver\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nils Adermann",
+                    "email": "naderman@naderman.de",
+                    "homepage": "http://www.naderman.de"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                },
+                {
+                    "name": "Rob Bast",
+                    "email": "rob.bast@gmail.com",
+                    "homepage": "http://robbast.nl"
+                }
+            ],
+            "description": "Semver library that offers utilities, version constraint parsing and validation.",
+            "keywords": [
+                "semantic",
+                "semver",
+                "validation",
+                "versioning"
+            ],
+            "time": "2016-08-30T16:08:34+00:00"
+        },
+        {
+            "name": "composer/spdx-licenses",
+            "version": "1.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/spdx-licenses.git",
+                "reference": "2603a0d7ddc00a015deb576fa5297ca43dee6b1c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/2603a0d7ddc00a015deb576fa5297ca43dee6b1c",
+                "reference": "2603a0d7ddc00a015deb576fa5297ca43dee6b1c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.2 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5 || ^5.0.5",
+                "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Spdx\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nils Adermann",
+                    "email": "naderman@naderman.de",
+                    "homepage": "http://www.naderman.de"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                },
+                {
+                    "name": "Rob Bast",
+                    "email": "rob.bast@gmail.com",
+                    "homepage": "http://robbast.nl"
+                }
+            ],
+            "description": "SPDX licenses list and validation library.",
+            "keywords": [
+                "license",
+                "spdx",
+                "validator"
+            ],
+            "time": "2017-04-03T19:08:52+00:00"
         },
         {
             "name": "danielstjules/stringy",
@@ -270,7 +478,7 @@
                 "utility",
                 "utils"
             ],
-            "time": "2015-07-23 00:54:12"
+            "time": "2015-07-23T00:54:12+00:00"
         },
         {
             "name": "dflydev/fig-cookies",
@@ -322,20 +530,20 @@
                 "psr-7",
                 "psr7"
             ],
-            "time": "2016-03-28 09:10:18"
+            "time": "2016-03-28T09:10:18+00:00"
         },
         {
             "name": "doctrine/annotations",
-            "version": "v1.3.1",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "bd4461328621bde0ae6b1b2675fbc6aca4ceb558"
+                "reference": "54cacc9b81758b14e3ce750f205a393d52339e97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/bd4461328621bde0ae6b1b2675fbc6aca4ceb558",
-                "reference": "bd4461328621bde0ae6b1b2675fbc6aca4ceb558",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/54cacc9b81758b14e3ce750f205a393d52339e97",
+                "reference": "54cacc9b81758b14e3ce750f205a393d52339e97",
                 "shasum": ""
             },
             "require": {
@@ -344,7 +552,7 @@
             },
             "require-dev": {
                 "doctrine/cache": "1.*",
-                "phpunit/phpunit": "^5.6.1"
+                "phpunit/phpunit": "^5.7"
             },
             "type": "library",
             "extra": {
@@ -390,7 +598,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2016-12-30 15:59:45"
+            "time": "2017-02-24T16:22:25+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -460,7 +668,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2016-10-29 11:16:17"
+            "time": "2016-10-29T11:16:17+00:00"
         },
         {
             "name": "doctrine/collections",
@@ -527,7 +735,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2017-01-03 10:49:41"
+            "time": "2017-01-03T10:49:41+00:00"
         },
         {
             "name": "doctrine/common",
@@ -600,20 +808,20 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2017-01-13 14:02:13"
+            "time": "2017-01-13T14:02:13+00:00"
         },
         {
             "name": "doctrine/dbal",
-            "version": "v2.5.10",
+            "version": "v2.5.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "fc376f7a61498e18520cd6fa083752a4ca08072b"
+                "reference": "7b9e911f9d8b30d43b96853dab26898c710d8f44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/fc376f7a61498e18520cd6fa083752a4ca08072b",
-                "reference": "fc376f7a61498e18520cd6fa083752a4ca08072b",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/7b9e911f9d8b30d43b96853dab26898c710d8f44",
+                "reference": "7b9e911f9d8b30d43b96853dab26898c710d8f44",
                 "shasum": ""
             },
             "require": {
@@ -671,7 +879,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2017-01-23 23:17:10"
+            "time": "2017-02-08T12:53:47+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -738,7 +946,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2015-11-06 14:35:42"
+            "time": "2015-11-06T14:35:42+00:00"
         },
         {
             "name": "doctrine/lexer",
@@ -792,24 +1000,25 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09 13:34:57"
+            "time": "2014-09-09T13:34:57+00:00"
         },
         {
             "name": "filp/whoops",
-            "version": "2.1.5",
+            "version": "2.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "2abce9d956589122c6443d6265f01cf7e9388e3c"
+                "reference": "f2950be7da8b8d6c4e77821b6c9d486e36cdc4f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/2abce9d956589122c6443d6265f01cf7e9388e3c",
-                "reference": "2abce9d956589122c6443d6265f01cf7e9388e3c",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/f2950be7da8b8d6c4e77821b6c9d486e36cdc4f3",
+                "reference": "f2950be7da8b8d6c4e77821b6c9d486e36cdc4f3",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5.9 || ^7.0"
+                "php": "^5.5.9 || ^7.0",
+                "psr/log": "^1.0.1"
             },
             "require-dev": {
                 "mockery/mockery": "0.9.*",
@@ -852,7 +1061,127 @@
                 "whoops",
                 "zf2"
             ],
-            "time": "2016-12-26 16:13:31"
+            "time": "2017-03-07T09:04:45+00:00"
+        },
+        {
+            "name": "flagrow/ads",
+            "version": "0.1.0-beta.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flagrow/ads.git",
+                "reference": "98747ba37f9af83eb5578e9a4ebe54e6a9ec073d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flagrow/ads/zipball/98747ba37f9af83eb5578e9a4ebe54e6a9ec073d",
+                "reference": "98747ba37f9af83eb5578e9a4ebe54e6a9ec073d",
+                "shasum": ""
+            },
+            "require": {
+                "flarum/core": "0.1.0-beta.6"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "flarum-extension": {
+                    "title": "Flagrow Ads",
+                    "icon": {
+                        "name": "audio-description",
+                        "backgroundColor": "#000",
+                        "color": "#87d37c"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Flagrow\\Ads\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniël Klabbers",
+                    "email": "daniel+flarum@klabbers.email",
+                    "homepage": "http://hyn.me"
+                },
+                {
+                    "name": "Clark Winkelmann",
+                    "email": "clark.winkelmann@gmail.com",
+                    "homepage": "https://clarkwinkelmann.com"
+                }
+            ],
+            "description": "Bombarding your users with ads everywhere, if you want..",
+            "keywords": [
+                "Advertising",
+                "ads",
+                "flagrow",
+                "flarum"
+            ],
+            "time": "2017-02-27T09:04:03+00:00"
+        },
+        {
+            "name": "flagrow/bazaar",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flagrow/bazaar.git",
+                "reference": "80fd0c3b5f24b8e2484d1454f4d272cd56603231"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flagrow/bazaar/zipball/80fd0c3b5f24b8e2484d1454f4d272cd56603231",
+                "reference": "80fd0c3b5f24b8e2484d1454f4d272cd56603231",
+                "shasum": ""
+            },
+            "require": {
+                "composer/composer": "^1.3",
+                "flarum/core": "^0.1.0-beta.6",
+                "guzzlehttp/guzzle": "^6.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "flarum-extension": {
+                    "title": "Flagrow Bazaar",
+                    "icon": {
+                        "name": "shopping-bag",
+                        "backgroundColor": "#000",
+                        "color": "#87d37c"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Flagrow\\Bazaar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "cc-by-nc-nd"
+            ],
+            "authors": [
+                {
+                    "name": "Daniël Klabbers",
+                    "email": "daniel+flarum@klabbers.email",
+                    "homepage": "http://hyn.me"
+                },
+                {
+                    "name": "Clark Winkelmann",
+                    "email": "clark.winkelmann@gmail.com",
+                    "homepage": "https://clarkwinkelmann.com"
+                }
+            ],
+            "description": "The Flarum extension marketplace.",
+            "keywords": [
+                "extension",
+                "flagrow",
+                "flarum"
+            ],
+            "time": "2017-04-27T20:11:30+00:00"
         },
         {
             "name": "flagrow/flarum-ext-image-upload",
@@ -918,20 +1247,20 @@
                 "upload"
             ],
             "abandoned": "flagrow/upload",
-            "time": "2016-10-31 09:13:16"
+            "time": "2016-10-31T09:13:16+00:00"
         },
         {
             "name": "flarum/core",
             "version": "v0.1.0-beta.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/flarum/core.git",
-                "reference": "46bb66dd946249a2cedf6505af20682d8eb47975"
+                "url": "https://github.com/FlarumChina/core.git",
+                "reference": "c51075f6a56a799787703dd062372c7ac6407a4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/core/zipball/46bb66dd946249a2cedf6505af20682d8eb47975",
-                "reference": "46bb66dd946249a2cedf6505af20682d8eb47975",
+                "url": "https://api.github.com/repos/FlarumChina/core/zipball/c51075f6a56a799787703dd062372c7ac6407a4c",
+                "reference": "c51075f6a56a799787703dd062372c7ac6407a4c",
                 "shasum": ""
             },
             "require": {
@@ -959,7 +1288,7 @@
                 "monolog/monolog": "^1.16.0",
                 "nikic/fast-route": "^0.6",
                 "oyejorge/less.php": "~1.5",
-                "php": ">=5.5.9",
+                "php": ">=5.6.0",
                 "psr/http-message": "^1.0",
                 "s9e/text-formatter": "^0.6.1",
                 "symfony/console": "^2.7",
@@ -968,7 +1297,7 @@
                 "symfony/yaml": "^2.7",
                 "tobscure/json-api": "^0.3.0",
                 "zendframework/zend-diactoros": "^1.1",
-                "zendframework/zend-stratigility": "^1.1"
+                "zendframework/zend-stratigility": "^1.3"
             },
             "require-dev": {
                 "mockery/mockery": "^0.9.4",
@@ -988,27 +1317,40 @@
                     "src/helpers.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/"
+                }
+            },
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
+                    "name": "Toby Zerner",
+                    "email": "toby.zerner@gmail.com"
+                },
+                {
                     "name": "Franz Liedke",
                     "email": "franz@develophp.org"
                 },
                 {
-                    "name": "Toby Zerner",
-                    "email": "toby.zerner@gmail.com"
+                    "name": "Skywalker512",
+                    "email": "houzhenhong@outlook.com"
                 }
             ],
-            "description": "Delightfully simple forum software.",
-            "homepage": "http://flarum.org",
+            "description": "Delightfully simple forum software for Chinese.",
+            "homepage": "http://flarum.ga",
             "keywords": [
                 "discussion",
                 "forum"
             ],
-            "time": "2016-10-19 10:41:30"
+            "support": {
+                "issues": "https://github.com/skywalker512/FlarumChinaCore/issues",
+                "source": "https://github.com/skywalker512/FlarumChinaCore",
+                "docs": "http://flarum.ga/docs"
+            },
+            "time": "2017-05-29T09:19:25+00:00"
         },
         {
             "name": "flarum/flarum-ext-akismet",
@@ -1063,7 +1405,7 @@
             "keywords": [
                 "moderation"
             ],
-            "time": "2016-10-19 10:42:05"
+            "time": "2016-10-19T10:42:05+00:00"
         },
         {
             "name": "flarum/flarum-ext-approval",
@@ -1116,7 +1458,7 @@
             "keywords": [
                 "moderation"
             ],
-            "time": "2016-10-19 10:42:14"
+            "time": "2016-10-19T10:42:14+00:00"
         },
         {
             "name": "flarum/flarum-ext-auth-facebook",
@@ -1169,7 +1511,7 @@
             "keywords": [
                 "Authentication"
             ],
-            "time": "2016-10-19 10:42:20"
+            "time": "2016-10-19T10:42:20+00:00"
         },
         {
             "name": "flarum/flarum-ext-auth-github",
@@ -1222,7 +1564,7 @@
             "keywords": [
                 "Authentication"
             ],
-            "time": "2016-10-19 10:42:27"
+            "time": "2016-10-19T10:42:27+00:00"
         },
         {
             "name": "flarum/flarum-ext-auth-twitter",
@@ -1275,7 +1617,7 @@
             "keywords": [
                 "Authentication"
             ],
-            "time": "2016-10-19 10:42:36"
+            "time": "2016-10-19T10:42:36+00:00"
         },
         {
             "name": "flarum/flarum-ext-bbcode",
@@ -1327,7 +1669,7 @@
             "keywords": [
                 "formatting"
             ],
-            "time": "2016-03-29 08:14:20"
+            "time": "2016-03-29T08:14:20+00:00"
         },
         {
             "name": "flarum/flarum-ext-emoji",
@@ -1378,7 +1720,7 @@
             "keywords": [
                 "formatting"
             ],
-            "time": "2016-10-19 10:42:56"
+            "time": "2016-10-19T10:42:56+00:00"
         },
         {
             "name": "flarum/flarum-ext-english",
@@ -1424,7 +1766,7 @@
             "keywords": [
                 "locale"
             ],
-            "time": "2016-10-19 10:43:02"
+            "time": "2016-10-19T10:43:02+00:00"
         },
         {
             "name": "flarum/flarum-ext-flags",
@@ -1476,7 +1818,7 @@
             "keywords": [
                 "moderation"
             ],
-            "time": "2016-10-19 10:43:08"
+            "time": "2016-10-19T10:43:08+00:00"
         },
         {
             "name": "flarum/flarum-ext-likes",
@@ -1528,7 +1870,7 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-10-19 10:43:14"
+            "time": "2016-10-19T10:43:14+00:00"
         },
         {
             "name": "flarum/flarum-ext-lock",
@@ -1580,7 +1922,7 @@
             "keywords": [
                 "moderation"
             ],
-            "time": "2016-10-19 10:43:19"
+            "time": "2016-10-19T10:43:19+00:00"
         },
         {
             "name": "flarum/flarum-ext-markdown",
@@ -1635,20 +1977,20 @@
             "keywords": [
                 "formatting"
             ],
-            "time": "2016-03-29 08:17:28"
+            "time": "2016-03-29T08:17:28+00:00"
         },
         {
             "name": "flarum/flarum-ext-mentions",
-            "version": "v0.1.0-beta.6",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/flarum/flarum-ext-mentions.git",
-                "reference": "9031a3163735da4ba520f07f886e47f09b60097f"
+                "url": "https://github.com/FlarumChina/flarum-ext-mentions.git",
+                "reference": "0612f83249519ba3db72e3dccd84e2bba7fb5b30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flarum/flarum-ext-mentions/zipball/9031a3163735da4ba520f07f886e47f09b60097f",
-                "reference": "9031a3163735da4ba520f07f886e47f09b60097f",
+                "url": "https://api.github.com/repos/FlarumChina/flarum-ext-mentions/zipball/0612f83249519ba3db72e3dccd84e2bba7fb5b30",
+                "reference": "0612f83249519ba3db72e3dccd84e2bba7fb5b30",
                 "shasum": ""
             },
             "require": {
@@ -1673,7 +2015,6 @@
                     "Flarum\\Mentions\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1687,7 +2028,11 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-10-19 10:43:31"
+            "support": {
+                "issues": "https://github.com/flarum/core/issues",
+                "source": "https://github.com/flarum/flarum-ext-mentions"
+            },
+            "time": "2017-04-03T03:27:27+00:00"
         },
         {
             "name": "flarum/flarum-ext-pusher",
@@ -1743,7 +2088,7 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-10-19 10:43:35"
+            "time": "2016-10-19T10:43:35+00:00"
         },
         {
             "name": "flarum/flarum-ext-sticky",
@@ -1795,7 +2140,7 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-10-19 10:43:40"
+            "time": "2016-10-19T10:43:40+00:00"
         },
         {
             "name": "flarum/flarum-ext-subscriptions",
@@ -1847,7 +2192,7 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-10-19 10:43:45"
+            "time": "2016-10-19T10:43:45+00:00"
         },
         {
             "name": "flarum/flarum-ext-suspend",
@@ -1899,7 +2244,7 @@
             "keywords": [
                 "moderation"
             ],
-            "time": "2016-10-19 10:43:51"
+            "time": "2016-10-19T10:43:51+00:00"
         },
         {
             "name": "flarum/flarum-ext-tags",
@@ -1951,7 +2296,98 @@
             "keywords": [
                 "discussion"
             ],
-            "time": "2016-11-07 11:52:19"
+            "time": "2016-11-07T11:52:19+00:00"
+        },
+        {
+            "name": "flarumchina/flarum-ext-mediaembed-pro",
+            "version": "0.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FlarumChina/flarum-ext-mediaembed-pro.git",
+                "reference": "eb3adfa02c111f44a74b9eeeb5573afb1fb53e09"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FlarumChina/flarum-ext-mediaembed-pro/zipball/eb3adfa02c111f44a74b9eeeb5573afb1fb53e09",
+                "reference": "eb3adfa02c111f44a74b9eeeb5573afb1fb53e09",
+                "shasum": ""
+            },
+            "require": {
+                "flarum/core": "^0.1.0-beta.6",
+                "php": ">=5.4.0"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "flarum-extension": {
+                    "title": "MediaEmbed",
+                    "icon": {
+                        "name": "youtube-play",
+                        "backgroundColor": "#cc181e",
+                        "color": "#fff"
+                    }
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Embed third-party content in your Flarum.",
+            "keywords": [
+                "embed",
+                "facebook",
+                "flarum",
+                "media",
+                "twitch",
+                "twitter",
+                "youtube"
+            ],
+            "time": "2017-04-03T14:10:55+00:00"
+        },
+        {
+            "name": "flarumchina/flarum-ext-simplified-chinese-pro",
+            "version": "v0.1.0-beta.6.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FlarumChina/flarum-ext-simplified-chinese-pro.git",
+                "reference": "7a10c7222eb3c188460460eb8626a53ec94cb795"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/7a10c7222eb3c188460460eb8626a53ec94cb795",
+                "reference": "7a10c7222eb3c188460460eb8626a53ec94cb795",
+                "shasum": ""
+            },
+            "require": {
+                "flarum/core": "^0.1.0-beta.6"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                },
+                "flarum-extension": {
+                    "title": "Chinese",
+                    "icon": {
+                        "image": "icon.svg",
+                        "backgroundColor": "#DE2910",
+                        "backgroundSize": "cover",
+                        "backgroundPosition": "center"
+                    }
+                },
+                "flarum-locale": {
+                    "code": "zh",
+                    "title": "简体中文"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "simplified chinese language pack.",
+            "keywords": [
+                "locale"
+            ],
+            "time": "2017-05-29T08:52:16+00:00"
         },
         {
             "name": "franzl/whoops-middleware",
@@ -1981,25 +2417,25 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2016-04-27 14:08:29"
+            "time": "2016-04-27T14:08:29+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.2.2",
+            "version": "6.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "ebf29dee597f02f09f4d5bbecc68230ea9b08f60"
+                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/ebf29dee597f02f09f4d5bbecc68230ea9b08f60",
-                "reference": "ebf29dee597f02f09f4d5bbecc68230ea9b08f60",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8d6c6cc55186db87b7dc5009827429ba4e9dc006",
+                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/promises": "^1.0",
-                "guzzlehttp/psr7": "^1.3.1",
+                "guzzlehttp/psr7": "^1.4",
                 "php": ">=5.5"
             },
             "require-dev": {
@@ -2043,7 +2479,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-10-08 15:01:37"
+            "time": "2017-02-28T22:50:30+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -2094,20 +2530,20 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20 10:07:11"
+            "time": "2016-12-20T10:07:11+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.3.1",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b"
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
-                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
                 "shasum": ""
             },
             "require": {
@@ -2143,16 +2579,23 @@
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Tobias Schultze",
+                    "homepage": "https://github.com/Tobion"
                 }
             ],
-            "description": "PSR-7 message implementation",
+            "description": "PSR-7 message implementation that also provides common utility methods",
             "keywords": [
                 "http",
                 "message",
+                "request",
+                "response",
                 "stream",
-                "uri"
+                "uri",
+                "url"
             ],
-            "time": "2016-06-24 23:00:38"
+            "time": "2017-03-20T17:10:46+00:00"
         },
         {
             "name": "http-interop/http-middleware",
@@ -2204,7 +2647,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-09-25 13:30:27"
+            "time": "2016-09-25T13:30:27+00:00"
         },
         {
             "name": "illuminate/bus",
@@ -2249,7 +2692,7 @@
             ],
             "description": "The Illuminate Bus package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-24 19:50:28"
+            "time": "2015-12-24T19:50:28+00:00"
         },
         {
             "name": "illuminate/cache",
@@ -2299,7 +2742,7 @@
             ],
             "description": "The Illuminate Cache package.",
             "homepage": "http://laravel.com",
-            "time": "2016-08-02 07:48:05"
+            "time": "2016-08-02T07:48:05+00:00"
         },
         {
             "name": "illuminate/config",
@@ -2344,7 +2787,7 @@
             ],
             "description": "The Illuminate Config package.",
             "homepage": "http://laravel.com",
-            "time": "2015-06-18 02:16:31"
+            "time": "2015-06-18T02:16:31+00:00"
         },
         {
             "name": "illuminate/container",
@@ -2387,7 +2830,7 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "http://laravel.com",
-            "time": "2016-06-14 13:37:44"
+            "time": "2016-06-14T13:37:44+00:00"
         },
         {
             "name": "illuminate/contracts",
@@ -2429,7 +2872,7 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "http://laravel.com",
-            "time": "2015-09-24 11:16:48"
+            "time": "2015-09-24T11:16:48+00:00"
         },
         {
             "name": "illuminate/database",
@@ -2489,7 +2932,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2016-08-10 12:23:17"
+            "time": "2016-08-10T12:23:17+00:00"
         },
         {
             "name": "illuminate/events",
@@ -2534,7 +2977,7 @@
             ],
             "description": "The Illuminate Events package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-30 20:19:08"
+            "time": "2015-12-30T20:19:08+00:00"
         },
         {
             "name": "illuminate/filesystem",
@@ -2584,7 +3027,7 @@
             ],
             "description": "The Illuminate Filesystem package.",
             "homepage": "http://laravel.com",
-            "time": "2016-05-28 21:16:16"
+            "time": "2016-05-28T21:16:16+00:00"
         },
         {
             "name": "illuminate/hashing",
@@ -2628,7 +3071,7 @@
             ],
             "description": "The Illuminate Hashing package.",
             "homepage": "http://laravel.com",
-            "time": "2015-11-29 16:58:05"
+            "time": "2015-11-29T16:58:05+00:00"
         },
         {
             "name": "illuminate/mail",
@@ -2680,7 +3123,7 @@
             ],
             "description": "The Illuminate Mail package.",
             "homepage": "http://laravel.com",
-            "time": "2016-08-04 14:14:51"
+            "time": "2016-08-04T14:14:51+00:00"
         },
         {
             "name": "illuminate/pipeline",
@@ -2724,7 +3167,7 @@
             ],
             "description": "The Illuminate Pipeline package.",
             "homepage": "http://laravel.com",
-            "time": "2015-10-05 21:58:27"
+            "time": "2015-10-05T21:58:27+00:00"
         },
         {
             "name": "illuminate/support",
@@ -2778,7 +3221,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
-            "time": "2016-06-11 16:44:59"
+            "time": "2016-06-11T16:44:59+00:00"
         },
         {
             "name": "illuminate/validation",
@@ -2828,7 +3271,7 @@
             ],
             "description": "The Illuminate Validation package.",
             "homepage": "http://laravel.com",
-            "time": "2016-05-28 21:16:16"
+            "time": "2016-05-28T21:16:16+00:00"
         },
         {
             "name": "illuminate/view",
@@ -2876,20 +3319,20 @@
             ],
             "description": "The Illuminate View package.",
             "homepage": "http://laravel.com",
-            "time": "2016-07-18 11:06:23"
+            "time": "2016-07-18T11:06:23+00:00"
         },
         {
             "name": "intervention/image",
-            "version": "2.3.10",
+            "version": "2.3.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "88911910dcbb7bf617f1370602ba1706489c8505"
+                "reference": "15a517f052ee15d373ffa145c9642d5fec7ddf5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/88911910dcbb7bf617f1370602ba1706489c8505",
-                "reference": "88911910dcbb7bf617f1370602ba1706489c8505",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/15a517f052ee15d373ffa145c9642d5fec7ddf5c",
+                "reference": "15a517f052ee15d373ffa145c9642d5fec7ddf5c",
                 "shasum": ""
             },
             "require": {
@@ -2938,7 +3381,7 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2017-01-25 18:52:04"
+            "time": "2017-04-23T18:45:36+00:00"
         },
         {
             "name": "ircmaxell/random-lib",
@@ -2993,7 +3436,7 @@
                 "random-numbers",
                 "random-strings"
             ],
-            "time": "2016-09-07 15:52:06"
+            "time": "2016-09-07T15:52:06+00:00"
         },
         {
             "name": "ircmaxell/security-lib",
@@ -3039,39 +3482,44 @@
             ],
             "description": "A Base Security Library",
             "homepage": "https://github.com/ircmaxell/SecurityLib",
-            "time": "2015-03-20 14:31:23"
+            "time": "2015-03-20T14:31:23+00:00"
         },
         {
-            "name": "jsthon/flarum-ext-simplified-chinese",
-            "version": "v0.1.0-beta.5",
+            "name": "issyrocks12/flarum-ext-filter",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Flarum-Chinese/flarum-ext-simplified-chinese.git",
-                "reference": "3b2ae7142f77b0eda343d0d25553d3f2bfe20976"
+                "url": "https://github.com/CDK2020/flarum-ext-filter.git",
+                "reference": "b66bc5754745285d09436fd006e3060466fdf3d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Flarum-Chinese/flarum-ext-simplified-chinese/zipball/3b2ae7142f77b0eda343d0d25553d3f2bfe20976",
-                "reference": "3b2ae7142f77b0eda343d0d25553d3f2bfe20976",
+                "url": "https://api.github.com/repos/CDK2020/flarum-ext-filter/zipball/b66bc5754745285d09436fd006e3060466fdf3d4",
+                "reference": "b66bc5754745285d09436fd006e3060466fdf3d4",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6",
+                "flarum/flarum-ext-approval": "^0.1.0-beta.6",
+                "flarum/flarum-ext-flags": "^v0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
-                "flarum-extension": {
-                    "title": "Simplified Chinese",
-                    "icon": {
-                        "image": "icon.svg",
-                        "backgroundColor": "#DE2910",
-                        "backgroundSize": "cover",
-                        "backgroundPosition": "center"
-                    }
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
                 },
-                "flarum-locale": {
-                    "code": "zh",
-                    "title": "简体中文"
+                "flarum-extension": {
+                    "title": "Filter",
+                    "icon": {
+                        "name": "filter",
+                        "backgroundColor": "#263238",
+                        "color": "#fff"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "issyrocks12\\filter\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3080,28 +3528,95 @@
             ],
             "authors": [
                 {
-                    "name": "Jsthon Wong",
-                    "email": "jsthon@outlook.com"
+                    "name": "Charlie K",
+                    "email": "charlie@jailbreakhub.org"
                 }
             ],
-            "description": "Simplified Chinese language pack.",
+            "description": "Filter out words and phrases from forum posts",
             "keywords": [
-                "locale"
+                "moderation"
             ],
-            "time": "2016-04-09 10:34:05"
+            "time": "2017-05-20T02:24:55+00:00"
         },
         {
-            "name": "league/flysystem",
-            "version": "1.0.34",
+            "name": "justinrainbow/json-schema",
+            "version": "5.2.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "469ad53c13ea19a0e54e3e5d70f61227ddcc0299"
+                "url": "https://github.com/justinrainbow/json-schema.git",
+                "reference": "429be236f296ca249d61c65649cdf2652f4a5e80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/469ad53c13ea19a0e54e3e5d70f61227ddcc0299",
-                "reference": "469ad53c13ea19a0e54e3e5d70f61227ddcc0299",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/429be236f296ca249d61c65649cdf2652f4a5e80",
+                "reference": "429be236f296ca249d61c65649cdf2652f4a5e80",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.1",
+                "json-schema/json-schema-test-suite": "1.2.0",
+                "phpdocumentor/phpdocumentor": "^2.7",
+                "phpunit/phpunit": "^4.8.22"
+            },
+            "bin": [
+                "bin/validate-json"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JsonSchema\\": "src/JsonSchema/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bruno Prieto Reis",
+                    "email": "bruno.p.reis@gmail.com"
+                },
+                {
+                    "name": "Justin Rainbow",
+                    "email": "justin.rainbow@gmail.com"
+                },
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch"
+                },
+                {
+                    "name": "Robert Schönthal",
+                    "email": "seroscho@googlemail.com"
+                }
+            ],
+            "description": "A library to validate a json schema.",
+            "homepage": "https://github.com/justinrainbow/json-schema",
+            "keywords": [
+                "json",
+                "schema"
+            ],
+            "time": "2017-05-16T21:06:09+00:00"
+        },
+        {
+            "name": "league/flysystem",
+            "version": "1.0.40",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem.git",
+                "reference": "3828f0b24e2c1918bb362d57a53205d6dc8fde61"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/3828f0b24e2c1918bb362d57a53205d6dc8fde61",
+                "reference": "3828f0b24e2c1918bb362d57a53205d6dc8fde61",
                 "shasum": ""
             },
             "require": {
@@ -3123,12 +3638,12 @@
                 "league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
                 "league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
                 "league/flysystem-copy": "Allows you to use Copy.com storage",
-                "league/flysystem-dropbox": "Allows you to use Dropbox storage",
                 "league/flysystem-eventable-filesystem": "Allows you to use EventableFilesystem",
                 "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
                 "league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
                 "league/flysystem-webdav": "Allows you to use WebDAV storage",
-                "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter"
+                "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter",
+                "spatie/flysystem-dropbox": "Allows you to use Dropbox storage"
             },
             "type": "library",
             "extra": {
@@ -3171,7 +3686,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2017-01-30 17:41:17"
+            "time": "2017-04-28T10:15:08+00:00"
         },
         {
             "name": "league/oauth1-client",
@@ -3234,7 +3749,7 @@
                 "tumblr",
                 "twitter"
             ],
-            "time": "2016-08-17 00:36:58"
+            "time": "2016-08-17T00:36:58+00:00"
         },
         {
             "name": "league/oauth2-client",
@@ -3297,7 +3812,7 @@
                 "oauth2",
                 "single sign on"
             ],
-            "time": "2016-07-28 13:20:43"
+            "time": "2016-07-28T13:20:43+00:00"
         },
         {
             "name": "league/oauth2-facebook",
@@ -3348,7 +3863,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2016-10-21 00:54:37"
+            "time": "2016-10-21T00:54:37+00:00"
         },
         {
             "name": "league/oauth2-github",
@@ -3404,20 +3919,20 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2016-11-22 05:14:51"
+            "time": "2016-11-22T05:14:51+00:00"
         },
         {
             "name": "matthiasmullie/minify",
-            "version": "1.3.43",
+            "version": "1.3.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matthiasmullie/minify.git",
-                "reference": "aa50b2dab6fa7bfd402d334fe51005d6f2526ad7"
+                "reference": "a7fc4a98ef8f2cf38bba701b51f1a84a1d67bc5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/aa50b2dab6fa7bfd402d334fe51005d6f2526ad7",
-                "reference": "aa50b2dab6fa7bfd402d334fe51005d6f2526ad7",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/a7fc4a98ef8f2cf38bba701b51f1a84a1d67bc5c",
+                "reference": "a7fc4a98ef8f2cf38bba701b51f1a84a1d67bc5c",
                 "shasum": ""
             },
             "require": {
@@ -3461,7 +3976,7 @@
                 "minifier",
                 "minify"
             ],
-            "time": "2017-01-26 15:48:07"
+            "time": "2017-03-16T16:42:50+00:00"
         },
         {
             "name": "matthiasmullie/path-converter",
@@ -3510,20 +4025,20 @@
                 "paths",
                 "relative"
             ],
-            "time": "2017-01-26 08:54:49"
+            "time": "2017-01-26T08:54:49+00:00"
         },
         {
             "name": "monolog/monolog",
-            "version": "1.22.0",
+            "version": "1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bad29cb8d18ab0315e6c477751418a82c850d558"
+                "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bad29cb8d18ab0315e6c477751418a82c850d558",
-                "reference": "bad29cb8d18ab0315e6c477751418a82c850d558",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1e044bc4b34e91743943479f1be7a1d5eb93add0",
+                "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0",
                 "shasum": ""
             },
             "require": {
@@ -3588,7 +4103,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-11-26 00:15:39"
+            "time": "2017-03-13T07:08:03+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -3641,7 +4156,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2017-01-16 07:55:07"
+            "time": "2017-01-16T07:55:07+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -3684,27 +4199,27 @@
                 "router",
                 "routing"
             ],
-            "time": "2015-06-18 19:15:47"
+            "time": "2015-06-18T19:15:47+00:00"
         },
         {
             "name": "oyejorge/less.php",
-            "version": "v1.7.0.10",
+            "version": "v1.7.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oyejorge/less.php.git",
-                "reference": "a1e2d3c20794b37ac4d0baeb24613e579584033b"
+                "reference": "42925c5a01a07d67ca7e82dfc8fb31814d557bc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oyejorge/less.php/zipball/a1e2d3c20794b37ac4d0baeb24613e579584033b",
-                "reference": "a1e2d3c20794b37ac4d0baeb24613e579584033b",
+                "url": "https://api.github.com/repos/oyejorge/less.php/zipball/42925c5a01a07d67ca7e82dfc8fb31814d557bc9",
+                "reference": "42925c5a01a07d67ca7e82dfc8fb31814d557bc9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.8.18"
+                "phpunit/phpunit": "~4.8.24"
             },
             "bin": [
                 "bin/lessc"
@@ -3736,7 +4251,7 @@
                     "homepage": "https://github.com/oyejorge"
                 }
             ],
-            "description": "PHP port of the Javascript version of LESS http://lesscss.org",
+            "description": "PHP port of the Javascript version of LESS http://lesscss.org (Originally maintained by Josh Schmidt)",
             "homepage": "http://lessphp.gpeasy.com",
             "keywords": [
                 "css",
@@ -3746,20 +4261,20 @@
                 "php",
                 "stylesheet"
             ],
-            "time": "2015-12-30 05:47:36"
+            "time": "2017-03-28T22:19:25+00:00"
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.4.1",
+            "version": "v1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774"
+                "reference": "965cdeb01fdcab7653253aa81d40441d261f1e66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c7e26a21ba357863de030f0b9e701c7d04593774",
-                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/965cdeb01fdcab7653253aa81d40441d261f1e66",
+                "reference": "965cdeb01fdcab7653253aa81d40441d261f1e66",
                 "shasum": ""
             },
             "require": {
@@ -3794,7 +4309,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-03-18 20:34:03"
+            "time": "2017-03-13T16:22:52+00:00"
         },
         {
             "name": "psr/http-message",
@@ -3844,7 +4359,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "psr/log",
@@ -3891,7 +4406,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10 12:19:37"
+            "time": "2016-10-10T12:19:37+00:00"
         },
         {
             "name": "pusher/pusher-php-server",
@@ -3935,52 +4450,127 @@
                 "rest",
                 "trigger"
             ],
-            "time": "2016-12-22 10:46:28"
+            "time": "2016-12-22T10:46:28+00:00"
         },
         {
-            "name": "s9e/flarum-ext-mediaembed",
-            "version": "0.3.2",
+            "name": "reflar/gamification",
+            "version": "1.0.0-rc.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/s9e/flarum-ext-mediaembed.git",
-                "reference": "7041c45cfe368eb083250bae7cd3d5d9587ea711"
+                "url": "https://gitlab.com/ReFlar/gamification.git",
+                "reference": "8e5a29596a3d9d9ff966502bbc3cb831d4903415"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/s9e/flarum-ext-mediaembed/zipball/7041c45cfe368eb083250bae7cd3d5d9587ea711",
-                "reference": "7041c45cfe368eb083250bae7cd3d5d9587ea711",
+                "url": "https://gitlab.com/api/v3/projects/ReFlar%2Fgamification/repository/archive.zip?sha=8e5a29596a3d9d9ff966502bbc3cb831d4903415",
+                "reference": "8e5a29596a3d9d9ff966502bbc3cb831d4903415",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.3",
-                "php": ">=5.4.0"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
                 "flarum-extension": {
-                    "title": "MediaEmbed",
+                    "title": "ReFlar Gamification",
                     "icon": {
-                        "name": "youtube-play",
-                        "backgroundColor": "#cc181e",
+                        "name": "thumbs-up",
+                        "backgroundColor": "#263238",
                         "color": "#fff"
                     }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Reflar\\gamification\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "description": "Embed third-party content in your Flarum.",
-            "keywords": [
-                "embed",
-                "facebook",
-                "flarum",
-                "media",
-                "twitch",
-                "twitter",
-                "youtube"
+            "authors": [
+                {
+                    "name": "Christian Lopez",
+                    "email": "ralkage@reflar.email",
+                    "homepage": "https://reflar.io"
+                },
+                {
+                    "name": "Charlie K",
+                    "email": "issyrocks12@reflar.email",
+                    "homepage": "https://reflar.io"
+                }
             ],
-            "time": "2015-12-04 17:40:51"
+            "description": "Manage your users with style",
+            "keywords": [
+                "Gamification",
+                "Settings",
+                "flarum",
+                "misc",
+                "points",
+                "reflar"
+            ],
+            "time": "2017-05-16T16:52:11+00:00"
+        },
+        {
+            "name": "reflar/user-management",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/ReFlar/user-management.git",
+                "reference": "5682085c6a0dd81bb0d5ea450a31f0d04117bb0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v3/projects/ReFlar%2Fuser-management/repository/archive.zip?sha=5682085c6a0dd81bb0d5ea450a31f0d04117bb0d",
+                "reference": "5682085c6a0dd81bb0d5ea450a31f0d04117bb0d",
+                "shasum": ""
+            },
+            "require": {
+                "flarum/core": "^0.1.0-beta.6"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "flarum-extension": {
+                    "title": "ReFlar User Management",
+                    "icon": {
+                        "name": "address-book-o",
+                        "backgroundColor": "#263238",
+                        "color": "#fff"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Reflar\\UserManagement\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Lopez",
+                    "email": "ralkage@reflar.email",
+                    "homepage": "https://reflar.io"
+                },
+                {
+                    "name": "Charlie K",
+                    "email": "issyrocks12@reflar.email",
+                    "homepage": "https://reflar.io"
+                }
+            ],
+            "description": "Manage your users with style",
+            "keywords": [
+                "Settings",
+                "flarum",
+                "management",
+                "misc",
+                "reflar",
+                "registration"
+            ],
+            "time": "2017-05-02T11:46:25+00:00"
         },
         {
             "name": "s9e/text-formatter",
@@ -4040,7 +4630,148 @@
                 "parser",
                 "shortcodes"
             ],
-            "time": "2016-08-09 14:16:45"
+            "time": "2016-08-09T14:16:45+00:00"
+        },
+        {
+            "name": "seld/cli-prompt",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/cli-prompt.git",
+                "reference": "a19a7376a4689d4d94cab66ab4f3c816019ba8dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/cli-prompt/zipball/a19a7376a4689d4d94cab66ab4f3c816019ba8dd",
+                "reference": "a19a7376a4689d4d94cab66ab4f3c816019ba8dd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Seld\\CliPrompt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be"
+                }
+            ],
+            "description": "Allows you to prompt for user input on the command line, and optionally hide the characters they type",
+            "keywords": [
+                "cli",
+                "console",
+                "hidden",
+                "input",
+                "prompt"
+            ],
+            "time": "2017-03-18T11:32:45+00:00"
+        },
+        {
+            "name": "seld/jsonlint",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/jsonlint.git",
+                "reference": "791f8c594f300d246cdf01c6b3e1e19611e301d8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/791f8c594f300d246cdf01c6b3e1e19611e301d8",
+                "reference": "791f8c594f300d246cdf01c6b3e1e19611e301d8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5"
+            },
+            "bin": [
+                "bin/jsonlint"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Seld\\JsonLint\\": "src/Seld/JsonLint/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "JSON Linter",
+            "keywords": [
+                "json",
+                "linter",
+                "parser",
+                "validator"
+            ],
+            "time": "2017-03-06T16:42:24+00:00"
+        },
+        {
+            "name": "seld/phar-utils",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/phar-utils.git",
+                "reference": "7009b5139491975ef6486545a39f3e6dad5ac30a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/phar-utils/zipball/7009b5139491975ef6486545a39f3e6dad5ac30a",
+                "reference": "7009b5139491975ef6486545a39f3e6dad5ac30a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Seld\\PharUtils\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be"
+                }
+            ],
+            "description": "PHAR file format utilities, for when PHP phars you up",
+            "keywords": [
+                "phra"
+            ],
+            "time": "2015-10-13T18:44:15+00:00"
         },
         {
             "name": "sijad/flarum-ext-details",
@@ -4097,7 +4828,7 @@
                 "summary",
                 "text"
             ],
-            "time": "2016-07-01 07:08:00"
+            "time": "2016-07-01T07:08:00+00:00"
         },
         {
             "name": "sijad/flarum-ext-links",
@@ -4149,7 +4880,7 @@
                 "menu",
                 "nav"
             ],
-            "time": "2016-05-03 20:05:44"
+            "time": "2016-05-03T20:05:44+00:00"
         },
         {
             "name": "sijad/flarum-ext-pages",
@@ -4199,20 +4930,20 @@
                 "page",
                 "static"
             ],
-            "time": "2016-10-23 14:52:44"
+            "time": "2016-10-23T14:52:44+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.5",
+            "version": "v5.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "cd142238a339459b10da3d8234220963f392540c"
+                "reference": "9a06dc570a0367850280eefd3f1dc2da45aef517"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/cd142238a339459b10da3d8234220963f392540c",
-                "reference": "cd142238a339459b10da3d8234220963f392540c",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/9a06dc570a0367850280eefd3f1dc2da45aef517",
+                "reference": "9a06dc570a0367850280eefd3f1dc2da45aef517",
                 "shasum": ""
             },
             "require": {
@@ -4253,25 +4984,25 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2016-12-29 10:02:40"
+            "time": "2017-05-01T15:54:03+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v2.8.16",
+            "version": "v2.8.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "2e18b8903d9c498ba02e1dfa73f64d4894bb6912"
+                "reference": "2cfcbced8e39e2313ed4da8896fc8c59a56c0d7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/2e18b8903d9c498ba02e1dfa73f64d4894bb6912",
-                "reference": "2e18b8903d9c498ba02e1dfa73f64d4894bb6912",
+                "url": "https://api.github.com/repos/symfony/console/zipball/2cfcbced8e39e2313ed4da8896fc8c59a56c0d7e",
+                "reference": "2cfcbced8e39e2313ed4da8896fc8c59a56c0d7e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.9",
-                "symfony/debug": "~2.7,>=2.7.2|~3.0.0",
+                "symfony/debug": "^2.7.2|~3.0.0",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "require-dev": {
@@ -4314,20 +5045,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-08 20:43:03"
+            "time": "2017-04-26T01:38:53+00:00"
         },
         {
             "name": "symfony/debug",
-            "version": "v2.7.23",
+            "version": "v2.7.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "b3bdc191eb708991c0c380fccf9bfbfaca4ae6d5"
+                "reference": "28590cbb8f7dd5ef34e902a1a87d7aa6af2b3bd7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/b3bdc191eb708991c0c380fccf9bfbfaca4ae6d5",
-                "reference": "b3bdc191eb708991c0c380fccf9bfbfaca4ae6d5",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/28590cbb8f7dd5ef34e902a1a87d7aa6af2b3bd7",
+                "reference": "28590cbb8f7dd5ef34e902a1a87d7aa6af2b3bd7",
                 "shasum": ""
             },
             "require": {
@@ -4339,7 +5070,7 @@
             },
             "require-dev": {
                 "symfony/class-loader": "~2.2",
-                "symfony/http-kernel": "~2.3.24|~2.5.9|~2.6,>=2.6.2"
+                "symfony/http-kernel": "~2.3.24|~2.5.9|^2.6.2"
             },
             "type": "library",
             "extra": {
@@ -4371,20 +5102,69 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-02 20:30:00"
+            "time": "2017-04-13T20:03:51+00:00"
         },
         {
-            "name": "symfony/finder",
-            "version": "v2.7.23",
+            "name": "symfony/filesystem",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/finder.git",
-                "reference": "927a4a6c37fc59e1331f4300cc138f4a752eeb12"
+                "url": "https://github.com/symfony/filesystem.git",
+                "reference": "040651db13cf061827a460cc10f6e36a445c45b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/927a4a6c37fc59e1331f4300cc138f4a752eeb12",
-                "reference": "927a4a6c37fc59e1331f4300cc138f4a752eeb12",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/040651db13cf061827a460cc10f6e36a445c45b4",
+                "reference": "040651db13cf061827a460cc10f6e36a445c45b4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Filesystem\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Filesystem Component",
+            "homepage": "https://symfony.com",
+            "time": "2017-04-12T14:13:17+00:00"
+        },
+        {
+            "name": "symfony/finder",
+            "version": "v2.7.27",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/finder.git",
+                "reference": "9ec5f638fa4c6f02e5231d04747963186f6840a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/9ec5f638fa4c6f02e5231d04747963186f6840a6",
+                "reference": "9ec5f638fa4c6f02e5231d04747963186f6840a6",
                 "shasum": ""
             },
             "require": {
@@ -4420,20 +5200,20 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-02 20:30:00"
+            "time": "2017-04-12T07:39:27+00:00"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.7.23",
+            "version": "v2.7.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "f84ffa8da993170c10fd3a109400c01ad2c0fe8a"
+                "reference": "db6ae9765dd723bc55c958456e2804170663dc97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/f84ffa8da993170c10fd3a109400c01ad2c0fe8a",
-                "reference": "f84ffa8da993170c10fd3a109400c01ad2c0fe8a",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/db6ae9765dd723bc55c958456e2804170663dc97",
+                "reference": "db6ae9765dd723bc55c958456e2804170663dc97",
                 "shasum": ""
             },
             "require": {
@@ -4476,7 +5256,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-06 17:20:46"
+            "time": "2017-04-29T15:58:46+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -4535,20 +5315,69 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
-            "name": "symfony/translation",
-            "version": "v2.7.23",
+            "name": "symfony/process",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/translation.git",
-                "reference": "f158ed71fe8921de1409a7823221dcfe5070425a"
+                "url": "https://github.com/symfony/process.git",
+                "reference": "999c2cf5061e627e6cd551dc9ebf90dd1d11d9f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/f158ed71fe8921de1409a7823221dcfe5070425a",
-                "reference": "f158ed71fe8921de1409a7823221dcfe5070425a",
+                "url": "https://api.github.com/repos/symfony/process/zipball/999c2cf5061e627e6cd551dc9ebf90dd1d11d9f0",
+                "reference": "999c2cf5061e627e6cd551dc9ebf90dd1d11d9f0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Process\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Process Component",
+            "homepage": "https://symfony.com",
+            "time": "2017-04-12T14:13:17+00:00"
+        },
+        {
+            "name": "symfony/translation",
+            "version": "v2.7.27",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/translation.git",
+                "reference": "160c2d5c546a1d7ba8ce60514ae177b8e3771829"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/160c2d5c546a1d7ba8ce60514ae177b8e3771829",
+                "reference": "160c2d5c546a1d7ba8ce60514ae177b8e3771829",
                 "shasum": ""
             },
             "require": {
@@ -4560,7 +5389,7 @@
             "require-dev": {
                 "psr/log": "~1.0",
                 "symfony/config": "~2.7",
-                "symfony/intl": "~2.4",
+                "symfony/intl": "~2.7.25|^2.8.18",
                 "symfony/yaml": "~2.2"
             },
             "suggest": {
@@ -4598,20 +5427,20 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-02 20:30:00"
+            "time": "2017-04-12T07:39:27+00:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.16",
+            "version": "v2.8.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "dbe61fed9cd4a44c5b1d14e5e7b1a8640cfb2bf2"
+                "reference": "93ccdde79f4b079c7558da4656a3cb1c50c68e02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/dbe61fed9cd4a44c5b1d14e5e7b1a8640cfb2bf2",
-                "reference": "dbe61fed9cd4a44c5b1d14e5e7b1a8640cfb2bf2",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/93ccdde79f4b079c7558da4656a3cb1c50c68e02",
+                "reference": "93ccdde79f4b079c7558da4656a3cb1c50c68e02",
                 "shasum": ""
             },
             "require": {
@@ -4647,7 +5476,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-03 13:49:52"
+            "time": "2017-05-01T14:31:55+00:00"
         },
         {
             "name": "tijsverkoyen/akismet",
@@ -4686,7 +5515,7 @@
             ],
             "description": "Akismet is a wrapper-class to communicate with the Akismet API.",
             "homepage": "https://github.com/tijsverkoyen/Akismet",
-            "time": "2016-07-19 13:50:18"
+            "time": "2016-07-19T13:50:18+00:00"
         },
         {
             "name": "tobscure/json-api",
@@ -4736,118 +5565,204 @@
                 "jsonapi",
                 "standard"
             ],
-            "time": "2016-03-31 09:25:28"
+            "time": "2016-03-31T09:25:28+00:00"
         },
         {
-            "name": "vingle/flarum-configure-smtp",
-            "version": "0.2.0",
+            "name": "wiseclock/flarum-ext-login2see",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tutula1/vingle-configure-smtp.git",
-                "reference": "52cd54cb143715be553dc11f023da0cd9502c345"
+                "url": "https://github.com/WiseClock/flarum-ext-login2see.git",
+                "reference": "03dd9038371b269f9ca141d2ff42254e7a76c28e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tutula1/vingle-configure-smtp/zipball/52cd54cb143715be553dc11f023da0cd9502c345",
-                "reference": "52cd54cb143715be553dc11f023da0cd9502c345",
+                "url": "https://api.github.com/repos/WiseClock/flarum-ext-login2see/zipball/03dd9038371b269f9ca141d2ff42254e7a76c28e",
+                "reference": "03dd9038371b269f9ca141d2ff42254e7a76c28e",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.5"
+                "flarum/core": "^0.1.0-beta.6"
             },
             "type": "flarum-extension",
             "extra": {
                 "flarum-extension": {
-                    "title": "Configure SMTP",
+                    "title": "Login2See",
                     "icon": {
-                        "name": "cogs",
-                        "backgroundColor": "#000",
-                        "backgroundSize": "100%",
-                        "color": "#ff0"
+                        "name": "eye-slash",
+                        "backgroundColor": "#ff1a00",
+                        "color": "#ffffff"
                     }
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Vingle\\Configure\\Smtp\\": "src/"
+                    "WiseClock\\Login2See\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
             "authors": [
                 {
-                    "name": "Binh Duong",
-                    "email": "binh.duong@vingle.net"
+                    "name": "WiseClock"
                 }
             ],
-            "description": "SMTP Config UI.",
-            "keywords": [
-                "smtp"
-            ],
-            "time": "2016-04-07 04:07:17"
+            "description": "Make posts hidden for visitors.",
+            "time": "2017-03-16T06:16:51+00:00"
         },
         {
-            "name": "vingle/flarum-share-social",
+            "name": "wiseclock/flarum-ext-post-copyright",
+            "version": "0.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WiseClock/flarum-ext-post-copyright.git",
+                "reference": "7f679ef05f244213e03716c2994eb02e09f38dbe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/WiseClock/flarum-ext-post-copyright/zipball/7f679ef05f244213e03716c2994eb02e09f38dbe",
+                "reference": "7f679ef05f244213e03716c2994eb02e09f38dbe",
+                "shasum": ""
+            },
+            "require": {
+                "flarum/core": "^0.1.0-beta.6"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "flarum-extension": {
+                    "title": "Post Copyright",
+                    "icon": {
+                        "name": "check-circle-o",
+                        "backgroundColor": "#cc0000",
+                        "color": "#ffd700"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "WiseClock\\PostCopyright\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "WiseClock"
+                }
+            ],
+            "description": "Enables copyright settings on posts.",
+            "time": "2017-03-22T01:40:53+00:00"
+        },
+        {
+            "name": "wiseclock/flarum-ext-profile-image-crop",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WiseClock/flarum-ext-profile-image-crop.git",
+                "reference": "35ef23cbb2f42156928f674fdf6525a3ac6cac26"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/WiseClock/flarum-ext-profile-image-crop/zipball/35ef23cbb2f42156928f674fdf6525a3ac6cac26",
+                "reference": "35ef23cbb2f42156928f674fdf6525a3ac6cac26",
+                "shasum": ""
+            },
+            "require": {
+                "flarum/core": "^0.1.0-beta.6"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "flarum-extension": {
+                    "title": "Profile Image Crop",
+                    "icon": {
+                        "name": "crop",
+                        "backgroundColor": "#000000",
+                        "color": "#ffffff"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "WiseClock\\ProfileImageCrop\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "WiseClock"
+                },
+                {
+                    "name": "foliotek"
+                }
+            ],
+            "description": "Crop when uploading profile image.",
+            "time": "2017-03-14T03:12:52+00:00"
+        },
+        {
+            "name": "wiseclock/flarum-ext-reply2see",
             "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tutula1/vingle-share-social.git",
-                "reference": "0ce19c16e926c1d42e091218e627ec56be073506"
+                "url": "https://github.com/WiseClock/flarum-ext-reply2see.git",
+                "reference": "6b5715d8402516570f4110f772bb7bcee8df5a6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tutula1/vingle-share-social/zipball/0ce19c16e926c1d42e091218e627ec56be073506",
-                "reference": "0ce19c16e926c1d42e091218e627ec56be073506",
+                "url": "https://api.github.com/repos/WiseClock/flarum-ext-reply2see/zipball/6b5715d8402516570f4110f772bb7bcee8df5a6e",
+                "reference": "6b5715d8402516570f4110f772bb7bcee8df5a6e",
                 "shasum": ""
             },
             "require": {
-                "flarum/core": "^0.1.0-beta.3"
+                "flarum/core": "^0.1.0-beta.6",
+                "flarum/flarum-ext-bbcode": "^0.1.0"
             },
             "type": "flarum-extension",
             "extra": {
                 "flarum-extension": {
-                    "title": "_ Share Social",
+                    "title": "Reply2See",
                     "icon": {
-                        "name": "share-alt",
-                        "backgroundColor": "#000",
-                        "color": "#FF0"
+                        "name": "reply-all",
+                        "backgroundColor": "#ff1a00",
+                        "color": "#ffffff"
                     }
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Vingle\\Share\\Social\\": "src/"
+                    "WiseClock\\Reply2See\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
             "authors": [
                 {
-                    "name": "Binh Duong",
-                    "email": "binh.duong@vingle.net"
+                    "name": "WiseClock"
                 }
             ],
-            "description": "Include share social button.",
-            "keywords": [
-                "facebook",
-                "google",
-                "google plus",
-                "share",
-                "social",
-                "twitter"
-            ],
-            "time": "2015-12-13 10:36:14"
+            "description": "Adds a reply to see BBCODE.",
+            "time": "2017-03-17T03:25:55+00:00"
         },
         {
             "name": "wiwatsrt/flarum-ext-best-answer",
-            "version": "v0.1.0-beta.5",
+            "version": "v0.1.0-beta.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wiwatsrt/flarum-ext-best-answer.git",
-                "reference": "bc8232749ade9dc0686ba329bfe4be1f0179c83b"
+                "reference": "4927e44acb125a05b37e184ec4b03cdffa132422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wiwatsrt/flarum-ext-best-answer/zipball/bc8232749ade9dc0686ba329bfe4be1f0179c83b",
-                "reference": "bc8232749ade9dc0686ba329bfe4be1f0179c83b",
+                "url": "https://api.github.com/repos/wiwatsrt/flarum-ext-best-answer/zipball/4927e44acb125a05b37e184ec4b03cdffa132422",
+                "reference": "4927e44acb125a05b37e184ec4b03cdffa132422",
                 "shasum": ""
             },
             "require": {
@@ -4856,7 +5771,7 @@
             "type": "flarum-extension",
             "extra": {
                 "branch-alias": {
-                    "dev-develop": "0.1.x-dev"
+                    "dev-master": "0.1.x-dev"
                 },
                 "flarum-extension": {
                     "title": "Best Answer",
@@ -4882,63 +5797,25 @@
                     "email": "wiwat@srisattha.com"
                 }
             ],
-            "description": "Best Answer fot Flarum.",
+            "description": "Best Answer for Flarum.",
             "keywords": [
                 "best-answer",
                 "flarum"
             ],
-            "time": "2016-11-11 01:16:51"
-        },
-        {
-            "name": "xengine/flarum-ext-markdown-editor",
-            "version": "1.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/XEngine/flarum-ext-markdown-editor.git",
-                "reference": "55639b2881420c76ff2a34916b19e4e270ddf776"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/XEngine/flarum-ext-markdown-editor/zipball/55639b2881420c76ff2a34916b19e4e270ddf776",
-                "reference": "55639b2881420c76ff2a34916b19e4e270ddf776",
-                "shasum": ""
-            },
-            "require": {
-                "flarum/core": "^0.1.0-beta.5"
-            },
-            "type": "flarum-extension",
-            "extra": {
-                "flarum-extension": {
-                    "title": "Markdown Editor"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "XEngine\\MarkdownEditor\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "XEngine",
-                    "email": "tidusdragonh3art@gmail.com"
-                }
-            ],
-            "description": "WYSIWYG Editor for Flarum",
-            "time": "2016-11-04 07:20:12"
+            "time": "2017-03-31T01:10:05+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "1.3.10",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "83e8d98b9915de76c659ce27d683c02a0f99fa90"
+                "reference": "b03f285a333f51e58c95cce54109a4a9ed691436"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/83e8d98b9915de76c659ce27d683c02a0f99fa90",
-                "reference": "83e8d98b9915de76c659ce27d683c02a0f99fa90",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/b03f285a333f51e58c95cce54109a4a9ed691436",
+                "reference": "b03f285a333f51e58c95cce54109a4a9ed691436",
                 "shasum": ""
             },
             "require": {
@@ -4946,17 +5823,19 @@
                 "psr/http-message": "~1.0"
             },
             "provide": {
-                "psr/http-message-implementation": "~1.0.0"
+                "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
                 "phpunit/phpunit": "^4.6 || ^5.5",
                 "zendframework/zend-coding-standard": "~1.0.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3-dev",
-                    "dev-develop": "1.4-dev"
+                    "dev-master": "1.4-dev",
+                    "dev-develop": "1.5-dev"
                 }
             },
             "autoload": {
@@ -4975,7 +5854,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2017-01-23 04:53:24"
+            "time": "2017-04-06T16:18:34+00:00"
         },
         {
             "name": "zendframework/zend-escaper",
@@ -5019,7 +5898,7 @@
                 "escaper",
                 "zf2"
             ],
-            "time": "2016-06-30 19:48:38"
+            "time": "2016-06-30T19:48:38+00:00"
         },
         {
             "name": "zendframework/zend-stratigility",
@@ -5072,31 +5951,29 @@
                 "middleware",
                 "psr-7"
             ],
-            "time": "2017-01-23 22:59:03"
+            "time": "2017-01-23T22:59:03+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "franzl/studio",
-            "version": "0.10.0",
+            "version": "0.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/franzliedke/studio.git",
-                "reference": "c29dbadaaa131d424648d54378c389d3c6309060"
+                "reference": "c1359ff9fdec24ca4e3ceb5dd38e09ce9ba8b2db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/franzliedke/studio/zipball/c29dbadaaa131d424648d54378c389d3c6309060",
-                "reference": "c29dbadaaa131d424648d54378c389d3c6309060",
+                "url": "https://api.github.com/repos/franzliedke/studio/zipball/c1359ff9fdec24ca4e3ceb5dd38e09ce9ba8b2db",
+                "reference": "c1359ff9fdec24ca4e3ceb5dd38e09ce9ba8b2db",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.0",
-                "illuminate/support": "~5.0",
-                "symfony/console": "^2.7|^3.0",
-                "symfony/filesystem": "^2.5|^3.0",
-                "symfony/finder": "^2.5|^3.0",
-                "symfony/process": "^2.5|^3.0"
+                "symfony/console": "^2.7 || ^3.0",
+                "symfony/filesystem": "^2.5 || ^3.0",
+                "symfony/process": "^2.5 || ^3.0"
             },
             "replace": {
                 "franzliedke/studio": "self.version"
@@ -5111,7 +5988,7 @@
             "type": "composer-plugin",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.10.x-dev"
+                    "dev-master": "0.11.x-dev"
                 },
                 "class": "Studio\\Composer\\StudioPlugin"
             },
@@ -5130,114 +6007,20 @@
                 "development",
                 "workflow"
             ],
-            "time": "2016-03-05 18:49:56"
-        },
-        {
-            "name": "symfony/filesystem",
-            "version": "v3.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/filesystem.git",
-                "reference": "a0c6ef2dc78d33b58d91d3a49f49797a184d06f4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/a0c6ef2dc78d33b58d91d3a49f49797a184d06f4",
-                "reference": "a0c6ef2dc78d33b58d91d3a49f49797a184d06f4",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Filesystem\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Filesystem Component",
-            "homepage": "https://symfony.com",
-            "time": "2017-01-08 20:47:33"
-        },
-        {
-            "name": "symfony/process",
-            "version": "v3.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/process.git",
-                "reference": "350e810019fc52dd06ae844b6a6d382f8a0e8893"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/350e810019fc52dd06ae844b6a6d382f8a0e8893",
-                "reference": "350e810019fc52dd06ae844b6a6d382f8a0e8893",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Process\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Process Component",
-            "homepage": "https://symfony.com",
-            "time": "2017-01-02 20:32:22"
+            "time": "2016-11-25T17:31:51+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "beta",
     "stability-flags": {
-        "jsthon/flarum-ext-simplified-chinese": 10,
+        "flarum/flarum-ext-mentions": 20,
+        "flagrow/bazaar": 10,
+        "flagrow/ads": 10,
+        "reflar/gamification": 5,
         "sijad/flarum-ext-pages": 10,
         "sijad/flarum-ext-links": 10,
-        "wiwatsrt/flarum-ext-best-answer": 10
+        "wiwatsrt/flarum-ext-best-answer": 10,
+        "flarumchina/flarum-ext-simplified-chinese-pro": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,

@@ -1,0 +1,49 @@
+# https://github.com/flagrow/bazaar/blob/master/locale/en.yml
+
+flagrow-bazaar:
+    admin:
+        loader:
+            is_loading: Processing..
+        nav:
+            title: Bazaar
+            description: 应用市场.
+        modal:
+            settings:
+                title: Flagrow Bazaar
+                field:
+                    apiToken: API token
+                    apiTokenDescription: 这个 api token 是访问 Flagrow 扩展所必须的。如果已经设置，请继续。
+            connect-bazaar:
+                title: 连接
+                description: >
+                    连接你的flarum论坛，您的个人帐户上{host}解锁高级功能; 
+                    包括一个仪表板，和你所有的连接的网站的概述. 我们将添加更多的功能。
+                    届时，您将集中管理你的论坛。
+            requirements:
+                file-permissions:
+                    title: 文件许可
+                    description: >
+                        应用市场需要文件的读写权限 <a>wiki</a>.
+                php-memory_limit:
+                    title: Memory limit
+                    description: >
+                        我们要求最少 {required} 的内存, 你的 php.ini 允许 {limit}.
+                        尽管我们做了大量的优化，但是否安装成功取决于你机器的性能，和网络链接速度。
+                        了解更多 <a> wiki</a>.
+        page:
+            button:
+                more: 更多
+                install: 安装
+                uninstall: 移除
+                enable: 启用
+                disable: 停用
+                update: 升级
+                connect: 连接
+                favorite_button: "喜欢"
+                remove_favorite_button: "不喜欢"
+            extension:
+                installed: 扩展已安装
+                installed: 扩展已启用
+                vendor: 由 {vendor} 开发
+                favorited: 喜欢过
+                outdated: "你的插件已过时请升级 {new}"

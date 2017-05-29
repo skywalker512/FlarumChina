@@ -3,9 +3,9 @@ flarum-best-answer:
         permissions:
             best_answer: => flarum-best-answer.ref.best_answer
     forum:
-        this_best_answer: "This Best Answer"
-        remove_best_answer: "Remove Best Answer"
-        header_best_answer: "Best Answer — Thread Owner's Choice"
+        this_best_answer: "This is the best answer"
+        remove_best_answer: "Remove the current best answer"
+        header_best_answer: "Tagged by the post creator as the best answer"
         best_answer_button: => flarum-best-answer.ref.best_answer
         best_answer: => flarum-best-answer.ref.best_answer
     ref:

@@ -7,7 +7,6 @@ use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Repository\PathRepository;
-use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Studio\Config\Config;
 use Studio\Config\FileStorage;
@@ -24,11 +23,6 @@ class StudioPlugin implements PluginInterface, EventSubscriberInterface
      */
     protected $io;
 
-    /**
-     * @var  string|null
-     */
-    protected $targetDir;
-
     public function activate(Composer $composer, IOInterface $io)
     {
         $this->composer = $composer;
@@ -43,37 +37,38 @@ class StudioPlugin implements PluginInterface, EventSubscriberInterface
         ];
     }
 
-    public function registerStudioPackages(Event $event)
+    /**
+     * Register all managed paths with Composer.
+     *
+     * This function configures Composer to treat all Studio-managed paths as local path repositories, so that packages
+     * therein will be symlinked directly.
+     */
+    public function registerStudioPackages()
     {
-        $this->targetDir = realpath($event->getComposer()->getPackage()->getTargetDir());
-        $studioFile = "{$this->targetDir}/studio.json";
+        $repoManager = $this->composer->getRepositoryManager();
+        $composerConfig = $this->composer->getConfig();
 
-        $config = $this->getConfig($studioFile);
+        foreach ($this->getManagedPaths() as $path) {
+            $this->io->writeError("[Studio] Loading path $path");
 
-        if ($config->hasPackages()) {
-            $io = $event->getIO();
-            $repoManager = $event->getComposer()->getRepositoryManager();
-            $composerConfig = $event->getComposer()->getConfig();
-
-            foreach ($config->getPackages() as $package => $path) {
-                $io->writeError("[Studio] Registering package $package with $path");
-                $repoManager->prependRepository(new PathRepository(
-                    ['url' => $path],
-                    $io,
-                    $composerConfig
-                ));
-            }
+            $repoManager->prependRepository(new PathRepository(
+                ['url' => $path],
+                $this->io,
+                $composerConfig
+            ));
         }
     }
 
     /**
-     * Instantiate and return the config object.
+     * Get the list of paths that are being managed by Studio.
      *
-     * @param string $file
-     * @return Config
+     * @return array
      */
-    protected function getConfig($file)
+    private function getManagedPaths()
     {
-        return new Config(new FileStorage($file));
+        $targetDir = realpath($this->composer->getPackage()->getTargetDir());
+        $config = Config::make("{$targetDir}/studio.json");
+
+        return $config->getPaths();
     }
 }

@@ -1,0 +1,34 @@
+{
+    "name": "wiseclock/flarum-ext-reply2see",
+    "description": "Adds a reply to see BBCODE.",
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "WiseClock"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/WiseClock/flarum-ext-reply2see/issues",
+        "source": "https://github.com/WiseClock/flarum-ext-reply2see"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6",
+        "flarum/flarum-ext-bbcode": "^0.1.0"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Reply2See",
+            "icon": {
+                "name": "reply-all",
+                "backgroundColor": "#ff1a00",
+                "color": "#ffffff"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "WiseClock\\Reply2See\\": "src/"
+        }
+    }
+}

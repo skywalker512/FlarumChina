@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -10,17 +11,19 @@
 
 namespace Flarum\Event;
 
+use Flarum\Extension\Extension;
+
 class ExtensionWasUninstalled
 {
     /**
-     * @var string
+     * @var Extension
      */
-    protected $extension;
+    public $extension;
 
     /**
-     * @param string $extension
+     * @param Extension $extension
      */
-    public function __construct($extension)
+    public function __construct(Extension $extension)
     {
         $this->extension = $extension;
     }

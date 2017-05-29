@@ -1,0 +1,33 @@
+{
+    "name": "wiseclock/flarum-ext-post-copyright",
+    "description": "Enables copyright settings on posts.",
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "WiseClock"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/WiseClock/flarum-ext-post-copyright/issues",
+        "source": "https://github.com/WiseClock/flarum-ext-post-copyright"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Post Copyright",
+            "icon": {
+                "name": "check-circle-o",
+                "backgroundColor": "#cc0000",
+                "color": "#ffd700"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "WiseClock\\PostCopyright\\": "src/"
+        }
+    }
+}

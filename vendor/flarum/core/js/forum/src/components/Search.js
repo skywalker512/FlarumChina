@@ -83,6 +83,7 @@ export default class Search extends Component {
       })}>
         <div className="Search-input">
           <input className="FormControl"
+            type="search"
             placeholder={extractText(app.translator.trans('core.forum.header.search_placeholder'))}
             value={this.value()}
             oninput={m.withAttr('value', this.value)}
@@ -143,7 +144,7 @@ export default class Search extends Component {
         search.searchTimeout = setTimeout(() => {
           if (search.searched.indexOf(query) !== -1) return;
 
-          if (query.length >= 1) {
+          if (query.length >= 3) {
             search.sources.map(source => {
               if (!source.search) return;
 

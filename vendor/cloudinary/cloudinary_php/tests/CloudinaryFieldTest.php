@@ -1,8 +1,10 @@
 <?php
 $base = realpath(dirname(__FILE__).DIRECTORY_SEPARATOR.'..');
+use PHPUnit\Framework\TestCase;
 require_once(join(DIRECTORY_SEPARATOR, array($base, 'src', 'Cloudinary.php')));
 require_once(join(DIRECTORY_SEPARATOR, array($base, 'src', 'CloudinaryField.php')));
-class CloudinaryFieldTest extends PHPUnit_Framework_TestCase {
+
+class CloudinaryFieldTest extends TestCase {
     public function setUp() {
         Cloudinary::config(array("cloud_name"=>"test123", "secure_distribution" => NULL, "private_cdn" => FALSE));
     }

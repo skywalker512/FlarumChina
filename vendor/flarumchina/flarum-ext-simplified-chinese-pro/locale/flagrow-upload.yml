@@ -1,0 +1,88 @@
+# https://github.com/flagrow/upload/blob/master/locale/en.yml
+
+# https://github.com/flagrow/upload/blob/master/locale/en.yml
+
+flagrow-upload:
+    forum:
+        buttons:
+            attach: 上传附件
+        states:
+            loading: 加载中
+            success: 上传成功
+            error: 上传失败
+    admin:
+        nav:
+            file_upload_button: 文件上传
+        permissions:
+            upload_label: 文件上传
+            download_label: 下载文件
+        upload_methods:
+            local: 本地
+            aws-s3: Amazon S3
+            imgur: Imgur
+            ovh-svfs: OVH SVFS
+        labels:
+            preferences:
+                title: 常规设置
+                max_file_size: 最大文件大小（以KB为单位）
+                mime_types: 设置上传文件的MIME类型，上传适配器映射
+            resize:
+                title: 重置大小
+                toggle: 调整图片大小
+                max_width: 最大图片宽度
+                max_height: 最大图片高度
+            watermark:
+                title: 水印图片
+                toggle: 用作水印的图片
+                position: 水印位置
+                file: 上传您的水印图片
+            local:
+                title: 本地存储设置
+                cdn_url: CDN 地址前缀
+            imgur:
+                title: Imgur 图片存储设置
+                client_id: Imgur 用户 ID
+            aws-s3:
+                title: AWS S3 存储设置
+                key: Key
+                secret: Secret
+                bucket: Bucket
+                region: Region
+            ovh-svfs:
+                title: OVH SVFS 存储设置
+                container: Container
+                tenantid: Tenant ID
+                username: Username
+                password: Password
+                region: Region
+            disable-hotlink-protection:
+                title: 禁用盗链保护
+                toggle: 禁用
+            disable-download-logging:
+                title: 禁用下载日志
+                toggle: 禁用
+
+        buttons:
+            save: 保存设置
+        help_texts:
+            description: >
+                设置上传服务及偏好
+            mime_types: >
+                请在这里配置您的映射。
+                每个MIME类型的正则表达式将由一个特定的
+                适配器处理上传。
+            resize: >
+                是否在上传前调整图片大小
+                您可以设置最大宽度和高度，以 px 为单位
+                调整大小将维持原图长宽比
+            watermark: >
+                选择是否在图片中添加水印
+                上传并根据下面偏好，水印将添加到你的
+                非GIF格式图片中。
+            disable-hotlink-protection: >
+                盗链保护防止其他网站开放下载。
+                当前方法需要一个 csrf 令牌和 post id。
+            disable-download-logging: >
+                禁止记录您的论坛用户下载附件的次数。
+                启用它，您可以查看下载次数和其他指标
+                在不久的将来（实现）

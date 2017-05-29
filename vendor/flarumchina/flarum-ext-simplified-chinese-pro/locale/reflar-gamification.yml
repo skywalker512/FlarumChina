@@ -1,0 +1,68 @@
+# https://github.com/ReFlar/gamification/blob/master/CODE/locale/en.yml
+core:
+  forum:
+    index_sort:
+      hot_button: 时尚话题
+      
+reflar-gamification:
+  forum:
+    vote_title: 投票人
+    nav:
+      name: 活跃排名
+    ranking:
+      rank: 排名
+      name: 用户
+      amount: 等级
+    notification:
+      upvote: 有人顶了你
+      downvote: 有人踩了你
+      grid:
+        upvoted: 有人顶了你的帖子
+        downvoted: 有人赞了踩的帖子
+    user:
+      points: "分数: {points}"
+      rank: "{rank}"
+    modal:
+      title: 投票
+      upvotes_label: 顶
+      downvotes_label: 踩
+  admin:
+    permissions:
+      vote_label: 顶/踩 帖子
+      see_votes_label: 查看帖子的 顶/踩
+    nav:
+      desc: 丰富你的论坛
+    page:
+      rankings:
+        blocked:
+          placeholder: CDK2020, Ralkage, AngelAvila
+          title: 忽略用户
+          help: 这些用户将不会出现在排名列表
+        title: 排名列表
+        enable: 使用自定义图片
+        custom_image_1: 第一名的图片
+        custom_image_2: 第二名的图片
+        custom_image_3: 第三名的图片 
+      votes:
+        points_title: 个人页面的标志
+        points_placeholder: "分数: "
+        color_holder: '#ffffff'
+        auto_upvote: 自动顶当你发帖时
+        title: 投票
+        vote_color: 投票图标颜色
+        icon_name: Upvote/downvote icon
+        icon_help: "使用 Font-Awesome icon 后缀为 -up 和 -down. 例如: arrow, thumbs, chevron"
+      save_settings: 保存
+      convert:
+        button: 转移Flarum喜欢数据
+        help: 将 flarum-ext-likes 数据转移到插件中
+        converting: 可能需要一点时间，取决于你的数据量
+        converted: "成功转移 {number} 的喜欢"
+      ranks:
+        title: 等级
+        ranks: 自定等级
+        help:
+          color: '#ffffff'
+          help: "输入所需数个赞，排名的用户的名字，和排名的十六进制颜色"
+          points: 分数
+          name: 用户名

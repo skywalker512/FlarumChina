@@ -1,0 +1,67 @@
+core:
+  forum:
+    index_sort:
+      hot_button: Más destacado
+      
+reflar-gamification:
+  forum:
+    vote_title: Mostrar quién ha votado
+    nav:
+      name: Rankings
+    ranking:
+      rank: Posición
+      name: Usuario
+      amount: Puntos
+    notification:
+      upvote: Alguien ha dado un voto positivo en tu publicación
+      downvote: Alguien ha dado un voto negativo en tu publicación
+      grid:
+        upvoted: Alguien dió un voto positivo en una de mis publicaciones
+        downvoted: Alguien dió un voto negativo en una de mis publicaciones
+    user:
+      points: "Puntos: {points}"
+      rank: "{rank}"
+    modal:
+      title: Votos
+      upvotes_label: Votos Positivos
+      downvotes_label: Votos Negativos
+  admin:
+    permissions:
+      vote_label: Publicaciones Positivas/Negativas
+      see_votes_label: Ver votos Positivos y Negativos de este post.
+    nav:
+      desc: Gamificación para tu comunidad Flarum.
+    page:
+      rankings:
+        blocked:
+          placeholder: CDK2020, Ralkage, AngelAvila
+          title: Usuarios Ignorados
+          help: Estos usuarios no aparecerán en el ranking de votos. Cada nombre de usuario debe separarse por una coma seguido de un espacio.
+        title: Página de Rankings
+        enable: Habilitar imágenes personalizadas.
+        custom_image_1: Imagen 1er lugar
+        custom_image_2: Imagen 2do lugar
+        custom_image_3: Imagen 3er lugar
+      votes:
+        points_title: Marcador de puntos
+        points_placeholder: "Puntos: "
+        color_holder: '#ffffff'
+        auto_upvote: Votar posts propios automáticamente cada vez que se posteen.
+        title: Votos
+        vote_color: Color si se ha votado.
+        icon_name: Icono para los votos Positivos/Negativos
+        icon_help: "Escribe el nombre de cualquier icono de Font-Awesome que tenga como sufijo -up y -down. Ejemplos: arrow, thumbs, chevron."
+      save_settings: Guardar ajustes
+      convert:
+        button: Convertir likes en votos positivos.
+        help: Convertir todos tus likes anteriores de flarum-ext-likes en votos positivos, asi como calcular la popularidad las discusiones actuales.
+        converting: Tus likes están siendo convertidos. Espera unos minutos y actualiza esta página para ver el proceso terminado. (El tiempo de conversión depende de la cantidad de Likes en todo tu foro)
+        converted: "Se han convertido {number} likes exitósamente"
+      ranks:
+        title: Rangos
+        ranks: Rangos personalizados
+        help:
+          color: '#ffffff'
+          help: "Escribe la cantidad de votos positivos requeridos, el nombre del rango y el codigo HEX del color para el rango."
+          points: Puntos
+          name: Nombre

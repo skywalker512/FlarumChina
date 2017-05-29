@@ -1,0 +1,4 @@
+wiseclock-reply2see:
+  forum:
+    hidden_content: 隐藏的内容
+    reply_to_see: "此内容{reply}并刷新后可见"

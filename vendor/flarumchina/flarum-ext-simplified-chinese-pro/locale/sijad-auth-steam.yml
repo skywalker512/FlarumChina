@@ -1,0 +1,23 @@
+# https://github.com/sijad/flarum-ext-auth-steam/blob/master/locale/en.yml
+
+sijad-auth-steam:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These translations are used in the Steam Settings modal dialog.
+    steam_settings:
+      api_key_label: API Key
+      api_secret_label: API Secret
+      title: Steam 设置
+
+  # Translations in this namespace are used by the forum user interface.
+  forum:
+
+    # These translations are used in the Log In modal dialog.
+    log_in:
+      with_steam_button: 通过 Steam 帐号登录

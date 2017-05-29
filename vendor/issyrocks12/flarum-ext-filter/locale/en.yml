@@ -1,0 +1,29 @@
+issyrocks12-filter:
+    forum:
+        flagger_name: Auto Moderator
+        flaged_text: Contained blocked strings
+    admin:
+        title: Filter
+        help: Input strings seperated by a comma and a space.
+        email_help: Body of flagged email. Accepts html or plaintext.
+        filter_label: Strings to filter
+        input:
+            placeholder: Strings to be filtered
+            filter_title: Strings to filter
+            email_label: Email Settings
+            switch: 
+              email: Email user when post is filter
+              merge: Auto merge double posts
+            email_subject: Subject
+            email_body: Body
+        nav:
+            text: Filter
+            desc: Filter posts by words
+        email:
+            default_subject: Regarding Your Recent Post
+            default_text: |
+                Thank you for posting! Unfortunately, your post was removed because it contained something we don't want to see on our forums.
+                
+                If you believe this was an error, you are in luck, each removed post is reviewed by our moderators. If they find that this was wrongfully removed, they will restore it.                
+                
+                Thank you for your understanding.

@@ -1,0 +1,69 @@
+reflar-usermanagement:
+  admin:
+    strike_perm_item: Dar advertencias
+    activate_perm_item: Activar usuarios manualmente
+    viewstrike_perm_item: Ver advertencias del usuario
+    nav:
+      title: Lista de Miembros
+      desc: Visualiza y gestiona tus usuarios
+    modal:
+      view:
+        number: Número
+        no_strikes: Este usuario no tiene advertencias!
+        content: Discusión
+        actor: Actor
+        time: Fecha
+        reason: Razón
+        link: Link
+        remove: Eliminar
+        title : "Advertencias de {username}"
+      settings_title: Ajustes
+      email_switch: Deshabilitar la opción Email en el registro.
+      gender_label: Habilitar la opción Género en el registro.
+      age_label: Habilitar la opción Edad en el registro.
+      amount_label: Cantidad de usuarios a mostrar en la página
+      recaptcha: Habilitar compatibilidad con Recaptcha
+    page: 
+      activate: Activar
+      online_text: En línea
+      settings: Ajustes
+      list_title: Usuarios
+      load_more_button: Ver más
+      about_text: "Tus usuarios estan a la vista. Dale click al ojo para ver el perfil de un usuario. Dale click a la ! para ver sus advertencias."
+  forum:
+    post_controls:
+      strike_button: Dar advertencia
+    signup:
+      age: Edad
+      gender: Género
+      male: Masculino
+      female: Femenino
+      other: Otro
+    user:
+      settings:
+        button: Edad y Género
+        title: Edad y Género
+        save: Guardar cambios
+        success: ¡Cambios guardados exitosamente!
+      age: "Edad: {age}"
+      controls:
+        strike_button: Ver advertencias
+        activate_button: Activar Usuario
+        modal: "Advertencias de {username}"
+        previous: "Anterior historial de {username}"
+    modal:
+      post:
+        title: Dar una advertencia a: {username}
+        reason_placeholder: Motivo de la advertencia
+        strike_reason: Motivo
+        submit_button: Dar advertencia
+      view:
+        number: Número
+        no_strikes: El usuario tiene un historial impecable!
+        content: Discusión
+        actor: Autor
+        time: Fecha
+        reason: Razón
+        link: Link
+        remove: Remover
+      

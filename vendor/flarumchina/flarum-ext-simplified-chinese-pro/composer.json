@@ -1,0 +1,31 @@
+{
+    "name": "flarumchina/flarum-ext-simplified-chinese-pro",
+    "type": "flarum-extension",
+    "description": "simplified chinese language pack.",
+    "keywords": ["locale"],
+    "license": "MIT",
+    "require": {
+        "flarum/core": "^0.1.0-beta.6"
+    },
+    "support": {
+        "source": "https://github.com/FlarumChina/flarum-ext-simplified-chinese-pro"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        },
+        "flarum-extension": {
+            "title": "Chinese",
+            "icon": {
+                "image": "icon.svg",
+                "backgroundColor": "#DE2910",
+                "backgroundSize": "cover",
+                "backgroundPosition": "center"
+            }
+        },
+        "flarum-locale": {
+            "code": "zh",
+            "title": "简体中文"
+        }
+    }
+}

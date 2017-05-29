@@ -1,0 +1,50 @@
+# https://github.com/datitisev/flarum-ext-admindashboard/blob/master/locale/en.yml
+datitisev-dashboard:
+
+  admin:
+
+    ## Translations for new dashboard page
+    dashboard:
+
+      months:
+        january: 一月
+        february: 二月
+        march: 三月
+        april: 四月
+        may: 五月
+        june: 六月
+        july: 七月
+        august: 八月
+        september: 九月
+        october: 十月
+        november: 十一月
+        december: 十二月
+
+      graph:
+        users: 用户
+        discussions: 主题
+        posts: 贴文
+
+      flarum_version: "Flarum {version}"
+      php_version: "PHP {version}"
+      mysql_version: "MySQL {version}"
+
+      extensionUpdates:
+        checkUpdates_button: 检查延伸套件更新
+        checking: "正在检查更新..."
+        updatesAvaliable: "{number} 个更新可用"
+        noUpdates: "暂无更新！"
+        error: "更新检查出错！"
+        addClientIdAndSecret:  => datitisev-dashboard.admin.settings.github_description
+
+
+    ## Settings for the extension
+    settings:
+
+      github_heading: Github
+      github_description: "The Client ID and Client Secret of a Github app are necessary so you do not exceed the API rate limit.<br\/\><br\/\> Create an app at Github Developers (https://github.com/settings/developers)<br\/\> and introduce the credentials in the extension settings."
+      clientId_label: Client Id
+      clientSecret_label: Client Secret
+
+      graph_heading: 仪表盘
+      interval_label: 数据更新频率，以分钟计（整数），缺省为 10 分钟

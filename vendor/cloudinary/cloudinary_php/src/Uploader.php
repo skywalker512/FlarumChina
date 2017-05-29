@@ -8,6 +8,7 @@ namespace Cloudinary {
         {
             $params = array("timestamp" => time(),
                 "allowed_formats" => \Cloudinary::encode_array(\Cloudinary::option_get($options, "allowed_formats")),
+                "async" => \Cloudinary::option_get($options, "async"),
                 "auto_tagging" => \Cloudinary::option_get($options, "auto_tagging"),
                 "background_removal" => \Cloudinary::option_get($options, "background_removal"),
                 "backup" => \Cloudinary::option_get($options, "backup"),

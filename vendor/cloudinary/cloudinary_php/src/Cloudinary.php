@@ -1,9 +1,8 @@
 <?php
-require_once 'Akamai.php';
+require_once 'AuthToken.php';
 
 class Cloudinary {
 
-	use \Cloudinary\Akamai;
     const CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
     const OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
     const AKAMAI_SHARED_CDN = "res.cloudinary.com";
@@ -12,9 +11,9 @@ class Cloudinary {
     const RANGE_VALUE_RE = '/^(?P<value>(\d+\.)?\d+)(?P<modifier>[%pP])?$/';
     const RANGE_RE = '/^(\d+\.)?\d+[%pP]?\.\.(\d+\.)?\d+[%pP]?$/';
 
-    const VERSION = "1.6.0";
+    const VERSION = "1.8.0";
     /** @internal Do not change this value */
-    const USER_AGENT = "CloudinaryPHP/1.6.0";
+    const USER_AGENT = "CloudinaryPHP/1.8.0";
 
     /**
      * Additional information to be passed with the USER_AGENT, e.g. "CloudinaryMagento/1.0.1". This value is set in platform-specific
@@ -225,29 +224,44 @@ class Cloudinary {
         $underlay = Cloudinary::process_layer(Cloudinary::option_consume($options, "underlay"), "underlay");
         $if = Cloudinary::process_if(Cloudinary::option_consume($options, "if"));
 
+        $aspect_ratio = Cloudinary::option_consume($options, "aspect_ratio");
+        $opacity = Cloudinary::option_consume($options, "opacity");
+        $quality = Cloudinary::option_consume($options, "quality");
+        $radius = Cloudinary::option_consume($options, "radius");
+        $x = Cloudinary::option_consume($options, "x");
+        $y = Cloudinary::option_consume($options, "y");
+        $zoom = Cloudinary::option_consume($options, "zoom");
+
         $params = array(
-          "a"   => $angle,
+          "a"   => self::normalize_expression($angle),
+          "ar"  => self::normalize_expression($aspect_ratio),
           "b"   => $background,
           "bo"  => $border,
           "c"   => $crop,
           "co"  => $color,
-          "dpr" => $dpr,
+          "dpr" => self::normalize_expression($dpr),
           "du"  => $duration,
-          "e"   => $effect,
+          "e"   => self::normalize_expression($effect),
           "eo"  => $end_offset,
           "fl"  => $flags,
-          "h"   => $height,
+          "h"   => self::normalize_expression($height),
           "l"   => $overlay,
+          "o" => self::normalize_expression($opacity),
+          "q"  => self::normalize_expression($quality),
+          "r"  => self::normalize_expression($radius),
           "so"  => $start_offset,
           "t"   => $named_transformation,
           "u"   => $underlay,
           "vc"  => $video_codec,
-          "w"   => $width);
+          "w"   => self::normalize_expression($width),
+          "x"  => self::normalize_expression($x),
+          "y"  => self::normalize_expression($y),
+          "z"  => self::normalize_expression($zoom),
+        );
 
         $simple_params = array(
             "ac" => "audio_codec",
             "af" => "audio_frequency",
-            "ar" => "aspect_ratio",
             "br" => "bit_rate",
             "cs" => "color_space",
             "d"  => "default_image",
@@ -255,31 +269,45 @@ class Cloudinary {
             "dn" => "density",
             "f"  => "fetch_format",
             "g"  => "gravity",
-            "o"  => "opacity",
             "p"  => "prefix",
             "pg" => "page",
-            "q"  => "quality",
-            "r"  => "radius",
             "vs" => "video_sampling",
-            "x"  => "x",
-            "y"  => "y",
-            "z"  => "zoom"
         );
 
         foreach ($simple_params as $param=>$option) {
             $params[$param] = Cloudinary::option_consume($options, $option);
         }
 
+        $variables = !empty($options["variables"]) ? $options["variables"] : [];
+
+        $var_params = [];
+        foreach($options as $key => $value) {
+          if (preg_match('/^\$/', $key)) {
+            $var_params[] = $key . '_' . self::normalize_expression((string)$value);
+          }
+        }
+
+        sort($var_params);
+
+        if (!empty($variables)) {
+          foreach($variables as $key => $value) {
+            $var_params[] = $key . '_' . self::normalize_expression((string)$value);
+            }
+        }
+
+        $variables = join(',', $var_params);
+
+
         $param_filter = function($value) { return $value === 0 || $value === '0' || trim($value) == true; };
         $params = array_filter($params, $param_filter);
         ksort($params);
         if (isset($if)) {
-            $params = array_merge(array("if"=>$if), $params);
+            $if = 'if_' . $if;
         }
         $join_pair = function($key, $value) { return $key . "_" . $value; };
         $transformation = implode(",", array_map($join_pair, array_keys($params), array_values($params)));
         $raw_transformation = Cloudinary::option_consume($options, "raw_transformation");
-        $transformation = implode(",", array_filter(array($transformation, $raw_transformation)));
+        $transformation = implode(",", array_filter(array($if, $variables, $transformation, $raw_transformation)));
         array_push($base_transformations, $transformation);
         if ($responsive_width) {
             $responsive_width_transformation = Cloudinary::config_get("responsive_width_transformation", Cloudinary::$DEFAULT_RESPONSIVE_WIDTH_TRANSFORMATION);
@@ -331,11 +359,20 @@ class Cloudinary {
         return implode("_", array_filter($keywords, 'Cloudinary::is_not_null'));
     }
 
+    /**
+     * Handle overlays.
+     * Overlay properties can came as array or as string.
+     * @param $layer
+     * @param $layer_parameter
+     * @return string
+     */
     private static function process_layer($layer, $layer_parameter) {
-        if (is_array($layer)) {
+       // When overlay is array.
+       if (is_array($layer)) {
             $resource_type = Cloudinary::option_get($layer, "resource_type");
             $type = Cloudinary::option_get($layer, "type");
             $text = Cloudinary::option_get($layer, "text");
+            $fetch = Cloudinary::option_get($layer, "fetch");
             $text_style = NULL;
             $public_id = Cloudinary::option_get($layer, "public_id");
             $format = Cloudinary::option_get($layer, "format");
@@ -346,38 +383,66 @@ class Cloudinary {
                 if($format != NULL) $public_id = $public_id . "." . $format;
             }
 
-            if ($text == NULL && $resource_type != "text"){
-                if ($public_id == NULL) {
-                    throw new InvalidArgumentException("Must supply public_id for $resource_type $layer_parameter");
-                }
-                if($resource_type == "subtitles") {
-                    $text_style = Cloudinary::text_style($layer, $layer_parameter);
-                }
+           // Fetch overlay.
+           if (!empty($fetch) || $resource_type === "fetch") {
+             $public_id = NULL;
+             $resource_type = "fetch";
+             $fetch = base64_encode($fetch);
+           }
 
-            } else {
-                $resource_type = "text";
-                $type = NULL; // type is ignored for text layers
-                $text_style = Cloudinary::text_style($layer, $layer_parameter); #FIXME duplicate
-                if($text != NULL) {
-                    if(!($public_id != NULL xor $text_style != NULL)) {
-                        throw new InvalidArgumentException("Must supply either style parameters or a public_id when providing text parameter in a text $layer_parameter");
-                    }
-                    $text = Cloudinary::smart_escape($text);
-                    $text = str_replace("%2C", "%252C", $text);
-                    $text = str_replace("/", "%252F", $text);
-                }
-            }
+           // Text overlay.
+           elseif (!empty($text) || $resource_type === "text") {
+             $resource_type = "text";
+             $type = NULL; // type is ignored for text layers
+             $text_style = Cloudinary::text_style($layer, $layer_parameter); #FIXME duplicate
+             if ($text != NULL) {
+               if (!($public_id != NULL xor $text_style != NULL)) {
+                 throw new InvalidArgumentException("Must supply either style parameters or a public_id when providing text parameter in a text $layer_parameter");
+               }
+               $escaped = Cloudinary::smart_escape($text);
+               $escaped = str_replace("%2C", "%252C", $escaped);
+               $escaped = str_replace("/", "%252F", $escaped);
+                 # Don't encode interpolation expressions e.g. $(variable)
+                 preg_match_all('/\$\([a-zA-Z]\w+\)/', $text, $matches);
+                 foreach ($matches[0] as $match) {
+                     $escaped_match = Cloudinary::smart_escape($match);
+                     $escaped = str_replace($escaped_match, $match, $escaped);
+                 }
+
+                 $text = $escaped;
+             }
+           } else {
+             if ($public_id == NULL) {
+               throw new InvalidArgumentException("Must supply public_id for $resource_type $layer_parameter");
+             }
+             if ($resource_type == "subtitles") {
+               $text_style = Cloudinary::text_style($layer, $layer_parameter);
+             }
+           }
+
+            // Build a components array.
             if($resource_type != "image") array_push($components, $resource_type);
             if($type != "upload") array_push($components, $type);
             array_push($components, $text_style);
             array_push($components, $public_id);
             array_push($components, $text);
+            array_push($components, $fetch);
+
+            // Build a valid overlay string.
             $layer = implode(":", array_filter($components, 'Cloudinary::is_not_null'));
         }
+
+        // Handle fetch overlay from string definition.
+        elseif (substr($layer, 0, strlen('fetch:')) === 'fetch:') {
+          $url = substr($layer, strlen('fetch:'));
+          $b64 = base64_encode($url);
+          $layer = 'fetch:' . $b64;
+        }
+
         return $layer;
     }
 
-    private static $IF_OPERATORS = array(
+    private static $CONDITIONAL_OPERATORS = array(
         "=" => 'eq',
         "!=" => 'ne',
         "<" => 'lt',
@@ -385,36 +450,62 @@ class Cloudinary {
         "<=" => 'lte',
         ">=" => 'gte',
         "&&" => 'and',
-        "||" => 'or');
-    private static $IF_PARAMETERS = array(
-        "width" => 'w',
-        "height" => 'h',
-        "page_count" => "pc",
+        "||" => 'or',
+        "*" => 'mul',
+        "/" => 'div',
+        "+" => 'add',
+        "-" => 'sub'
+    );
+    private static $PREDEFINED_VARS = array(
+        "aspect_ratio" => "ar",
+        "current_page" => "cp",
         "face_count" => "fc",
-        "aspect_ratio" => "ar"
+        "height" => "h",
+        "initial_aspect_ratio" => "iar",
+        "initial_height" => "ih",
+        "initial_width" => "iw",
+        "page_count" => "pc",
+        "page_x" => "px",
+        "page_y" => "py",
+        "tags" => "tags",
+        "width" => "w"
     );
 
     private static function translate_if( $source )
     {
-        if (isset(self::$IF_OPERATORS[$source[0]])) {
-            return self::$IF_OPERATORS[$source[0]];
-        } elseif (isset(self::$IF_PARAMETERS[$source[0]])) {
-            return self::$IF_PARAMETERS[$source[0]];
+        if (isset(self::$CONDITIONAL_OPERATORS[$source[0]])) {
+            return self::$CONDITIONAL_OPERATORS[$source[0]];
+        } elseif (isset(self::$PREDEFINED_VARS[$source[0]])) {
+            return self::$PREDEFINED_VARS[$source[0]];
         } else {
             return $source[0];
         }
     }
 
-    private  static $IF_REPLACE_RE;
+    private static $IF_REPLACE_RE;
+
     private static function process_if($if) {
-        if (empty(self::$IF_REPLACE_RE)) {
-            self::$IF_REPLACE_RE = '/(' . implode('|', array_keys(self::$IF_PARAMETERS)) . '|[=<>&|!]+)/';
-        }
-        if (isset($if)) {
-            $if = preg_replace('/[ _]+/', '_', $if);
-            $if = preg_replace_callback(self::$IF_REPLACE_RE, array("Cloudinary", "translate_if"), $if);
-        }
+        $if = self::normalize_expression($if);
         return $if;
+    }
+
+    private static function normalize_expression($exp) {
+      if (is_float($exp)) {
+          return number_format($exp, 1);
+      }
+      if (preg_match('/^!.+!$/', $exp)) {
+        return $exp;
+      } else {
+        if (empty(self::$IF_REPLACE_RE)) {
+          self::$IF_REPLACE_RE = '/((\|\||>=|<=|&&|!=|>|=|<|\/|\-|\+|\*)(?=[ _])|' . implode('|', array_keys(self::$PREDEFINED_VARS)) . ')/';
+        }
+        if (isset($exp)) {
+          $exp = preg_replace('/[ _]+/', '_', $exp);
+          $exp = preg_replace_callback(self::$IF_REPLACE_RE, array("Cloudinary", "translate_if"), $exp);
+        }
+        return $exp;
+      }
+
     }
 
     private static function process_border($border) {
@@ -495,6 +586,12 @@ class Cloudinary {
         $api_secret = Cloudinary::option_consume($options, "api_secret", Cloudinary::config_get("api_secret"));
         $url_suffix = Cloudinary::option_consume($options, "url_suffix", Cloudinary::config_get("url_suffix"));
         $use_root_path = Cloudinary::option_consume($options, "use_root_path", Cloudinary::config_get("use_root_path"));
+        $auth_token = Cloudinary::option_consume($options, "auth_token");
+        if (is_array($auth_token) ) {
+        	$auth_token = array_merge(self::config_get("auth_token", array()), $auth_token);
+        } elseif (is_null($auth_token)) {
+        	$auth_token = self::config_get("auth_token");
+        }
 
         if (!$private_cdn and !empty($url_suffix)) {
             throw new InvalidArgumentException("URL Suffix only supported in private CDN");
@@ -517,7 +614,7 @@ class Cloudinary {
         $version = $version ? "v" . $version : NULL;
 
         $signature = NULL;
-        if ($sign_url) {
+        if ($sign_url && !$auth_token) {
           $to_sign = implode("/", array_filter(array($transformation, $source_to_sign)));
           $signature = str_replace(array('+','/','='), array('-','_',''), base64_encode(sha1($to_sign . $api_secret, TRUE)));
           $signature = 's--' . substr($signature, 0, 8) . '--';
@@ -526,8 +623,21 @@ class Cloudinary {
         $prefix = Cloudinary::unsigned_download_url_prefix($source, $cloud_name, $private_cdn, $cdn_subdomain, $secure_cdn_subdomain,
           $cname, $secure, $secure_distribution);
 
-        return preg_replace("/([^:])\/+/", "$1/", implode("/", array_filter(array($prefix, $resource_type_and_type,
-          $signature, $transformation, $version, $source))));
+	    $source = preg_replace( "/([^:])\/+/", "$1/", implode( "/", array_filter( array(
+		                                                                              $prefix,
+		                                                                              $resource_type_and_type,
+		                                                                              $signature,
+		                                                                              $transformation,
+		                                                                              $version,
+		                                                                              $source
+	                                                                              ) ) ) );
+
+	    if( $sign_url && $auth_token) {
+	    	$path = parse_url($source, PHP_URL_PATH);
+	    	$token = \Cloudinary\AuthToken::generate(array_merge($auth_token, array( "url" => $path)));
+	    	$source = $source . "?" . $token;
+	    }
+	    return $source;
     }
 
     private static function finalize_source($source, $format, $url_suffix) {
@@ -734,6 +844,24 @@ class Cloudinary {
         return Cloudinary::download_archive_url($options);
     }
 
+	/**
+	 *  Generate an authorization token.
+	 *  Options:
+	 *      string key - the secret key required to sign the token
+	 *      string ip - the IP address of the client
+	 *      number start_time - the start time of the token in seconds from epoch
+	 *      string expiration - the expiration time of the token in seconds from epoch
+	 *      string duration - the duration of the token (from start_time)
+	 *      string acl - the ACL for the token
+	 *      string url - the URL to authentication in case of a URL token
+	 *
+	 * @param array $options token configuration, merge with the global configuration "auth_token".
+	 * @return string the authorization token
+	 */
+    public static function generate_auth_token($options){
+    	$token_options = array_merge(self::config_get("auth_token", array()), $options);
+    	return \Cloudinary\AuthToken::generate($token_options);
+    }
 
     # Returns a Hash of parameters used to create an archive
     # @param [Hash] options

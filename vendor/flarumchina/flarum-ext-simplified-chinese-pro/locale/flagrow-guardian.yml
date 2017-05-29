@@ -1,0 +1,20 @@
+# https://github.com/flagrow/flarum-ext-guardian/blob/master/locale/en.yml
+
+hyn-guardian:
+  package_name: "Guardian"
+  package_description: "查看用户数据"
+  generic:
+    never: 从未
+  admin:
+    nav:
+      guardian_button: => hyn-guardian.package_name
+      guardian_text: => hyn-guardian.package_description
+    grid:
+      user:
+        joined_at: 注册时间
+        last_seen_at: 最后在线时间
+        badges: 徽章
+        activated: 激活
+        details: 详细数据
+        states:
+          never_visited: => hyn-guardian.generic.never

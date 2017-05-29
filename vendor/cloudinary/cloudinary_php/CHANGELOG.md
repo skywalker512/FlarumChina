@@ -1,4 +1,69 @@
 
+1.8.0 / 2017-05-03
+==================
+
+New functionality and features
+------------------------------
+
+  * Advanced search API
+  * Add `async` parameter to upload parameters.
+
+Other Changes
+-------------
+
+  * Update tests to use `TestHelper`
+  * Add compatibility for newer PHPUnit versions
+
+1.7.2 / 2017-04-03
+==================
+
+  * Add update ocr parameters test
+  * Merge pull request #71 from jtabet/fix-floats-issue
+    * Added a number_format on float values in the transformation string
+  * Add ocr parameters tests
+  * Fix variables order. Add variables order tests.
+
+1.7.1 / 2017-03-13
+==================
+
+  * Update phpunit to 5.7.*
+  * Update travis.yml to test 5.6 and 7.0 (matching phpunit)
+  * Don't normalize negative numbers. Fixed #68.
+
+1.7.0 / 2017-03-09
+==================
+
+New functionality and features
+------------------------------
+
+  * User defined variables
+  * Add `async` parameter to upload params (#65)
+  * Add `fetch` prefix to overlay path
+  * Support fetch overlay underlay
+
+Other Changes
+-------------
+
+  * Rename items and add missing variables.
+
+1.6.2 / 2017-02-23
+==================
+
+  * Add URL authentication.
+  * Rename `auth_token`. 
+  * Support nested values in `CLOUDINARY_URL`
+  * Fix archive test.
+  * Add a test for `build_eager`.
+
+1.6.1 / 2017-02-16
+==================
+
+  * Allow 'invalidate' param in 'delete_transformation'
+  * Upgrade Travis test from 7.0 to 7.1
+  * Merge pull request #61 from dragosprotung/patch-1
+  * Merge pull request #63 from cloudinary/support-invalidate-in-delete-transformation
+  * Deleted stub file
+
 1.6.0 / 2017-01-30
 ==================
 

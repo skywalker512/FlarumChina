@@ -1,0 +1,17 @@
+# https://github.com/AntoineFr/flarum-ext-money/blob/master/locale/en.yml
+antoinefr-money:
+  admin:
+    settings:
+      title: 设置
+      moneyforpost: 每条回复可获取
+      moneyfordiscussion: 每篇贴文可获取
+      moneyname: 货币名称
+    permissions:
+      edit_money_label: 修改资产
+  forum:
+    user_controls:
+      money_button: 修改资产
+    modal:
+      title: "{username} 的资产"
+      current: 目前 :
+      submit_button: => core.ref.save_changes

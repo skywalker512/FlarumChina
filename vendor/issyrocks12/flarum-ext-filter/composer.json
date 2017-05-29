@@ -1,0 +1,40 @@
+{
+    "name": "issyrocks12/flarum-ext-filter",
+    "description": "Filter out words and phrases from forum posts",
+    "type": "flarum-extension",
+    "keywords": ["moderation"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Charlie K",
+            "email": "charlie@jailbreakhub.org"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/issyrocks12/flarum-ext-filter/issues",
+        "source": "https://github.com/issyrocks12/flarum-ext-filter"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6",
+        "flarum/flarum-ext-approval": "^0.1.0-beta.6",
+        "flarum/flarum-ext-flags": "^v0.1.0-beta.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "issyrocks12\\filter\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        },
+        "flarum-extension": {
+            "title": "Filter",
+            "icon": {
+                "name": "filter",
+                "backgroundColor": "#263238",
+                "color": "#fff"
+            }
+        }
+    }
+}

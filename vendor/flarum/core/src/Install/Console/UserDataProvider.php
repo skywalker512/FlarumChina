@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -34,9 +35,18 @@ class UserDataProvider implements DataProviderInterface
 
     public function getDatabaseConfiguration()
     {
+        $host = $this->ask('Database host:');
+
+        if (str_contains($host, ':')) {
+            list($host, $port) = explode(':', $host, 2);
+        } else {
+            $port = $this->ask('Database port:');
+        }
+
         return [
             'driver'   => 'mysql',
-            'host'     => $this->ask('Database host:'),
+            'host'     => $host,
+            'port'     => $port,
             'database' => $this->ask('Database name:'),
             'username' => $this->ask('Database user:'),
             'password' => $this->secret('Database password:'),

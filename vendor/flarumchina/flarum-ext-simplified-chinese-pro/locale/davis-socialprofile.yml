@@ -1,0 +1,15 @@
+# https://github.com/dav-is/flarum-ext-socialprofile/blob/master/locale/en.yml
+
+davis-socialprofile:
+  forum:
+    edit:
+      edit: "编辑"
+      add: "添加"
+      headtitle: "编辑按钮"
+      title: "标题"
+      url: "URL"
+      submit: "保存"
+      delete: "移除"
+      deletetitle: "移除按钮"
+  admin:
+    test: "测试"

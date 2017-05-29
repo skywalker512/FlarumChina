@@ -1,0 +1,12 @@
+pnobbe-oauth-discord:
+
+  admin:
+    discord_settings:
+      title: "Discord 设置"
+      client_id_label: "Client ID"
+      client_secret_label: "Client Secret"
+      hosted_domain_label: "网域（可选）"
+
+  forum:
+    log_in:
+      with_discord_button: "通过 Discord 帐号登录"

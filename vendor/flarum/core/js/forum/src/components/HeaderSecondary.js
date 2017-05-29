@@ -39,7 +39,7 @@ export default class HeaderSecondary extends Component {
 
     items.add('search', app.search.render(), 30);
 
-    if (Object.keys(app.data.locales).length > 1) {
+    if (app.forum.attribute("showLanguageSelector") && Object.keys(app.data.locales).length > 1) {
       const locales = [];
 
       for (const locale in app.data.locales) {

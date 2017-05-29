@@ -1,0 +1,16 @@
+# https://github.com/sijad/flarum-ext-google-analytics/blob/master/locale/en.yml
+
+sijad-google-analytics:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These strings are used in the Google Analytics setting modal in extensions page.
+    google_analytics_settings:
+      set_up_analytics: <a>设置 Analytics 追踪</a>
+      title: Google Analytics
+      tracking_code: 追踪码

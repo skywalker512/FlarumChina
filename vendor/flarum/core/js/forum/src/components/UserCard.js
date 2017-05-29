@@ -25,6 +25,7 @@ import listItems from 'flarum/helpers/listItems';
 export default class UserCard extends Component {
   view() {
     const user = this.props.user;
+    var uid = this.props.user.id();
     const controls = UserControls.controls(user, this).toArray();
     const color = user.color();
     const badges = user.badges().toArray();
@@ -80,6 +81,7 @@ export default class UserCard extends Component {
   infoItems() {
     const items = new ItemList();
     const user = this.props.user;
+    var uid = this.props.user.id();
     const lastSeenTime = user.lastSeenTime();
 
     items.add('bio',
@@ -88,6 +90,8 @@ export default class UserCard extends Component {
         editable: this.props.editable
       })
     );
+
+    items.add('uid', 'UID：\t' + uid);
 
     if (lastSeenTime) {
       const online = user.isOnline();

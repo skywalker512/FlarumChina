@@ -1,0 +1,30 @@
+flagrow-bazaar:
+    admin:
+        loader:
+            is_loading: A Processar..
+        popup:
+            title: Bazar da Flagrow
+            field:
+                apiToken: Chave da API
+                apiTokenDescription: É necessária a chave para acessar a API de extensão da Flagrow. Se a chave já se encontra definida, está pronto para ir ao bazar!
+        nav:
+            title: Bazar
+            description: A loja das Extenções .
+        page:
+            button:
+                more: Mais
+                install: Instalar
+                uninstall: Desinstalar 
+                enable: Ativar
+                disable: Desativar
+                connect: Conectar
+                connectDescription: "Conecte o seu forum à sua conta pessoal em {host} para desbloquear novos recursos."
+                connected: Painel de controle
+                connectedDescription: "O seu forum está conectado, visite o Painel de controle em {host}."
+                favorite_button: "Extensão favorita"
+                remove_favorite_button: "Remover a extensão dos favoritos"
+            extension:
+                installed: A extensão está instalada
+                enabled: A extensão está ativada
+                vendor: Por {vendor}
+                favorited: Uma das suas extenções favoritas

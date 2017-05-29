@@ -1,0 +1,68 @@
+reflar-usermanagement:
+  admin:
+    strike_perm_item: Serve Strikes
+    activate_perm_item: Manually Activate Users
+    viewstrike_perm_item: View User Strikes
+    nav:
+      title: Member List
+      desc: View and manage your users
+    modal:
+      view:
+        number: Number
+        no_strikes: User has a clean record!
+        content: Post
+        actor: Actor
+        time: Time
+        reason: Reason
+        link: Link
+        remove: Remove
+        title : "{username}'s Strikes"
+      settings_title: Settings
+      email_switch: Disable email registration
+      gender_label: Enable gender registration
+      age_label: Enable age registration
+      amount_label: Amount of users to show on page
+      recaptcha: Enable recaptcha compatibility
+    page: 
+      activate: Activate
+      online_text: Online
+      settings: Settings
+      list_title: Users
+      load_more_button: Load More
+      about_text: "Your users at a glance. Click on the eye to view the user's profile. Click on the '!' to view a user's strikes"
+  forum:
+    post_controls:
+      strike_button: Serve Strike
+    signup:
+      age: Age
+      gender: Gender
+      male: Male
+      female: Female
+      other: Other
+    user:
+      settings:
+        button: Age and Gender
+        title: Age and Gender
+        save: Save
+        success: Successfully saved.
+      age: "Age: {age}"
+      controls:
+        strike_button: View Strikes
+        activate_button: Activate User
+        modal: "{username}'s Strikes"
+        previous: "{username}'s Previous Record"
+    modal:
+      post:
+        title: Serve a Strike to: {username}
+        reason_placeholder: Reason for strike
+        strike_reason: Reason
+        submit_button: Serve Strike
+      view:
+        number: Number
+        no_strikes: User has a clean record!
+        content: Post
+        actor: Actor
+        time: Time
+        reason: Reason
+        link: Link
+        remove: Remove

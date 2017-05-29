@@ -1,0 +1,33 @@
+{
+    "name": "wiseclock/flarum-ext-login2see",
+    "description": "Make posts hidden for visitors.",
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "WiseClock"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/WiseClock/flarum-ext-login2see/issues",
+        "source": "https://github.com/WiseClock/flarum-ext-login2see"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Login2See",
+            "icon": {
+                "name": "eye-slash",
+                "backgroundColor": "#ff1a00",
+                "color": "#ffffff"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "WiseClock\\Login2See\\": "src/"
+        }
+    }
+}

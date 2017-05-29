@@ -1,0 +1,36 @@
+wiseclock-post-copyright:
+  forum:
+    composer:
+      authorized: 允许授权转载
+      sourced: 允许规范转载
+      paid: 允许付费转载
+      prohibited: 禁止转载
+      none: 不设置版权
+    post:
+      authorized: 本文章允许经授权的转载
+      sourced: 本文章允许规范转载
+      paid: 本文章允许付费转载
+      prohibited: 本文章禁止转载
+  admin:
+    settings:
+      title: 帖子版权设置
+      ui:
+        title: 界面
+        primary_color: 使用突出色调版权下拉框
+        discussions_only: 不对回帖设置版权
+        copyright: 版权行前缀
+        align_right: 版权行居右对齐
+      edit:
+        title: 修改
+        allow_trespass: 允许编辑他人帖子时修改其版权
+      defaults:
+        title: 默认版权开关
+        help: 开关自带的版权列表
+        authorized: 允许授权转载
+        sourced: 允许规范转载
+        paid: 允许付费转载
+        prohibited: 禁止转载
+      addition:
+        title: 附加版权
+        help: "依据格式 <code>key,menu,ui</code> 添加自定义版权，使用半角逗号隔开。每一行都代表一个版权选项：key是版权选项的唯一标识，menu是编辑器内下拉框的选项，ui是每个帖子最下面的版权申明语句。一行符合标准的选项如下："
+        notes: "如果你想使用半角逗号，请别忘了转义：<code>\\,</code>。"

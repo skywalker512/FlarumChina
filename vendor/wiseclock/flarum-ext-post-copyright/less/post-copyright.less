@@ -1,0 +1,31 @@
+.Copyright-wrapper
+{
+    height: 24px;
+    line-height: 24px;
+    font-size: 12px;
+    color: @muted-more-color;
+    user-select: none;
+    cursor: default;
+}
+
+.Copyright-wrapper-right
+{
+    text-align: right;
+}
+
+.Dropdown-primary > span.Select > select.FormControl
+{
+    background-color: @primary-color;
+    color: #fff;
+    font-weight: bold;
+    &:hover,
+    &:focus,
+    &.focus
+    {
+        background-color: darken(fadein(@primary-color, 5%), 5%);
+    }
+    +i.Select-caret
+    {
+        color: #fff;
+    }
+}

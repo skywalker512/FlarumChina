@@ -7,13 +7,13 @@ use Studio\Parts\AbstractPart;
 
 class Part extends AbstractPart
 {
-
     public function setupPackage($composer, Directory $target)
     {
         if ($this->input->confirm('Do you want to set up PhpSpec as a testing tool?')) {
             $composer->{'require-dev'}['phpspec/phpspec'] = '~2.0';
 
-            $namespace = head(array_keys((array) $composer->autoload->{'psr-4'}));
+            $psr4Autoloading = (array) $composer->autoload->{'psr-4'};
+            $namespace = key($psr4Autoloading).'Tests';
             $namespace = rtrim($namespace, '\\');
 
             $this->copyTo(
@@ -28,5 +28,4 @@ class Part extends AbstractPart
             $target->makeDir('spec');
         }
     }
-
 }

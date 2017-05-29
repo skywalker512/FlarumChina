@@ -1,0 +1,22 @@
+wiseclock-login2see:
+  forum:
+    post: "你必须{login}或{register}以浏览全文"
+    link: 登入后可见
+    image: 登入后可见
+  admin:
+    title: Login2See
+    post:
+      title: 隐藏超出此长度的内容
+      help: 输入 <em>-1</em> 以显示全文
+    link:
+      title: 链接
+      no_replace: 不替换链接
+      replace_address: 仅隐藏链接地址
+      replace_all: 隐藏链接地址并替换文本
+    image:
+      title: 图片
+      label: 将图片替换为占位区块
+    php:
+      title: 传统模式
+      help: "*不推荐* 使用服务器端处理以支持古董浏览器。你必须在PHP内开启<code>mb_substr</code>及<code>mb_strlen</code>"
+      label: 使用PHP处理

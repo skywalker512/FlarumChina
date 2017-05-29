@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -64,6 +65,7 @@ class ForumSerializer extends AbstractSerializer
         $attributes = [
             'title' => $this->settings->get('forum_title'),
             'description' => $this->settings->get('forum_description'),
+            'showLanguageSelector' => (bool) $this->settings->get('show_language_selector', true),
             'baseUrl' => $url = $this->app->url(),
             'basePath' => parse_url($url, PHP_URL_PATH) ?: '',
             'debug' => $this->app->inDebugMode(),

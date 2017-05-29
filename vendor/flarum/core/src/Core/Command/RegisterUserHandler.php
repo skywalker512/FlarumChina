@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -115,7 +116,9 @@ class RegisterUserHandler
         // from the get-go.
         if (isset($token)) {
             foreach ($token->payload as $k => $v) {
-                $user->$k = $v;
+                if (in_array($user->$k, ['', null], true)) {
+                    $user->$k = $v;
+                }
             }
 
             if (isset($token->payload['email'])) {

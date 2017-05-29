@@ -1,0 +1,36 @@
+wiseclock-post-copyright:
+  forum:
+    composer:
+      authorized: Consenti ripubblicazione con autorizzazione
+      sourced: Consenti ripubblicazione con link sorgente
+      paid: Consenti ripubblicazione con pagamento
+      prohibited: Ripubblicazione non consentita
+      none: Copyright libero
+    post:
+      authorized: Riproduzione con autorizzazione consentito
+      sourced: Riproduzione con link sorgente consentito
+      paid: Riproduzione con pagamento consentito
+      prohibited: Riproduzione proibita
+  admin:
+    settings:
+      title: Impostazioni Post Copyright
+      ui:
+        title: UI
+        primary_color: Usa il colore primario per il dropdown
+        discussions_only: Imposta copyright solo per le discussioni
+        copyright: Prefisso linea di copyright
+        align_right: Allinea a destra il copyright
+      edit:
+        title: Trasgressione
+        allow_trespass: Permetti la modifica del tipo di copyright degli altri utenti
+      defaults:
+        title: Interrutori copyright di base
+        help: Alterna le opzioni predefinite.
+        authorized: Consenti ripubblicazione con autorizzazione
+        sourced: Consenti ripubblicazione con link sorgente
+        paid: Consenti ripubblicazione con pagamento
+        prohibited: Ripubblicazione non consentito
+      addition:
+        title: Opzioni aggiuntive
+        help: "Aggiungi le opzioni che desideri utilizzando il formato <code>key,menu,ui</code> separati da un apostrofo. Ogni linea rappresenta una opzione. KEY è ID univoco di un opzione; MENU è la stringa visualizzata nell elenco a discesa; UI è la stringa inferiore di ogni post. Una linea valida deve essere simile a questa:"
+        notes: "Sei vuoi utilizzare una virgola nella stringa, assicurati di usare questo modo: <code>\\,</code>."

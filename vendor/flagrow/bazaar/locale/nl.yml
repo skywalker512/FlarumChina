@@ -1,0 +1,32 @@
+flagrow-bazaar:
+    admin:
+        loader:
+            is_loading: In behandeling..
+        popup:
+            title: Flagrow Bazaar
+            field:
+                apiToken: API token
+                apiTokenDescription: Deze token is benodigd voor toegang tot de Flagrow extensies api. Indien reeds ingevuld, hoef je verder niets te doen!
+        nav:
+            title: Bazaar
+            description: De extensie marktplaats.
+        page:
+            button:
+                more: Meer
+                install: Installeer
+                uninstall: Verwijder
+                enable: Inschakelen
+                disable: Uitschakelen
+                connect: Verbinden
+                update: Updaten
+                connectDescription: "Verbind je Flarum installatie met je account op {host} om extra functionaliteiten vrij te schakelen."
+                connected: Dashboard
+                connectedDescription: "Je Flarum installatie is verbonden, bezoek het dashboard op {host}."
+                favorite_button: "Extensie markeren als favoriet"
+                remove_favorite_button: "Extensie verwijderen als favoriet"
+            extension:
+                installed: Extensie is geïnstalleerd
+                enabled: Extensie is actief
+                vendor: Van {vendor}
+                favorited: Jouw favoriet
+                outdated: "Extensie is verouderd, update z.s.m. naar {new}"

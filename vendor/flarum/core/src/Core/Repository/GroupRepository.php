@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -41,6 +42,19 @@ class GroupRepository
         $query = Group::where('id', $id);
 
         return $this->scopeVisibleTo($query, $actor)->firstOrFail();
+    }
+
+    /**
+     * Find a group by name.
+     *
+     * @param string $name
+     * @return User|null
+     */
+    public function findByName($name, User $actor = null)
+    {
+        $query = Group::where('name_singular', $name)->orWhere('name_plural', $name);
+
+        return $this->scopeVisibleTo($query, $actor)->first();
     }
 
     /**

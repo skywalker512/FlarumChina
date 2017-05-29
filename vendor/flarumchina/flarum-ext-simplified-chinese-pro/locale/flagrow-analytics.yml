@@ -1,0 +1,30 @@
+# https://github.com/flagrow/flarum-ext-analytics/blob/master/locale/en.yml
+
+flagrow-analytics:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Strings in this namespace are used by the admin interface.
+  admin:
+    popup:
+      title: 统计设置
+
+      field:
+        googleTrackingCode: 跟踪代码 ID
+        piwikUrl: Piwik 链接
+        piwikSiteId: 站点 ID
+        piwikAliasUrl: 别名链接
+        piwikAuthToken: 验证令牌 config->users
+
+      checkbox:
+        label:
+          piwikTrackSubdomain: 跟踪所有 Flarum 子域的访问者
+          piwikPrependDomain: 跟踪时将网站域名添加到页面标题
+          piwikHideAliasUrl: 在「外链」报告中，隐藏已知别名链接的点击量
+
+    page:
+      nav:
+        title: 站点统计
+        description: 查看站点统计数据

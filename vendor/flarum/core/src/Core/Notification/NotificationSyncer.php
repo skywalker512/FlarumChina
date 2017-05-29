@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -169,7 +170,7 @@ class NotificationSyncer
      */
     protected function sendNotifications(BlueprintInterface $blueprint, array $recipients)
     {
-        $now = Carbon::now()->toDateTimeString();
+        $now = Carbon::now('utc')->toDateTimeString();
 
         event(new NotificationWillBeSent($blueprint, $recipients));
 

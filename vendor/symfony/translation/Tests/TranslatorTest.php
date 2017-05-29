@@ -11,12 +11,13 @@
 
 namespace Symfony\Component\Translation\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class TranslatorTest extends \PHPUnit_Framework_TestCase
+class TranslatorTest extends TestCase
 {
     /**
      * @dataProvider      getInvalidLocalesTests
@@ -155,6 +156,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         $translator = new Translator($locale, new MessageSelector());
         $translator->setFallbackLocales(array('fr', $locale));
         // no assertion. this method just asserts that no exception is thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testTransWithFallbackLocale()
@@ -186,6 +188,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         $translator = new Translator('fr', new MessageSelector());
         $translator->addResource('array', array('foo' => 'foofoo'), $locale);
         // no assertion. this method just asserts that no exception is thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testAddResourceAfterTrans()
@@ -389,6 +392,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 
         $translator->transChoice('foo', 1, array(), '', $locale);
         // no assertion. this method just asserts that no exception is thrown
+        $this->addToAssertionCount(1);
     }
 
     public function getTransFileTests()

@@ -58,7 +58,7 @@ export default function(app) {
    */
   app.route.user = user => {
     return app.route('user', {
-      username: user.username()
+      username: user.id()
     });
   };
 }

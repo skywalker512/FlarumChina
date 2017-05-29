@@ -1,0 +1,36 @@
+{
+    "name": "wiseclock/flarum-ext-profile-image-crop",
+    "description": "Crop when uploading profile image.",
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "WiseClock"
+        },
+        {
+            "name": "foliotek"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/WiseClock/flarum-ext-profile-image-crop/issues",
+        "source": "https://github.com/WiseClock/flarum-ext-profile-image-crop"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Profile Image Crop",
+            "icon": {
+                "name": "crop",
+                "backgroundColor": "#000000",
+                "color": "#ffffff"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "WiseClock\\ProfileImageCrop\\": "src/"
+        }
+    }
+}

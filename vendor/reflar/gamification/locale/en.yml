@@ -1,0 +1,67 @@
+core:
+  forum:
+    index_sort:
+      hot_button: Trending
+      
+reflar-gamification:
+  forum:
+    vote_title: Show Who Voted
+    nav:
+      name: Rankings
+    ranking:
+      rank: Place
+      name: User
+      amount: Points
+    notification:
+      upvote: Someone upvoted your post
+      downvote: Someone downvoted your post
+      grid:
+        upvoted: Someone upvoted one of my posts
+        downvoted: Someone downvoted one of my posts
+    user:
+      points: "Points: {points}"
+      rank: "{rank}"
+    modal:
+      title: Votes
+      upvotes_label: Upvotes
+      downvotes_label: Downvotes
+  admin:
+    permissions:
+      vote_label: Upvote/Downvote posts
+      see_votes_label: See post upvotes/downvotes
+    nav:
+      desc: Gamification for your Flarum community
+    page:
+      rankings:
+        blocked:
+          placeholder: CDK2020, Ralkage, AngelAvila
+          title: Ignored Users
+          help: These users will not be shown on the ranking page. Usernames should be seperated by a comma followed by a space.
+        title: Rankings Page
+        enable: Enable custom images
+        custom_image_1: 1st place image
+        custom_image_2: 2nd place image
+        custom_image_3: 3rd place image
+      votes:
+        points_title: Points Placeholder
+        points_placeholder: "Points: "
+        color_holder: '#ffffff'
+        auto_upvote: Auto upvote posts when posted
+        title: Votes
+        vote_color: Voted color
+        icon_name: Upvote/downvote icon
+        icon_help: "Input any Font-Awesome icon that is suffixed with -up and -down. Examples: arrow, thumbs, chevron"
+      save_settings: Save settings
+      convert:
+        button: Convert likes to upvotes
+        help: Convert your previous likes from flarum-ext-likes into upvotes, as well as calculate the hotness for all current discussions.
+        converting: Your likes are now being converted. Refresh your site after a few minutes to see the process finished. (Conversion time might take a while depending on your total forum likes)
+        converted: "Successfully converted all {number} likes"
+      ranks:
+        title: Ranks
+        ranks: Custom ranks
+        help:
+          color: '#ffffff'
+          help: "Input the required number of upvotes, the name of the rank, and the hex color of the rank"
+          points: Points
+          name: Name

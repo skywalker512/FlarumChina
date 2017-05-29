@@ -1,6 +1,0 @@
-{
-  "name": "forum",
-  "dependencies": {
-    "pagedown-flarum": "*"
-  }
-}

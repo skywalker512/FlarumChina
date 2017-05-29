@@ -1,7 +1,8 @@
 <?php
 $base = realpath(dirname(__FILE__).DIRECTORY_SEPARATOR.'..');
+use PHPUnit\Framework\TestCase;
 require_once(join(DIRECTORY_SEPARATOR, array($base, 'src', 'Cloudinary.php')));
-class CloudinaryTest extends PHPUnit_Framework_TestCase {
+class CloudinaryTest extends \PHPUnit\Framework\TestCase {
 
   const DEFAULT_ROOT_PATH = 'http://res.cloudinary.com/test123/';
   const DEFAULT_UPLOAD_PATH = 'http://res.cloudinary.com/test123/image/upload/';
@@ -111,8 +112,12 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
     // should use x, y, radius, prefix, gravity and quality from $options
     $options = array("x" => 1, "y" => 2, "radius" => 3, "gravity" => "center", "quality" => 0.4, "prefix" => "a", "opacity" => 20);
     $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "g_center,o_20,p_a,q_0.4,r_3,x_1,y_2/test");
-    $options = array("gravity" => "auto", "crop" => "crop", "width" => 0.5);
-    $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_crop,g_auto,w_0.5/test");
+	  $options = array("gravity" => "auto", "crop" => "crop", "width" => 0.5);
+	  $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_crop,g_auto,w_0.5/test");
+	  $options = array("gravity" => "auto:ocr_text", "crop" => "crop", "width" => 0.5);
+	  $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_crop,g_auto:ocr_text,w_0.5/test");
+	  $options = array("gravity" => "ocr_text", "crop" => "crop", "width" => 0.5);
+	  $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "c_crop,g_ocr_text,w_0.5/test");
   }
 
     public function test_quality() {
@@ -255,6 +260,18 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
     $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "h_100,u_text:hello,w_100/test");
   }
 
+  public function test_overlay_fetch() {
+    // should support overlay from a fetch url
+    $options = array("overlay" => "fetch:http://cloudinary.com/images/old_logo.png");
+    $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "l_fetch:aHR0cDovL2Nsb3VkaW5hcnkuY29tL2ltYWdlcy9vbGRfbG9nby5wbmc=/test");
+  }
+
+  public function test_underlay_fetch() {
+    // should support underlay from a fetch url
+    $options = array("underlay" => "fetch:http://cloudinary.com/images/old_logo.png");
+    $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "u_fetch:aHR0cDovL2Nsb3VkaW5hcnkuY29tL2ltYWdlcy9vbGRfbG9nby5wbmc=/test");
+  }
+
   public function test_fetch_format() {
     // should support format for fetch urls
     $options = array("format" => "jpg", "type" => "fetch");
@@ -269,8 +286,8 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
 
   public function test_effect_with_array() {
     // should support effect with array
-    $options = array("effect" => array("sepia", 10));
-    $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "e_sepia:10/test");
+    $options = array("effect" => array("sepia", -10));
+    $this->cloudinary_url_assertion("test", $options, CloudinaryTest::DEFAULT_UPLOAD_PATH . "e_sepia:-10/test");
   }
 
   public function test_density() {
@@ -836,8 +853,10 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
             "text with font family and size" => array(array("text"=>"Hello World, Nice to meet you?", "font_family"=>"Arial", "font_size"=>"18"),"text:Arial_18:Hello%20World%252C%20Nice%20to%20meet%20you%3F"),
             "text with style" => array(array("text"=>"Hello World, Nice to meet you?", "font_family"=>"Arial", "font_size"=>"18", "font_weight"=>"bold", "font_style"=>"italic", "letter_spacing"=>4),"text:Arial_18_bold_italic_letter_spacing_4:Hello%20World%252C%20Nice%20to%20meet%20you%3F"),
             "subtitles" => array(array("resource_type"=>"subtitles","public_id"=>"sample_sub_en.srt"),"subtitles:sample_sub_en.srt"),
-            "subtitles with font family and size" => array(array("resource_type"=>"subtitles","public_id"=>"sample_sub_he.srt", "font_family"=>"Arial", "font_size"=>"40"),"subtitles:Arial_40:sample_sub_he.srt")
-            );
+            "subtitles with font family and size" => array(array("resource_type"=>"subtitles","public_id"=>"sample_sub_he.srt", "font_family"=>"Arial", "font_size"=>"40"),"subtitles:Arial_40:sample_sub_he.srt"),
+            "fetch" => array(array("public_id"=>"logo",'fetch' => 'https://cloudinary.com/images/old_logo.png'), 'fetch:aHR0cHM6Ly9jbG91ZGluYXJ5LmNvbS9pbWFnZXMvb2xkX2xvZ28ucG5n'),
+
+        );
     }
 
     /**
@@ -885,7 +904,7 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
             "image" => array("image"),
             "video" => array("video"),
             "raw" => array("raw"),
-            "subtitles" => array("subtitles")
+            "subtitles" => array("subtitles"),
         );
     }
 
@@ -926,60 +945,91 @@ class CloudinaryTest extends PHPUnit_Framework_TestCase {
   }
 
 
-  public function test_akamai_token() {
-  	\Cloudinary::config(array("akamai_key"=>"00112233FF99"));
-	  $token = Cloudinary::generate_akamai_token(
-		  array(
-			  "start_time" => 1111111111,
-			  "acl"        => '/image/*',
-			  "window"     => 300
-		  ) );
-	  $this->assertEquals(
-		  '__cld_token__=st=1111111111~exp=1111111411~acl=/image/*~' .
-		  'hmac=0854e8b6b6a46471a80b2dc28c69bd352d977a67d031755cc6f3486c121b43af',
-		  $token,
-		  "should generate an Akamai token with start_time and window" );
-	  $first_exp = time() + 300;
-	  $token = Cloudinary::generate_akamai_token(
-		  array(
-			  "acl"        => '*',
-			  "window"     => 300
-		  ) );
-	  $second_exp = time() + 300;
-	  preg_match('/exp=(\d+)/', $token, $matches);
-	  $this->assertNotEmpty($matches);
-	  $this->assertNotEmpty($matches[1]);
-	  $expiration = 0+ $matches[1];
-	  $this->assertGreaterThanOrEqual($first_exp, $expiration);
-	  $this->assertLessThanOrEqual($second_exp, $expiration);
+  public function test_array_should_define_set_of_variables() {
+    $options = array(
+      'if' => "face_count > 2",
+      'crop' => "scale",
+      'width' => '$foo * 200',
+      'variables' => array(
+        '$z' => 5,
+        '$foo' => '$z * 2'
+      ),
+    );
+
+    $t = Cloudinary::generate_transformation_string($options);
+    $this->assertEquals('if_fc_gt_2,$z_5,$foo_$z_mul_2,c_scale,w_$foo_mul_200', $t);
   }
-  public function test_accepts_key() {
-	$this->assertEquals('__cld_token__=exp=10000000~acl=*~' .
-	                   'hmac=030eafb6b19e499659d699b3d43e7595e35e3c0060e8a71904b3b8c8759f4890',
-	                   Cloudinary::generate_akamai_token(
-	                   	array(
-		                    "acl"        => '*',
-		                    "end_time"     => 10000000,
-		                    "key"        => '00aabbff'
-	                    )
-	                   ));
+
+  public function test_key_should_define_variable() {
+    $options = array(
+      'transformation' => array(
+          array('$foo' => 10),
+          array('if' => "face_count > 2"),
+          array('crop' => "scale", 'width' => '$foo * 200 / face_count'),
+          array('if' => "end"),
+        )
+    );
+
+    $t = Cloudinary::generate_transformation_string($options);
+    $this->assertEquals('$foo_10/if_fc_gt_2/c_scale,w_$foo_mul_200_div_fc/if_end', $t);
   }
-	/**
-	 * @expectedException \Cloudinary\Error
-	 */
-  public function test_requires_end_time_or_window() {
-	  \Cloudinary::config(array("akamai_key"=>"00112233FF99"));
-	  Cloudinary::generate_akamai_token(
-		  array(
-			  "acl"        => '*'
-		  ) );
+
+  public function test_should_sort_defined_variable() {
+    $options = array(
+          '$second' => 1,
+          '$first' => 2,
+    );
+
+    $t = Cloudinary::generate_transformation_string($options);
+    $this->assertEquals('$first_2,$second_1', $t);
   }
+
+  public function test_should_place_defined_variables_before_ordered(){
+      $options = array(
+          'variables' => array(
+              '$z' => 5,
+              '$foo' => '$z * 2'
+          ),
+          '$second' => 1,
+          '$first' => 2,
+      );
+
+      $t = Cloudinary::generate_transformation_string($options);
+      $this->assertEquals('$first_2,$second_1,$z_5,$foo_$z_mul_2', $t);
+  }
+
+  public function test_should_support_text_values() {
+    $e =  array(
+      'effect' => '$efname:100',
+      '$efname' => '!blur!'
+    );
+    $t = Cloudinary::generate_transformation_string($e);
+
+    $this->assertEquals('$efname_!blur!,e_$efname:100', $t);
+  }
+
+  public function test_should_support_string_interpolation() {
+    $this->cloudinary_url_assertion(
+      "sample",
+      array(
+        'crop' => 'scale',
+        'overlay' => array(
+          'text' => '$(start)Hello $(name)$(ext), $(no ) $( no)$(end)',
+          'font_family' => "Arial",
+          'font_size' => "18",
+        ),
+      ),
+      CloudinaryTest::DEFAULT_UPLOAD_PATH . 'c_scale,l_text:Arial_18:$(start)Hello%20$(name)$(ext)%252C%20%24%28no%20%29%20%24%28%20no%29$(end)/sample'
+    );
+  }
+
 
   private function cloudinary_url_assertion($source, $options, $expected, $expected_options = array()) {
     $url = Cloudinary::cloudinary_url($source, $options);
     $this->assertEquals($expected_options, $options);
     $this->assertEquals($expected, $url);
   }
+
 }
 ?>
 

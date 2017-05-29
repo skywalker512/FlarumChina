@@ -2,11 +2,11 @@
 
 namespace Studio\Shell;
 
+use RuntimeException;
 use Symfony\Component\Process\Process;
 
 class Shell
 {
-
     public static function run($task, $directory = null)
     {
         $process = new Process("$task", $directory);
@@ -15,12 +15,11 @@ class Shell
         $process->run();
 
         if (! $process->isSuccessful()) {
-            $command = collect(explode(' ', $task))->first();
+            $command = preg_replace('/ .+$/', '', $task);
             $error = $process->getErrorOutput();
-            throw new \RuntimeException("Error while running $command: $error");
+            throw new RuntimeException("Error while running $command: $error");
         }
 
         return $process->getOutput();
     }
-
 }

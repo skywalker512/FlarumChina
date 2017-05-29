@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite0eb05802e6bccce875ca1887352b344
+class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
 {
     public static $files = array (
         '65fec9ebcfbb3cbb4fd0d519687aea01' => __DIR__ . '/..' . '/danielstjules/stringy/src/Create.php',
@@ -25,25 +25,24 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         array (
             's9e\\TextFormatter\\' => 18,
         ),
+        'i' => 
+        array (
+            'issyrocks12\\filter\\' => 19,
+        ),
         'Z' => 
         array (
             'Zend\\Stratigility\\' => 18,
             'Zend\\Escaper\\' => 13,
             'Zend\\Diactoros\\' => 15,
         ),
-        'X' => 
-        array (
-            'XEngine\\MarkdownEditor\\' => 23,
-        ),
         'W' => 
         array (
             'WiwatSrt\\BestAnswer\\' => 20,
+            'WiseClock\\Reply2See\\' => 20,
+            'WiseClock\\ProfileImageCrop\\' => 27,
+            'WiseClock\\PostCopyright\\' => 24,
+            'WiseClock\\Login2See\\' => 20,
             'Whoops\\' => 7,
-        ),
-        'V' => 
-        array (
-            'Vingle\\Share\\Social\\' => 20,
-            'Vingle\\Configure\\Smtp\\' => 22,
         ),
         'T' => 
         array (
@@ -65,6 +64,14 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
             'Sijad\\Pages\\' => 12,
             'Sijad\\Links\\' => 12,
             'Sijad\\Details\\' => 14,
+            'Seld\\PharUtils\\' => 15,
+            'Seld\\JsonLint\\' => 14,
+            'Seld\\CliPrompt\\' => 15,
+        ),
+        'R' => 
+        array (
+            'Reflar\\gamification\\' => 20,
+            'Reflar\\UserManagement\\' => 22,
         ),
         'P' => 
         array (
@@ -82,6 +89,10 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
             'League\\OAuth2\\Client\\' => 21,
             'League\\OAuth1\\' => 14,
             'League\\Flysystem\\' => 17,
+        ),
+        'J' => 
+        array (
+            'JsonSchema\\' => 11,
         ),
         'I' => 
         array (
@@ -130,6 +141,8 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
             'Flarum\\Akismet\\' => 15,
             'Flarum\\' => 7,
             'Flagrow\\ImageUpload\\' => 20,
+            'Flagrow\\Bazaar\\' => 15,
+            'Flagrow\\Ads\\' => 12,
             'FastRoute\\' => 10,
         ),
         'D' => 
@@ -141,11 +154,14 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         ),
         'C' => 
         array (
+            'Composer\\Spdx\\' => 14,
+            'Composer\\Semver\\' => 16,
+            'Composer\\CaBundle\\' => 18,
+            'Composer\\' => 9,
             'Carbon\\' => 7,
         ),
         'A' => 
         array (
-            'Avatar4eg\\UsersList\\' => 20,
             'AntoineFr\\Money\\' => 16,
         ),
     );
@@ -154,6 +170,10 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         's9e\\TextFormatter\\' => 
         array (
             0 => __DIR__ . '/..' . '/s9e/text-formatter/src',
+        ),
+        'issyrocks12\\filter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/issyrocks12/flarum-ext-filter/src',
         ),
         'Zend\\Stratigility\\' => 
         array (
@@ -167,25 +187,29 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-diactoros/src',
         ),
-        'XEngine\\MarkdownEditor\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/xengine/flarum-ext-markdown-editor/src',
-        ),
         'WiwatSrt\\BestAnswer\\' => 
         array (
             0 => __DIR__ . '/..' . '/wiwatsrt/flarum-ext-best-answer/src',
         ),
+        'WiseClock\\Reply2See\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wiseclock/flarum-ext-reply2see/src',
+        ),
+        'WiseClock\\ProfileImageCrop\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wiseclock/flarum-ext-profile-image-crop/src',
+        ),
+        'WiseClock\\PostCopyright\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wiseclock/flarum-ext-post-copyright/src',
+        ),
+        'WiseClock\\Login2See\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wiseclock/flarum-ext-login2see/src',
+        ),
         'Whoops\\' => 
         array (
             0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
-        ),
-        'Vingle\\Share\\Social\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/vingle/flarum-share-social/src',
-        ),
-        'Vingle\\Configure\\Smtp\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/vingle/flarum-configure-smtp/src',
         ),
         'Tobscure\\JsonApi\\' => 
         array (
@@ -247,6 +271,26 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         array (
             0 => __DIR__ . '/..' . '/sijad/flarum-ext-details/src',
         ),
+        'Seld\\PharUtils\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/seld/phar-utils/src',
+        ),
+        'Seld\\JsonLint\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/seld/jsonlint/src/Seld/JsonLint',
+        ),
+        'Seld\\CliPrompt\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/seld/cli-prompt/src',
+        ),
+        'Reflar\\gamification\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/reflar/gamification/src',
+        ),
+        'Reflar\\UserManagement\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/reflar/user-management/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
@@ -280,6 +324,10 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         'League\\Flysystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
+        ),
+        'JsonSchema\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/justinrainbow/json-schema/src/JsonSchema',
         ),
         'Intervention\\Image\\' => 
         array (
@@ -437,6 +485,14 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         array (
             0 => __DIR__ . '/..' . '/flagrow/flarum-ext-image-upload/src',
         ),
+        'Flagrow\\Bazaar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/flagrow/bazaar/src',
+        ),
+        'Flagrow\\Ads\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/flagrow/ads/src',
+        ),
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
@@ -457,13 +513,25 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         array (
             0 => __DIR__ . '/..' . '/dflydev/fig-cookies/src/Dflydev/FigCookies',
         ),
+        'Composer\\Spdx\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/spdx-licenses/src',
+        ),
+        'Composer\\Semver\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/semver/src',
+        ),
+        'Composer\\CaBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
+        ),
+        'Composer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/composer/src/Composer',
+        ),
         'Carbon\\' => 
         array (
             0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
-        ),
-        'Avatar4eg\\UsersList\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/avatar4eg/flarum-ext-users-list/src',
         ),
         'AntoineFr\\Money\\' => 
         array (
@@ -515,10 +583,8 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
     );
 
     public static $classMap = array (
-        'AkismetTest' => __DIR__ . '/..' . '/tijsverkoyen/akismet/tests/AkismetTest.php',
         'Cloudinary' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Cloudinary.php',
         'CloudinaryField' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/CloudinaryField.php',
-        'Cloudinary\\Akamai' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Akamai.php',
         'Cloudinary\\Api' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Api.php',
         'Cloudinary\\Api\\AlreadyExists' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Api.php',
         'Cloudinary\\Api\\AuthorizationRequired' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Api.php',
@@ -529,8 +595,10 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
         'Cloudinary\\Api\\NotFound' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Api.php',
         'Cloudinary\\Api\\RateLimited' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Api.php',
         'Cloudinary\\Api\\Response' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Api.php',
+        'Cloudinary\\AuthToken' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/AuthToken.php',
         'Cloudinary\\Error' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Uploader.php',
         'Cloudinary\\PreloadedFile' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/PreloadedFile.php',
+        'Cloudinary\\Search' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Search.php',
         'Cloudinary\\Uploader' => __DIR__ . '/..' . '/cloudinary/cloudinary_php/src/Uploader.php',
         'Pusher' => __DIR__ . '/..' . '/pusher/pusher-php-server/lib/Pusher.php',
         'PusherException' => __DIR__ . '/..' . '/pusher/pusher-php-server/lib/Pusher.php',
@@ -544,10 +612,10 @@ class ComposerStaticInite0eb05802e6bccce875ca1887352b344
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite0eb05802e6bccce875ca1887352b344::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite0eb05802e6bccce875ca1887352b344::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInite0eb05802e6bccce875ca1887352b344::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInite0eb05802e6bccce875ca1887352b344::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1::$classMap;
 
         }, null, ClassLoader::class);
     }

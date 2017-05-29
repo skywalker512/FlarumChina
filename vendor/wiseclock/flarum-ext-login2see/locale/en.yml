@@ -1,0 +1,22 @@
+wiseclock-login2see:
+  forum:
+    post: "You have to {login} or {register} to see the full post"
+    link: LOGIN TO SEE
+    image: LOGIN TO SEE
+  admin:
+    title: Login2See
+    post:
+      title: Hide content exceeding this length
+      help: Enter <em>-1</em> to show all.
+    link:
+      title: Links
+      no_replace: Do not replace
+      replace_address: Hide address only
+      replace_all: Replace address and text
+    image:
+      title: Images
+      label: Replace with placeholders
+    php:
+      title: Legacy Mode
+      help: "*NOT RECOMMENDED* Do the work in the backend to support old browsers.  You need to have <code>mb_substr</code> and <code>mb_strlen</code> enabled."
+      label: Use PHP

@@ -430,6 +430,22 @@ class CSS extends Minify
                 $url .= $params;
             }
 
+            /*
+             * Urls with control characters above 0x7e should be quoted.
+             * According to Mozilla's parser, whitespace is only allowed at the
+             * end of unquoted urls.
+             * Urls with `)` (as could happen with data: uris) should also be
+             * quoted to avoid being confused for the url() closing parentheses.
+             * And urls with a # have also been reported to cause issues.
+             *
+             * @see https://developer.mozilla.org/nl/docs/Web/CSS/url#The_url()_functional_notation
+             * @see https://hg.mozilla.org/mozilla-central/rev/14abca4e7378
+             */
+            $url = trim($url);
+            if (preg_match('/[\s\)#\x{7f}-\x{9f}]/u', $url)) {
+                $url = $match['quotes'] . $url . $match['quotes'];
+            }
+
             // build replacement
             $search[] = $match[0];
             if ($type === 'url') {

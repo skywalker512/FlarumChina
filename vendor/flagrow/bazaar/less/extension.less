@@ -1,0 +1,84 @@
+
+
+.ExtensionsPage.Bazaar {
+    .container {
+        margin: 0 5em;
+    }
+    .ExtensionListItem {
+        height: 180px;
+
+        &.outdated {
+            .ExtensionListItem-version {
+                text-decoration: line-through;
+            }
+        }
+
+        .ExtensionListItem-vendor {
+            color: @muted-more-color;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .ExtensionListItem-badges {
+            right: -2px;
+            top: -2px;
+            position: absolute;
+            pointer-events: auto;
+
+            .Badge {
+                margin-left: -5px;
+                position: relative;
+                pointer-events: auto;
+
+                &.Badge--enabled {
+                    background: @alert-success-bg;
+                    color: @alert-success-color;
+                }
+                &.Badge--installed {
+                }
+                &.Badge--outdated {
+                    background: @alert-error-bg;
+                    color: @alert-error-color;
+                }
+                &.Badge--favorited {
+                    background: @alert-error-bg;
+                    color: @alert-error-color;
+                }
+            }
+        }
+    }
+
+    .Bazaar--Loader {
+        z-index: @zindex-modal;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: fade(@overlay-bg, 60%);
+        position: absolute;
+
+        div {
+            width: 150px;
+            height: 150px;
+            margin-top: 75px;
+            margin-left: -75px;
+            left: 50%;
+            background-color: @body-bg;
+            color: @text-color;
+            opacity: .9;
+            position: fixed;
+            text-align: center;
+
+            border-radius: @border-radius @border-radius @border-radius @border-radius;
+
+            span {
+                width: 100%;
+            }
+
+            i {
+                font-size: 110px;
+                margin: 0 5px;
+            }
+        }
+    }
+}

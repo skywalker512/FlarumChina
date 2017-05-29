@@ -223,7 +223,9 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
      */
     public function getUsername()
     {
-        return $this->safeStorage->retrieveSafely('username') ?: 'anonymous';
+        $username = $this->safeStorage->retrieveSafely('username');
+
+        return $username !== null ? $username : 'anonymous';
     }
 
     /**
@@ -570,7 +572,10 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
      */
     public function getConnection()
     {
-        if ( ! $this->isConnected()) {
+        $tries = 0;
+
+        while ( ! $this->isConnected() && $tries < 3) {
+            $tries++;
             $this->disconnect();
             $this->connect();
         }

@@ -1,0 +1,46 @@
+{
+    "name": "flagrow/ads",
+    "description": "Bombarding your users with ads everywhere, if you want..",
+    "keywords": [
+        "ads",
+        "flarum",
+        "flagrow",
+        "advertising"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniël Klabbers",
+            "email": "daniel+flarum@klabbers.email",
+            "homepage": "http://hyn.me"
+        },
+        {
+            "name": "Clark Winkelmann",
+            "email": "clark.winkelmann@gmail.com",
+            "homepage": "https://clarkwinkelmann.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/flagrow/ads/issues",
+        "source": "https://github.com/flagrow/ads"
+    },
+    "require": {
+        "flarum/core": "0.1.0-beta.6"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Flagrow Ads",
+            "icon": {
+                "name": "audio-description",
+                "backgroundColor": "#000",
+                "color": "#87d37c"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Flagrow\\Ads\\": "src/"
+        }
+    }
+}

@@ -1,0 +1,21 @@
+#https://github.com/AmauryCarrade/flarum-ext-syndication/tree/master/locale
+amaurycarrade-syndication:
+  forum:
+    autodiscovery:
+      forum_activity: "论坛贴文及回复"
+      forum_new_discussions: "论坛最新贴文"
+      tag_activity: "{tag} 节点贴文及回复"
+      tag_new_discussions: "{tag} 节点最新贴文"
+      discussion_last_posts: "本帖中的回复"
+    feeds:
+      titles:
+        main_title: "{forum_name}"
+        main_subtitle: "论坛最新贴文及回复"
+        main_d_title: "{forum_name} 贴文"
+        main_d_subtitle: "论坛最新贴文"
+        tag_title: "{tag} 节点贴文及回复"
+        tag_subtitle: "{tag}」节点贴文及回复"
+        tag_d_title: "{tag} 节点最新贴文"
+        tag_d_subtitle: "{tag} 节点最新贴文"
+        discussion_title: "{discussion_name}"
+        discussion_subtitle: "本帖中的回复"

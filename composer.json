@@ -20,6 +20,17 @@
         "source": "https://github.com/flarum/flarum",
         "docs": "http://flarum.org/docs"
     },
+   "repositories":
+    [
+            {
+                "type": "vcs",
+                "url": "https://github.com/FlarumChina/core.git"
+            },
+            {
+                "type": "vcs",
+                "url": "https://github.com/FlarumChina/flarum-ext-mentions.git"
+            }
+    ],
     "require": {
         "flarum/core": "^0.1.0",
         "flarum/flarum-ext-akismet": "^0.1.0",
@@ -34,32 +45,40 @@
         "flarum/flarum-ext-likes": "^0.1.0",
         "flarum/flarum-ext-lock": "^0.1.0",
         "flarum/flarum-ext-markdown": "^0.1.0",
-        "flarum/flarum-ext-mentions": "^0.1.0",
+        "flarum/flarum-ext-mentions": "dev-master",
         "flarum/flarum-ext-pusher": "^0.1.0",
         "flarum/flarum-ext-sticky": "^0.1.0",
         "flarum/flarum-ext-subscriptions": "^0.1.0",
         "flarum/flarum-ext-suspend": "^0.1.0",
         "flarum/flarum-ext-tags": "^0.1.0",
-        "jsthon/flarum-ext-simplified-chinese": "^0.1.0@beta",
+        "flagrow/bazaar": "^0.1.0@beta",
+        "flagrow/ads": "^0.1.0@beta",
+        "wiseclock/flarum-ext-login2see": "^0.1.1",
+        "wiseclock/flarum-ext-reply2see": "^0.1.0",
+        "reflar/user-management": "^0.1.2",
+        "wiseclock/flarum-ext-post-copyright": "^0.1.7",
+        "reflar/gamification": "^1.0@RC",
         "sijad/flarum-ext-pages": "^0.1.0@beta",
         "sijad/flarum-ext-links": "^0.1.0@beta",
-        "flagrow/flarum-ext-image-upload": "^0.3.0",
+        "flagrow/flarum-ext-image-upload": "^0.3.1",
         "cloudinary/cloudinary_php": "^1.4",
-        "s9e/flarum-ext-mediaembed": "^0.3.2",
+        "flarumchina/flarum-ext-mediaembed-pro": "^0.3",
         "sijad/flarum-ext-details": "^0.1.2",
-        "vingle/flarum-configure-smtp": "^0.2.0",
-        "vingle/flarum-share-social": "^0.1.0",
         "wiwatsrt/flarum-ext-best-answer": "^0.1.0@beta",
         "clarkwinkelmann/flarum-ext-emojionearea": "^0.1.1",
-        "xengine/flarum-ext-markdown-editor": "^1.3",
-        "antoinefr/flarum-ext-money": "^0.3.0",
-        "avatar4eg/flarum-ext-users-list": "^0.1.1"
+        "antoinefr/flarum-ext-money": "0.4.0",
+        "flarumchina/flarum-ext-simplified-chinese-pro": "^0.1.0@beta",
+        "issyrocks12/flarum-ext-filter": "1.2.2",
+        "wiseclock/flarum-ext-profile-image-crop": "^0.1.1"
     },
     "require-dev": {
-        "franzl/studio": "^0.10.0"
+        "franzl/studio": "^0.11.0"
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "github-oauth": {
+            "github.com": "3500f70a8b72c33a447e602a2a7dab927ed8eb67"
+        }
     },
     "minimum-stability": "beta",
     "prefer-stable": true

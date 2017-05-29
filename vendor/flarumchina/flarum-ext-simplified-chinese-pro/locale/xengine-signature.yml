@@ -1,0 +1,34 @@
+# https://github.com/XEngine/flarum-ext-signature/blob/master/locale/en.yml
+
+xengine-signature:
+    forum:
+        buttons:
+            signature: 签名
+            save: 保存签名
+        modal:
+            loading:
+                title: 加载中...
+                content: 请等待...
+            error:
+                title: Oops！遇到了一些问题...
+                content: 错误列表：
+        errors:
+             max_char_limit_exceed: 超出最大字符数限制
+             max_image_width_exceed: 超出最大图片宽度限制
+             max_image_height_exceed: 超出最大图片高度限制
+             max_image_count_exceed: 超出最大图片数限制
+    admin:
+        title: 签名
+        settings:
+            maximum_image_width:
+                description: 最大图片宽度
+                placeholder : 350（缺省）
+            maximum_image_height:
+                description : 最大累计图片高度
+                placeholder : 500（缺省）
+            maximum_image_count:
+                description : 最大图片数
+                placeholder : 5（缺省）
+            maximum_char_limit:
+                description : 最大字符数（仅计算字符数量，不包含 HTML 标签）
+                placeholder : 1000（缺省）

@@ -5,9 +5,9 @@ namespace Cloudinary {
   require_once(join(DIRECTORY_SEPARATOR, array($base, 'src', 'Uploader.php')));
   require_once(join(DIRECTORY_SEPARATOR, array($base, 'src', 'Api.php')));
   require_once( 'TestHelper.php');
-  use PHPUnit_Framework_TestCase;
+  use PHPUnit\Framework\TestCase;
 
-  class ArchiveTest extends PHPUnit_Framework_TestCase {
+  class ArchiveTest extends TestCase {
     public static function setUpBeforeClass() {
       Curl::$instance = new Curl();
     }
@@ -61,7 +61,7 @@ namespace Cloudinary {
 
       public function test_download_zip_url() {
           $result = \Cloudinary::download_zip_url(array("tags"=>$this->tag));
-          $file = tempnam("tmp", "zip");
+          $file = tempnam(".", "zip");
           file_put_contents($file, file_get_contents($result));
           $zip = new \ZipArchive();
           $zip->open($file);

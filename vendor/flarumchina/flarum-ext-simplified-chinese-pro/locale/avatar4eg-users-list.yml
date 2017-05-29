@@ -1,0 +1,28 @@
+# https://github.com/Avatar4eg/flarum-ext-users-list/blob/master/locale/en.yml
+
+avatar4eg-users-list:
+  admin:
+    nav:
+      users_button: => avatar4eg-users-list.ref.users_title
+      users_text: 查看会员列表
+    page:
+      about_text:  查看注册会员列表
+      online_text: => core.forum.user.online_text
+      load_more_button: => core.ref.load_more
+      list_title: => avatar4eg-users-list.ref.users_title
+      mail_all_button: 给所有会员发信
+    modal_mail:
+      title_text: 发信给
+      title_all_text: 所有会员
+      email_label: 收件人
+      subject_label: 主题
+      default_subject: => avatar4eg-users-list.ref.default_subject
+      message_label: 正文
+      submit_button: 送出
+
+  email:
+    default_subject: => avatar4eg-users-list.ref.default_subject
+
+  ref:
+    default_subject: 来自论坛管理员的信件
+    users_title: 用户们

@@ -1,0 +1,21 @@
+# https://github.com/sijad/flarum-ext-recaptcha/blob/master/locale/en.yml
+
+sijad-recaptcha:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These translations are used in the reCAPTCHA Settings modal dialog.
+    recaptcha_settings:
+        sitekey_label: Site Key
+        secret_label: Secret Key
+        title: reCAPTCHA 设置
+
+# Translations in this namespace are used in validation
+validation:
+    recaptcha: 'reCAPTCHA 验证失败，请重试。'
+

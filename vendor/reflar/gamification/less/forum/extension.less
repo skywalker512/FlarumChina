@@ -1,0 +1,135 @@
+@import "../lib/rankLabel.less";
+
+.VotesModal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  a {
+    color: @text-color;
+    font-size: 15px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+    text-decoration: none;
+
+    &:hover .username {
+      text-decoration: underline;
+    }
+  }
+  .Avatar {
+    .Avatar--size(32px);
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+}
+
+@media only screen and (max-width: 529px) {
+  .rankings-mobile {
+    display: none !important;
+  }
+}
+
+.rankings-mobile {
+  width: 215px;
+}
+
+.Post-upvote {
+    margin-right: 5px;
+  }
+
+.Post-downvote {
+    margin-left: 10px;
+  }
+
+.Post-vote {
+    background-color: rgba(0,0,0,0);
+    border: none;
+    margin-top: 7px;
+}
+
+.Post-Rank {
+  color: gray;
+  font-size: 10px;
+  margin-left: 10px;
+}
+
+.Post-vote:focus {
+    outline:0;
+}
+
+.Post-points {
+    margin-top: 7px;
+    background-color: rgba(0,0,0,0);
+    border: none;
+}
+
+.ranking-1, .ranking-2, .ranking-3 {
+    span.username {
+      margin-top: 15px;
+    }
+    span.username:hover {
+      text-decoration: underline;
+    }
+}
+
+  .rankings {
+    width: 100%;
+    td, th {
+      text-align: center;
+      padding: 5px;
+    }
+    &-1 {
+      font-size: 8em;
+      color: gold;
+    }
+    &-1-avatar {
+      width: 80px;
+      height: 80px;
+      font-size: 40px;
+      line-height: 80px;
+    }
+    a:hover {
+      text-decoration: none;
+    }
+    &-2 {
+      font-size: 6em;
+      color: silver;
+    }
+    &-2-avatar {
+      width: 60px;
+      height: 60px;
+      font-size: 30px;
+      line-height: 60px;
+    }
+    &-3 {
+      font-size: 4em;
+      color: #CD7F32;
+    }
+    &-3-avatar {
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      line-height: 40px;
+    }
+    &-image {
+      display: block;
+      margin: 0 auto;
+      margin-top: 10%;
+    }
+    &-info {
+      padding-left: 38.6%;
+    }
+    &-points {
+      font-size: 50px;
+    }
+    span.username {
+      display: block;
+    }
+    .info-avatar {
+      margin-bottom: 15px;
+      display: block;
+      margin: 0 auto;
+      position: inherit;
+    }
+  }

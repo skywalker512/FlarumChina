@@ -1,0 +1,18 @@
+flagrow-ads:
+    admin:
+        buttons:
+            save: Zapisz ustawienia
+        positions:
+            under-header:
+                title: Pozycja reklamy pod nagłówkiem nawigacyjnym
+                placeholder: Wprowadź tu kod swojej reklamy.
+            between-posts:
+                title: Pozycja reklamy pomiędzy postami
+                placeholder: => flagrow-ads.admin.positions.under-header.placeholder
+            under-nav-items:
+                title: Pozycja reklamy w lewej kolumnie pod tagami na stronie głównej
+                placeholder: => flagrow-ads.admin.positions.under-header.placeholder
+        settings:
+            between-n-posts: Ustal po ilu postach wyświetlać reklamę
+        tab:
+            description: Ustaw preferencje reklam i pozycje.

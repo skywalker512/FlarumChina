@@ -1,4 +1,16 @@
+# 1.7.0.13
+ - [All Changes](https://github.com/Asenar/less.php/compare/v1.7.0.12...v1.7.0.13)
+ - Fix composer.json (PSR-4 was invalid)
 
+# 1.7.0.12
+ - [All Changes](https://github.com/Asenar/less.php/compare/v1.7.0.11...v1.7.0.12)
+ - set bin/lessc bit executable
+ - Add 'gettingVariables' method in Less_Parser
+
+# 1.7.0.11
+ - [All Changes](https://github.com/Asenar/less.php/compare/v1.7.0.10...v1.7.0.11)
+ - Fix realpath issue (windows)
+ - Set Less_Tree_Call property back to public ( Fix 258 266 267 issues from oyejorge/less.php)
 
 # 1.7.0.10
 

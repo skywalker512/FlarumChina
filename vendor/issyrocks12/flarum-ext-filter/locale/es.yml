@@ -1,0 +1,29 @@
+issyrocks12-filter:
+    forum:
+        flagger_name: Moderador Automático
+        flaged_text: Contenía palabras o frases bloqueadas.
+    admin:
+        title: Filtro
+        help: Introduce las palabras o frases a filtrar separándolas con una coma y un espacio.
+        email_help: Contenido del correo de notificación. Se acepta código HTML o texto plano.
+        filter_label: Palabras o frases a filtrar.
+        input:
+            placeholder: Palabras o frases que serán filtradas.
+            filter_title: Palabras o frases a filtrar.
+            email_label: Ajustes del Correo
+            switch: 
+              email: Enviar un correo de notificación al usuario cuando su post sea filtrado.
+              merge: Fusiona automáticamente comentarios dobles dentro de un post.
+            email_subject: Título
+            email_body: Mensaje
+        nav:
+            text: Filtro
+            desc: Filtrar publicaciones por palabras.
+        email:
+            default_subject: Acerca de tu publicación más reciente
+            default_text: |
+                Gracias por publicar! Desafortunadamente, tu publicación ha sido removida debido a que poseía contenido no permitido en nuestro foro.
+                
+                Si crees que esto ha sido un error, estás de suerte, pues nuestros moderadores analizan todo el contenido eliminado. Si ellos consideran que ha sido un error, podrán restaurarlo.                
+                
+                Gracias por tu comprensión.

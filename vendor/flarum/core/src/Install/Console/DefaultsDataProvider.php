@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -19,6 +20,7 @@ class DefaultsDataProvider implements DataProviderInterface
         'username' => 'root',
         'password' => 'root',
         'prefix'   => '',
+        'port'     => '3306',
     ];
 
     protected $baseUrl = 'http://flarum.dev';

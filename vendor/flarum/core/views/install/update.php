@@ -1,23 +1,23 @@
-<h2>升级 Flarum</h2>
+<h2>更新 Flarum</h2>
 
-<p>请输入mysql用户密码<strong>在升级前请备份数据库</strong>. 若有麻烦请到 <a href="http://discuss.flarum.ga" target="_blank">FlarumChina</a>.</p>
+<p>输入数据库密码以更新 Flarum. 在更新前你需要<strong>备份数据库</strong>. 若你遇到麻烦可点击 <a href="http://flarum.org/docs/updating" target="_blank">Flarum 交流论坛（英文）</a>.</p>
 
 <form method="post">
   <div id="error" style="display:none"></div>
 
   <div class="FormGroup">
     <div class="FormField">
-      <label>Database Password</label>
+      <label>数据库密码</label>
       <input type="password" name="databasePassword">
     </div>
   </div>
 
   <div class="FormButtons">
-    <button type="submit">Update Flarum</button>
+    <button type="submit">点击更新</button>
   </div>
 </form>
 
-<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script>
 $(function() {
   $('form :input:first').select();

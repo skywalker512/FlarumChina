@@ -161,9 +161,13 @@ class Api {
   
   function delete_transformation($transformation, $options=array()) {
     $uri = array("transformations", $this->transformation_string($transformation));
-    return $this->call_api("delete", $uri, array(), $options);    
+    $params = array();
+    if (isset($options["invalidate"])) {
+      $params["invalidate"] = $options["invalidate"];
+    }
+    return $this->call_api("delete", $uri, $params, $options);
   }
-    
+
   # updates - currently only supported update is the "allowed_for_strict" boolean flag
   function update_transformation($transformation, $updates=array(), $options=array()) {
     $uri = array("transformations", $this->transformation_string($transformation));
@@ -316,7 +320,16 @@ class Api {
 
     if ($method != "get")
     {
-        $post_params = array();
+      $post_params = array();
+      if (array_key_exists("content_type", $options) && $options["content_type"] == 'application/json')
+      {
+        $headers = array( 
+          "Content-type: application/json", 
+          "Accept: application/json", 
+        ); 
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); 
+        $post_params = json_encode($params);
+      } else {
         foreach ($params as $key => $value) {
             if (is_array($value)) {
                 $i = 0;
@@ -328,8 +341,8 @@ class Api {
                 $post_params[$key] = $value;
             }
         }
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_params);
-
+      }
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $post_params);
     }
     curl_setopt($ch, CURLOPT_HEADER, 1);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));

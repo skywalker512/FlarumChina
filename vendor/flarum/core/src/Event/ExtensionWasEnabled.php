@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -15,9 +16,9 @@ use Flarum\Extension\Extension;
 class ExtensionWasEnabled
 {
     /**
-     * @var string
+     * @var Extension
      */
-    protected $extension;
+    public $extension;
 
     /**
      * @param Extension $extension

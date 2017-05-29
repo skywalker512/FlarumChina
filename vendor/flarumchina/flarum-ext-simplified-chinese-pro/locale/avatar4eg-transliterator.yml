@@ -1,0 +1,8 @@
+# https://github.com/Avatar4eg/flarum-ext-transliterator/blob/master/locale/en.yml
+
+avatar4eg-transliterator:
+  admin:
+    settings:
+      modal_title: URL 字符转译设置
+      parse_button: 处理现有贴文
+      result: 已处理贴文：

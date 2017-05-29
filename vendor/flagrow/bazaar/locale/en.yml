@@ -1,0 +1,32 @@
+flagrow-bazaar:
+    admin:
+        loader:
+            is_loading: Processing..
+        popup:
+            title: Flagrow Bazaar
+            field:
+                apiToken: API token
+                apiTokenDescription: This api token is required to access the Flagrow extension api. If already set, you're good to go!
+        nav:
+            title: Bazaar
+            description: The extension marketplace.
+        page:
+            button:
+                more: More
+                install: Install
+                uninstall: Uninstall
+                enable: Enable
+                disable: Disable
+                connect: Connect
+                update: Update
+                connectDescription: "Connect your Flarum installation to your personal account on {host} to unlock new features."
+                connected: Dashboard
+                connectedDescription: "Your Flarum is connected, visit the dashboard on {host}."
+                favorite_button: "Favorite extension"
+                remove_favorite_button: "Remove extension from your favorites"
+            extension:
+                installed: Extension is installed
+                enabled: Extension is enabled
+                vendor: By {vendor}
+                favorited: One of your favorites
+                outdated: "Extension is outdated, please update to version {new}"

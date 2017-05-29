@@ -803,7 +803,12 @@ class Less_Functions{
 	 * @param string $unit
 	 */
 	public function isunit( $n, $unit ){
-		return ($n instanceof Less_Tree_Dimension) && $n->unit->is( ( property_exists($unit,'value') ? $unit->value : $unit) ) ? new Less_Tree_Keyword('true') : new Less_Tree_Keyword('false');
+
+		if( is_object($unit) && property_exists($unit,'value') ){
+			$unit = $unit->value;
+		}
+
+		return ($n instanceof Less_Tree_Dimension) && $n->unit->is($unit) ? new Less_Tree_Keyword('true') : new Less_Tree_Keyword('false');
 	}
 
 	/**
@@ -813,11 +818,11 @@ class Less_Functions{
 		return is_a($n, $type) ? new Less_Tree_Keyword('true') : new Less_Tree_Keyword('false');
 	}
 
-	public function tint($color, $amount) {
+	public function tint($color, $amount = null) {
 		return $this->mix( $this->rgb(255,255,255), $color, $amount);
 	}
 
-	public function shade($color, $amount) {
+	public function shade($color, $amount = null) {
 		return $this->mix($this->rgb(0, 0, 0), $color, $amount);
 	}
 

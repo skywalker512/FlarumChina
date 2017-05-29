@@ -1,6 +1,6 @@
 {
   "name": "wiwatsrt/flarum-ext-best-answer",
-  "description": "Best Answer fot Flarum.",
+  "description": "Best Answer for Flarum.",
   "type": "flarum-extension",
   "keywords": ["flarum", "best-answer"],
   "license": "MIT",
@@ -20,7 +20,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-develop": "0.1.x-dev"
+      "dev-master": "0.1.x-dev"
     },
     "flarum-extension": {
       "title": "Best Answer",
