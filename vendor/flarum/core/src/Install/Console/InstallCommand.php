@@ -348,6 +348,8 @@ class InstallCommand extends AbstractCommand
             'flarum-pusher',
             'antoinefr-money',
             "flagrow-bazaar",
+            "wiseclock-login2see",
+            "wiseclock-reply2see",
         ];
 
         foreach ($extensions->getExtensions() as $name => $extension) {
