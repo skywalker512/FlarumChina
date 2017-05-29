@@ -347,7 +347,7 @@ class InstallCommand extends AbstractCommand
             'flarum-auth-twitter',
             'flarum-pusher',
             'antoinefr-money',
-            "flagrow-bazaar"，
+            "flagrow-bazaar",
         ];
 
         foreach ($extensions->getExtensions() as $name => $extension) {
