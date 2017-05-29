@@ -19,7 +19,7 @@ issyrocks12-filter:
             email_subject: 主题
             email_body: 正文
         nav:
-              text: 过滤器
+            text: 过滤器
             desc: 依照关键字过滤贴文
         email:
             default_subject: 您最新发布的贴文已被移除
