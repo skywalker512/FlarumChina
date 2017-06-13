@@ -1,0 +1,25 @@
+flagrow-byobu:
+    forum:
+        buttons:
+            add_recipients: Destinataires
+            submit: OK
+            edit_recipients: Modifier destinataires
+        labels:
+            user_deleted: -supprimé-
+        nav:
+            private_discussions: Discussion Privée
+        input:
+            search_recipients: Rechercher un destinataire en tapant les 3 premières lettres...
+        modal:
+            titles:
+                update_recipients: Mettre à jour les destinataires de {title}
+                add_recipients: Ajouter les destinataires à votre discussion
+        post:
+            recipients_modified:
+                added_and_removed: "{username} a ajouté les destinataires {added} et a supprimé {removed}."
+                added: "{username} a ajouté les destinataires {added}."
+                removed: "{username} a supprimé les destinataires {removed}."
+    admin:
+        permission:
+            create_private_discussions: Créer des discussions privées
+            edit_recipients: Modifier les destinataires de discussions privées

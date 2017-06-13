@@ -284,6 +284,7 @@ class WebAppView
 
         $this->view->share('translator', $this->locales->getTranslator());
         $this->view->share('allowJs', ! array_get($request->getQueryParams(), 'nojs'));
+        $this->view->share('isRobot', $this->isCrawler());
         $this->view->share('forum', array_get($forum, 'data'));
         $this->view->share('debug', $this->app->inDebugMode());
 
@@ -300,8 +301,9 @@ class WebAppView
         $view->layout = $this->buildLayout();
 
         $baseUrl = array_get($forum, 'data.attributes.baseUrl');
-        $view->cssUrls = $this->buildCssUrls($baseUrl);
-        $view->jsUrls = $this->buildJsUrls($baseUrl);
+        $cdnUrl = array_get($forum, 'data.attributes.cdnUrl');
+        $view->cssUrls = $this->buildCssUrls($cdnUrl);
+        $view->jsUrls = $this->buildJsUrls($cdnUrl);
 
         $view->head = $this->buildHeadContent();
         $view->foot = implode("\n", $this->foot);
@@ -476,5 +478,76 @@ class WebAppView
         }
 
         return $data;
+    }
+    
+    function isCrawler() {
+        $agent= strtolower($_SERVER['HTTP_USER_AGENT']);
+        if (!empty($agent)) {
+                $spiderSite= array(
+                        "360Spider",
+                        "Alexa (IA Archiver)",
+                        "Ask",
+                        "BaiduGame",
+                        "BaiDuSpider",
+                        "Baiduspider+",
+                        "Baiduspider-image",
+                        "BSpider",
+                        "bingbot",
+                        "ChinasoSpider",
+                        "Custo",
+                        "EasouSpider",
+                        "Exabot",
+                        "Fish search",
+                        "Google AdSense",
+                        "Googlebot",
+                        "Heritrix",
+                        "ia_archiver",
+                        "Java (Often spam bot)",
+                        "larbin",
+                        "legs",
+                        "lwp-trivial",
+                        "MJ12bot",
+                        "MSIECrawler",
+                        "msnbot",
+                        "MSNBot",
+                        "Netcraft",
+                        "Nutch",
+                        "OutfoxBot/YodaoBot",
+                        "Perl tool",
+                        "Python-urllib",
+                        "Sogou blog",
+                        "Sogou inst spider",
+                        "Sogou News Spider",
+                        "Sogou Orion spider",
+                        "Sogou Spider",
+                        "Sogou spider2",
+                        "Sogou web spider",
+                        "Sosospider",
+                        "Sosospider+",
+                        "Speedy Spider",
+                        "StackRambler",
+                        "SurveyBot",
+                        "TencentTraveler",
+                        "The web archive (IA Archiver)",
+                        "twiceler",
+                        "Voila",
+                        "WGet tools",
+                        "yacy",
+                        "Yahoo Slurp",
+                        "Yahoo! Slurp",
+                        "Yandex bot",
+                        "Yisouspider",
+                        "YoudaoBot",
+                );
+                foreach($spiderSite as $val) {
+                        $str = strtolower($val);
+                        if (strpos($agent, $str) !== false) {
+                                return true;
+                        }
+                }
+                return false;
+        } else {
+                return false;
+        }
     }
 }

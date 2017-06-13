@@ -8,13 +8,13 @@ use Illuminate\Filesystem\Filesystem;
 
 class ComposerEnvironmentProvider extends AbstractServiceProvider
 {
-    public function boot(Filesystem $filesystem)
+    public function register()
     {
-        $this->app->singleton(ComposerEnvironment::class, function($app) use($filesystem) {
+        $this->app->singleton(ComposerEnvironment::class, function($app) {
             return new ComposerEnvironment(
                 $app->basePath(),
-                $app->storagePath('/composer-home'),
-                $filesystem);
+                storage_path('composer-home'),
+                $app->make(Filesystem::class));
         });
     }
 }

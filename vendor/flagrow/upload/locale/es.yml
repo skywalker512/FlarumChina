@@ -1,0 +1,62 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: Adjuntar 
+        states:
+            loading: Cargando
+            success: Finalizado
+            error: Error
+    admin:
+        permissions:
+            upload_label: Subir archivos
+        upload_methods:
+            local: Local
+            aws-s3: Amazon Si3
+            imgur: Imgur
+        labels:
+            upload_method: Método de subida
+            preferences:
+                title: Preferencias generales
+                max_file_size: Tamaño máximo de archivo (en kilobytes)
+                mime_types_allowed: Especifique las extensiones admitidas usando expresiones regulares
+            resize:
+                title: Redimensionar imagen
+                toggle: Redimensionar imágenes
+                max_width: Ancho de imagen máximo
+                max_height: Altura máxima de imagen
+            watermark:
+                title: Imágenes de marca de agua
+                toggle: Insertar marca de agua a las imágenes
+                position: Posición de la marca de agua
+                file: Subir marca de agua
+            local:
+                title: Ajustes de almacenamiento local
+                cdn_url: Content Delivery URL (prefijo de los archivos)
+            imgur:
+                title: Configuración de almacenamiento imgur
+                client_id: Imgur client ID
+            aws-s3:
+                title: Configuración de almacenamiento AWS S3
+                key: Key
+                secret: Secret
+                bucket: Bucket
+                region: Región
+        buttons:
+            save: Guardar configuración
+        help_texts:
+            description: >
+                Configure los métodos de subida y preferencias.
+            upload_method: >
+                Aquí puede seleccionar el método para la subida de
+                archivos. Una vez seleccione uno, la configuración
+                adicional del mismo aparecerá.
+            resize: >
+                Configure si quiere redimensonar las imágenes antes de
+                ser subidas. Puede establecer un ancho y una altura 
+                máxima, en píxeles. Las imágenes serán redimensionadas
+                manteniendo la proporción visual (ratio) de las mismas.
+            watermark: >
+                Configure si a las imágenes subidas se le añade una capa
+                de agua durante el proceso de subida. La marca de agua
+                se añade a toda imagen salvo formato GIF dependiendo de
+                la configuración siguiente.

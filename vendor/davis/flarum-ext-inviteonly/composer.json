@@ -1,0 +1,35 @@
+{
+    "name": "davis/flarum-ext-inviteonly",
+    "description": "Allow Registration only if invited.",
+    "keywords": ["invite", "flarum", "davis", "customization", "private"],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Connor Davis",
+            "email": "davis@produes.co"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/dav-is/flarum-ext-inviteonly/issues",
+        "source": "https://github.com/dav-is/flarum-ext-inviteonly"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Davis\\InviteOnly\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Invite Only",
+            "icon": {
+                "name": "exchange",
+                "backgroundColor": "#2980b9",
+                "color": "white"
+            }
+        }
+    }
+}

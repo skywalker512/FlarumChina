@@ -73,5 +73,12 @@ class AddApiControllers
             'bazaar.connect',
             Controllers\ConnectController::class
         );
+
+        // List Tasks
+        $event->get(
+            '/bazaar/tasks',
+            'bazaar.tasks.index',
+            Controllers\ListTaskController::class
+        );
     }
 }

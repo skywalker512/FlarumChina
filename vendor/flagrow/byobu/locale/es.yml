@@ -1,0 +1,34 @@
+flagrow-byobu:
+    forum:
+        badges:
+            is_private:
+                tooltip: Discusión privada
+        buttons:
+            add_recipients: Destinatarios
+            submit: OK
+            edit_recipients: Editar Destinatarios
+        labels:
+            recipients: "{count} Destinatario|{count} Destinatarios"
+            user_deleted: -eliminado-
+        nav:
+            private_discussions: Discusión privada
+        input:
+            search_recipients: Busca destinatario escribiendo los tres primeros caracteres...
+        search:
+            headings:
+                groups: Permisos del Grupo
+        modal:
+            titles:
+                update_recipients: Actualizar destinatarios de {title}
+                add_recipients: Agregar destinatarios a la discusión
+        post:
+            recipients_modified:
+                added_and_removed: "{username} agregó a los destinatarios {added} y eliminó a {removed}."
+                added: "{username} agregó a los destinatarios {added}."
+                removed: "{username} eliminó a los destinatarios {removed}."
+    admin:
+        permission:
+            create_private_discussions_with_users: Crear discusiones privadas con usuarios
+            create_private_discussions_with_groups: Crear discusiones privadas con grupos
+            edit_user_recipients: Editar participación de los usuarios en discusiones privadas
+            edit_group_recipients: Editar participación del los grupos en discusiones privadas

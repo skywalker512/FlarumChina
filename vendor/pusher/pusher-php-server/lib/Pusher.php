@@ -58,7 +58,7 @@ class PusherInstance
 
 class Pusher
 {
-    public static $VERSION = '2.6.3';
+    public static $VERSION = '2.6.4';
 
     private $settings = array(
         'scheme'       => 'http',
@@ -342,11 +342,11 @@ class Pusher
         $response['body'] = curl_exec($ch);
         $response['status'] = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        $this->log('exec_curl response: '.print_r($response, true));
-
-        if ($response['body'] === false) {
+        if ($response['body'] === false || $response['status'] < 200 || 400 <= $response['status']) {
             $this->log('exec_curl error: '.curl_error($ch));
         }
+
+        $this->log('exec_curl response: '.print_r($response, true));
 
         return $response;
     }
@@ -438,14 +438,14 @@ class Pusher
      * Trigger an event by providing event name and payload.
      * Optionally provide a socket ID to exclude a client (most likely the sender).
      *
-     * @param array  $channels        An array of channel names to publish the event on.
-     * @param string $event
-     * @param mixed  $data            Event data
-     * @param string $socket_id       [optional]
-     * @param bool   $debug           [optional]
-     * @param bool   $already_encoded [optional]
+     * @param array|string $channels        A channel name or an array of channel names to publish the event on.
+     * @param string       $event
+     * @param mixed        $data            Event data
+     * @param string       $socket_id       [optional]
+     * @param bool         $debug           [optional]
+     * @param bool         $already_encoded [optional]
      *
-     * @return bool|string
+     * @return bool|array
      */
     public function trigger($channels, $event, $data, $socket_id = null, $debug = false, $already_encoded = false)
     {

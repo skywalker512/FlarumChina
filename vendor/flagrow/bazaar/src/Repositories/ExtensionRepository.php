@@ -137,6 +137,9 @@ class ExtensionRepository
         return $extension;
     }
 
+    /**
+     * @param Extension $extension
+     */
     protected function refreshInstalledExtension(Extension &$extension)
     {
         $installedExtension = $this->manager->getExtension($extension->getShortName());
@@ -149,7 +152,7 @@ class ExtensionRepository
     /**
      * Install an extension.
      *
-     * @param string $package Valid
+     * @param string $package
      * @return Extension|null
      */
     public function installExtension($package)
@@ -176,7 +179,7 @@ class ExtensionRepository
     {
         $extension = $this->getExtension($package);
 
-        $this->packages->requirePackage($extension->getPackage());
+        $this->packages->updatePackage($extension->getPackage());
 
         $this->manager->migrate($extension->getInstalledExtension());
 
@@ -205,7 +208,7 @@ class ExtensionRepository
 
         $this->manager->migrateDown($extension->getInstalledExtension());
 
-        $this->packages->removePackage($package);
+        $this->packages->removePackage($extension->getPackage());
 
         $installedExtension = $extension->getInstalledExtension();
 

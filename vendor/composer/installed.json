@@ -203,108 +203,6 @@
         ]
     },
     {
-        "name": "symfony/process",
-        "version": "v3.2.8",
-        "version_normalized": "3.2.8.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/process.git",
-            "reference": "999c2cf5061e627e6cd551dc9ebf90dd1d11d9f0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/process/zipball/999c2cf5061e627e6cd551dc9ebf90dd1d11d9f0",
-            "reference": "999c2cf5061e627e6cd551dc9ebf90dd1d11d9f0",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.5.9"
-        },
-        "time": "2017-04-12T14:13:17+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.2-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Process\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Process Component",
-        "homepage": "https://symfony.com"
-    },
-    {
-        "name": "symfony/filesystem",
-        "version": "v3.2.8",
-        "version_normalized": "3.2.8.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/filesystem.git",
-            "reference": "040651db13cf061827a460cc10f6e36a445c45b4"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/filesystem/zipball/040651db13cf061827a460cc10f6e36a445c45b4",
-            "reference": "040651db13cf061827a460cc10f6e36a445c45b4",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.5.9"
-        },
-        "time": "2017-04-12T14:13:17+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.2-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Filesystem\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Filesystem Component",
-        "homepage": "https://symfony.com"
-    },
-    {
         "name": "psr/log",
         "version": "1.0.2",
         "version_normalized": "1.0.2.0",
@@ -352,189 +250,6 @@
             "psr",
             "psr-3"
         ]
-    },
-    {
-        "name": "symfony/polyfill-mbstring",
-        "version": "v1.3.0",
-        "version_normalized": "1.3.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/polyfill-mbstring.git",
-            "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
-            "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "suggest": {
-            "ext-mbstring": "For best performance"
-        },
-        "time": "2016-11-14T01:06:16+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Polyfill\\Mbstring\\": ""
-            },
-            "files": [
-                "bootstrap.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Nicolas Grekas",
-                "email": "p@tchwork.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony polyfill for the Mbstring extension",
-        "homepage": "https://symfony.com",
-        "keywords": [
-            "compatibility",
-            "mbstring",
-            "polyfill",
-            "portable",
-            "shim"
-        ]
-    },
-    {
-        "name": "symfony/debug",
-        "version": "v2.7.27",
-        "version_normalized": "2.7.27.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/debug.git",
-            "reference": "28590cbb8f7dd5ef34e902a1a87d7aa6af2b3bd7"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/debug/zipball/28590cbb8f7dd5ef34e902a1a87d7aa6af2b3bd7",
-            "reference": "28590cbb8f7dd5ef34e902a1a87d7aa6af2b3bd7",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9",
-            "psr/log": "~1.0"
-        },
-        "conflict": {
-            "symfony/http-kernel": ">=2.3,<2.3.24|~2.4.0|>=2.5,<2.5.9|>=2.6,<2.6.2"
-        },
-        "require-dev": {
-            "symfony/class-loader": "~2.2",
-            "symfony/http-kernel": "~2.3.24|~2.5.9|^2.6.2"
-        },
-        "time": "2017-04-13T20:03:51+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.7-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Debug\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Debug Component",
-        "homepage": "https://symfony.com"
-    },
-    {
-        "name": "symfony/console",
-        "version": "v2.8.20",
-        "version_normalized": "2.8.20.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/console.git",
-            "reference": "2cfcbced8e39e2313ed4da8896fc8c59a56c0d7e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/console/zipball/2cfcbced8e39e2313ed4da8896fc8c59a56c0d7e",
-            "reference": "2cfcbced8e39e2313ed4da8896fc8c59a56c0d7e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9",
-            "symfony/debug": "^2.7.2|~3.0.0",
-            "symfony/polyfill-mbstring": "~1.0"
-        },
-        "require-dev": {
-            "psr/log": "~1.0",
-            "symfony/event-dispatcher": "~2.1|~3.0.0",
-            "symfony/process": "~2.1|~3.0.0"
-        },
-        "suggest": {
-            "psr/log": "For using the console logger",
-            "symfony/event-dispatcher": "",
-            "symfony/process": ""
-        },
-        "time": "2017-04-26T01:38:53+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Console\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Console Component",
-        "homepage": "https://symfony.com"
     },
     {
         "name": "franzl/studio",
@@ -1168,69 +883,6 @@
         ]
     },
     {
-        "name": "filp/whoops",
-        "version": "2.1.8",
-        "version_normalized": "2.1.8.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/filp/whoops.git",
-            "reference": "f2950be7da8b8d6c4e77821b6c9d486e36cdc4f3"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/filp/whoops/zipball/f2950be7da8b8d6c4e77821b6c9d486e36cdc4f3",
-            "reference": "f2950be7da8b8d6c4e77821b6c9d486e36cdc4f3",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^5.5.9 || ^7.0",
-            "psr/log": "^1.0.1"
-        },
-        "require-dev": {
-            "mockery/mockery": "0.9.*",
-            "phpunit/phpunit": "^4.8 || ^5.0",
-            "symfony/var-dumper": "^2.6 || ^3.0"
-        },
-        "suggest": {
-            "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
-            "whoops/soap": "Formats errors as SOAP responses"
-        },
-        "time": "2017-03-07T09:04:45+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Whoops\\": "src/Whoops/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Filipe Dobreira",
-                "homepage": "https://github.com/filp",
-                "role": "Developer"
-            }
-        ],
-        "description": "php error handling for cool kids",
-        "homepage": "https://filp.github.io/whoops/",
-        "keywords": [
-            "error",
-            "exception",
-            "handling",
-            "library",
-            "whoops",
-            "zf2"
-        ]
-    },
-    {
         "name": "franzl/whoops-middleware",
         "version": "0.4.1",
         "version_normalized": "0.4.1.0",
@@ -1564,71 +1216,6 @@
         "homepage": "http://laravel.com"
     },
     {
-        "name": "symfony/translation",
-        "version": "v2.7.27",
-        "version_normalized": "2.7.27.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/translation.git",
-            "reference": "160c2d5c546a1d7ba8ce60514ae177b8e3771829"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/160c2d5c546a1d7ba8ce60514ae177b8e3771829",
-            "reference": "160c2d5c546a1d7ba8ce60514ae177b8e3771829",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9"
-        },
-        "conflict": {
-            "symfony/config": "<2.7"
-        },
-        "require-dev": {
-            "psr/log": "~1.0",
-            "symfony/config": "~2.7",
-            "symfony/intl": "~2.7.25|^2.8.18",
-            "symfony/yaml": "~2.2"
-        },
-        "suggest": {
-            "psr/log": "To use logging capability in translator",
-            "symfony/config": "",
-            "symfony/yaml": ""
-        },
-        "time": "2017-04-12T07:39:27+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.7-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Translation\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Translation Component",
-        "homepage": "https://symfony.com"
-    },
-    {
         "name": "nesbot/carbon",
         "version": "1.22.1",
         "version_normalized": "1.22.1.0",
@@ -1734,57 +1321,6 @@
         ],
         "description": "The Illuminate Cache package.",
         "homepage": "http://laravel.com"
-    },
-    {
-        "name": "symfony/finder",
-        "version": "v2.7.27",
-        "version_normalized": "2.7.27.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/finder.git",
-            "reference": "9ec5f638fa4c6f02e5231d04747963186f6840a6"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/finder/zipball/9ec5f638fa4c6f02e5231d04747963186f6840a6",
-            "reference": "9ec5f638fa4c6f02e5231d04747963186f6840a6",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9"
-        },
-        "time": "2017-04-12T07:39:27+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.7-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Finder\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Finder Component",
-        "homepage": "https://symfony.com"
     },
     {
         "name": "illuminate/filesystem",
@@ -2147,64 +1683,6 @@
         ],
         "description": "The Illuminate Mail package.",
         "homepage": "http://laravel.com"
-    },
-    {
-        "name": "symfony/http-foundation",
-        "version": "v2.7.27",
-        "version_normalized": "2.7.27.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/http-foundation.git",
-            "reference": "db6ae9765dd723bc55c958456e2804170663dc97"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/db6ae9765dd723bc55c958456e2804170663dc97",
-            "reference": "db6ae9765dd723bc55c958456e2804170663dc97",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9",
-            "symfony/polyfill-mbstring": "~1.1"
-        },
-        "require-dev": {
-            "symfony/expression-language": "~2.4"
-        },
-        "time": "2017-04-29T15:58:46+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.7-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\HttpFoundation\\": ""
-            },
-            "classmap": [
-                "Resources/stubs"
-            ],
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony HttpFoundation Component",
-        "homepage": "https://symfony.com"
     },
     {
         "name": "illuminate/validation",
@@ -2886,57 +2364,6 @@
             "parser",
             "shortcodes"
         ]
-    },
-    {
-        "name": "symfony/yaml",
-        "version": "v2.8.20",
-        "version_normalized": "2.8.20.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/yaml.git",
-            "reference": "93ccdde79f4b079c7558da4656a3cb1c50c68e02"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/yaml/zipball/93ccdde79f4b079c7558da4656a3cb1c50c68e02",
-            "reference": "93ccdde79f4b079c7558da4656a3cb1c50c68e02",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9"
-        },
-        "time": "2017-05-01T14:31:55+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Yaml\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Yaml Component",
-        "homepage": "https://symfony.com"
     },
     {
         "name": "http-interop/http-middleware",
@@ -4249,52 +3676,6 @@
         ]
     },
     {
-        "name": "pusher/pusher-php-server",
-        "version": "2.6.3",
-        "version_normalized": "2.6.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/pusher/pusher-http-php.git",
-            "reference": "7101edc482d1b1de027abadd7a80a0d00222ef08"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/7101edc482d1b1de027abadd7a80a0d00222ef08",
-            "reference": "7101edc482d1b1de027abadd7a80a0d00222ef08",
-            "shasum": ""
-        },
-        "require": {
-            "ext-curl": "*",
-            "php": ">=5.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4"
-        },
-        "time": "2016-12-22T10:46:28+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "lib/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Library for interacting with the Pusher REST API",
-        "homepage": "https://github.com/pusher/pusher-php-server",
-        "keywords": [
-            "events",
-            "php-pusher-server",
-            "publish",
-            "pusher",
-            "realtime",
-            "rest",
-            "trigger"
-        ]
-    },
-    {
         "name": "flarum/flarum-ext-pusher",
         "version": "v0.1.0-beta.6",
         "version_normalized": "0.1.0.0-beta6",
@@ -4569,63 +3950,6 @@
         ]
     },
     {
-        "name": "flarum/flarum-ext-mentions",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/FlarumChina/flarum-ext-mentions.git",
-            "reference": "0612f83249519ba3db72e3dccd84e2bba7fb5b30"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-mentions/zipball/0612f83249519ba3db72e3dccd84e2bba7fb5b30",
-            "reference": "0612f83249519ba3db72e3dccd84e2bba7fb5b30",
-            "shasum": ""
-        },
-        "require": {
-            "flarum/core": "^0.1.0-beta.6"
-        },
-        "time": "2017-04-03T03:27:27+00:00",
-        "type": "flarum-extension",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.1.x-dev"
-            },
-            "flarum-extension": {
-                "title": "Mentions",
-                "icon": {
-                    "name": "at",
-                    "backgroundColor": "#539EC1",
-                    "color": "#fff"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Flarum\\Mentions\\": "src/"
-            }
-        },
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Toby Zerner",
-                "email": "toby.zerner@gmail.com"
-            }
-        ],
-        "description": "Mention and reply to specific posts and users.",
-        "keywords": [
-            "discussion"
-        ],
-        "support": {
-            "issues": "https://github.com/flarum/core/issues",
-            "source": "https://github.com/flarum/flarum-ext-mentions"
-        }
-    },
-    {
         "name": "wiseclock/flarum-ext-login2see",
         "version": "0.1.1",
         "version_normalized": "0.1.1.0",
@@ -4719,68 +4043,6 @@
             }
         ],
         "description": "Adds a reply to see BBCODE."
-    },
-    {
-        "name": "reflar/user-management",
-        "version": "0.1.2",
-        "version_normalized": "0.1.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://gitlab.com/ReFlar/user-management.git",
-            "reference": "5682085c6a0dd81bb0d5ea450a31f0d04117bb0d"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://gitlab.com/api/v3/projects/ReFlar%2Fuser-management/repository/archive.zip?sha=5682085c6a0dd81bb0d5ea450a31f0d04117bb0d",
-            "reference": "5682085c6a0dd81bb0d5ea450a31f0d04117bb0d",
-            "shasum": ""
-        },
-        "require": {
-            "flarum/core": "^0.1.0-beta.6"
-        },
-        "time": "2017-05-02T11:46:25+00:00",
-        "type": "flarum-extension",
-        "extra": {
-            "flarum-extension": {
-                "title": "ReFlar User Management",
-                "icon": {
-                    "name": "address-book-o",
-                    "backgroundColor": "#263238",
-                    "color": "#fff"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Reflar\\UserManagement\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Christian Lopez",
-                "email": "ralkage@reflar.email",
-                "homepage": "https://reflar.io"
-            },
-            {
-                "name": "Charlie K",
-                "email": "issyrocks12@reflar.email",
-                "homepage": "https://reflar.io"
-            }
-        ],
-        "description": "Manage your users with style",
-        "keywords": [
-            "Settings",
-            "flarum",
-            "management",
-            "misc",
-            "reflar",
-            "registration"
-        ]
     },
     {
         "name": "wiseclock/flarum-ext-post-copyright",
@@ -5622,70 +4884,6 @@
         ]
     },
     {
-        "name": "flagrow/bazaar",
-        "version": "0.1.1",
-        "version_normalized": "0.1.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/flagrow/bazaar.git",
-            "reference": "80fd0c3b5f24b8e2484d1454f4d272cd56603231"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/flagrow/bazaar/zipball/80fd0c3b5f24b8e2484d1454f4d272cd56603231",
-            "reference": "80fd0c3b5f24b8e2484d1454f4d272cd56603231",
-            "shasum": ""
-        },
-        "require": {
-            "composer/composer": "^1.3",
-            "flarum/core": "^0.1.0-beta.6",
-            "guzzlehttp/guzzle": "^6.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^4.8"
-        },
-        "time": "2017-04-27T20:11:30+00:00",
-        "type": "flarum-extension",
-        "extra": {
-            "flarum-extension": {
-                "title": "Flagrow Bazaar",
-                "icon": {
-                    "name": "shopping-bag",
-                    "backgroundColor": "#000",
-                    "color": "#87d37c"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Flagrow\\Bazaar\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "cc-by-nc-nd"
-        ],
-        "authors": [
-            {
-                "name": "Daniël Klabbers",
-                "email": "daniel+flarum@klabbers.email",
-                "homepage": "http://hyn.me"
-            },
-            {
-                "name": "Clark Winkelmann",
-                "email": "clark.winkelmann@gmail.com",
-                "homepage": "https://clarkwinkelmann.com"
-            }
-        ],
-        "description": "The Flarum extension marketplace.",
-        "keywords": [
-            "extension",
-            "flagrow",
-            "flarum"
-        ]
-    },
-    {
         "name": "reflar/gamification",
         "version": "1.0.0-rc.3",
         "version_normalized": "1.0.0.0-RC3",
@@ -5854,60 +5052,6 @@
         ]
     },
     {
-        "name": "cloudinary/cloudinary_php",
-        "version": "1.8.0",
-        "version_normalized": "1.8.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/cloudinary/cloudinary_php.git",
-            "reference": "641b0901ca616c540b773abb802987a502aa8b89"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/cloudinary/cloudinary_php/zipball/641b0901ca616c540b773abb802987a502aa8b89",
-            "reference": "641b0901ca616c540b773abb802987a502aa8b89",
-            "shasum": ""
-        },
-        "require": {
-            "ext-curl": "*",
-            "ext-json": "*",
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "5.7.*"
-        },
-        "time": "2017-05-03T14:29:33+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src"
-            ],
-            "files": [
-                "src/Helpers.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Cloudinary",
-                "homepage": "https://github.com/cloudinary/cloudinary_php/graphs/contributors"
-            }
-        ],
-        "description": "Cloudinary PHP SDK",
-        "homepage": "https://github.com/cloudinary/cloudinary_php",
-        "keywords": [
-            "cdn",
-            "cloud",
-            "cloudinary",
-            "image management",
-            "sdk"
-        ]
-    },
-    {
         "name": "flarumchina/flarum-ext-mediaembed-pro",
         "version": "0.3.3",
         "version_normalized": "0.3.3.0",
@@ -6010,24 +5154,495 @@
         ]
     },
     {
-        "name": "flarumchina/flarum-ext-simplified-chinese-pro",
-        "version": "v0.1.0-beta.6.3",
-        "version_normalized": "0.1.0.0-beta6.3",
+        "name": "filp/whoops",
+        "version": "2.1.9",
+        "version_normalized": "2.1.9.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/FlarumChina/flarum-ext-simplified-chinese-pro.git",
-            "reference": "7a10c7222eb3c188460460eb8626a53ec94cb795"
+            "url": "https://github.com/filp/whoops.git",
+            "reference": "b238974e1c7cc1859b0c16ddc1c02ecb70ecc07f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/7a10c7222eb3c188460460eb8626a53ec94cb795",
-            "reference": "7a10c7222eb3c188460460eb8626a53ec94cb795",
+            "url": "https://api.github.com/repos/filp/whoops/zipball/b238974e1c7cc1859b0c16ddc1c02ecb70ecc07f",
+            "reference": "b238974e1c7cc1859b0c16ddc1c02ecb70ecc07f",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.5.9 || ^7.0",
+            "psr/log": "^1.0.1"
+        },
+        "require-dev": {
+            "mockery/mockery": "0.9.*",
+            "phpunit/phpunit": "^4.8 || ^5.0",
+            "symfony/var-dumper": "^2.6 || ^3.0"
+        },
+        "suggest": {
+            "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
+            "whoops/soap": "Formats errors as SOAP responses"
+        },
+        "time": "2017-06-03T18:33:07+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Whoops\\": "src/Whoops/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Filipe Dobreira",
+                "homepage": "https://github.com/filp",
+                "role": "Developer"
+            }
+        ],
+        "description": "php error handling for cool kids",
+        "homepage": "https://filp.github.io/whoops/",
+        "keywords": [
+            "error",
+            "exception",
+            "handling",
+            "library",
+            "whoops",
+            "zf2"
+        ]
+    },
+    {
+        "name": "symfony/finder",
+        "version": "v2.7.29",
+        "version_normalized": "2.7.29.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/finder.git",
+            "reference": "936529dea4ebedcfe577700b6079a75eb918d21f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/finder/zipball/936529dea4ebedcfe577700b6079a75eb918d21f",
+            "reference": "936529dea4ebedcfe577700b6079a75eb918d21f",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9"
+        },
+        "time": "2017-06-01T20:44:56+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.7-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Finder\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Finder Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "symfony/polyfill-mbstring",
+        "version": "v1.4.0",
+        "version_normalized": "1.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/polyfill-mbstring.git",
+            "reference": "f29dca382a6485c3cbe6379f0c61230167681937"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/f29dca382a6485c3cbe6379f0c61230167681937",
+            "reference": "f29dca382a6485c3cbe6379f0c61230167681937",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "suggest": {
+            "ext-mbstring": "For best performance"
+        },
+        "time": "2017-06-09T14:24:12+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Polyfill\\Mbstring\\": ""
+            },
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Grekas",
+                "email": "p@tchwork.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony polyfill for the Mbstring extension",
+        "homepage": "https://symfony.com",
+        "keywords": [
+            "compatibility",
+            "mbstring",
+            "polyfill",
+            "portable",
+            "shim"
+        ]
+    },
+    {
+        "name": "symfony/http-foundation",
+        "version": "v2.7.29",
+        "version_normalized": "2.7.29.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/http-foundation.git",
+            "reference": "dff67542358c302a0dbc3fc3e5e9b7b0445b5224"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/dff67542358c302a0dbc3fc3e5e9b7b0445b5224",
+            "reference": "dff67542358c302a0dbc3fc3e5e9b7b0445b5224",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9",
+            "symfony/polyfill-mbstring": "~1.1"
+        },
+        "require-dev": {
+            "symfony/expression-language": "~2.4"
+        },
+        "time": "2017-06-01T20:44:56+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.7-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\HttpFoundation\\": ""
+            },
+            "classmap": [
+                "Resources/stubs"
+            ],
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony HttpFoundation Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "symfony/translation",
+        "version": "v2.7.29",
+        "version_normalized": "2.7.29.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/translation.git",
+            "reference": "3232308ee2c8522642df02c343cfa217162485bd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/3232308ee2c8522642df02c343cfa217162485bd",
+            "reference": "3232308ee2c8522642df02c343cfa217162485bd",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9"
+        },
+        "conflict": {
+            "symfony/config": "<2.7"
+        },
+        "require-dev": {
+            "psr/log": "~1.0",
+            "symfony/config": "~2.7",
+            "symfony/intl": "~2.7.25|^2.8.18",
+            "symfony/yaml": "~2.2"
+        },
+        "suggest": {
+            "psr/log": "To use logging capability in translator",
+            "symfony/config": "",
+            "symfony/yaml": ""
+        },
+        "time": "2017-06-01T20:44:56+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.7-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Translation\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Translation Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "symfony/debug",
+        "version": "v2.7.29",
+        "version_normalized": "2.7.29.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/debug.git",
+            "reference": "2662c21dea8fb116c46fe1bcf819bc5dd4bc99fd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/debug/zipball/2662c21dea8fb116c46fe1bcf819bc5dd4bc99fd",
+            "reference": "2662c21dea8fb116c46fe1bcf819bc5dd4bc99fd",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9",
+            "psr/log": "~1.0"
+        },
+        "conflict": {
+            "symfony/http-kernel": ">=2.3,<2.3.24|~2.4.0|>=2.5,<2.5.9|>=2.6,<2.6.2"
+        },
+        "require-dev": {
+            "symfony/class-loader": "~2.2",
+            "symfony/http-kernel": "~2.3.24|~2.5.9|^2.6.2"
+        },
+        "time": "2017-06-01T20:44:56+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.7-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Debug\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Debug Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "symfony/console",
+        "version": "v2.8.22",
+        "version_normalized": "2.8.22.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/console.git",
+            "reference": "3ef6ef64abecd566d551d9e7f6393ac6e93b2462"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/console/zipball/3ef6ef64abecd566d551d9e7f6393ac6e93b2462",
+            "reference": "3ef6ef64abecd566d551d9e7f6393ac6e93b2462",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9",
+            "symfony/debug": "^2.7.2|~3.0.0",
+            "symfony/polyfill-mbstring": "~1.0"
+        },
+        "require-dev": {
+            "psr/log": "~1.0",
+            "symfony/event-dispatcher": "~2.1|~3.0.0",
+            "symfony/process": "~2.1|~3.0.0"
+        },
+        "suggest": {
+            "psr/log": "For using the console logger",
+            "symfony/event-dispatcher": "",
+            "symfony/process": ""
+        },
+        "time": "2017-06-02T14:36:56+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Console\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Console Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "symfony/yaml",
+        "version": "v2.8.22",
+        "version_normalized": "2.8.22.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/yaml.git",
+            "reference": "4c29dec8d489c4e37cf87ccd7166cd0b0e6a45c5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/yaml/zipball/4c29dec8d489c4e37cf87ccd7166cd0b0e6a45c5",
+            "reference": "4c29dec8d489c4e37cf87ccd7166cd0b0e6a45c5",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9"
+        },
+        "time": "2017-06-01T20:52:29+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Yaml\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Yaml Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "flarumchina/flarum-ext-simplified-chinese-pro",
+        "version": "v0.1.0-beta.6.7",
+        "version_normalized": "0.1.0.0-beta6.7",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FlarumChina/flarum-ext-simplified-chinese-pro.git",
+            "reference": "908b1fcc02011de575a2619d5156e9b6f9a83dbb"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/908b1fcc02011de575a2619d5156e9b6f9a83dbb",
+            "reference": "908b1fcc02011de575a2619d5156e9b6f9a83dbb",
             "shasum": ""
         },
         "require": {
             "flarum/core": "^0.1.0-beta.6"
         },
-        "time": "2017-05-29T08:52:16+00:00",
+        "time": "2017-06-13T13:50:06+00:00",
         "type": "flarum-extension",
         "extra": {
             "branch-alias": {
@@ -6058,18 +5673,702 @@
         ]
     },
     {
-        "name": "flarum/core",
-        "version": "v0.1.0-beta.6",
-        "version_normalized": "0.1.0.0-beta6",
+        "name": "symfony/filesystem",
+        "version": "v3.3.2",
+        "version_normalized": "3.3.2.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/FlarumChina/core.git",
-            "reference": "c51075f6a56a799787703dd062372c7ac6407a4c"
+            "url": "https://github.com/symfony/filesystem.git",
+            "reference": "c709670bf64721202ddbe4162846f250735842c0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/FlarumChina/core/zipball/c51075f6a56a799787703dd062372c7ac6407a4c",
-            "reference": "c51075f6a56a799787703dd062372c7ac6407a4c",
+            "url": "https://api.github.com/repos/symfony/filesystem/zipball/c709670bf64721202ddbe4162846f250735842c0",
+            "reference": "c709670bf64721202ddbe4162846f250735842c0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5.9"
+        },
+        "time": "2017-05-28T14:08:56+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Filesystem\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Filesystem Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "symfony/process",
+        "version": "v3.3.2",
+        "version_normalized": "3.3.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/process.git",
+            "reference": "8e30690c67aafb6c7992d6d8eb0d707807dd3eaf"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/process/zipball/8e30690c67aafb6c7992d6d8eb0d707807dd3eaf",
+            "reference": "8e30690c67aafb6c7992d6d8eb0d707807dd3eaf",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5.9"
+        },
+        "time": "2017-05-22T12:32:03+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Process\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Process Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "pusher/pusher-php-server",
+        "version": "2.6.4",
+        "version_normalized": "2.6.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/pusher/pusher-http-php.git",
+            "reference": "2cf2ba85e7ce3250468a1c42ab7c948a7d43839d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/2cf2ba85e7ce3250468a1c42ab7c948a7d43839d",
+            "reference": "2cf2ba85e7ce3250468a1c42ab7c948a7d43839d",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "php": ">=5.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4"
+        },
+        "time": "2017-06-06T16:41:17+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "lib/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Library for interacting with the Pusher REST API",
+        "homepage": "https://github.com/pusher/pusher-php-server",
+        "keywords": [
+            "events",
+            "php-pusher-server",
+            "publish",
+            "pusher",
+            "realtime",
+            "rest",
+            "trigger"
+        ]
+    },
+    {
+        "name": "flagrow/bazaar",
+        "version": "0.2.1",
+        "version_normalized": "0.2.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/flagrow/bazaar.git",
+            "reference": "0f5a5f2b3861504d77674a49c0f0cb0ac468819b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/flagrow/bazaar/zipball/0f5a5f2b3861504d77674a49c0f0cb0ac468819b",
+            "reference": "0f5a5f2b3861504d77674a49c0f0cb0ac468819b",
+            "shasum": ""
+        },
+        "require": {
+            "composer/composer": "^1.3",
+            "flarum/core": "^0.1.0-beta.6",
+            "guzzlehttp/guzzle": "^6.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8"
+        },
+        "time": "2017-05-30T18:03:43+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Flagrow Bazaar",
+                "icon": {
+                    "name": "shopping-bag",
+                    "backgroundColor": "#f4f4f4",
+                    "color": "#5f4bb6"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Flagrow\\Bazaar\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "cc-by-nc-nd"
+        ],
+        "authors": [
+            {
+                "name": "Clark Winkelmann",
+                "email": "clark.winkelmann@gmail.com",
+                "homepage": "https://clarkwinkelmann.com"
+            },
+            {
+                "name": "Daniël Klabbers",
+                "email": "daniel@klabbers.email",
+                "homepage": "http://luceos.com"
+            }
+        ],
+        "description": "The Flarum extension marketplace.",
+        "keywords": [
+            "extension",
+            "flagrow",
+            "flarum"
+        ]
+    },
+    {
+        "name": "flarum/flarum-ext-mentions",
+        "version": "v0.1.0-beta.6.1",
+        "version_normalized": "0.1.0.0-beta6.1",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FlarumChina/flarum-ext-mentions.git",
+            "reference": "0612f83249519ba3db72e3dccd84e2bba7fb5b30"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-mentions/zipball/0612f83249519ba3db72e3dccd84e2bba7fb5b30",
+            "reference": "0612f83249519ba3db72e3dccd84e2bba7fb5b30",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6"
+        },
+        "time": "2017-04-03T03:27:27+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.1.x-dev"
+            },
+            "flarum-extension": {
+                "title": "Mentions",
+                "icon": {
+                    "name": "at",
+                    "backgroundColor": "#539EC1",
+                    "color": "#fff"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Flarum\\Mentions\\": "src/"
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Toby Zerner",
+                "email": "toby.zerner@gmail.com"
+            }
+        ],
+        "description": "Mention and reply to specific posts and users.",
+        "keywords": [
+            "discussion"
+        ],
+        "support": {
+            "issues": "https://github.com/flarum/core/issues",
+            "source": "https://github.com/flarum/flarum-ext-mentions"
+        }
+    },
+    {
+        "name": "ramsey/uuid",
+        "version": "3.6.1",
+        "version_normalized": "3.6.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ramsey/uuid.git",
+            "reference": "4ae32dd9ab8860a4bbd750ad269cba7f06f7934e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ramsey/uuid/zipball/4ae32dd9ab8860a4bbd750ad269cba7f06f7934e",
+            "reference": "4ae32dd9ab8860a4bbd750ad269cba7f06f7934e",
+            "shasum": ""
+        },
+        "require": {
+            "paragonie/random_compat": "^1.0|^2.0",
+            "php": "^5.4 || ^7.0"
+        },
+        "replace": {
+            "rhumsaa/uuid": "self.version"
+        },
+        "require-dev": {
+            "apigen/apigen": "^4.1",
+            "codeception/aspect-mock": "^1.0 | ^2.0",
+            "doctrine/annotations": "~1.2.0",
+            "goaop/framework": "1.0.0-alpha.2 | ^1.0 | ^2.1",
+            "ircmaxell/random-lib": "^1.1",
+            "jakub-onderka/php-parallel-lint": "^0.9.0",
+            "mockery/mockery": "^0.9.4",
+            "moontoast/math": "^1.1",
+            "php-mock/php-mock-phpunit": "^0.3|^1.1",
+            "phpunit/phpunit": "^4.7|>=5.0 <5.4",
+            "satooshi/php-coveralls": "^0.6.1",
+            "squizlabs/php_codesniffer": "^2.3"
+        },
+        "suggest": {
+            "ext-libsodium": "Provides the PECL libsodium extension for use with the SodiumRandomGenerator",
+            "ext-uuid": "Provides the PECL UUID extension for use with the PeclUuidTimeGenerator and PeclUuidRandomGenerator",
+            "ircmaxell/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
+            "moontoast/math": "Provides support for converting UUID to 128-bit integer (in string form).",
+            "ramsey/uuid-console": "A console application for generating UUIDs with ramsey/uuid",
+            "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
+        },
+        "time": "2017-03-26T20:37:53+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Ramsey\\Uuid\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Marijn Huizendveld",
+                "email": "marijn.huizendveld@gmail.com"
+            },
+            {
+                "name": "Thibaud Fabre",
+                "email": "thibaud@aztech.io"
+            },
+            {
+                "name": "Ben Ramsey",
+                "email": "ben@benramsey.com",
+                "homepage": "https://benramsey.com"
+            }
+        ],
+        "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
+        "homepage": "https://github.com/ramsey/uuid",
+        "keywords": [
+            "guid",
+            "identifier",
+            "uuid"
+        ]
+    },
+    {
+        "name": "flagrow/upload",
+        "version": "0.5.7",
+        "version_normalized": "0.5.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/flagrow/upload.git",
+            "reference": "a3c7f0399457732b885e105b1214eac99cc05b14"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/flagrow/upload/zipball/a3c7f0399457732b885e105b1214eac99cc05b14",
+            "reference": "a3c7f0399457732b885e105b1214eac99cc05b14",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6",
+            "ramsey/uuid": "^3.5.2"
+        },
+        "require-dev": {
+            "league/flysystem": "^1.0.32",
+            "league/flysystem-aws-s3-v3": "^1.0",
+            "techyah/flysystem-ovh": "^1.0"
+        },
+        "suggest": {
+            "league/flysystem-aws-s3-v3": "Uploads to AWS S3 using API version 3.",
+            "techyah/flysystem-ovh": "Uploads to OVH Swift vfs using API."
+        },
+        "time": "2017-05-16T12:33:48+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Flagrow Upload",
+                "icon": {
+                    "name": "files-o",
+                    "backgroundColor": "#f4f4f4",
+                    "color": "#5f4bb6"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Flagrow\\Upload\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Daniël Klabbers",
+                "email": "daniel+flarum@klabbers.email",
+                "homepage": "http://hyn.me"
+            }
+        ],
+        "description": "The file upload extension for the Flarum forum with insane intelligence.",
+        "keywords": [
+            "file",
+            "flagrow",
+            "flarum",
+            "upload"
+        ]
+    },
+    {
+        "name": "issyrocks12/flarum-ext-users-list",
+        "version": "0.2.2.1",
+        "version_normalized": "0.2.2.1",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/issyrocks12/flarum-ext-users-list.git",
+            "reference": "959417c6ce15140b96891f8b24def54467f5f90a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/issyrocks12/flarum-ext-users-list/zipball/959417c6ce15140b96891f8b24def54467f5f90a",
+            "reference": "959417c6ce15140b96891f8b24def54467f5f90a",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.5"
+        },
+        "time": "2017-03-03T20:42:21+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Users list",
+                "icon": {
+                    "name": "users",
+                    "backgroundColor": "#FFFFFF",
+                    "color": "#000000"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "issyrocks12\\UsersList\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nikolai Morozov",
+                "email": "avanmorozov@gmail.com"
+            },
+            {
+                "name": "Charlie K",
+                "email": "charlie@jailbreakhub.org"
+            }
+        ],
+        "description": "Add users list in admin panel.",
+        "keywords": [
+            "Users",
+            "admin"
+        ],
+        "abandoned": "reflar/user-management"
+    },
+    {
+        "name": "samdark/sitemap",
+        "version": "2.0.7",
+        "version_normalized": "2.0.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/samdark/sitemap.git",
+            "reference": "9b0d0d11b26d96f463a3aa3ea74a7f6ab3c33a8a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/samdark/sitemap/zipball/9b0d0d11b26d96f463a3aa3ea74a7f6ab3c33a8a",
+            "reference": "9b0d0d11b26d96f463a3aa3ea74a7f6ab3c33a8a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.4"
+        },
+        "time": "2017-01-28T10:09:18+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "samdark\\sitemap\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Alexander Makarov",
+                "email": "sam@rmcreative.ru",
+                "homepage": "http://rmcreative.ru/"
+            }
+        ],
+        "description": "Sitemap and sitemap index builder",
+        "homepage": "https://github.com/samdark/sitemap",
+        "keywords": [
+            "Sitemap"
+        ]
+    },
+    {
+        "name": "flarumchina/flarum-ext-sitemap-chinese",
+        "version": "v1.0.3",
+        "version_normalized": "1.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FlarumChina/flarum-ext-sitemap-chinese.git",
+            "reference": "548d530831e78a561e3e9ed5d4cf0a52de5fa490"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-sitemap-chinese/zipball/548d530831e78a561e3e9ed5d4cf0a52de5fa490",
+            "reference": "548d530831e78a561e3e9ed5d4cf0a52de5fa490",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6",
+            "samdark/sitemap": "^2.0.4"
+        },
+        "time": "2017-06-13T03:14:52+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Sitemap for Chinese",
+                "icon": {
+                    "name": "sitemap",
+                    "backgroundColor": "#000",
+                    "color": "#fff"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Terabin\\Sitemap\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Allyson S Bacon",
+                "email": "allyson_198@hotmail.com"
+            }
+        ],
+        "description": "Generate a Sitemap for Flarum automatically for Chinese",
+        "keywords": [
+            "Sitemap",
+            "generator"
+        ]
+    },
+    {
+        "name": "davis/flarum-ext-securehttps",
+        "version": "0.1.0-beta4",
+        "version_normalized": "0.1.0.0-beta4",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/dav-is/flarum-ext-securehttps.git",
+            "reference": "c4d11f17b35cb8fb0f1ffc0936c953ab539a4997"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/dav-is/flarum-ext-securehttps/zipball/c4d11f17b35cb8fb0f1ffc0936c953ab539a4997",
+            "reference": "c4d11f17b35cb8fb0f1ffc0936c953ab539a4997",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.5"
+        },
+        "time": "2016-05-07T00:25:43+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Secure HTTPS",
+                "icon": {
+                    "name": "lock",
+                    "backgroundColor": "#000",
+                    "color": "green"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Davis\\SecureHttps\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Connor Davis",
+                "email": "davis@produes.co"
+            }
+        ],
+        "description": "Changes all images using http to https",
+        "keywords": [
+            "customization",
+            "davis",
+            "flarum",
+            "https",
+            "images"
+        ]
+    },
+    {
+        "name": "davis/flarum-ext-inviteonly",
+        "version": "v0.1.0-beta3",
+        "version_normalized": "0.1.0.0-beta3",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/dav-is/flarum-ext-inviteonly.git",
+            "reference": "0b7a7442cacd87eb22a45dbac38c7a096db1f9e8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/dav-is/flarum-ext-inviteonly/zipball/0b7a7442cacd87eb22a45dbac38c7a096db1f9e8",
+            "reference": "0b7a7442cacd87eb22a45dbac38c7a096db1f9e8",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.5"
+        },
+        "time": "2016-06-27T01:19:28+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Invite Only",
+                "icon": {
+                    "name": "exchange",
+                    "backgroundColor": "#2980b9",
+                    "color": "white"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Davis\\InviteOnly\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Connor Davis",
+                "email": "davis@produes.co"
+            }
+        ],
+        "description": "Allow Registration only if invited.",
+        "keywords": [
+            "Invite",
+            "customization",
+            "davis",
+            "flarum",
+            "private"
+        ]
+    },
+    {
+        "name": "flarum/core",
+        "version": "v0.1.0-beta.6.2",
+        "version_normalized": "0.1.0.0-beta6.2",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FlarumChina/core.git",
+            "reference": "f412fed9f2e27d0f8bc28aeb782bcaa3a6eca75b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FlarumChina/core/zipball/f412fed9f2e27d0f8bc28aeb782bcaa3a6eca75b",
+            "reference": "f412fed9f2e27d0f8bc28aeb782bcaa3a6eca75b",
             "shasum": ""
         },
         "require": {
@@ -6112,7 +6411,7 @@
             "mockery/mockery": "^0.9.4",
             "phpunit/phpunit": "^4.8"
         },
-        "time": "2017-05-29T09:19:25+00:00",
+        "time": "2017-06-13T13:04:39+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -6163,39 +6462,41 @@
         }
     },
     {
-        "name": "flagrow/ads",
-        "version": "0.1.0-beta.3",
-        "version_normalized": "0.1.0.0-beta3",
+        "name": "flagrow/byobu",
+        "version": "0.1.0-beta.16",
+        "version_normalized": "0.1.0.0-beta16",
         "source": {
             "type": "git",
-            "url": "https://github.com/flagrow/ads.git",
-            "reference": "98747ba37f9af83eb5578e9a4ebe54e6a9ec073d"
+            "url": "https://github.com/flagrow/byobu.git",
+            "reference": "40bd474ec853459f78b6524f9eb7d22c35ba28a6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/flagrow/ads/zipball/98747ba37f9af83eb5578e9a4ebe54e6a9ec073d",
-            "reference": "98747ba37f9af83eb5578e9a4ebe54e6a9ec073d",
+            "url": "https://api.github.com/repos/flagrow/byobu/zipball/40bd474ec853459f78b6524f9eb7d22c35ba28a6",
+            "reference": "40bd474ec853459f78b6524f9eb7d22c35ba28a6",
             "shasum": ""
         },
         "require": {
-            "flarum/core": "0.1.0-beta.6"
+            "flarum/core": "^0.1.0-beta.6",
+            "flarum/flarum-ext-markdown": "^0.1.0-beta.5",
+            "flarum/flarum-ext-pusher": "^0.1.0-beta.5"
         },
-        "time": "2017-02-27T09:04:03+00:00",
+        "time": "2017-06-06T10:16:36+00:00",
         "type": "flarum-extension",
         "extra": {
             "flarum-extension": {
-                "title": "Flagrow Ads",
+                "title": "Flagrow Byōbu",
                 "icon": {
-                    "name": "audio-description",
-                    "backgroundColor": "#000",
-                    "color": "#87d37c"
+                    "name": "map-o",
+                    "backgroundColor": "#f4f4f4",
+                    "color": "#5f4bb6"
                 }
             }
         },
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "Flagrow\\Ads\\": "src/"
+                "Flagrow\\Byobu\\": "src/"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
@@ -6205,21 +6506,74 @@
         "authors": [
             {
                 "name": "Daniël Klabbers",
-                "email": "daniel+flarum@klabbers.email",
-                "homepage": "http://hyn.me"
-            },
-            {
-                "name": "Clark Winkelmann",
-                "email": "clark.winkelmann@gmail.com",
-                "homepage": "https://clarkwinkelmann.com"
+                "email": "daniel@klabbers.email",
+                "homepage": "http://luceos.com"
             }
         ],
-        "description": "Bombarding your users with ads everywhere, if you want..",
+        "description": "Well integrated, advanced private discussions.",
         "keywords": [
-            "Advertising",
-            "ads",
             "flagrow",
-            "flarum"
+            "flarum",
+            "messaging",
+            "pm",
+            "private discussions"
+        ]
+    },
+    {
+        "name": "flagrow/masquerade",
+        "version": "0.1.0",
+        "version_normalized": "0.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/flagrow/masquerade.git",
+            "reference": "97b62ce4aa6d6acc85f3a67b02a696633374fc0c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/flagrow/masquerade/zipball/97b62ce4aa6d6acc85f3a67b02a696633374fc0c",
+            "reference": "97b62ce4aa6d6acc85f3a67b02a696633374fc0c",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6"
+        },
+        "time": "2017-05-31T05:07:06+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Flagrow Masquerade",
+                "icon": {
+                    "name": "id-card-o",
+                    "backgroundColor": "#f4f4f4",
+                    "color": "#5f4bb6"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Flagrow\\Masquerade\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "mit"
+        ],
+        "authors": [
+            {
+                "name": "Daniël Klabbers",
+                "email": "daniel@klabbers.email",
+                "homepage": "http://luceos.com"
+            }
+        ],
+        "description": "User profile builder extension for your Flarum forum.",
+        "keywords": [
+            "extension",
+            "flagrow",
+            "flarum",
+            "member profile",
+            "profile",
+            "user profile"
         ]
     }
 ]

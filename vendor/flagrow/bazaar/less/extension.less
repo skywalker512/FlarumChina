@@ -1,6 +1,19 @@
-
-
 .ExtensionsPage.Bazaar {
+    .ExtensionsPage-header {
+        background: #5f4bb6;
+        .box-shadow(0 1px 5px @shadow-color);
+    }
+    .Button {
+        &.Requirement-MemoryLimit, &.Requirement-FilePermissions {
+            .Button--color(@control-danger-color, @control-danger-bg);
+        }
+        &.Connected {
+            .Button--color(@alert-success-color, @alert-success-bg);
+        }
+        &.Connect {
+            .Button--color(@primary-color, @alert-success-bg);
+        }
+    }
     .container {
         margin: 0 5em;
     }
@@ -78,6 +91,63 @@
             i {
                 font-size: 110px;
                 margin: 0 5px;
+            }
+        }
+    }
+
+    .TaskPage-table {
+        width: 100%;
+        max-width: 1000px;
+        text-align: center;
+
+        .time-column {
+            width: 9em;
+        }
+
+        .status-column {
+            width: 4em;
+        }
+
+        td.command-column,
+        td.output-column {
+            text-align: left;
+        }
+
+        .details-column {
+            width: 6em;
+        }
+
+        .TaskListItem {
+            .status {
+                padding: 0.5em;
+                border-radius: @border-radius;
+                text-align: center;
+            }
+
+            &.status-success .status {
+                background: @alert-success-bg;
+                color: @alert-success-color;
+            }
+
+            &.status-exception .status {
+                background: @alert-error-bg;
+                color: @alert-error-color;
+            }
+
+            td {
+                padding: 1em 0.8em;
+            }
+
+            pre {
+                background: #ddd;
+                padding: 0.5em;
+                max-width: 1000px;
+                max-height: 30em;
+                overflow: auto;
+            }
+
+            tr:last-of-type td {
+                border-bottom: 1px solid @muted-more-color;
             }
         }
     }

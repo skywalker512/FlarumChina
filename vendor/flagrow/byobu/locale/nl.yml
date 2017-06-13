@@ -1,0 +1,34 @@
+flagrow-byobu:
+    forum:
+        badges:
+            is_private:
+                tooltip: Privé discussie
+        buttons:
+            add_recipients: Deelnemers
+            submit: Ok
+            edit_recipients: Bewerk deelnemers
+        labels:
+            recipients: "{count} Deelnemer|{count} Deelnemers"
+            user_deleted: -verwijderd-
+        nav:
+            private_discussions: Privé discussie
+        input:
+            search_recipients: Zoek ontvangers door de eerste drie letters te typen...
+        search:
+            headings:
+                groups: Groepsrechten
+        modal:
+            titles:
+                update_recipients: Deelnemers van {title} bijgewerkt.
+                add_recipients: Voeg een deelnemer toe aan de discussie
+        post:
+            recipients_modified:
+                added_and_removed: "{username} heeft deelnemer {added} toegevoegd en {removed} verwijderd."
+                added: "{username} heeft {added} toegevoegd."
+                removed: "{username} heeft {removed} verwijderd."
+    admin:
+        permission:
+            create_private_discussions_with_users: Maak een privé discussie met gebruikers
+            create_private_discussions_with_groups: Maak een privé discussie met groepen
+            edit_user_recipients: Bewerk deelnemers die onderdeel zijn van een privé discussie
+            edit_group_recipients: Bewerk groepen die onderdeel zijn van een privé discussie

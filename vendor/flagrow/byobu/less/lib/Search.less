@@ -1,0 +1,54 @@
+    .AddRecipientModal-form {
+        .RecipientsInput-selected {
+            margin: 2vh 0;
+        }
+
+        .Search-results {
+            position: relative;
+            display: block;
+            max-height: 70vh;
+            overflow: auto;
+            left: 0;
+            right: 0;
+
+            > li > a {
+                white-space: normal;
+            }
+
+            mark {
+                background: none;
+                padding: 0;
+                font-weight: bold;
+                color: inherit;
+                box-shadow: none;
+            }
+        }
+        .Search {
+            &.focused {
+                margin-left: 0px;
+            }
+
+            input {
+                position: relative;
+                padding-left: 32px;
+                padding-right: 32px;
+                box-sizing: inherit !important;
+            }
+            .Button {
+                float: left;
+                margin-left: -36px;
+                width: 36px !important;
+                outline: none;
+            }
+
+            .RecipientsInput-selected {
+                display: block;
+                clear: both;
+            }
+            .SearchResult .Avatar {
+                .Avatar--size(24px);
+                margin: -2px 10px -2px 0;
+            }
+        }
+    }
+

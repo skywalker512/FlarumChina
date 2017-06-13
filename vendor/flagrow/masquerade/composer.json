@@ -1,0 +1,39 @@
+{
+    "name": "flagrow/masquerade",
+    "description": "User profile builder extension for your Flarum forum.",
+    "keywords": [
+        "extension",
+        "flarum",
+        "flagrow",
+        "user profile",
+        "member profile",
+        "profile"
+    ],
+    "type": "flarum-extension",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "Daniël Klabbers",
+            "email": "daniel@klabbers.email",
+            "homepage": "http://luceos.com"
+        }
+    ],
+    "require": {
+        "flarum/core": "^0.1.0-beta.6"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Flagrow Masquerade",
+            "icon": {
+                "name": "id-card-o",
+                "backgroundColor": "#f4f4f4",
+                "color": "#5f4bb6"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Flagrow\\Masquerade\\": "src/"
+        }
+    }
+}

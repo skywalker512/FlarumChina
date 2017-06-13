@@ -1,0 +1,53 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: Dosya Ekle
+        states:
+            loading: Yükleniyor
+            success: Başarılı
+            error: Hata
+    admin:
+        permissions:
+            upload_label: Dosya yükleyebilme
+        upload_methods:
+            local: Yerel
+            aws-s3: Amazon S3
+            imgur: Imgur
+        labels:
+            upload_method: Dosya yükleme metodu
+            preferences:
+                title: Genel ayarlar
+                max_file_size: En fazla dosya boyutu (kilobyte değeriyle)
+                mime_types_allowed: Regular Expression kullanarak uygulamanız içerisindeki yüklenecek dosyaların mime tiplerini belirleyin
+            resize:
+                title: Resim boyutu
+                toggle: Resim boyutlandırmayı aç
+                max_width: En fazla resim genişliği
+                max_height: En fazla resim uzunluğu
+            local:
+                title: Yerel depolama ayarları
+                cdn_url: CDN hizmeti bağlantısı (dosyalara ön ek olacaktır)
+            imgur:
+                title: Imgur image storage settings
+                client_id: Imgur client ID
+            aws-s3:
+                title: AWS S3 depolama ayarları
+                key: Key
+                secret: Secret
+                bucket: Bucket
+                region: Region
+        buttons:
+            save: Ayarları kaydet
+        help_texts:
+            description: >
+                Dosya yükleme servisleri ve ayarları.
+            upload_method: >
+                Burada dosyanızın yükleme metodunu seçebilirsiniz.
+                Ayarınızı seçtiğiniz zaman uygulamanın ön yüzünde
+                seçtiğiniz ayar kartı görüntülenecektir.
+            resize: >
+                Yüklenen dosya resim olduğu zaman, resim seçili olan servise
+                gönderilmeden önce tekrar boyutlandırma işlemi yapılması için
+                seçiniz. Resim için en fazla genişliği ve uzunluğu "pixel" formatında
+                belirleyebilirsiniz. Tekrar boyutlandırma işleminde en/boy oranı herzaman
+                korunacaktır.

@@ -1,0 +1,68 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: Załącz
+        states:
+            loading: Ładowanie
+            success: Sukces
+            error: Błąd
+    admin:
+        permissions:
+            upload_label: Prześlij pliki
+        upload_methods:
+            local: Lokalnie
+            aws-s3: Amazon S3
+            imgur: Imgur
+            ovh-svfs: OVH SVFS
+        labels:
+            upload_method: Metoda przesyłu
+            preferences:
+                title: Generalne preferencje
+                max_file_size: Maksymalna wielkość pliku (w kilobajtach)
+                mime_types_allowed: Uściśl na jakie typy mime chcesz pozwolić używając wyrażenia regularnego
+            resize:
+                title: Zmiana wielkości obrazów
+                toggle: Zmieniaj wielkości obrazów
+                max_width: Maksymalna szerokość obrazu
+                max_height: Maksymalna wysokość obrazu
+            watermark:
+                title: Oznaczanie obrazów
+                toggle: Oznaczaj obrazy znakami wodnymi
+                position: Pozycja znaku wodnego
+                file: Prześlij swój znak wodny
+            local:
+                title: Ustawienia przestrzeni lokalnej
+                cdn_url: URL systemu dostarczania treści (rozpoczyna ścieżki plików)
+            imgur:
+                title: Ustawienia Imgura
+                client_id: ID użytkownika Imgura
+            aws-s3:
+                title: Ustawienia AWS S3
+                key: Klucz
+                secret: Sekret
+                bucket: Bucket
+                region: Region
+            ovh-svfs:
+                title: Ustawienia magazynu OVH SVFS
+                container: Kontener
+                tenantid: ID Tenant
+                username: Nazwa użytkownika
+                password: Hasło
+                region: Region
+        buttons:
+            save: Zapisz ustawienia
+        help_texts:
+            description: >
+                Ustaw usługi przesyłania.
+            upload_method: >
+                Tutaj możesz wybrać metodę, którą chcesz użyć
+                do przesłania swoich plików. Kiedy wybierzesz jedną
+                z nich pojawi się karta ustawień.
+            resize: >
+                Wybierz czy chcesz zmienić rozmiar swoich obrazów zanim
+                zostaną przesłane. Możesz wybrać maksymalną szerokość
+                i wysokość w pikselach. Proces zmiany rozmiaru utrzyma
+                proporcje obrazu.
+            watermark: >
+                Wybierz, czy obrazy będą miały dodany znak wodny podczas przesyłania.
+                Znaki wodne są dodawane do nie-gifów bazując na twoich preferencjach poniżej.

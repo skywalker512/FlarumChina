@@ -195,7 +195,7 @@ class InstallCommand extends AbstractCommand
         $dbConfig = $this->dbConfig;
 
         $config = [
-            'debug'    => false,
+            'debug'    => true,
             'database' => [
                 'driver'    => $dbConfig['driver'],
                 'host'      => $dbConfig['host'],
@@ -347,9 +347,14 @@ class InstallCommand extends AbstractCommand
             'flarum-auth-twitter',
             'flarum-pusher',
             'antoinefr-money',
-            "flagrow-bazaar",
-            "wiseclock-login2see",
-            "wiseclock-reply2see",
+            'wiseclock-post-copyright',
+            'wiseclock-profile-image-crop',
+            'flagrow-byobu',
+            'flagrow-upload',
+            'wiseclock-reply2see',
+            'wiseclock-login2see',
+            'reflar-gamification',
+            'flagrow-masquerade',
         ];
 
         foreach ($extensions->getExtensions() as $name => $extension) {

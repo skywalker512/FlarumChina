@@ -27,6 +27,7 @@ class ComposerEnvironment
      * ComposerEnvironment constructor.
      * @param string $composerInstallRoot
      * @param string $composerHome
+     * @param Filesystem $filesystem
      */
     public function __construct($composerInstallRoot, $composerHome, Filesystem $filesystem)
     {
@@ -95,9 +96,9 @@ class ComposerEnvironment
     }
 
     /**
-     * @throws FilePermissionException
+     * @return array
      */
-    public function checkFilePermissions()
+    public function retrieveFilePermissions()
     {
         $pathsToCheck = [
             $this->getComposerInstallRoot(),
@@ -107,10 +108,24 @@ class ComposerEnvironment
             $this->getTemporaryVendorPath(),
         ];
 
+        $paths = [];
+
         foreach ($pathsToCheck as $path) {
             if (file_exists($path) && !is_writable($path)) {
-                throw new FilePermissionException('Write permission missing for '.$path);
+                $paths[] = str_replace(base_path(), '/', $path);
             }
+        }
+
+        return $paths;
+    }
+
+    /**
+     * @throws FilePermissionException
+     */
+    public function checkFilePermissions()
+    {
+        foreach ($this->retrieveFilePermissions() as $path) {
+            throw new FilePermissionException('Write permission missing for '.$path);
         }
     }
 

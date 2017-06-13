@@ -11,8 +11,8 @@
     "authors": [
         {
             "name": "Daniël Klabbers",
-            "email": "daniel+flarum@klabbers.email",
-            "homepage": "http://hyn.me"
+            "email": "daniel@klabbers.email",
+            "homepage": "http://luceos.com"
         },
         {
             "name": "Clark Winkelmann",
@@ -37,8 +37,8 @@
             "title": "Flagrow Bazaar",
             "icon": {
                 "name": "shopping-bag",
-                "backgroundColor": "#000",
-                "color": "#87d37c"
+                "backgroundColor": "#f4f4f4",
+                "color": "#5f4bb6"
             }
         }
     },

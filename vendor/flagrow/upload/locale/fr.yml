@@ -1,0 +1,58 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: Joindre
+        states:
+            loading: Téléchargement
+            success: Succès
+            error: Erreur
+    admin:
+        permissions:
+            upload_label: Joindre des fichiers
+        upload_methods:
+            local: Local
+            aws-s3: Amazon S3
+            imgur: Imgur
+        labels:
+            upload_method: Méthode de téléchargement
+            preferences:
+                title: Préférences générales
+                max_file_size: Taille maximale du fichier (en kilobytes)
+                mime_types: Déterminez les extensions à autoriser en utilisant une expression régulière
+            resize:
+                title: Redimensionnement des images
+                toggle: Redimensionner les images
+                max_width: Largeur maximale de l’image
+                max_height: Hauteur maximale de l’image
+            watermark:
+                title: Images en filigrane
+                toggle: Images en filigrane
+                position: Position du watermark
+                file: Joindre votre image en filigrane
+            local:
+                title: Paramètres du stockage local
+                cdn_url: URL du contenu délivré (préfixes des fichiers)
+            imgur:
+                title: Paramètres de stockage des images Imgur
+                client_id: ID de client Imgur
+            aws-s3:
+                title: Paramètres du stockage AWS S3
+                key: Clé
+                secret: Secret
+                bucket: Bucket
+                region: Région
+        buttons:
+            save: Sauvegarder les paramètres
+        help_texts:
+            description: >
+                Paramétrer les services et préférences de téléchargement.
+            mime_types: >
+                Configurez la correspondance entre le type de données et le stockage. Chaque type mime représenté par une expression régulière sera géré
+                par le service de stockage correspondant.
+            upload_method: >
+                Vous pouvez sélectionner la méthode que vous souhaitez utiliser pour joindre vos fichiers. Lorsque vous en sélectionner une, the
+                relative setting card is going to be displayed.
+            resize: >
+                Choisir si vous voulez redimensionner les images avant leur téléchargement. Vous pouvez choisir une largeur et hauteur maximales, en pixels. Le processus de redimensionnement conserve le rapport d’aspect des images.
+            watermark: >
+                Choisir si les images possèderont une image en filigrane pendant le téléchargement. Les images en filigrane sont ajoutées sur des images (sauf .gif) basées sur vos préférences ci-dessous.

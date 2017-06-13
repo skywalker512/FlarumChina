@@ -17453,12 +17453,12 @@ System.register('flarum/components/AddExtensionModal', ['flarum/components/Modal
               m(
                 'p',
                 null,
-                app.translator.trans('core.admin.add_extension.install_text', { a: m('a', { href: 'https://discuss.flarum.org/t/extensions', target: '_blank' }) })
+                app.translator.trans('core.admin.add_extension.install_text', { a: m('a', { href: 'https://bbs.flarumchina.org/t/extensions', target: '_blank' }) })
               ),
               m(
                 'p',
                 null,
-                app.translator.trans('core.admin.add_extension.developer_text', { a: m('a', { href: 'http://flarum.org/docs/extend', target: '_blank' }) })
+                app.translator.trans('core.admin.add_extension.developer_text', { a: m('a', { href: 'http://flarumchina.org/docs/extend', target: '_blank' }) })
               )
             );
           }
@@ -18412,27 +18412,27 @@ System.register("flarum/components/DashboardPage", ["flarum/components/Page"], f
                   m(
                     "li",
                     null,
-                    app.translator.trans('core.admin.dashboard.contributing_text', { a: m("a", { href: "http://flarum.org/docs/contributing", target: "_blank" }) })
+                    app.translator.trans('core.admin.dashboard.contributing_text', { a: m("a", { href: "http://flarumchina.org/docs/contributing", target: "_blank" }) })
                   ),
                   m(
                     "li",
                     null,
-                    app.translator.trans('core.admin.dashboard.troubleshooting_text', { a: m("a", { href: "http://flarum.org/docs/troubleshooting", target: "_blank" }) })
+                    app.translator.trans('core.admin.dashboard.troubleshooting_text', { a: m("a", { href: "http://flarumchina.org/docs/troubleshooting", target: "_blank" }) })
                   ),
                   m(
                     "li",
                     null,
-                    app.translator.trans('core.admin.dashboard.support_text', { a: m("a", { href: "http://discuss.flarum.org/t/support", target: "_blank" }) })
+                    app.translator.trans('core.admin.dashboard.support_text', { a: m("a", { href: "http://bbs.flarumchina.org/", target: "_blank" }) })
                   ),
                   m(
                     "li",
                     null,
-                    app.translator.trans('core.admin.dashboard.features_text', { a: m("a", { href: "http://discuss.flarum.org/t/features", target: "_blank" }) })
+                    app.translator.trans('core.admin.dashboard.features_text', { a: m("a", { href: "http://bbs.flarumchina.org/t/resources", target: "_blank" }) })
                   ),
                   m(
                     "li",
                     null,
-                    app.translator.trans('core.admin.dashboard.extension_text', { a: m("a", { href: "http://flarum.org/docs/extend", target: "_blank" }) })
+                    app.translator.trans('core.admin.dashboard.extension_text', { a: m("a", { href: "http://flarumchina.org/docs/extend", target: "_blank" }) })
                   )
                 )
               )

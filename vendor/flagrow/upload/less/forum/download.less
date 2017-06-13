@@ -1,0 +1,103 @@
+
+.flagrow-download.row {
+
+    margin: 10px auto 0;
+    min-height: 280px;
+
+    .card {
+        float: left;
+        padding: 0 1.7rem;
+        width: 50%;
+
+        .menu-content {
+            &::before,
+            &::after {
+                content: '';
+                display: table;
+            }
+            &::after {
+                clear: both;
+            }
+            float: right;
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            li {
+                display: inline-block;
+                margin: 0 5px;
+                position: relative;
+                > div {
+                    color: @text-color;
+                    > span {
+                        position: absolute;
+                        left: 50%;
+                        top: 0;
+                        font-size: 10px;
+                        font-weight: 700;
+                        font-family: 'Open Sans';
+                        transform: translate(-50%, 0);
+                        transition: all 0.3s;
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+
+        .wrapper {
+            background-color: @body-bg;
+            min-height: 250px;
+            position: relative;
+            overflow: hidden;
+
+            box-shadow: 0 0 10px 1px @shadow-color;
+
+            &:hover {
+                .data {
+                    background-color: @body-bg;
+                    transform: translateY(0);
+                }
+                .header {
+                    background-color: @body-bg;
+                    .menu-content {
+                        span {
+                            transform: translate(-50%, -10px);
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        .data {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            transition: transform 0.3s;
+            .content {
+                padding: 1em;
+                position: relative;
+                z-index: 1;
+            }
+            color: @text-color;
+            transform: translateY(calc(70px + 14em));
+        }
+
+        .title {
+            margin-top: 2px;
+            text-align: center;
+        }
+
+        .header {
+            &::before,
+            &::after {
+                content: '';
+                display: table;
+            }
+            &::after {
+                clear: both;
+            }
+            color: white;
+            padding: 1em 1em 0.1em;
+        }
+    }
+}

@@ -1,0 +1,70 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: Allega
+        states:
+            loading: Caricamento
+            success: Successo
+            error: Errore
+    admin:
+        permissions:
+            upload_label: Carica file
+        upload_methods:
+            local: Locale
+            aws-s3: Amazon S3
+            imgur: Imgur
+            ovh-svfs: OVH SVFS
+        labels:
+            upload_method: Metodo di caricamento
+            preferences:
+                title: Preferenze generali
+                max_file_size: Dimensione massima dei file (in kilobytes)
+                mime_types_allowed: Specifica i tipi MIME dei file che vuoi autorizzare, usando una espressione regolare
+            resize:
+                title: Ridimensiona immagini
+                toggle: Ridimensiona immagini
+                max_width: Larghezza massima immagini
+                max_height: Altezza massima immagini
+            watermark:
+                title: Immagini Watermark
+                toggle: Immagini Watermark
+                position: Posizione Watermark
+                file: Carica la tua immagine di Watermark
+            local:
+                title: Impostazioni archiviazione locale
+                cdn_url: URL della CDN (prefisso ai file)
+            imgur:
+                title: Impostazioni archiviazione Imgur
+                client_id: Imgur client ID
+            aws-s3:
+                title: Imposazioni archiviazione AWS S3
+                key: Key
+                secret: Secret
+                bucket: Bucket
+                region: Region
+            ovh-svfs:
+                title: Impostazioni archiviazione OVH SVFS
+                container: Container
+                tenantid: Tenant ID
+                username: Nome utente
+                password: Password
+                region: Regione
+        buttons:
+            save: Salva impostazioni
+        help_texts:
+            description: >
+                Imposta i servizi di caricamento e le preferenze.
+            mime_types: >
+                Configura la mappatura qui. Ogni singolo
+                tipo di mime sarà gestito da un adattatore di
+                caricamento specifico.
+            resize: >
+                Qui puoi decidere se ridimensionare le tue immagini
+                prima che vengano caricate. Puoi impostare le dimensioni
+                massime per larghezza e altezza, in pixel.
+                Il processo di ridimensionamento manterrà il corretto
+                rapporto tra i due lati.
+            watermark: >
+                Qui puoi decidere se aggiungere un Watermark alle tue
+                immagini. Il Watermark sarà aggiunto a tutte le immagini
+                non GIF seguendo le impostazioni che inserirai qui sotto

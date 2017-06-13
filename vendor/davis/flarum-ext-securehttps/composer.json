@@ -1,0 +1,35 @@
+{
+    "name": "davis/flarum-ext-securehttps",
+    "description": "Changes all images using http to https",
+    "keywords": ["https", "flarum", "davis", "customization", "images"],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Connor Davis",
+            "email": "davis@produes.co"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/dav-is/flarum-ext-securehttps/issues",
+        "source": "https://github.com/dav-is/flarum-ext-securehttps"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Davis\\SecureHttps\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Secure HTTPS",
+            "icon": {
+                "name": "lock",
+                "backgroundColor": "#000",
+                "color": "green"
+            }
+        }
+    }
+}

@@ -1,0 +1,56 @@
+.flagrow-upload-button {
+    overflow: hidden;
+    position: relative;
+
+    input {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+}
+
+.Composer.flagrow-upload-dragging {
+    background-color: #ddd;
+    .box-shadow(~"0 0 0 2px @{primary-color}, 0 2px 6px @{shadow-color}");
+}
+
+.fa-spin {
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+
+.green {
+    color: rgb(46, 204, 113) !important;
+}
+
+.red {
+    color: rgb(242, 38, 19) !important;
+}
+
+@-webkit-keyframes fa-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes fa-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}

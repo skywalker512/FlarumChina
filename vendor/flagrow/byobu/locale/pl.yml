@@ -1,0 +1,35 @@
+flagrow-byobu:
+    forum:
+        badges:
+            is_private:
+                tooltip: Prywatna dyskusja
+        buttons:
+            add_recipients: Adresaci
+            submit: OK
+            edit_recipients: Edytuj adresatów
+        labels:
+            recipients: "{count} adresat|{count} adresatów"
+            user_deleted: -usunięte-
+        nav:
+            private_discussions: Prywatna dyskusja
+        input:
+            search_recipients: Szukaj adresatów przez napisanie trzech pierwszych znaków...
+        search:
+            headings:
+                groups: Grupy Uprawnień
+        modal:
+            titles:
+                update_recipients: Uaktualnij adresatów {title}
+                add_recipients: Dodaj adresatów do swojej dyskusji
+        post:
+            recipients_modified:
+                added_and_removed: "{username} dodał {added} jako adresata i usunął {removed}."
+                added: "{username} dodał {added} jako adresata."
+                removed: "{username} usunął {removed}."
+    admin:
+        permission:
+            create_private_discussions_with_users: Tworzenie prywatnych dyskusji z użytkownikami
+            create_private_discussions_with_groups: Tworzenie prywatnych dyskusji z grupami
+            edit_user_recipients: Edytowanie użytkowników biorących udział w prywatnych dyskusjach
+            edit_group_recipients: Edytowanie grup biorących udział w prywatnych dyskusjach
+0

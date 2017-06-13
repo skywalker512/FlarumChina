@@ -1,0 +1,40 @@
+.RecipientLabel {
+    font-size: 85%;
+    font-weight: 600;
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    border-radius: @border-radius;
+    background: @body-bg;
+    color: @control-color;
+    text-transform: none;
+    border: 1px solid @primary-color;
+
+    &.none {
+        background: transparent;
+        border: 1px dotted @muted-color;
+        color: @muted-color;
+    }
+
+    .DiscussionHero .RecipientsLabel & {
+        font-size: 14px;
+    }
+}
+
+.RecipientsLabel {
+
+    .RecipientLabel {
+
+        background: transparent;
+        border-radius: 0;
+
+        &:first-child {
+            border-radius: @border-radius 0 0 @border-radius;
+        }
+        &:last-child {
+            border-radius: 0 @border-radius @border-radius 0;
+        }
+        &:first-child:last-child {
+            border-radius: @border-radius;
+        }
+    }
+}

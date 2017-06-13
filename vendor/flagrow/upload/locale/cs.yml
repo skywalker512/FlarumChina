@@ -1,0 +1,66 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: Přiložit obrázek
+        states:
+            loading: Načítání
+            success: Úspěch
+            error: Chyba
+    admin:
+        permissions:
+            upload_label: Nahrávat soubory
+        upload_methods:
+            local: Místní úložiště
+            aws-s3: Amazon S3
+            imgur: Imgur
+            ovh-svfs: OVH SVFS
+        labels:
+            preferences:
+                title: Obecné předvolby
+                max_file_size: Maximální velikost souboru (v kilobajtech)
+                mime_types: Přiřaďte jednotlivým MIME typům nahrávací službu
+            resize:
+                title: Změna rozměrů obrázků
+                toggle: Zmenšovat obrázky
+                max_width: Maximální šířka obrázku
+                max_height: Maximální výška obrázku
+            watermark:
+                title: Vodoznaky
+                toggle: Přidávát na obrázky vodoznak
+                position: Pozice vodoznaku
+                file: Nahrát obrázek s vodoznakem
+            local:
+                title: Nastavení místního úložiště
+                cdn_url: URL CDN (bude vloženo před název souboru)
+            imgur:
+                title: Nastavení ukládání na Imgur
+                client_id: ID Imgur klienta
+            aws-s3:
+                title: Nastavení ukládání na AWS S3
+                key: Klíč
+                secret: Tajemství
+                bucket: Kbelík
+                region: Region
+            ovh-svfs:
+                title: Nastavení ukládání na OVH SVFS
+                container: Kontejner
+                tenantid: Tenant ID
+                username: Uživatelské jméno
+                password: Heslo
+                region: Region
+        buttons:
+            save: Uložit nastavení
+        help_texts:
+            description: >
+                Nastavení nahrávacích služeb a předvoleb.
+            mime_types: >
+                Každý MIME typ odpovídající regulárnímu výrazu bude
+                zpracován nahrávací službou, kterou zde přiřadíte.
+            resize: >
+                Vyberte, jestli chcete před nahráním obrázky zmenšit.
+                Můžete zvolit maximální výšku a šířku v pixelech. Zmenšení
+                zachová poměr stran obrázků.
+            watermark: >
+                Určete, jestli má být obrázkům při nahrávání vložen
+                vodoznak. Vodoznaky budou přidány obrázkům (kromě GIFů)
+                na základě vašeho výběru níže.

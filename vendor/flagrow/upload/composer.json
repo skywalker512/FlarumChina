@@ -1,0 +1,51 @@
+{
+    "name": "flagrow/upload",
+    "description": "The file upload extension for the Flarum forum with insane intelligence.",
+    "keywords": [
+        "upload",
+        "flarum",
+        "flagrow",
+        "file"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniël Klabbers",
+            "email": "daniel+flarum@klabbers.email",
+            "homepage": "http://hyn.me"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/flagrow/upload/issues",
+        "source": "https://github.com/flagrow/upload"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6",
+        "ramsey/uuid": "^3.5.2"
+    },
+    "suggest": {
+        "league/flysystem-aws-s3-v3": "Uploads to AWS S3 using API version 3.",
+        "techyah/flysystem-ovh": "Uploads to OVH Swift vfs using API."
+    },
+    "require-dev": {
+        "league/flysystem": "^1.0.32",
+        "league/flysystem-aws-s3-v3": "^1.0",
+        "techyah/flysystem-ovh": "^1.0"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Flagrow Upload",
+            "icon": {
+                "name": "files-o",
+                "backgroundColor": "#f4f4f4",
+                "color": "#5f4bb6"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Flagrow\\Upload\\": "src/"
+        }
+    }
+}

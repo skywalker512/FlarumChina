@@ -1,0 +1,57 @@
+flagrow-upload:
+  forum:
+    buttons:
+      attach: 添加附件
+    states:
+      loading: 加载中
+      success: 成功
+      error: 错误
+  admin:
+    permissions:
+      upload_label: 文件上传设定
+    upload_methods:
+      local: 本地
+      aws-s3: 亚马逊 S3
+      imgur: Imgur
+      ovh-svfs: OVH SVFS
+    labels:
+      preferences:
+        title: 偏好设定
+        max_file_size: 最大文件大小 (单位为 KB)
+        mime_types: 设置MIME类型对应的上传方式
+      resize:
+        title: 调整图片大小
+        toggle: 切换图片调整
+        max_width: 最大图片宽度
+        max_height: 最大图片高度
+      watermark:
+        title: 水印图片
+        toggle: 水印图片
+        position: 水印位置
+        file: 上传水印图片
+      local:
+        title: 本地存储设定
+        cdn_url: CDN 网址 (附加在文件前面)
+      imgur:
+        title: Imgur 图片存储设定
+        client_id: Imgur 客户ID
+      aws-s3:
+        title: AWS S3 存储设定
+        key: Key
+        secret: Secret
+        bucket: Bucket
+        region: 地区
+      ovh-svfs:
+        title: OVH SVFS 存储设定
+        container: 容器
+        tenantid: 租户ID
+        username: 用户名
+        password: 密码
+        region: 地区
+    buttons:
+      save: 保存设定
+    help_texts:
+      description: 设置上传服务与偏好设定
+      mime_types: 请设置MIME类型。每一种类型都将会使用设定好的上传方式处理。
+      resize: 你可以选择是否在上传图片之前调整图片大小。 以像素为单位, 你可以选择图片最大的长度和宽度。调整图片大小将会保持图片的纵横比。
+      watermark: 选择上传图片时是否附加水印。水印会根据下面的偏好设置来添加到非GIF的图片上。

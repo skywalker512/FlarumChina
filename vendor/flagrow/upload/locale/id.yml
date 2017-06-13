@@ -1,0 +1,65 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: Lampirkan
+        states:
+            loading: Memuat
+            success: Sukses
+            error: Kesalahan
+    admin:
+        permissions:
+            upload_label: Unggah berkas
+        upload_methods:
+            local: Lokal
+            aws-s3: Amazon S3
+            imgur: Imgur
+            ovh-svfs: OVH SVFS
+        labels:
+            preferences:
+                title: Prefensi Umum
+                max_file_size: Besar maksimal berkas (dalam kilobytes)
+                mime_types: Konfigurasikan tipe mime, unggah pemetaan adaptor
+            resize:
+                title: Pengukuran gambar
+                toggle: Ubah ukuran gambar
+                max_width: Lebar maksimal gambar
+                max_height: Tinggi maksimal gambar
+            watermark:
+                title: Gambar Watermark
+                toggle: Gambar Watermark
+                position: Posisi Watermark
+                file: Unggah gambar watermark Anda
+            local:
+                title: Pengaturan Penyimpanan Lokal
+                cdn_url: URL Pengantar Konten (awalan berkas)
+            imgur:
+                title: Pengaturan penyimpanan gambar Imgur
+                client_id: Imgur client ID
+            aws-s3:
+                title: Pengaturan penyimpanan AWS S3
+                key: Key
+                secret: Secret
+                bucket: Bucket
+                region: Region
+            ovh-svfs:
+                title: Pengaturan penyimpanan OVH SVFS
+                container: Container
+                tenantid: Tenant ID
+                username: Username
+                password: Password
+                region: Region
+        buttons:
+            save: Simpan pengaturan
+        help_texts:
+            description: >
+                Mengatur layanan dan preferensi mengunggah.
+            mime_types: >
+                Konfigurasikan pemetaan Anda di sini.
+                Setiap jenis mime secara reguler akan ditangani oleh adaptor unggahan tertentu.
+            resize: >
+                Pilih apapun untuk merubah ukuran gambar sebelum diunggah.
+                Anda dapat menggunakan panjang maksimal dan tinggi, dalam pixel.
+                Pengubahan ukuran gambar ini tetap menjaga aspek rasio dari gambar.
+            watermark: >
+                Pilih gambar apapun yang akan dijadikan watermark saat gambar diunggah.
+                Watermark ditambahkan ke non-gif berdasarkan preferensi Anda di bawah ini.

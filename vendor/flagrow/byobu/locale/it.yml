@@ -1,0 +1,34 @@
+flagrow-byobu:
+    forum:
+        badges:
+            is_private:
+                tooltip: Conversazione privata
+        buttons:
+            add_recipients: Destinatari
+            submit: OK
+            edit_recipients: Modifica Destinatari
+        labels:
+            recipients: "{count} Destinatario|{count} Destinatari"
+            user_deleted: -cancellato-
+        nav:
+            private_discussions: Conversazione privata
+        input:
+            search_recipients: Ricerca destinatario digitando i primi tre caratteri...
+        search:
+            headings:
+                groups: Permessi Gruppi
+        modal:
+            titles:
+                update_recipients: Aggiorna destinatari di {title}
+                add_recipients: Aggiungi destinatari alla tua conversazione
+        post:
+            recipients_modified:
+                added_and_removed: "{username} ha aggiunto {added} e rimosso {removed}."
+                added: "{username} ha aggiunto {added}."
+                removed: "{username} ha rimosso {removed}."
+    admin:
+        permission:
+            create_private_discussions_with_users: Creare discussioni private con gli utenti
+            create_private_discussions_with_groups: Creare discussioni private con i gruppi
+            edit_user_recipients: Modificare gli utenti che partecipano a conversazioni private
+            edit_group_recipients: Modificare i gruppi che partecipano a conversazioni private

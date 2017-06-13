@@ -9,7 +9,7 @@ class TokenSet
      */
     public $token;
 
-    public function __construct(string $token)
+    public function __construct($token)
     {
         $this->token = $token;
     }

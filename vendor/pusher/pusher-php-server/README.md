@@ -18,7 +18,7 @@ Or add to `composer.json`:
 
 ```json
 "require": {
-    "pusher/pusher-php-server": "^2.2"
+    "pusher/pusher-php-server": "^2.6"
 }
 ```
 
@@ -37,11 +37,12 @@ Use the credentials from your Pusher application to create a new `Pusher` instan
 $app_id = 'YOUR_APP_ID';
 $app_key = 'YOUR_APP_KEY';
 $app_secret = 'YOUR_APP_SECRET';
+$app_cluster = 'YOUR_APP_CLUSTER';
 
-$pusher = new Pusher( $app_key, $app_secret, $app_id );
+$pusher = new Pusher( $app_key, $app_secret, $app_id, array('cluster' => $app_cluster) );
 ```
 
-A fourth parameter `$options` parameter can also be passed. The available options are:
+The fourth parameter is an `$options` array. The additional options are:
 
 * `scheme` - e.g. http or https
 * `host` - the host e.g. api.pusherapp.com. No trailing forward slash.
@@ -54,12 +55,12 @@ A fourth parameter `$options` parameter can also be passed. The available option
 For example, by default calls will be made over a non-encrypted connection. To change this to make calls over HTTPS use:
 
 ```php
-$pusher = new Pusher( $app_key, $app_secret, $app_id, array( 'encrypted' => true ) );
+$pusher = new Pusher( $app_key, $app_secret, $app_id, array( 'cluster' => $app_cluster, 'encrypted' => true ) );
 ```
 
 For example, if you want to set custom curl options, use this:
 ```php
-$pusher = new Pusher( $app_key, $app_secret, $app_id, array( 'encrypted' => true, 'curl_options' => array( CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4 ) ) );
+$pusher = new Pusher( $app_key, $app_secret, $app_id, array( 'cluster' => $app_cluster, 'encrypted' => true, 'curl_options' => array( CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4 ) ) );
 ```
 
 
@@ -135,7 +136,7 @@ $pusher->trigger('my-channel', 'event', 'data', null, false, true)
 To authorise your users to access private channels on Pusher, you can use the socket_auth function:
 
 ```php
-$pusher->socket_auth('my-channel','socket_id');
+$pusher->socket_auth('private-my-channel','socket_id');
 ```
 
 ## Authenticating Presence channels
@@ -143,7 +144,7 @@ $pusher->socket_auth('my-channel','socket_id');
 Using presence channels is similar to private channels, but you can specify extra data to identify that particular user:
 
 ```php
-$pusher->presence_auth('my-channel','socket_id', 'user_id', 'user_info');
+$pusher->presence_auth('presence-my-channel','socket_id', 'user_id', 'user_info');
 ```
 
 ### Presence example

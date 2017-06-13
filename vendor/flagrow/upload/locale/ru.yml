@@ -1,0 +1,57 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: "Загрузить"
+        states:
+            loading: "Загрузка"
+            success: "Выполнена"
+            error: "Ошибка!"
+    admin:
+        permissions:
+            upload_label: "Загружать файлы"
+        upload_methods:
+            local: "Локальное хранилище"
+            aws-s3: "Amazon S3"
+            imgur: "Imgur"
+            ovh-svfs: "OVH SVFS"
+        labels:
+            preferences:
+                title: "Основные настройки"
+                max_file_size: "Максимальный размер файла (в килобайтах)"
+                mime_types: "Разрешённые типы файлов"
+            resize:
+                title: "Изменение размера изображений"
+                toggle: "Изменение размера изображений"
+                max_width: "Максимальная ширина"
+                max_height: "Максимальная высота"
+            watermark:
+                title: "Изображения watermark"
+                toggle: "Изображения watermark"
+                position: "Позиция watermark"
+                file: "Загрузить watermark"
+            local:
+                title: "Настройки локального хранилища"
+                cdn_url: "URL сети доставки контента (префиксы файлов)"
+            imgur:
+                title: "Настройки хранилища изображений Imgur"
+                client_id: "Imgur client ID"
+            aws-s3:
+                title: "Настройки хранилища AWS S3"
+                key: "Key"
+                secret: "Secret"
+                bucket: "Bucket"
+                region: "Region"
+            ovh-svfs:
+                title: "Настройки хранилища OVH SVFS"
+                container: "Container"
+                tenantid: "Tenant ID"
+                username: "Username"
+                password: "Password"
+                region: "Region"
+        buttons:
+            save: "Сохранить"
+        help_texts:
+            description: "Настройки файловых хранилищ."
+            mime_types: "Пожалуйста, настройте mime-типы файлов. Каждое регулярное выражение mime-типа файла будет обработано конкретным адаптером загрузки."
+            resize: "Укажите, нужно ли изменять размер изображения перед загрузкой. Вы можете задать максимальные ширину и высоту в пикселях. Процесс изменения размера сохранит пропорции изображения."
+            watermark: "Укажите, нужно ли добавлять водяной знак (watermark) к изображению во время его загрузки. Водяные знаки добавляются к изображению (за исключением .gif), основываясь на Ваших предпочтениях."

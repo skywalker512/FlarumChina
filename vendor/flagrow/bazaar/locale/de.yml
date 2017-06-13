@@ -1,0 +1,32 @@
+flagrow-bazaar:
+    admin:
+        loader:
+            is_loading: Wird geladen...
+        popup:
+            title: Flagrow Bazaar
+            field:
+                apiToken: API Token
+                apiTokenDescription: Dieser API Token wird für den Zugriff auf die Flagrow Erweiterung API benötigt. Wenn der API Token bereits gesetzt ist, bist du bereit anzufangen.
+        nav:
+            title: Bazaar
+            description: Der Marktplatz für Erweiterungen.
+        page:
+            button:
+                more: Mehr
+                install: Installieren
+                uninstall: Deinstallieren
+                enable: Aktivieren
+                disable: Deaktivieren
+                connect: Verbinden
+                update: Aktualisieren
+                connectDescription: "Verbinde deine Flarum Installation zu deinem persönlichen Account auf {host} um neue Features freizuschalten."
+                connected: Dashboard
+                connectedDescription: "Dein Flarum ist verbunden, besuche das Dashboard auf {host}."
+                favorite_button: "Favorisiere Erweiterung"
+                remove_favorite_button: "Entferne die Erweiterung aus den Favoriten."
+            extension:
+                installed: Erweiterung ist installiert
+                enabled: Erweiterung ist aktiviert
+                vendor: Von {vendor}
+                favorited: Einer deiner Favoriten
+outdated: "Die Erweiterung ist veraltet, bitte aktualisiere auf Version {new}"

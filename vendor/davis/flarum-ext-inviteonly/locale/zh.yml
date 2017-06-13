@@ -1,0 +1,15 @@
+davis-inviteonly:
+  admin:
+    settings:
+      title: 邀请设置
+      maximumkeys: 用户最大有效邀请码限制
+  forum:
+    loading: "请稍候..."
+    edit:
+      title: 您的邀请码
+      key: 邀请码
+      used: 状态
+      used_by: 使用者
+      expire: 有效期
+    sign_up:
+      referal_placeholder: 邀请码

@@ -1,0 +1,68 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: Bestand
+        states:
+            loading: Laad
+            success: Gelukt
+            error: Mislukt
+    admin:
+        permissions:
+            upload_label: Bestanden uploaden
+        upload_methods:
+            local: Lokaal
+            aws-s3: Amazon S3
+            imgur: Imgur
+            ovh-svfs: OVH SVFS
+        labels:
+            preferences:
+                title: Algemene instellingen
+                max_file_size: Maximale bestandsgrootte (in kilobytes)
+                mime_types: Configureer je mime type, upload adapter instellingen
+            resize:
+                title: Plaatjes verkleinen
+                toggle: Verkleinen
+                max_width: Maximale breedte
+                max_height: Maximale hoogte
+            watermark:
+                title: Watermerk
+                toggle: Watermerk toevoegen
+                position: Positie van het watermerk
+                file: Upload je watermerk
+            local:
+                title: Instellingen lokale opslag
+                cdn_url: Content Delivery URL
+            imgur:
+                title: Imgur opslag instellingen
+                client_id: Imgur client ID
+            aws-s3:
+                title: AWS S3 opslag instellingen
+                key: Sleutel (key)
+                secret: Geheim (secret)
+                bucket: Bucket
+                region: Gebied (region)
+            ovh-svfs:
+                title: OVH SVFS opslag instellingen
+                container: Container
+                tenantid: Tenant ID
+                username: Gebruikersnaam
+                password: Wachtwoord
+                region: Gebied
+        buttons:
+            save: Instellingen opslaan
+        help_texts:
+            description: >
+                Stel upload diensten en diens configuratie in.
+            mime_types: >
+                Configureer je voorkeur hier. Ieder mime type (op
+                basis van reguliere expressies) wordt afgehandeld
+                door een specifieke upload adapter.
+            resize: >
+                Kies hier of je je plaatjes wilt laten verkleinen
+                voordat ze geupload worden. Je kan een maximale hoogte
+                en breedte instellen in pixels. Het process behoud de
+                hoogte-breedte verhouding automatisch.
+            watermark: >
+                Bepaal of plaatjes automatisch een watermerk krijgen
+                tijdens het uploaden. Watermerken worden automatisch op alle
+                plaatjes toegevoegd, behalve bij gif-bestanden.

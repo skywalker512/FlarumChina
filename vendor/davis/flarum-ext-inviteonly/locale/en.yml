@@ -1,0 +1,15 @@
+davis-inviteonly:
+  admin:
+    settings:
+      title: Invite Only Extension Settings
+      maximumkeys: Maximum live Keys a user can possess
+  forum:
+    loading: "Loading..."
+    edit:
+      title: Your Sign Up Keys
+      key: Key
+      used: Status
+      used_by: Used By
+      expire: Valid for
+    sign_up:
+      referal_placeholder: Referal Code

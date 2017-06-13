@@ -1,0 +1,44 @@
+{
+    "name": "flagrow/byobu",
+    "description": "Well integrated, advanced private discussions.",
+    "keywords": [
+        "pm",
+        "flarum",
+        "flagrow",
+        "messaging",
+        "private discussions"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniël Klabbers",
+            "email": "daniel@klabbers.email",
+            "homepage": "http://luceos.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/flagrow/byobu/issues",
+        "source": "https://github.com/flagrow/byobu"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6",
+        "flarum/flarum-ext-markdown": "^0.1.0-beta.5",
+        "flarum/flarum-ext-pusher": "^0.1.0-beta.5"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Flagrow Byōbu",
+            "icon": {
+                "name": "map-o",
+                "backgroundColor": "#f4f4f4",
+                "color": "#5f4bb6"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Flagrow\\Byobu\\": "src/"
+        }
+    }
+}

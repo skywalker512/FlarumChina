@@ -3,10 +3,13 @@
 flagrow-bazaar:
     admin:
         loader:
-            is_loading: Processing..
+            is_loading: 加载中..
         nav:
             title: Bazaar
             description: 应用市场.
+        header:
+            extensions: 浏览插件
+            tasks: 任务历史
         modal:
             settings:
                 title: Flagrow Bazaar
@@ -43,7 +46,31 @@ flagrow-bazaar:
                 remove_favorite_button: "不喜欢"
             extension:
                 installed: 扩展已安装
-                installed: 扩展已启用
+                enabled: 扩展已启用
                 vendor: 由 {vendor} 开发
                 favorited: 喜欢过
                 outdated: "你的插件已过时请升级 {new}"
+            task:
+                header:
+                    status: 状态
+                    command: 日志
+                    output: 输出
+                    time: 时间
+                    details: 细节
+                attribute:
+                    created_at: 创建于
+                    started_at: 开始于
+                    finished_at: 完成于
+                status:
+                    success: 成功
+                    exception: 一个意外发生
+                    working: 工作中
+                    unknown: 未知
+                command:
+                    install: 安装 {extension}
+                    update: 升级 {extension}
+                    uninstall: 卸载 {extension}
+                group:
+                    today: 今天
+                    lastmonth: 这个月
+                    older: 更早
