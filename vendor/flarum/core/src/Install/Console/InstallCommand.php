@@ -351,6 +351,7 @@ class InstallCommand extends AbstractCommand
             'wiseclock-profile-image-crop',
             'flagrow-byobu',
             'flagrow-upload',
+            'flagrow-bazaar',
             'wiseclock-reply2see',
             'wiseclock-login2see',
             'reflar-gamification',
