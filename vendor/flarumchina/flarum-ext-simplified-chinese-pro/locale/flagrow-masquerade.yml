@@ -1,0 +1,44 @@
+# https://github.com/flagrow/masquerade/blob/master/assets/locale/en.yml
+
+flagrow-masquerade:
+    forum:
+        alerts:
+            profile-completion-required: >
+                请填写以下所需的简要表字段。
+        buttons:
+            view-profile: 查看个人信息
+            configure-profile: 配置个人信息
+            save-profile: 保存
+    admin:
+        buttons:
+            add-field: 添加字段
+            edit-field: 编辑字段
+            delete-field: 删除字段
+        permissions:
+            have-profile: 拥有个人信息
+            view-profile: 查看个人信息
+        menu:
+            description: >
+                配置用户字段。
+        fields:
+            add: 添加字段 {field}
+            edit: 编辑字段 {field}
+            name: 字段名称
+            name-help: >
+                公开可见的（非翻译）字段标签。
+            description: 字段描述
+            description-help: >
+                用于解释该字段的使用/可选
+            required: 强制填写该字段
+            validation: 验证
+            validation-help: >
+                查看支持 <a>Laravel validation rules</a>. 例如:
+                "string,min:5" 或者 "url".
+            prefix: 字段的前缀
+            prefix-help: >
+                在用户输入该字段的值之前显示前缀。
+            icon: Icon
+            icon-help: >
+                在用户输入的字段前面显示一个图标。
+                查看支持 <a>FontAwesome website</a> 不要使用"fa-"
+            force-user-to-completion: 强制用户完成个人信息的填写

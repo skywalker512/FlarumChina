@@ -5625,54 +5625,6 @@
         "homepage": "https://symfony.com"
     },
     {
-        "name": "flarumchina/flarum-ext-simplified-chinese-pro",
-        "version": "v0.1.0-beta.6.7",
-        "version_normalized": "0.1.0.0-beta6.7",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/FlarumChina/flarum-ext-simplified-chinese-pro.git",
-            "reference": "908b1fcc02011de575a2619d5156e9b6f9a83dbb"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/908b1fcc02011de575a2619d5156e9b6f9a83dbb",
-            "reference": "908b1fcc02011de575a2619d5156e9b6f9a83dbb",
-            "shasum": ""
-        },
-        "require": {
-            "flarum/core": "^0.1.0-beta.6"
-        },
-        "time": "2017-06-13T13:50:06+00:00",
-        "type": "flarum-extension",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.1.x-dev"
-            },
-            "flarum-extension": {
-                "title": "Chinese",
-                "icon": {
-                    "image": "icon.svg",
-                    "backgroundColor": "#DE2910",
-                    "backgroundSize": "cover",
-                    "backgroundPosition": "center"
-                }
-            },
-            "flarum-locale": {
-                "code": "zh",
-                "title": "简体中文"
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "simplified chinese language pack.",
-        "keywords": [
-            "locale"
-        ]
-    },
-    {
         "name": "symfony/filesystem",
         "version": "v3.3.2",
         "version_normalized": "3.3.2.0",
@@ -6574,6 +6526,54 @@
             "member profile",
             "profile",
             "user profile"
+        ]
+    },
+    {
+        "name": "flarumchina/flarum-ext-simplified-chinese-pro",
+        "version": "v0.1.0-beta.6.8",
+        "version_normalized": "0.1.0.0-beta6.8",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FlarumChina/flarum-ext-simplified-chinese-pro.git",
+            "reference": "22a43e8fccf27486c5346d8287e13b8d38d39115"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/22a43e8fccf27486c5346d8287e13b8d38d39115",
+            "reference": "22a43e8fccf27486c5346d8287e13b8d38d39115",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6"
+        },
+        "time": "2017-06-14T00:45:20+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.1.x-dev"
+            },
+            "flarum-extension": {
+                "title": "Chinese",
+                "icon": {
+                    "image": "icon.svg",
+                    "backgroundColor": "#DE2910",
+                    "backgroundSize": "cover",
+                    "backgroundPosition": "center"
+                }
+            },
+            "flarum-locale": {
+                "code": "zh",
+                "title": "简体中文"
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "simplified chinese language pack.",
+        "keywords": [
+            "locale"
         ]
     }
 ]

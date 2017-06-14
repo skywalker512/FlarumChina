@@ -2515,16 +2515,16 @@
         },
         {
             "name": "flarumchina/flarum-ext-simplified-chinese-pro",
-            "version": "v0.1.0-beta.6.7",
+            "version": "v0.1.0-beta.6.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FlarumChina/flarum-ext-simplified-chinese-pro.git",
-                "reference": "908b1fcc02011de575a2619d5156e9b6f9a83dbb"
+                "reference": "22a43e8fccf27486c5346d8287e13b8d38d39115"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/908b1fcc02011de575a2619d5156e9b6f9a83dbb",
-                "reference": "908b1fcc02011de575a2619d5156e9b6f9a83dbb",
+                "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/22a43e8fccf27486c5346d8287e13b8d38d39115",
+                "reference": "22a43e8fccf27486c5346d8287e13b8d38d39115",
                 "shasum": ""
             },
             "require": {
@@ -2557,7 +2557,7 @@
             "keywords": [
                 "locale"
             ],
-            "time": "2017-06-13T13:50:06+00:00"
+            "time": "2017-06-14T00:45:20+00:00"
         },
         {
             "name": "flarumchina/flarum-ext-sitemap-chinese",
