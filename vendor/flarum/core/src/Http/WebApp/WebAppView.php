@@ -41,6 +41,13 @@ class WebAppView
      */
     public $description;
 
+     /**
+     * The cdnUrl of the document, for cdn support.
+     *
+     * @var null|string
+     */
+    public $cdnUrl;
+
     /**
      * The language of the document, displayed as the value of the attribute `dir` in the <html> tag.
      *
@@ -538,6 +545,7 @@ class WebAppView
                         "Yandex bot",
                         "Yisouspider",
                         "YoudaoBot",
+                        "YandexBot",
                 );
                 foreach($spiderSite as $val) {
                         $str = strtolower($val);

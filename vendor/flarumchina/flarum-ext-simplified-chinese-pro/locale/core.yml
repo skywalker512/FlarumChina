@@ -38,15 +38,19 @@ core:
       all_discussions_label: => core.ref.all_discussions
       default_language_heading: 默认语言
       forum_description_heading: 站点描述
-      forum_description_text: 通过几个短语或句子描述你的站点，它将作为 Meta 标记，并且被搜索引擎抓取。
+      forum_description_text: 通过几个短语或句子描述你的站点，它将作为 Meta/description 标记，并且被搜索引擎抓取。
+      forum_cdn_heading: CDN域名
+      forum_cdn_text: 请设置cdn域名，以加速你的 Flarum.(例如填写//cdn.your-domain.com)
+      forum_meta_heading: Mate代码
+      forum_meta_text: 以下内容会出现在head中，主要用于网站验证。
       forum_title_heading: 站点名称
       home_page_heading: 站点首页
       home_page_text: "选择一个页面作为站点首页。如果输入了自定义值，请使用基于站点根目录的相对路径。"
       saved_message: 你的更改已保存
+      show_language_selector_label: 是否显示语言选择按钮
       submit_button: => core.ref.save_changes
       welcome_banner_heading: 欢迎横幅
       welcome_banner_text: 输入一段文字作为横幅，它将显示在站点的“所有话题”页面中。
-      show_language_selector_label: 是否显示语言选择按钮
 
     # These translations are used in the Dashboard page.
     dashboard:

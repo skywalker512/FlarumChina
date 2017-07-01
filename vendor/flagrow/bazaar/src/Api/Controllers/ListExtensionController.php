@@ -44,7 +44,7 @@ class ListExtensionController extends AbstractCollectionController
 
         $offset = $this->extractOffset($request);
 
-        $results = $this->extensions->index();
+        $results = $this->extensions->index($request->getQueryParams());
 
         $document->addPaginationLinks(
             $this->url->toRoute('bazaar.extensions.index'),

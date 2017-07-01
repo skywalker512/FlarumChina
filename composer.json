@@ -73,7 +73,10 @@
         "flagrow/byobu": "^0.1.0@beta",
         "davis/flarum-ext-inviteonly": "^0.1.0@beta",
         "issyrocks12/flarum-ext-users-list": "^0.2.2.1",
-        "flagrow/masquerade": "^0.1.0"
+        "flagrow/masquerade": "^0.1.0",
+        "henter/wechat-oauth": "dev-master",
+        "stanleysong/flarum-ext-auth-wechat": "^1.0",
+        "flagrow/flarum-ext-analytics": "^0.5.0"
     },
     "require-dev": {
         "franzl/studio": "^0.11.0"

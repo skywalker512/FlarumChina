@@ -1,6 +1,6 @@
 <h2>安装 Flarum</h2>
 
-<p>请在下面设置你的信息. 若你遇到麻烦可点击  <a href="http://flarum.org/docs/installation" target="_blank">Flarum 交流论坛（英文）</a>.</p>
+<p>请在下面设置你的信息. 若你遇到麻烦可点击  <a href="https://bbs.flarumchina.org" target="_blank">FlarumChina 交流论坛</a>.</p>
 
 <form method="post">
   <div id="error" style="display:none"></div>

@@ -1,0 +1,16 @@
+vendor/
+build/
+bin/
+composer.phar
+*.bak
+*.back
+*.swp
+*.log
+*~
+.DS_Store
+.idea/
+._.DS_Store
+.settings
+.buildpath
+.project
+cache.properties

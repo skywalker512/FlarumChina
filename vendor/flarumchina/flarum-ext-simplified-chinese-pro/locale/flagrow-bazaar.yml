@@ -74,3 +74,8 @@ flagrow-bazaar:
                     today: 今天
                     lastmonth: 这个月
                     older: 更早
+        search:
+            placeholder: 搜索插件
+            filter_installed: 只看安装的插件
+            filter_update_required: 只看可升级的插件
+            filter_favorited: 只看喜欢的插件

@@ -37,7 +37,7 @@ class DefaultsDataProvider implements DataProviderInterface
         'allow_renaming' => '10',
         'allow_sign_up' => '1',
         'custom_less' => '',
-        'default_locale' => 'en',
+        'default_locale' => 'zh',
         'default_route' => '/all',
         'extensions_enabled' => '[]',
         'forum_title' => 'Development Forum',
@@ -48,8 +48,8 @@ class DefaultsDataProvider implements DataProviderInterface
         'theme_dark_mode' => '0',
         'theme_primary_color' => '#4D698E',
         'theme_secondary_color' => '#4D698E',
-        'welcome_message' => 'This is beta software and you should not use it in production.',
-        'welcome_title' => 'Welcome to Development Forum',
+        'welcome_message' => '你已经成功安装FlarumChina,遇到问题请访问<a href="https://bbs.flarumchina.org">交流论坛</a>以获得帮助',
+        'welcome_title' => '欢迎来到',
     ];
 
     public function getDatabaseConfiguration()

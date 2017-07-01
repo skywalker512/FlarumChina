@@ -75,3 +75,8 @@ flagrow-bazaar:
                     today: Today
                     lastmonth: Last month
                     older: Older
+        search:
+            placeholder: Search extensions
+            filter_installed: Show only installed extensions
+            filter_update_required: Show only extension with an update available
+            filter_favorited: Show only favorited extensions

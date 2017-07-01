@@ -2101,145 +2101,6 @@
         ]
     },
     {
-        "name": "matthiasmullie/minify",
-        "version": "1.3.44",
-        "version_normalized": "1.3.44.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/matthiasmullie/minify.git",
-            "reference": "a7fc4a98ef8f2cf38bba701b51f1a84a1d67bc5c"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/a7fc4a98ef8f2cf38bba701b51f1a84a1d67bc5c",
-            "reference": "a7fc4a98ef8f2cf38bba701b51f1a84a1d67bc5c",
-            "shasum": ""
-        },
-        "require": {
-            "ext-pcre": "*",
-            "matthiasmullie/path-converter": "~1.1",
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "friendsofphp/php-cs-fixer": "~1.0",
-            "matthiasmullie/scrapbook": "~1.0",
-            "phpunit/phpunit": "~4.8"
-        },
-        "time": "2017-03-16T16:42:50+00:00",
-        "bin": [
-            "bin/minifycss",
-            "bin/minifyjs"
-        ],
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "MatthiasMullie\\Minify\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Matthias Mullie",
-                "email": "minify@mullie.eu",
-                "homepage": "http://www.mullie.eu",
-                "role": "Developer"
-            }
-        ],
-        "description": "CSS & JS minifier",
-        "homepage": "http://www.minifier.org",
-        "keywords": [
-            "JS",
-            "css",
-            "javascript",
-            "minifier",
-            "minify"
-        ]
-    },
-    {
-        "name": "monolog/monolog",
-        "version": "1.22.1",
-        "version_normalized": "1.22.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Seldaek/monolog.git",
-            "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1e044bc4b34e91743943479f1be7a1d5eb93add0",
-            "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0",
-            "psr/log": "~1.0"
-        },
-        "provide": {
-            "psr/log-implementation": "1.0.0"
-        },
-        "require-dev": {
-            "aws/aws-sdk-php": "^2.4.9 || ^3.0",
-            "doctrine/couchdb": "~1.0@dev",
-            "graylog2/gelf-php": "~1.0",
-            "jakub-onderka/php-parallel-lint": "0.9",
-            "php-amqplib/php-amqplib": "~2.4",
-            "php-console/php-console": "^3.1.3",
-            "phpunit/phpunit": "~4.5",
-            "phpunit/phpunit-mock-objects": "2.3.0",
-            "ruflin/elastica": ">=0.90 <3.0",
-            "sentry/sentry": "^0.13",
-            "swiftmailer/swiftmailer": "~5.3"
-        },
-        "suggest": {
-            "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
-            "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
-            "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-            "ext-mongo": "Allow sending log messages to a MongoDB server",
-            "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-            "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
-            "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
-            "php-console/php-console": "Allow sending log messages to Google Chrome",
-            "rollbar/rollbar": "Allow sending log messages to Rollbar",
-            "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-            "sentry/sentry": "Allow sending log messages to a Sentry server"
-        },
-        "time": "2017-03-13T07:08:03+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.0.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Monolog\\": "src/Monolog"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jordi Boggiano",
-                "email": "j.boggiano@seld.be",
-                "homepage": "http://seld.be"
-            }
-        ],
-        "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
-        "homepage": "http://github.com/Seldaek/monolog",
-        "keywords": [
-            "log",
-            "logging",
-            "psr-3"
-        ]
-    },
-    {
         "name": "oyejorge/less.php",
         "version": "v1.7.0.14",
         "version_normalized": "1.7.0.14",
@@ -2718,70 +2579,6 @@
         ],
         "description": "Akismet is a wrapper-class to communicate with the Akismet API.",
         "homepage": "https://github.com/tijsverkoyen/Akismet"
-    },
-    {
-        "name": "guzzlehttp/guzzle",
-        "version": "6.2.3",
-        "version_normalized": "6.2.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/guzzle/guzzle.git",
-            "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8d6c6cc55186db87b7dc5009827429ba4e9dc006",
-            "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006",
-            "shasum": ""
-        },
-        "require": {
-            "guzzlehttp/promises": "^1.0",
-            "guzzlehttp/psr7": "^1.4",
-            "php": ">=5.5"
-        },
-        "require-dev": {
-            "ext-curl": "*",
-            "phpunit/phpunit": "^4.0",
-            "psr/log": "^1.0"
-        },
-        "time": "2017-02-28T22:50:30+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "6.2-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "src/functions_include.php"
-            ],
-            "psr-4": {
-                "GuzzleHttp\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Michael Dowling",
-                "email": "mtdowling@gmail.com",
-                "homepage": "https://github.com/mtdowling"
-            }
-        ],
-        "description": "Guzzle is a PHP HTTP client library",
-        "homepage": "http://guzzlephp.org/",
-        "keywords": [
-            "client",
-            "curl",
-            "framework",
-            "http",
-            "http client",
-            "rest",
-            "web service"
-        ]
     },
     {
         "name": "league/oauth2-client",
@@ -4447,57 +4244,6 @@
         ]
     },
     {
-        "name": "seld/jsonlint",
-        "version": "1.6.0",
-        "version_normalized": "1.6.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Seldaek/jsonlint.git",
-            "reference": "791f8c594f300d246cdf01c6b3e1e19611e301d8"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/791f8c594f300d246cdf01c6b3e1e19611e301d8",
-            "reference": "791f8c594f300d246cdf01c6b3e1e19611e301d8",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^5.3 || ^7.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^4.5"
-        },
-        "time": "2017-03-06T16:42:24+00:00",
-        "bin": [
-            "bin/jsonlint"
-        ],
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Seld\\JsonLint\\": "src/Seld/JsonLint/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jordi Boggiano",
-                "email": "j.boggiano@seld.be",
-                "homepage": "http://seld.be"
-            }
-        ],
-        "description": "JSON Linter",
-        "keywords": [
-            "json",
-            "linter",
-            "parser",
-            "validator"
-        ]
-    },
-    {
         "name": "seld/cli-prompt",
         "version": "1.0.3",
         "version_normalized": "1.0.3.0",
@@ -4889,7 +4635,7 @@
         "version_normalized": "1.0.0.0-RC3",
         "source": {
             "type": "git",
-            "url": "https://gitlab.com/ReFlar/gamification.git",
+            "url": "https://gitlab.com/ReDevelopers/ReFlar/gamification.git",
             "reference": "8e5a29596a3d9d9ff966502bbc3cb831d4903415"
         },
         "dist": {
@@ -5773,70 +5519,6 @@
         ]
     },
     {
-        "name": "flagrow/bazaar",
-        "version": "0.2.1",
-        "version_normalized": "0.2.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/flagrow/bazaar.git",
-            "reference": "0f5a5f2b3861504d77674a49c0f0cb0ac468819b"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/flagrow/bazaar/zipball/0f5a5f2b3861504d77674a49c0f0cb0ac468819b",
-            "reference": "0f5a5f2b3861504d77674a49c0f0cb0ac468819b",
-            "shasum": ""
-        },
-        "require": {
-            "composer/composer": "^1.3",
-            "flarum/core": "^0.1.0-beta.6",
-            "guzzlehttp/guzzle": "^6.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^4.8"
-        },
-        "time": "2017-05-30T18:03:43+00:00",
-        "type": "flarum-extension",
-        "extra": {
-            "flarum-extension": {
-                "title": "Flagrow Bazaar",
-                "icon": {
-                    "name": "shopping-bag",
-                    "backgroundColor": "#f4f4f4",
-                    "color": "#5f4bb6"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Flagrow\\Bazaar\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "cc-by-nc-nd"
-        ],
-        "authors": [
-            {
-                "name": "Clark Winkelmann",
-                "email": "clark.winkelmann@gmail.com",
-                "homepage": "https://clarkwinkelmann.com"
-            },
-            {
-                "name": "Daniël Klabbers",
-                "email": "daniel@klabbers.email",
-                "homepage": "http://luceos.com"
-            }
-        ],
-        "description": "The Flarum extension marketplace.",
-        "keywords": [
-            "extension",
-            "flagrow",
-            "flarum"
-        ]
-    },
-    {
         "name": "flarum/flarum-ext-mentions",
         "version": "v0.1.0-beta.6.1",
         "version_normalized": "0.1.0.0-beta6.1",
@@ -6309,111 +5991,6 @@
         ]
     },
     {
-        "name": "flarum/core",
-        "version": "v0.1.0-beta.6.2",
-        "version_normalized": "0.1.0.0-beta6.2",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/FlarumChina/core.git",
-            "reference": "f412fed9f2e27d0f8bc28aeb782bcaa3a6eca75b"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/FlarumChina/core/zipball/f412fed9f2e27d0f8bc28aeb782bcaa3a6eca75b",
-            "reference": "f412fed9f2e27d0f8bc28aeb782bcaa3a6eca75b",
-            "shasum": ""
-        },
-        "require": {
-            "components/font-awesome": "^4.6",
-            "dflydev/fig-cookies": "^1.0.2",
-            "doctrine/dbal": "^2.5",
-            "franzl/whoops-middleware": "^0.4.0",
-            "illuminate/bus": "5.1.*",
-            "illuminate/cache": "5.1.*",
-            "illuminate/config": "5.1.*",
-            "illuminate/container": "5.1.*",
-            "illuminate/contracts": "5.1.*",
-            "illuminate/database": "^5.1.31",
-            "illuminate/events": "5.1.*",
-            "illuminate/filesystem": "5.1.*",
-            "illuminate/hashing": "5.1.*",
-            "illuminate/mail": "5.1.*",
-            "illuminate/support": "5.1.*",
-            "illuminate/validation": "5.1.*",
-            "illuminate/view": "5.1.*",
-            "intervention/image": "^2.3.0",
-            "league/flysystem": "^1.0.11",
-            "league/oauth2-client": "~1.0",
-            "matthiasmullie/minify": "^1.3",
-            "monolog/monolog": "^1.16.0",
-            "nikic/fast-route": "^0.6",
-            "oyejorge/less.php": "~1.5",
-            "php": ">=5.6.0",
-            "psr/http-message": "^1.0",
-            "s9e/text-formatter": "^0.6.1",
-            "symfony/console": "^2.7",
-            "symfony/http-foundation": "^2.7",
-            "symfony/translation": "^2.7",
-            "symfony/yaml": "^2.7",
-            "tobscure/json-api": "^0.3.0",
-            "zendframework/zend-diactoros": "^1.1",
-            "zendframework/zend-stratigility": "^1.3"
-        },
-        "require-dev": {
-            "mockery/mockery": "^0.9.4",
-            "phpunit/phpunit": "^4.8"
-        },
-        "time": "2017-06-13T13:04:39+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.1.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Flarum\\": "src/"
-            },
-            "files": [
-                "src/helpers.php"
-            ]
-        },
-        "autoload-dev": {
-            "psr-4": {
-                "Tests\\": "tests/"
-            }
-        },
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Toby Zerner",
-                "email": "toby.zerner@gmail.com"
-            },
-            {
-                "name": "Franz Liedke",
-                "email": "franz@develophp.org"
-            },
-            {
-                "name": "Skywalker512",
-                "email": "houzhenhong@outlook.com"
-            }
-        ],
-        "description": "Delightfully simple forum software for Chinese.",
-        "homepage": "http://flarum.ga",
-        "keywords": [
-            "discussion",
-            "forum"
-        ],
-        "support": {
-            "issues": "https://github.com/skywalker512/FlarumChinaCore/issues",
-            "source": "https://github.com/skywalker512/FlarumChinaCore",
-            "docs": "http://flarum.ga/docs"
-        }
-    },
-    {
         "name": "flagrow/byobu",
         "version": "0.1.0-beta.16",
         "version_normalized": "0.1.0.0-beta16",
@@ -6529,24 +6106,453 @@
         ]
     },
     {
-        "name": "flarumchina/flarum-ext-simplified-chinese-pro",
-        "version": "v0.1.0-beta.6.8",
-        "version_normalized": "0.1.0.0-beta6.8",
+        "name": "matthiasmullie/minify",
+        "version": "1.3.45",
+        "version_normalized": "1.3.45.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/FlarumChina/flarum-ext-simplified-chinese-pro.git",
-            "reference": "22a43e8fccf27486c5346d8287e13b8d38d39115"
+            "url": "https://github.com/matthiasmullie/minify.git",
+            "reference": "09b83e9dbdc50cf6734c6a9652a54891c0651998"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/22a43e8fccf27486c5346d8287e13b8d38d39115",
-            "reference": "22a43e8fccf27486c5346d8287e13b8d38d39115",
+            "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/09b83e9dbdc50cf6734c6a9652a54891c0651998",
+            "reference": "09b83e9dbdc50cf6734c6a9652a54891c0651998",
+            "shasum": ""
+        },
+        "require": {
+            "ext-pcre": "*",
+            "matthiasmullie/path-converter": "~1.1",
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "~1.0",
+            "matthiasmullie/scrapbook": "~1.0",
+            "phpunit/phpunit": "~4.8"
+        },
+        "suggest": {
+            "psr/cache-implementation": "Cache implementation to use with Minify::cache"
+        },
+        "time": "2017-06-13T15:54:31+00:00",
+        "bin": [
+            "bin/minifycss",
+            "bin/minifyjs"
+        ],
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "MatthiasMullie\\Minify\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Matthias Mullie",
+                "email": "minify@mullie.eu",
+                "homepage": "http://www.mullie.eu",
+                "role": "Developer"
+            }
+        ],
+        "description": "CSS & JS minifier",
+        "homepage": "http://www.minifier.org",
+        "keywords": [
+            "JS",
+            "css",
+            "javascript",
+            "minifier",
+            "minify"
+        ]
+    },
+    {
+        "name": "monolog/monolog",
+        "version": "1.23.0",
+        "version_normalized": "1.23.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Seldaek/monolog.git",
+            "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
+            "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0",
+            "psr/log": "~1.0"
+        },
+        "provide": {
+            "psr/log-implementation": "1.0.0"
+        },
+        "require-dev": {
+            "aws/aws-sdk-php": "^2.4.9 || ^3.0",
+            "doctrine/couchdb": "~1.0@dev",
+            "graylog2/gelf-php": "~1.0",
+            "jakub-onderka/php-parallel-lint": "0.9",
+            "php-amqplib/php-amqplib": "~2.4",
+            "php-console/php-console": "^3.1.3",
+            "phpunit/phpunit": "~4.5",
+            "phpunit/phpunit-mock-objects": "2.3.0",
+            "ruflin/elastica": ">=0.90 <3.0",
+            "sentry/sentry": "^0.13",
+            "swiftmailer/swiftmailer": "^5.3|^6.0"
+        },
+        "suggest": {
+            "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+            "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+            "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
+            "ext-mongo": "Allow sending log messages to a MongoDB server",
+            "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+            "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+            "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
+            "php-console/php-console": "Allow sending log messages to Google Chrome",
+            "rollbar/rollbar": "Allow sending log messages to Rollbar",
+            "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
+            "sentry/sentry": "Allow sending log messages to a Sentry server"
+        },
+        "time": "2017-06-19T01:22:40+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Monolog\\": "src/Monolog"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jordi Boggiano",
+                "email": "j.boggiano@seld.be",
+                "homepage": "http://seld.be"
+            }
+        ],
+        "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
+        "homepage": "http://github.com/Seldaek/monolog",
+        "keywords": [
+            "log",
+            "logging",
+            "psr-3"
+        ]
+    },
+    {
+        "name": "guzzlehttp/guzzle",
+        "version": "6.3.0",
+        "version_normalized": "6.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/guzzle/guzzle.git",
+            "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+            "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+            "shasum": ""
+        },
+        "require": {
+            "guzzlehttp/promises": "^1.0",
+            "guzzlehttp/psr7": "^1.4",
+            "php": ">=5.5"
+        },
+        "require-dev": {
+            "ext-curl": "*",
+            "phpunit/phpunit": "^4.0 || ^5.0",
+            "psr/log": "^1.0"
+        },
+        "suggest": {
+            "psr/log": "Required for using the Log middleware"
+        },
+        "time": "2017-06-22T18:50:49+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "6.2-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/functions_include.php"
+            ],
+            "psr-4": {
+                "GuzzleHttp\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            }
+        ],
+        "description": "Guzzle is a PHP HTTP client library",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "client",
+            "curl",
+            "framework",
+            "http",
+            "http client",
+            "rest",
+            "web service"
+        ]
+    },
+    {
+        "name": "seld/jsonlint",
+        "version": "1.6.1",
+        "version_normalized": "1.6.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Seldaek/jsonlint.git",
+            "reference": "50d63f2858d87c4738d5b76a7dcbb99fa8cf7c77"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/50d63f2858d87c4738d5b76a7dcbb99fa8cf7c77",
+            "reference": "50d63f2858d87c4738d5b76a7dcbb99fa8cf7c77",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.3 || ^7.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.5"
+        },
+        "time": "2017-06-18T15:11:04+00:00",
+        "bin": [
+            "bin/jsonlint"
+        ],
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Seld\\JsonLint\\": "src/Seld/JsonLint/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jordi Boggiano",
+                "email": "j.boggiano@seld.be",
+                "homepage": "http://seld.be"
+            }
+        ],
+        "description": "JSON Linter",
+        "keywords": [
+            "json",
+            "linter",
+            "parser",
+            "validator"
+        ]
+    },
+    {
+        "name": "flarum/core",
+        "version": "v0.1.0-beta.6.3",
+        "version_normalized": "0.1.0.0-beta6.3",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FlarumChina/core.git",
+            "reference": "0be9b5e33ce82006ec1e1eab192e9e3b5eeb6e5f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FlarumChina/core/zipball/0be9b5e33ce82006ec1e1eab192e9e3b5eeb6e5f",
+            "reference": "0be9b5e33ce82006ec1e1eab192e9e3b5eeb6e5f",
+            "shasum": ""
+        },
+        "require": {
+            "components/font-awesome": "^4.6",
+            "dflydev/fig-cookies": "^1.0.2",
+            "doctrine/dbal": "^2.5",
+            "franzl/whoops-middleware": "^0.4.0",
+            "illuminate/bus": "5.1.*",
+            "illuminate/cache": "5.1.*",
+            "illuminate/config": "5.1.*",
+            "illuminate/container": "5.1.*",
+            "illuminate/contracts": "5.1.*",
+            "illuminate/database": "^5.1.31",
+            "illuminate/events": "5.1.*",
+            "illuminate/filesystem": "5.1.*",
+            "illuminate/hashing": "5.1.*",
+            "illuminate/mail": "5.1.*",
+            "illuminate/support": "5.1.*",
+            "illuminate/validation": "5.1.*",
+            "illuminate/view": "5.1.*",
+            "intervention/image": "^2.3.0",
+            "league/flysystem": "^1.0.11",
+            "league/oauth2-client": "~1.0",
+            "matthiasmullie/minify": "^1.3",
+            "monolog/monolog": "^1.16.0",
+            "nikic/fast-route": "^0.6",
+            "oyejorge/less.php": "~1.5",
+            "php": ">=5.6.0",
+            "psr/http-message": "^1.0",
+            "s9e/text-formatter": "^0.6.1",
+            "symfony/console": "^2.7",
+            "symfony/http-foundation": "^2.7",
+            "symfony/translation": "^2.7",
+            "symfony/yaml": "^2.7",
+            "tobscure/json-api": "^0.3.0",
+            "zendframework/zend-diactoros": "^1.1",
+            "zendframework/zend-stratigility": "^1.3"
+        },
+        "require-dev": {
+            "mockery/mockery": "^0.9.4",
+            "phpunit/phpunit": "^4.8"
+        },
+        "time": "2017-07-01T02:31:37+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.1.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Flarum\\": "src/"
+            },
+            "files": [
+                "src/helpers.php"
+            ]
+        },
+        "autoload-dev": {
+            "psr-4": {
+                "Tests\\": "tests/"
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Toby Zerner",
+                "email": "toby.zerner@gmail.com"
+            },
+            {
+                "name": "Franz Liedke",
+                "email": "franz@develophp.org"
+            },
+            {
+                "name": "Skywalker512",
+                "email": "houzhenhong@outlook.com"
+            }
+        ],
+        "description": "Delightfully simple forum software for Chinese.",
+        "homepage": "http://flarum.ga",
+        "keywords": [
+            "discussion",
+            "forum"
+        ],
+        "support": {
+            "issues": "https://github.com/skywalker512/FlarumChinaCore/issues",
+            "source": "https://github.com/skywalker512/FlarumChinaCore",
+            "docs": "http://flarum.ga/docs"
+        }
+    },
+    {
+        "name": "flagrow/bazaar",
+        "version": "0.2.2",
+        "version_normalized": "0.2.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/flagrow/bazaar.git",
+            "reference": "7c6a8feb7db60955d6334988908a8ff17d9bf9b7"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/flagrow/bazaar/zipball/7c6a8feb7db60955d6334988908a8ff17d9bf9b7",
+            "reference": "7c6a8feb7db60955d6334988908a8ff17d9bf9b7",
+            "shasum": ""
+        },
+        "require": {
+            "composer/composer": "^1.3",
+            "flarum/core": "^0.1.0-beta.6",
+            "guzzlehttp/guzzle": "^6.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8"
+        },
+        "time": "2017-06-22T11:21:40+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Flagrow Bazaar",
+                "icon": {
+                    "name": "shopping-bag",
+                    "backgroundColor": "#f4f4f4",
+                    "color": "#5f4bb6"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Flagrow\\Bazaar\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "cc-by-nc-nd"
+        ],
+        "authors": [
+            {
+                "name": "Clark Winkelmann",
+                "email": "clark.winkelmann@gmail.com",
+                "homepage": "https://clarkwinkelmann.com"
+            },
+            {
+                "name": "Daniël Klabbers",
+                "email": "daniel@klabbers.email",
+                "homepage": "http://luceos.com"
+            }
+        ],
+        "description": "The Flarum extension marketplace.",
+        "keywords": [
+            "extension",
+            "flagrow",
+            "flarum"
+        ]
+    },
+    {
+        "name": "flarumchina/flarum-ext-simplified-chinese-pro",
+        "version": "v0.1.0-beta.6.9",
+        "version_normalized": "0.1.0.0-beta6.9",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FlarumChina/flarum-ext-simplified-chinese-pro.git",
+            "reference": "a50bbff898b299e530d1bfaca1a487238750416e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/a50bbff898b299e530d1bfaca1a487238750416e",
+            "reference": "a50bbff898b299e530d1bfaca1a487238750416e",
             "shasum": ""
         },
         "require": {
             "flarum/core": "^0.1.0-beta.6"
         },
-        "time": "2017-06-14T00:45:20+00:00",
+        "time": "2017-07-01T14:36:57+00:00",
         "type": "flarum-extension",
         "extra": {
             "branch-alias": {
@@ -6574,6 +6580,169 @@
         "description": "simplified chinese language pack.",
         "keywords": [
             "locale"
+        ]
+    },
+    {
+        "name": "henter/wechat-oauth",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/henter/WeChat-OAuth.git",
+            "reference": "0e5f72672446da3b0e18ed00367d6ab546f608a9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/henter/WeChat-OAuth/zipball/0e5f72672446da3b0e18ed00367d6ab546f608a9",
+            "reference": "0e5f72672446da3b0e18ed00367d6ab546f608a9",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9"
+        },
+        "require-dev": {
+            "satooshi/php-coveralls": "dev-master"
+        },
+        "time": "2015-12-28T08:35:57+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Henter\\WeChat": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Henter",
+                "email": "henter@henter.me"
+            }
+        ],
+        "description": "WeChat OAuth SDK",
+        "keywords": [
+            "login",
+            "oauth",
+            "wechat",
+            "wechat-oauth",
+            "wechatlogin",
+            "wechatoauth",
+            "weixin",
+            "weixin-oauth",
+            "weixinlogin",
+            "weixinoauth"
+        ]
+    },
+    {
+        "name": "stanleysong/flarum-ext-auth-wechat",
+        "version": "1.0.3",
+        "version_normalized": "1.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/StanleySong/flarum-ext-auth-wechat.git",
+            "reference": "c5fe9c6a0f4048ac1d5515f9a3951a39e322334b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/StanleySong/flarum-ext-auth-wechat/zipball/c5fe9c6a0f4048ac1d5515f9a3951a39e322334b",
+            "reference": "c5fe9c6a0f4048ac1d5515f9a3951a39e322334b",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6",
+            "henter/wechat-oauth": "dev-master"
+        },
+        "time": "2017-06-18T02:01:35+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Wechat Login",
+                "icon": {
+                    "name": "wechat",
+                    "backgroundColor": "#22aa00",
+                    "color": "#fff"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "StanleySong\\Auth\\Wechat\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Stanley Song",
+                "email": "sxhuan@gmail.com"
+            }
+        ],
+        "description": "Allow users to log in with Wechat.",
+        "keywords": [
+            "Authentication"
+        ]
+    },
+    {
+        "name": "flagrow/flarum-ext-analytics",
+        "version": "0.5.0",
+        "version_normalized": "0.5.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/flagrow/flarum-ext-analytics.git",
+            "reference": "8fc5b36e37cd642ffad2a3c5062711da080206c4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/flagrow/flarum-ext-analytics/zipball/8fc5b36e37cd642ffad2a3c5062711da080206c4",
+            "reference": "8fc5b36e37cd642ffad2a3c5062711da080206c4",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6"
+        },
+        "time": "2016-10-24T11:19:57+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "Analytics",
+                "icon": {
+                    "name": "line-chart",
+                    "backgroundColor": "#74000E",
+                    "color": "#BE1E31"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Flagrow\\Analytics\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Daniël Klabbers",
+                "email": "daniel+flarum@klabbers.email",
+                "homepage": "http://hyn.io"
+            },
+            {
+                "name": "Santiago Testa Biali",
+                "email": "santiago.t.biali@gmail.com"
+            }
+        ],
+        "description": "Tracks analytics using googles and piwik metric tool analytics",
+        "keywords": [
+            "analytics",
+            "flagrow",
+            "flarum"
         ]
     }
 ]

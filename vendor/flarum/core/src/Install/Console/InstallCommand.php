@@ -148,19 +148,19 @@ class InstallCommand extends AbstractCommand
             $this->adminUser = $admin = $this->dataSource->getAdminUser();
 
             if (strlen($admin['password']) < 8) {
-                throw new Exception('Password must be at least 8 characters.');
+                throw new Exception('密码必须大余8个英文字符');
             }
 
             if ($admin['password'] !== $admin['password_confirmation']) {
-                throw new Exception('The password did not match its confirmation.');
+                throw new Exception('两次输入的密码不一致');
             }
 
             if (! filter_var($admin['email'], FILTER_VALIDATE_EMAIL)) {
-                throw new Exception('You must enter a valid email.');
+                throw new Exception('你必须输入一个有效的邮箱');
             }
 
             if (! $admin['username'] || preg_match('/[^-_a-zA-Z0-9\x7f-\xff]/i', $admin['username'])) {
-                throw new Exception('Username can only contain letters, numbers, underscores, and dashes.');
+                throw new Exception('用户名不能是特殊字符');
             }
 
             $this->storeConfiguration();
@@ -223,7 +223,7 @@ class InstallCommand extends AbstractCommand
         $version = $db->getPdo()->getAttribute(PDO::ATTR_SERVER_VERSION);
 
         if (version_compare($version, '5.5.0', '<')) {
-            throw new Exception('MySQL version too low. You need at least MySQL 5.5.');
+        throw new Exception('请使用MYSQL5.5，及以上版本');
         }
 
         $this->info('Writing config');
