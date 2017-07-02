@@ -47,6 +47,12 @@ class WebAppView
      * @var null|string
      */
     public $cdnUrl;
+     /**
+     * The meta of the document, for meta support.
+     *
+     * @var null|string
+     */
+    public $meta;
 
     /**
      * The language of the document, displayed as the value of the attribute `dir` in the <html> tag.
@@ -299,6 +305,7 @@ class WebAppView
 
         $view->title = $this->buildTitle(array_get($forum, 'data.attributes.title'));
         $view->description = $this->description ?: array_get($forum, 'data.attributes.description');
+        $view->meta = $this->meta ?: array_get($forum, 'data.attributes.meta');
         $view->language = $this->language ?: $this->locales->getLocale();
         $view->direction = $this->direction ?: 'ltr';
 

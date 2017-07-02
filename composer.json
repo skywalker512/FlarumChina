@@ -83,8 +83,8 @@
     },
     "config": {
         "preferred-install": "dist",
-        "github-oauth": {
-            "github.com": "3500f70a8b72c33a447e602a2a7dab927ed8eb67"
+        "github-oauth": { 
+            "github.com": "d4c60ad3af2678e381a91bfe013ee78d44d306e0"
         }
     },
     "minimum-stability": "beta",

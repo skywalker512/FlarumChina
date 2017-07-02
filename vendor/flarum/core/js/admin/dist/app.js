@@ -18057,7 +18057,7 @@ System.register('flarum/components/BasicsPage', ['flarum/components/Page', 'flar
 
             this.loading = false;
 
-            this.fields = ['forum_title', 'forum_description', 'forum_cdn', 'default_locale', 'show_language_selector', 'default_route', 'welcome_title', 'welcome_message'];
+            this.fields = ['forum_title', 'forum_description', 'forum_cdn', 'forum_meta', 'default_locale', 'show_language_selector', 'default_route', 'welcome_title', 'welcome_message'];
             this.values = {};
 
             var settings = app.data.settings;
@@ -18106,6 +18106,14 @@ System.register('flarum/components/BasicsPage', ['flarum/components/Page', 'flar
                       { className: 'helpText' },
                       app.translator.trans('core.admin.basics.forum_cdn_text')
                     ), m('input', { className: 'FormControl', value: this.values.forum_cdn(), oninput: m.withAttr('value', this.values.forum_cdn) })]
+                  }),
+                  FieldSet.component({
+                    label: app.translator.trans('core.admin.basics.forum_meta_heading'),
+                    children: [m(
+                      'div',
+                      { className: 'helpText' },
+                      app.translator.trans('core.admin.basics.forum_meta_text')
+                    ), m('textarea', { className: 'FormControl', value: this.values.forum_meta(), oninput: m.withAttr('value', this.values.forum_meta) })]
                   }),
                   Object.keys(this.localeOptions).length > 1 ? FieldSet.component({
                     label: app.translator.trans('core.admin.basics.default_language_heading'),

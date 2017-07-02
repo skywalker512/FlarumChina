@@ -19,6 +19,7 @@
     @endif
 
     {!! $head !!}
+    {!! $meta !!}
   </head>
 
   <body>
@@ -64,5 +65,6 @@
     @endif
 
     {!! $foot !!}
+    
   </body>
 </html>

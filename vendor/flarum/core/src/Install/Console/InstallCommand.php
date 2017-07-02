@@ -356,6 +356,10 @@ class InstallCommand extends AbstractCommand
             'wiseclock-login2see',
             'reflar-gamification',
             'flagrow-masquerade',
+            'issyrocks12-users-list',
+            'davis-securehttps',
+            'davis-inviteonly',
+            'issyrocks12-filter',
         ];
 
         foreach ($extensions->getExtensions() as $name => $extension) {

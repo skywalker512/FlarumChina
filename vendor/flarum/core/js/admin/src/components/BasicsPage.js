@@ -17,6 +17,7 @@ export default class BasicsPage extends Page {
       'forum_title',
       'forum_description',
       'forum_cdn',
+      'forum_meta',
       'default_locale',
       'show_language_selector',
       'default_route',
@@ -66,6 +67,16 @@ export default class BasicsPage extends Page {
                   {app.translator.trans('core.admin.basics.forum_cdn_text')}
                 </div>,
                 <input className="FormControl" value={this.values.forum_cdn()} oninput={m.withAttr('value', this.values.forum_cdn)}/>
+              ]
+            })}
+
+            {FieldSet.component({
+              label: app.translator.trans('core.admin.basics.forum_meta_heading'),
+              children: [
+                <div className="helpText">
+                  {app.translator.trans('core.admin.basics.forum_meta_text')}
+                </div>,
+                <textarea className="FormControl" value={this.values.forum_meta()} oninput={m.withAttr('value', this.values.forum_meta)}/>
               ]
             })}
 

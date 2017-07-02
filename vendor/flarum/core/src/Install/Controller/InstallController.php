@@ -76,6 +76,7 @@ class InstallController implements ControllerInterface
         $data->setSetting('forum_cdn', '//'.parse_url($baseUrl, PHP_URL_HOST));
         $data->setSetting('mail_from', 'noreply@'.preg_replace('/^www\./i', '', parse_url($baseUrl, PHP_URL_HOST)));
         $data->setSetting('welcome_title', '欢迎来到 '.array_get($input, 'forumTitle'));
+        $data->setSetting('forum_meta', '<!--Meta代码-->');
 
         $body = fopen('php://temp', 'wb+');
         $input = new StringInput('');
