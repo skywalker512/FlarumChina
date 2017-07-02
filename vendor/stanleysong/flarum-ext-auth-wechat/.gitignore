@@ -1,0 +1,23 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+
+#vscode
+.vscode/
+
+# Mac
+.DS_Store
+
+# Node
+js/admin/node_modules/
+js/forum/node_modules/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Istanbul
+coverage/
+
+# Bower
+bower_components/

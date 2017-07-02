@@ -24,11 +24,11 @@
     [
             {
                 "type": "vcs",
-                "url": "https://github.com/FlarumChina/core.git"
+                "url": "https://git.oschina.net/FlarumChina/core.git"
             },
             {
                 "type": "vcs",
-                "url": "https://github.com/FlarumChina/flarum-ext-mentions.git"
+                "url": "https://git.oschina.net/FlarumChina/flarum-ext-mentions.git"
             }
     ],
     "require": {
@@ -73,16 +73,17 @@
         "flagrow/byobu": "^0.1.0@beta",
         "davis/flarum-ext-inviteonly": "^0.1.0@beta",
         "issyrocks12/flarum-ext-users-list": "^0.2.2.1",
-        "flagrow/masquerade": "^0.1.0"
+        "flagrow/masquerade": "^0.1.0",
+        "henter/wechat-oauth": "dev-master",
+        "stanleysong/flarum-ext-auth-wechat": "^1.0",
+        "flagrow/flarum-ext-analytics": "^0.5.0"
+
     },
     "require-dev": {
         "franzl/studio": "^0.11.0"
     },
     "config": {
-        "preferred-install": "dist",
-        "github-oauth": {
-            "github.com": "3500f70a8b72c33a447e602a2a7dab927ed8eb67"
-        }
+        "preferred-install": "dist"
     },
     "minimum-stability": "beta",
     "prefer-stable": true

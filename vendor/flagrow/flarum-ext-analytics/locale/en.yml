@@ -1,0 +1,28 @@
+flagrow-analytics:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Strings in this namespace are used by the admin interface.
+  admin:
+    popup:
+      title: Analytics Settings
+
+      field:
+        googleTrackingCode: Tracking Code ID
+        piwikUrl: Piwik's url
+        piwikSiteId: Site Id
+        piwikAliasUrl: Alias Url
+        piwikAuthToken: Authentication token config->users
+
+      checkbox:
+        label:
+          piwikTrackSubdomain: Track visitors across all subdomains of Flarum
+          piwikPrependDomain: Prepend the site domain to the page title when tracking
+          piwikHideAliasUrl: In the "Outlinks" report, hide clicks to known alias URLs
+
+    page:
+      nav:
+        title: Analytics
+        description: Take a look at Statistics

@@ -1,0 +1,40 @@
+{
+    "name": "flagrow/flarum-ext-analytics",
+    "description": "Tracks analytics using googles and piwik metric tool analytics",
+    "keywords": ["analytics", "flagrow", "flarum"],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniël Klabbers",
+            "email": "daniel+flarum@klabbers.email",
+            "homepage": "http://hyn.io"
+        },
+        {
+          "name": "Santiago Testa Biali",
+          "email": "santiago.t.biali@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/flagrow/flarum-ext-analytics/issues",
+        "source": "https://github.com/flagrow/flarum-ext-analytics"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Analytics",
+            "icon": {
+                "name": "line-chart",
+                "backgroundColor": "#74000E",
+                "color": "#BE1E31"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Flagrow\\Analytics\\": "src/"
+        }
+    }
+}

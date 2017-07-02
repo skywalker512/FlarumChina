@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
+class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -63,6 +63,7 @@ class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
             'Symfony\\Component\\Console\\' => 26,
             'Studio\\' => 7,
             'Stringy\\' => 8,
+            'StanleySong\\Auth\\Wechat\\' => 24,
             'Sijad\\Pages\\' => 12,
             'Sijad\\Links\\' => 12,
             'Sijad\\Details\\' => 14,
@@ -147,6 +148,7 @@ class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
             'Flagrow\\ImageUpload\\' => 20,
             'Flagrow\\Byobu\\' => 14,
             'Flagrow\\Bazaar\\' => 15,
+            'Flagrow\\Analytics\\' => 18,
             'FastRoute\\' => 10,
         ),
         'D' => 
@@ -276,6 +278,10 @@ class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
         'Stringy\\' => 
         array (
             0 => __DIR__ . '/..' . '/danielstjules/stringy/src',
+        ),
+        'StanleySong\\Auth\\Wechat\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/stanleysong/flarum-ext-auth-wechat/src',
         ),
         'Sijad\\Pages\\' => 
         array (
@@ -519,6 +525,10 @@ class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
         array (
             0 => __DIR__ . '/..' . '/flagrow/bazaar/src',
         ),
+        'Flagrow\\Analytics\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/flagrow/flarum-ext-analytics/src',
+        ),
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
@@ -593,6 +603,13 @@ class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
             'Less' => 
             array (
                 0 => __DIR__ . '/..' . '/oyejorge/less.php/lib',
+            ),
+        ),
+        'H' => 
+        array (
+            'Henter\\WeChat' => 
+            array (
+                0 => __DIR__ . '/..' . '/henter/wechat-oauth/lib',
             ),
         ),
         'D' => 
@@ -1253,6 +1270,8 @@ class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
         'FastRoute\\RouteCollector' => __DIR__ . '/..' . '/nikic/fast-route/src/RouteCollector.php',
         'FastRoute\\RouteParser' => __DIR__ . '/..' . '/nikic/fast-route/src/RouteParser.php',
         'FastRoute\\RouteParser\\Std' => __DIR__ . '/..' . '/nikic/fast-route/src/RouteParser/Std.php',
+        'Flagrow\\Analytics\\Listeners\\AddClientAssets' => __DIR__ . '/..' . '/flagrow/flarum-ext-analytics/src/Listeners/AddClientAssets.php',
+        'Flagrow\\Analytics\\Listeners\\AddTrackingJs' => __DIR__ . '/..' . '/flagrow/flarum-ext-analytics/src/Listeners/AddTrackingJs.php',
         'Flagrow\\Bazaar\\Api\\Controllers\\ConnectController' => __DIR__ . '/..' . '/flagrow/bazaar/src/Api/Controllers/ConnectController.php',
         'Flagrow\\Bazaar\\Api\\Controllers\\FavoriteExtensionController' => __DIR__ . '/..' . '/flagrow/bazaar/src/Api/Controllers/FavoriteExtensionController.php',
         'Flagrow\\Bazaar\\Api\\Controllers\\InstallExtensionController' => __DIR__ . '/..' . '/flagrow/bazaar/src/Api/Controllers/InstallExtensionController.php',
@@ -1963,6 +1982,10 @@ class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
         'GuzzleHttp\\RetryMiddleware' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/RetryMiddleware.php',
         'GuzzleHttp\\TransferStats' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/TransferStats.php',
         'GuzzleHttp\\UriTemplate' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/UriTemplate.php',
+        'Henter\\WeChat\\OAuth' => __DIR__ . '/..' . '/henter/wechat-oauth/lib/Henter/WeChat/OAuth.php',
+        'Henter\\WeChat\\Payment' => __DIR__ . '/..' . '/henter/wechat-oauth/lib/Henter/WeChat/Payment.php',
+        'Henter\\WeChat\\Request' => __DIR__ . '/..' . '/henter/wechat-oauth/lib/Henter/WeChat/Request.php',
+        'Henter\\WeChat\\Response' => __DIR__ . '/..' . '/henter/wechat-oauth/lib/Henter/WeChat/Response.php',
         'Illuminate\\Bus\\BusServiceProvider' => __DIR__ . '/..' . '/illuminate/bus/BusServiceProvider.php',
         'Illuminate\\Bus\\Dispatcher' => __DIR__ . '/..' . '/illuminate/bus/Dispatcher.php',
         'Illuminate\\Bus\\MarshalException' => __DIR__ . '/..' . '/illuminate/bus/MarshalException.php',
@@ -2843,6 +2866,9 @@ class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
         'Sijad\\Pages\\Search\\Page\\PageSearch' => __DIR__ . '/..' . '/sijad/flarum-ext-pages/src/Search/Page/PageSearch.php',
         'Sijad\\Pages\\Search\\Page\\PageSearcher' => __DIR__ . '/..' . '/sijad/flarum-ext-pages/src/Search/Page/PageSearcher.php',
         'Sijad\\Pages\\Util\\Html' => __DIR__ . '/..' . '/sijad/flarum-ext-pages/src/Util/Html.php',
+        'StanleySong\\Auth\\Wechat\\Listener\\AddClientAssets' => __DIR__ . '/..' . '/stanleysong/flarum-ext-auth-wechat/src/Listener/AddClientAssets.php',
+        'StanleySong\\Auth\\Wechat\\Listener\\AddWechatAuthRoute' => __DIR__ . '/..' . '/stanleysong/flarum-ext-auth-wechat/src/Listener/AddWechatAuthRoute.php',
+        'StanleySong\\Auth\\Wechat\\WechatAuthController' => __DIR__ . '/..' . '/stanleysong/flarum-ext-auth-wechat/src/WechatAuthController.php',
         'Stringy\\StaticStringy' => __DIR__ . '/..' . '/danielstjules/stringy/src/StaticStringy.php',
         'Stringy\\Stringy' => __DIR__ . '/..' . '/danielstjules/stringy/src/Stringy.php',
         'Studio\\Composer\\StudioPlugin' => __DIR__ . '/..' . '/franzl/studio/src/Composer/StudioPlugin.php',
@@ -3513,10 +3539,10 @@ class ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit2ced0fa03f8bc05fd0e3a95644c1d8d1::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit22115d18056dbc3517ba285e84cdea19::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit22115d18056dbc3517ba285e84cdea19::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit22115d18056dbc3517ba285e84cdea19::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit22115d18056dbc3517ba285e84cdea19::$classMap;
 
         }, null, ClassLoader::class);
     }

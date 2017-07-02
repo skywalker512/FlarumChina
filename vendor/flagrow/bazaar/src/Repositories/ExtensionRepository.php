@@ -71,7 +71,7 @@ class ExtensionRepository
     /**
      * @return SearchResults
      */
-    public function index()
+    public function index($params)
     {
         $query = [
             'page[size]' => 9999,
@@ -79,7 +79,11 @@ class ExtensionRepository
             'sort' => 'title' // Sort by package name per default
         ];
 
-        $hash = 'flagrow.io.search.list';
+        if (Arr::has($params, 'filter') && Arr::has($params['filter'], 'search')) {
+            $query['filter[search]'] = $params['filter']['search'];
+        }
+
+        $hash = 'flagrow.io.search.list' . (Arr::has($query, 'filter[search]') ? '.search-' . $query['filter[search]'] : '');
 
         $response = $this->getOrSetCache($hash, function () use ($query) {
             $response = $this->client->get('packages', compact('query'));
