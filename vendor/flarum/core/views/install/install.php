@@ -34,12 +34,7 @@
     </div>
 
     <div class="FormField">
-      <label>MySQL 端口</label>
-      <input type="number" name="mysqlPort">
-    </div>
-
-    <div class="FormField">
-      <label>数据库前缀（可选）</label>
+      <label>数据库前缀(可选)</label>
       <input type="text" name="tablePrefix">
     </div>
   </div>
@@ -71,7 +66,7 @@
   </div>
 </form>
 
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
 <script>
 $(function() {
   $('form :input:first').select();

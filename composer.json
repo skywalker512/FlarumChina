@@ -76,7 +76,8 @@
         "flagrow/masquerade": "^0.1.0",
         "henter/wechat-oauth": "dev-master",
         "stanleysong/flarum-ext-auth-wechat": "^1.0",
-        "flagrow/flarum-ext-analytics": "^0.5.0"
+        "flagrow/flarum-ext-analytics": "^0.5.0",
+        "davis/flarum-ext-socialprofile": "^0.2.3"
 
     },
     "require-dev": {

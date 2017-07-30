@@ -26,6 +26,11 @@ class CreateTagController extends AbstractCreateController
     public $serializer = TagSerializer::class;
 
     /**
+     * {@inheritdoc}
+     */
+    public $include = ['parent'];
+
+    /**
      * @var Dispatcher
      */
     protected $bus;
@@ -44,7 +49,7 @@ class CreateTagController extends AbstractCreateController
     protected function data(ServerRequestInterface $request, Document $document)
     {
         return $this->bus->dispatch(
-            new CreateTag($request->getAttribute('actor'), array_get($request->getParsedBody(), 'data'))
+            new CreateTag($request->getAttribute('actor'), array_get($request->getParsedBody(), 'data', []))
         );
     }
 }

@@ -60,6 +60,7 @@ reflar-gamification:
       ranks:
         title: Rangos
         ranks: Rangos personalizados
+        number_title: Cuántas insignias deberían mostrarse?
         help:
           color: '#ffffff'
           help: "Escribe la cantidad de votos positivos requeridos, el nombre del rango y el codigo HEX del color para el rango."

@@ -1,0 +1,13 @@
+# https://gitlab.com/ReDevelopers/ReFlar/oauth-gitlab/blob/master/locale/en.yml
+
+reflar-oauth-gitlab:
+
+  admin:
+    gitlab_settings:
+      title: GitLab 设置
+      client_id_label: Application ID
+      client_secret_label: Secret
+
+  forum:
+    log_in:
+      with_gitlab_button: 使用 GitLab 登陆

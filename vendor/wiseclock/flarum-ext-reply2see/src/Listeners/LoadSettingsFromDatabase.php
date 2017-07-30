@@ -6,6 +6,7 @@ use Flarum\Api\Serializer\PostSerializer;
 use Flarum\Event\PrepareApiAttributes;
 use Illuminate\Contracts\Events\Dispatcher;
 use Symfony\Component\Translation\TranslatorInterface;
+use Flarum\Core\Post\CommentPost;
 
 class LoadSettingsFromDatabase
 {
@@ -23,7 +24,7 @@ class LoadSettingsFromDatabase
 
     public function prepareApiAttributes(PrepareApiAttributes $event)
     {
-        if ($event->isSerializer(PostSerializer::class))
+        if ($event->isSerializer(PostSerializer::class) && $event->model instanceof CommentPost)
         {
             $newHTML = $event->attributes['contentHtml'];
             if (strpos($newHTML, '<reply2see>') === false)

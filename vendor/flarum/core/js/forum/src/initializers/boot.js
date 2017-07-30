@@ -4,7 +4,6 @@ import ScrollListener from 'flarum/utils/ScrollListener';
 import Pane from 'flarum/utils/Pane';
 import Drawer from 'flarum/utils/Drawer';
 import mapRoutes from 'flarum/utils/mapRoutes';
-import icon from 'flarum/helpers/icon';
 import Navigation from 'flarum/components/Navigation';
 import HeaderPrimary from 'flarum/components/HeaderPrimary';
 import HeaderSecondary from 'flarum/components/HeaderSecondary';
@@ -31,7 +30,7 @@ export default function boot(app) {
   }
 
   app.routes[defaultAction].path = '/';
-  app.history.push(defaultAction, icon('bars'), '/');
+  app.history.push(defaultAction, app.translator.trans('core.forum.header.back_to_index_tooltip'), '/');
 
   m.startComputation();
 

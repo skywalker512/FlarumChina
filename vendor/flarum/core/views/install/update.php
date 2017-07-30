@@ -1,6 +1,6 @@
 <h2>更新 Flarum</h2>
 
-<p>输入数据库密码以更新 Flarum. 在更新前你需要<strong>备份数据库</strong>. 若你遇到麻烦可点击 <a href="http://flarum.org/docs/updating" target="_blank">Flarum 交流论坛（英文）</a>.</p>
+<p>输入数据库密码以更新 Flarum. 在更新前你需要<strong>备份数据库</strong>. 若你遇到麻烦可点击 <a href="https://bbs.flarumchina.org" target="_blank">FlarumChina 交流论坛</a>.</p>
 
 <form method="post">
   <div id="error" style="display:none"></div>
@@ -17,7 +17,7 @@
   </div>
 </form>
 
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
 <script>
 $(function() {
   $('form :input:first').select();

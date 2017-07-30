@@ -60,6 +60,7 @@ reflar-gamification:
       ranks:
         title: Ranks
         ranks: Custom ranks
+        number_title: How many rank badges should be shown?
         help:
           color: '#ffffff'
           help: "Input the required number of upvotes, the name of the rank, and the hex color of the rank"

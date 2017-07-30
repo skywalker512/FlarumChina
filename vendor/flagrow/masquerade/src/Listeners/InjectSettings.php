@@ -31,6 +31,7 @@ class InjectSettings
             // Dispatcher not yet available if we're using IoC in construct.
             $fields = app(FieldRepository::class);
             $event->attributes['masquerade.force-profile-completion'] = $this->settings->get('masquerade.force-profile-completion', false);
+            $event->attributes['masquerade.disable-user-bio'] = $this->settings->get('masquerade.disable-user-bio', false);
             $event->attributes['masquerade.profile-completed'] = $event->actor && $event->actor->id ? $fields->completed($event->actor->id) : false;
         }
     }

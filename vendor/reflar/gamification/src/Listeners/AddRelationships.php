@@ -122,6 +122,7 @@ class AddRelationships
             $event->attributes['TopImage1'] = $this->settings->get('reflar.gamification.topimage.1');
             $event->attributes['TopImage2'] = $this->settings->get('reflar.gamification.topimage.2');
             $event->attributes['TopImage3'] = $this->settings->get('reflar.gamification.topimage.3');
+            $event->attributes['ranksAmt'] = $this->settings->get('reflar.gamification.rankAmt');
         }
         if ($event->isSerializer(DiscussionSerializer::class)) {
             $event->attributes['votes'] = (int) $event->model->votes;

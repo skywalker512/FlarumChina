@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -57,31 +58,28 @@ class DiscussionPolicy extends AbstractPolicy
      * @param Discussion $discussion
      * @return bool
      */
-    public function before(User $actor, $ability, Discussion $discussion)
+    public function after(User $actor, $ability, Discussion $discussion)
     {
         // Wrap all discussion permission checks with some logic pertaining to
         // the discussion's tags. If the discussion has a tag that has been
-        // restricted, and the user has this permission for that tag, then they
-        // are allowed. If the discussion only has tags that have been
-        // restricted, then the user *must* have permission for at least one of
-        // them.
+        // restricted, the user must have the permission for that tag.
         $tags = $discussion->tags;
 
         if (count($tags)) {
-            $restricted = true;
+            $restricted = false;
 
             foreach ($tags as $tag) {
                 if ($tag->is_restricted) {
-                    if ($actor->hasPermission('tag'.$tag->id.'.discussion.'.$ability)) {
-                        return true;
+                    if (! $actor->hasPermission('tag'.$tag->id.'.discussion.'.$ability)) {
+                        return false;
                     }
-                } else {
-                    $restricted = false;
+
+                    $restricted = true;
                 }
             }
 
             if ($restricted) {
-                return false;
+                return true;
             }
         }
     }

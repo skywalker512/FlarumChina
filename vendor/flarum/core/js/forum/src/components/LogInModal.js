@@ -37,7 +37,7 @@ export default class LogInModal extends Modal {
      *
      * @type {Function}
      */
-    this.remember = m.prop(this.props.remember && true);
+    this.remember = m.prop(!!this.props.remember);
   }
 
   className() {
@@ -66,10 +66,14 @@ export default class LogInModal extends Modal {
               disabled={this.loading} />
           </div>
 
-          <label className="checkbox">
-            <input name="remember" type="checkbox" bidi={this.remember} disabled={this.loading} />
-            {app.translator.trans('core.forum.log_in.remember_me_label')}
-          </label>
+          <div className="Form-group">
+            <div>
+              <label className="checkbox">
+                <input type="checkbox" bidi={this.remember} disabled={this.loading} />
+                {app.translator.trans('core.forum.log_in.remember_me_label')}
+              </label>
+            </div>
+          </div>
 
           <div className="Form-group">
             {Button.component({

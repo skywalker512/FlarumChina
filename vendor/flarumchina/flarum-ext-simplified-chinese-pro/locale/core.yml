@@ -153,6 +153,7 @@ core:
       start_discussions_label: 发布话题
       view_discussions_label: 浏览话题
       view_post_ips_label: 查看话题的发布 IP
+      view_user_list_label: 查看用户列表(API)
 
 
     # These translations are used in the dropdown menus on the Permissions page.
@@ -270,6 +271,7 @@ core:
     # These translations are used in the header and session dropdown menu.
     header:
       admin_button: 管理后台
+      back_to_index_tooltip: 回到讨论列表
       log_in_link: => core.ref.log_in
       log_out_button: => core.ref.log_out
       profile_button: 我的资料
@@ -299,7 +301,7 @@ core:
       forgot_password_link: "忘记了密码？"
       invalid_login_message: 这个登入信息有误！
       password_placeholder: => core.ref.password
-      remember_me_label: 两周内自动登录
+      remember_me_label: 记住我
       sign_up_text: "还没有注册？ <a>注册</a>"
       submit_button: => core.ref.log_in
       title: => core.ref.log_in

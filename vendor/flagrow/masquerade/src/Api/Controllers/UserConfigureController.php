@@ -68,6 +68,8 @@ class UserConfigureController extends AbstractCollectionController
         $fields->each(function (Field $field) use ($answers, $actor) {
             $content = Arr::get($answers, $field->id);
 
+            $this->processBoolean($field, $content);
+
             $this->validator->setField($field);
 
             $this->validator->assertValid([
@@ -80,5 +82,22 @@ class UserConfigureController extends AbstractCollectionController
                 $actor
             );
         });
+    }
+
+    protected function processBoolean(Field $field, &$content)
+    {
+        if ($this->hasType($field, 'boolean')) {
+            $content = in_array(strtolower($content), ['yes', 'true']);
+        }
+    }
+
+    protected function hasType(Field $field, $type)
+    {
+        return collect(explode(',', $field->validation))
+            ->map(function ($rule) {
+                return trim($rule);
+            })
+            ->filter()
+            ->contains($type);
     }
 }

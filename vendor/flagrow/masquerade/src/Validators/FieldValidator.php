@@ -14,7 +14,8 @@ class FieldValidator extends AbstractValidator
             'required' => ['boolean'],
             'validation' => ['string'],
             'icon' => ['string'],
-            'prefix' => ['string']
+            'prefix' => ['string'],
+            'on_bio' => ['boolean']
         ];
     }
 }

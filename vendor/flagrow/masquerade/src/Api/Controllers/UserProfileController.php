@@ -3,7 +3,6 @@
 namespace Flagrow\Masquerade\Api\Controllers;
 
 use Flagrow\Masquerade\Api\Serializers\FieldSerializer;
-use Flagrow\Masquerade\Field;
 use Flagrow\Masquerade\Repositories\FieldRepository;
 use Flagrow\Masquerade\Validators\AnswerValidator;
 use Flarum\Api\Controller\AbstractCollectionController;

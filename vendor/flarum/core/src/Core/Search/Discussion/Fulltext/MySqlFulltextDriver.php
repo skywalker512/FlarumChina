@@ -12,6 +12,7 @@
 namespace Flarum\Core\Search\Discussion\Fulltext;
 
 use Flarum\Core\Post;
+use Flarum\Core\Discussion;
 
 class MySqlFulltextDriver implements DriverInterface
 {
@@ -20,17 +21,21 @@ class MySqlFulltextDriver implements DriverInterface
      */
     public function match($string)
     {
-        $discussionIds = Post::where('type', 'comment')
-            ->where('content', 'like', "%$string%")
-            
-            ->lists('discussion_id', 'id');
-
+        $discussionIds = Discussion::whereRaw("is_approved = 1 AND title LIKE '%$string%'")
+            ->orderBy('id', 'desc')
+            ->limit(50)
+            ->lists('id','start_post_id');
         $relevantPostIds = [];
-
         foreach ($discussionIds as $postId => $discussionId) {
             $relevantPostIds[$discussionId][] = $postId;
         }
-
+        $discussionIds = Post::whereRaw("is_approved = 1 AND content LIKE '%$string%'")
+            ->orderBy('id', 'desc')
+            ->limit(50)
+            ->lists('discussion_id', 'id');
+        foreach ($discussionIds as $postId => $discussionId) {
+            $relevantPostIds[$discussionId][] = $postId;
+        }
         return $relevantPostIds;
     }
 }

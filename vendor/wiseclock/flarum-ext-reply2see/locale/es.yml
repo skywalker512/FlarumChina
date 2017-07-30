@@ -1,0 +1,4 @@
+wiseclock-reply2see:
+  forum:
+    hidden_content: CONTENIDO OCULTO
+    reply_to_see: "Tienes que {reply} y actualizar esta página para ver el contenido."

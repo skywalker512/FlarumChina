@@ -1,0 +1,11 @@
+davis-socialprofile:
+  forum:
+    edit:
+      edit: "Editer"
+      add: "Ajouter"
+      headtitle: "Modifier mes boutons"
+      title: "Titre"
+      url: "Url"
+      submit: "Sauvegarder"
+      delete: "Effacer"
+      deletetitle: "Bouton Supprimer"

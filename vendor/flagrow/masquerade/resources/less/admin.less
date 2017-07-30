@@ -1,0 +1,44 @@
+.ProfileConfigurePane {
+    background: @control-bg;
+    color: @control-color;
+    min-height: 100vh;
+    padding: 20px 0;
+
+    fieldset.Field {
+        padding: 5px;
+        background: @body-bg;
+        border-radius: @border-radius;
+        legend {
+            margin: 10px;
+            width: 100%;
+            > span {
+                cursor: pointer;
+            }
+        }
+        > ul {
+            margin-bottom: 30px;
+            display: none;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            > li {
+                margin: 8px 0;
+                display: block;
+
+                > label {
+                    font-weight: bold;
+                }
+            }
+        }
+        &.new > ul, &.active > ul {
+            display: block;
+        }
+    }
+
+    @media @desktop-up {
+        .container {
+            max-width: 600px;
+            margin: 0;
+        }
+    }
+}

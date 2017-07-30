@@ -7,6 +7,7 @@ flagrow-byobu:
             add_recipients: Destinatarios
             submit: OK
             edit_recipients: Editar Destinatarios
+            send_pd: "Enviar mensaje a {username}"
         labels:
             recipients: "{count} Destinatario|{count} Destinatarios"
             user_deleted: -eliminado-

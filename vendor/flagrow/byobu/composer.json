@@ -22,7 +22,7 @@
         "source": "https://github.com/flagrow/byobu"
     },
     "require": {
-        "flarum/core": "^0.1.0-beta.6",
+        "flarum/core": "^0.1.0-beta.7",
         "flarum/flarum-ext-markdown": "^0.1.0-beta.5",
         "flarum/flarum-ext-pusher": "^0.1.0-beta.5"
     },

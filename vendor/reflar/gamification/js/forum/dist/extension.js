@@ -1,9 +1,9 @@
 "use strict";
 
-System.register("Reflar/gamification/components/AddAttributes", ["flarum/helpers/avatar", "flarum/helpers/username", "flarum/models/Discussion", "flarum/extend", "flarum/Model", "flarum/models/Post", "flarum/components/PostUser", "flarum/models/User", "flarum/components/UserCard", "flarum/helpers/userOnline", "flarum/helpers/listItems", "Reflar/gamification/helpers/rankLabel"], function (_export, _context) {
+System.register("Reflar/gamification/components/AddAttributes", ["flarum/helpers/avatar", "flarum/components/AvatarEditor", "flarum/helpers/username", "flarum/models/Discussion", "flarum/components/Dropdown", "flarum/extend", "flarum/Model", "flarum/models/Post", "flarum/components/PostUser", "flarum/models/User", "flarum/components/UserCard", "flarum/utils/UserControls", "flarum/helpers/userOnline", "flarum/helpers/listItems", "Reflar/gamification/helpers/rankLabel"], function (_export, _context) {
     "use strict";
 
-    var avatar, username, Discussion, extend, Model, Post, PostUser, User, UserCard, userOnline, listItems, rankLabel;
+    var avatar, AvatarEditor, username, Discussion, Dropdown, extend, Model, Post, PostUser, User, UserCard, UserControls, userOnline, listItems, rankLabel;
 
     _export("default", function () {
         Discussion.prototype.canVote = Model.attribute('canVote');
@@ -30,14 +30,73 @@ System.register("Reflar/gamification/components/AddAttributes", ["flarum/helpers
             }
 
             items.add('points', points);
-
-            if (this.props.user.ranks() !== false) {
-
-                this.props.user.ranks().map(function (rank) {
-                    items.add(rank.name(), rankLabel(rank));
-                });
-            }
         });
+
+        UserCard.prototype.view = function () {
+            var user = this.props.user;
+            var controls = UserControls.controls(user, this).toArray();
+            var color = user.color();
+            var badges = user.badges().toArray();
+
+            return m(
+                "div",
+                { className: 'UserCard ' + (this.props.className || ''),
+                    style: color ? { backgroundColor: color } : '' },
+                m(
+                    "div",
+                    { className: "darkenBackground" },
+                    m(
+                        "div",
+                        { className: "container" },
+                        controls.length ? Dropdown.component({
+                            children: controls,
+                            className: 'UserCard-controls App-primaryControl',
+                            menuClassName: 'Dropdown-menu--right',
+                            buttonClassName: this.props.controlsButtonClassName,
+                            label: app.translator.trans('core.forum.user_controls.button'),
+                            icon: 'ellipsis-v'
+                        }) : '',
+                        m(
+                            "div",
+                            { className: "UserCard-profile" },
+                            m(
+                                "h2",
+                                { className: "UserCard-identity" },
+                                this.props.editable ? [AvatarEditor.component({ user: user, className: 'UserCard-avatar' }), username(user)] : m(
+                                    "a",
+                                    { href: app.route.user(user), config: m.route },
+                                    m(
+                                        "div",
+                                        { className: "UserCard-avatar" },
+                                        avatar(user)
+                                    ),
+                                    username(user)
+                                )
+                            ),
+                            badges.length ? m(
+                                "ul",
+                                { className: "UserCard-badges badges" },
+                                listItems(badges),
+                                user.ranks() !== false ? user.ranks().map(function (rank, i) {
+                                    if (i >= app.forum.attribute('ranksAmt') && app.forum.attribute('ranksAmt') !== null) {} else {
+                                        return m(
+                                            "li",
+                                            { className: "User-Rank" },
+                                            rankLabel(rank)
+                                        );
+                                    }
+                                }) : ''
+                            ) : '',
+                            m(
+                                "ul",
+                                { className: "UserCard-info" },
+                                listItems(this.infoItems().toArray())
+                            )
+                        )
+                    )
+                )
+            );
+        };
 
         PostUser.prototype.view = function () {
             var post = this.props.post;
@@ -83,12 +142,14 @@ System.register("Reflar/gamification/components/AddAttributes", ["flarum/helpers
                         ' ',
                         username(user)
                     ),
-                    user.ranks().map(function (rank) {
-                        return m(
-                            "span",
-                            { className: "Post-Rank" },
-                            rankLabel(rank)
-                        );
+                    user.ranks().map(function (rank, i) {
+                        if (i >= app.forum.attribute('ranksAmt') && app.forum.attribute('ranksAmt') !== null) {} else {
+                            return m(
+                                "span",
+                                { className: "Post-Rank" },
+                                rankLabel(rank)
+                            );
+                        }
                     })
                 ),
                 m(
@@ -104,10 +165,14 @@ System.register("Reflar/gamification/components/AddAttributes", ["flarum/helpers
     return {
         setters: [function (_flarumHelpersAvatar) {
             avatar = _flarumHelpersAvatar.default;
+        }, function (_flarumComponentsAvatarEditor) {
+            AvatarEditor = _flarumComponentsAvatarEditor.default;
         }, function (_flarumHelpersUsername) {
             username = _flarumHelpersUsername.default;
         }, function (_flarumModelsDiscussion) {
             Discussion = _flarumModelsDiscussion.default;
+        }, function (_flarumComponentsDropdown) {
+            Dropdown = _flarumComponentsDropdown.default;
         }, function (_flarumExtend) {
             extend = _flarumExtend.extend;
         }, function (_flarumModel) {
@@ -120,6 +185,8 @@ System.register("Reflar/gamification/components/AddAttributes", ["flarum/helpers
             User = _flarumModelsUser.default;
         }, function (_flarumComponentsUserCard) {
             UserCard = _flarumComponentsUserCard.default;
+        }, function (_flarumUtilsUserControls) {
+            UserControls = _flarumUtilsUserControls.default;
         }, function (_flarumHelpersUserOnline) {
             userOnline = _flarumHelpersUserOnline.default;
         }, function (_flarumHelpersListItems) {

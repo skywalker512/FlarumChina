@@ -5,7 +5,7 @@ namespace Flagrow\Byobu\Access;
 use Flagrow\Byobu\Traits\ProvidesAccess;
 use Flarum\Core\Discussion;
 use Flarum\Core\User;
-use Flarum\Event\ScopeHiddenDiscussionVisibility;
+use Flarum\Event\ScopePrivateDiscussionVisibility;
 use Flarum\Extension\ExtensionManager;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
@@ -65,9 +65,9 @@ class DiscussionPolicy extends AbstractPolicy
     }
 
     /**
-     * @param ScopeHiddenDiscussionVisibility $event
+     * @param ScopePrivateDiscussionVisibility $event
      */
-    public function scopeHiddenDiscussionVisibility(ScopeHiddenDiscussionVisibility $event)
+    public function scopePrivateDiscussionVisibility(ScopePrivateDiscussionVisibility $event)
     {
         $this->transformVisibilityQuery($event->actor, $event->query);
     }
@@ -93,8 +93,6 @@ class DiscussionPolicy extends AbstractPolicy
                         return $query;
                     });
             });
-
-            $this->showWithFlags($query, $actor, 'posts.flags');
         }
     }
 }

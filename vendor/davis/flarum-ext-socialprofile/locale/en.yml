@@ -1,0 +1,13 @@
+davis-socialprofile:
+  forum:
+    edit:
+      edit: "Edit"
+      add: "Add"
+      headtitle: "Edit Buttons"
+      title: "Title"
+      url: "Url"
+      submit: "Save"
+      delete: "Delete"
+      deletetitle: "Delete Button"
+  admin:
+    test: "Test"

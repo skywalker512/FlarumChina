@@ -17101,13 +17101,11 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
             // and clients support, then we'll send it as a POST request with the
             // intended method specified in the X-HTTP-Method-Override header.
             if (options.method !== 'GET' && options.method !== 'POST') {
-              (function () {
-                var method = options.method;
-                extend(options, 'config', function (result, xhr) {
-                  return xhr.setRequestHeader('X-HTTP-Method-Override', method);
-                });
-                options.method = 'POST';
-              })();
+              var method = options.method;
+              extend(options, 'config', function (result, xhr) {
+                return xhr.setRequestHeader('X-HTTP-Method-Override', method);
+              });
+              options.method = 'POST';
             }
 
             // When we deserialize JSON data, if for some reason the server has provided
@@ -18062,7 +18060,7 @@ System.register('flarum/components/BasicsPage', ['flarum/components/Page', 'flar
 
             var settings = app.data.settings;
             this.fields.forEach(function (key) {
-              return _this2.values[key] = m.prop(settings[key] || false);
+              return _this2.values[key] = m.prop(settings[key]);
             });
 
             this.localeOptions = {};
@@ -18119,15 +18117,14 @@ System.register('flarum/components/BasicsPage', ['flarum/components/Page', 'flar
                     label: app.translator.trans('core.admin.basics.default_language_heading'),
                     children: [Select.component({
                       options: this.localeOptions,
+                      value: this.values.default_locale(),
                       onchange: this.values.default_locale
+                    }), Switch.component({
+                      state: this.values.show_language_selector(),
+                      onchange: this.values.show_language_selector,
+                      children: app.translator.trans('core.admin.basics.show_language_selector_label')
                     })]
                   }) : '',
-                  Switch.component({
-                    state: this.values.show_language_selector(),
-                    onchange: this.values.show_language_selector,
-                    children: app.translator.trans('core.admin.basics.show_language_selector_label')
-                  }),
-                  m('br', null),
                   FieldSet.component({
                     label: app.translator.trans('core.admin.basics.home_page_heading'),
                     className: 'BasicsPage-homePage',
@@ -19867,10 +19864,10 @@ System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/com
             var previous = history.getPrevious() || {};
 
             return LinkButton.component({
-              className: 'Button Navigation-back ' + (previous.title ? '' : 'Button--icon'),
+              className: 'Button Navigation-back Button--icon',
               href: history.backUrl(),
               icon: 'chevron-left',
-              children: previous.title,
+              title: previous.title,
               config: function config() {},
               onclick: function onclick(e) {
                 if (e.shiftKey || e.ctrlKey || e.metaKey || e.which === 2) return;
@@ -20306,6 +20303,13 @@ System.register('flarum/components/PermissionGrid', ['flarum/Component', 'flarum
               icon: 'eye',
               label: app.translator.trans('core.admin.permissions.view_discussions_label'),
               permission: 'viewDiscussions',
+              allowGuest: true
+            }, 100);
+
+            items.add('viewUserList', {
+              icon: 'users',
+              label: app.translator.trans('core.admin.permissions.view_user_list_label'),
+              permission: 'viewUserList',
               allowGuest: true
             }, 100);
 
@@ -21506,7 +21510,7 @@ System.register('flarum/helpers/icon', [], function (_export, _context) {
   function icon(name) {
     var attrs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    attrs.className = 'icon fa fa-fw fa-' + name + ' ' + (attrs.className || '');
+    attrs.className = 'icon fa fa-' + name + ' ' + (attrs.className || '');
 
     return m('i', attrs);
   }

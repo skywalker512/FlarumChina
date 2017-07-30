@@ -4,7 +4,6 @@ namespace Flagrow\Masquerade\Api\Serializers;
 
 use Flagrow\Masquerade\Field;
 use Flarum\Api\Serializer\AbstractSerializer;
-use Tobscure\JsonApi\Resource;
 
 class AnswerSerializer extends AbstractSerializer
 {
@@ -35,6 +34,9 @@ class AnswerSerializer extends AbstractSerializer
      */
     public function field($model)
     {
-        return new Resource($model, new FieldSerializer);
+        return $this->hasOne(
+            $model->field,
+            FieldSerializer::class
+        );
     }
 }

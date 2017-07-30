@@ -69,7 +69,7 @@ System.register("Reflar/gamification/components/SettingsPage", ["flarum/componen
                     value: function init() {
                         var _this2 = this;
 
-                        this.fields = ['convertedLikes', 'amountPerPost', 'amountPerDiscussion', 'postStartAmount', 'iconName', 'voteColor', 'blockedUsers', 'pointsPlaceholder'];
+                        this.fields = ['convertedLikes', 'amountPerPost', 'amountPerDiscussion', 'postStartAmount', 'rankAmt', 'iconName', 'voteColor', 'blockedUsers', 'pointsPlaceholder'];
 
                         this.switches = ['autoUpvotePosts', 'customRankingImages'];
 
@@ -154,7 +154,12 @@ System.register("Reflar/gamification/components/SettingsPage", ["flarum/componen
                             className: 'Button Button--warning Ranks-button',
                             icon: 'plus',
                             onclick: this.addRank.bind(this)
-                        })])), m('legend', {}, app.translator.trans('reflar-gamification.admin.page.votes.title')), m('label', {}, app.translator.trans('reflar-gamification.admin.page.votes.icon_name')), m('div', { className: 'helpText' }, app.translator.trans('reflar-gamification.admin.page.votes.icon_help')), m('input', {
+                        })])), m('label', {}, app.translator.trans('reflar-gamification.admin.page.ranks.number_title')), m('input', {
+                            className: 'FormControl Ranks-default',
+                            value: this.values.rankAmt() || '',
+                            placeholder: 2,
+                            oninput: m.withAttr('value', this.values.rankAmt)
+                        }), m('legend', {}, app.translator.trans('reflar-gamification.admin.page.votes.title')), m('label', {}, app.translator.trans('reflar-gamification.admin.page.votes.icon_name')), m('div', { className: 'helpText' }, app.translator.trans('reflar-gamification.admin.page.votes.icon_help')), m('input', {
                             className: 'FormControl Ranks-default',
                             value: this.values.iconName() || '',
                             placeholder: 'thumbs',

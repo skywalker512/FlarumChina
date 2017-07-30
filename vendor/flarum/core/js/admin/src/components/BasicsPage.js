@@ -27,7 +27,7 @@ export default class BasicsPage extends Page {
     this.values = {};
 
     const settings = app.data.settings;
-    this.fields.forEach(key => this.values[key] = m.prop(settings[key] || false));
+    this.fields.forEach(key => this.values[key] = m.prop(settings[key]));
 
     this.localeOptions = {};
     const locales = app.data.locales;
@@ -86,19 +86,17 @@ export default class BasicsPage extends Page {
                 children: [
                   Select.component({
                     options: this.localeOptions,
+                    value: this.values.default_locale(),
                     onchange: this.values.default_locale
+                  }),
+                  Switch.component({
+                    state: this.values.show_language_selector(),
+                    onchange: this.values.show_language_selector,
+                    children: app.translator.trans('core.admin.basics.show_language_selector_label'),
                   })
                 ]
               })
               : ''}
-
-            {Switch.component({
-              state: this.values.show_language_selector(),
-              onchange: this.values.show_language_selector,
-              children: app.translator.trans('core.admin.basics.show_language_selector_label'),
-            })}
-
-            <br/>
 
             {FieldSet.component({
               label: app.translator.trans('core.admin.basics.home_page_heading'),

@@ -19279,13 +19279,11 @@ System.register('flarum/App', ['flarum/utils/ItemList', 'flarum/components/Alert
             // and clients support, then we'll send it as a POST request with the
             // intended method specified in the X-HTTP-Method-Override header.
             if (options.method !== 'GET' && options.method !== 'POST') {
-              (function () {
-                var method = options.method;
-                extend(options, 'config', function (result, xhr) {
-                  return xhr.setRequestHeader('X-HTTP-Method-Override', method);
-                });
-                options.method = 'POST';
-              })();
+              var method = options.method;
+              extend(options, 'config', function (result, xhr) {
+                return xhr.setRequestHeader('X-HTTP-Method-Override', method);
+              });
+              options.method = 'POST';
             }
 
             // When we deserialize JSON data, if for some reason the server has provided
@@ -21696,21 +21694,17 @@ System.register('flarum/components/DiscussionListItem', ['flarum/Component', 'fl
         }, {
           key: 'config',
           value: function config(isInitialized) {
-            var _this4 = this;
-
             if (isInitialized) return;
 
             // If we're on a touch device, set up the discussion row to be slidable.
             // This allows the user to drag the row to either side of the screen to
             // reveal controls.
             if ('ontouchstart' in window) {
-              (function () {
-                var slidableInstance = slidable(_this4.$().addClass('Slidable'));
+              var slidableInstance = slidable(this.$().addClass('Slidable'));
 
-                _this4.$('.DiscussionListItem-controls').on('hidden.bs.dropdown', function () {
-                  return slidableInstance.reset();
-                });
-              })();
+              this.$('.DiscussionListItem-controls').on('hidden.bs.dropdown', function () {
+                return slidableInstance.reset();
+              });
             }
           }
         }, {
@@ -23281,10 +23275,10 @@ System.register('flarum/components/HeaderSecondary', ['flarum/Component', 'flaru
 });;
 'use strict';
 
-System.register('flarum/components/IndexPage', ['flarum/extend', 'flarum/components/Page', 'flarum/utils/ItemList', 'flarum/helpers/listItems', 'flarum/helpers/icon', 'flarum/components/DiscussionList', 'flarum/components/WelcomeHero', 'flarum/components/DiscussionComposer', 'flarum/components/LogInModal', 'flarum/components/DiscussionPage', 'flarum/components/Select', 'flarum/components/Button', 'flarum/components/LinkButton', 'flarum/components/SelectDropdown'], function (_export, _context) {
+System.register('flarum/components/IndexPage', ['flarum/extend', 'flarum/components/Page', 'flarum/utils/ItemList', 'flarum/helpers/listItems', 'flarum/helpers/icon', 'flarum/components/DiscussionList', 'flarum/components/WelcomeHero', 'flarum/components/DiscussionComposer', 'flarum/components/LogInModal', 'flarum/components/DiscussionPage', 'flarum/components/Dropdown', 'flarum/components/Button', 'flarum/components/LinkButton', 'flarum/components/SelectDropdown'], function (_export, _context) {
   "use strict";
 
-  var extend, Page, ItemList, listItems, icon, DiscussionList, WelcomeHero, DiscussionComposer, LogInModal, DiscussionPage, Select, Button, LinkButton, SelectDropdown, IndexPage;
+  var extend, Page, ItemList, listItems, icon, DiscussionList, WelcomeHero, DiscussionComposer, LogInModal, DiscussionPage, Dropdown, Button, LinkButton, SelectDropdown, IndexPage;
   return {
     setters: [function (_flarumExtend) {
       extend = _flarumExtend.extend;
@@ -23306,8 +23300,8 @@ System.register('flarum/components/IndexPage', ['flarum/extend', 'flarum/compone
       LogInModal = _flarumComponentsLogInModal.default;
     }, function (_flarumComponentsDiscussionPage) {
       DiscussionPage = _flarumComponentsDiscussionPage.default;
-    }, function (_flarumComponentsSelect) {
-      Select = _flarumComponentsSelect.default;
+    }, function (_flarumComponentsDropdown) {
+      Dropdown = _flarumComponentsDropdown.default;
     }, function (_flarumComponentsButton) {
       Button = _flarumComponentsButton.default;
     }, function (_flarumComponentsLinkButton) {
@@ -23363,7 +23357,7 @@ System.register('flarum/components/IndexPage', ['flarum/extend', 'flarum/compone
               app.cache.discussionList = new DiscussionList({ params: params });
             }
 
-            app.history.push('index', icon('bars'));
+            app.history.push('index', app.translator.trans('core.forum.header.back_to_index_tooltip'));
 
             this.bodyClass = 'App--index';
           }
@@ -23510,6 +23504,8 @@ System.register('flarum/components/IndexPage', ['flarum/extend', 'flarum/compone
         }, {
           key: 'viewItems',
           value: function viewItems() {
+            var _this2 = this;
+
             var items = new ItemList();
             var sortMap = app.cache.discussionList.sortMap();
 
@@ -23518,10 +23514,22 @@ System.register('flarum/components/IndexPage', ['flarum/extend', 'flarum/compone
               sortOptions[i] = app.translator.trans('core.forum.index_sort.' + i + '_button');
             }
 
-            items.add('sort', Select.component({
-              options: sortOptions,
-              value: this.params().sort || Object.keys(sortMap)[0],
-              onchange: this.changeSort.bind(this)
+            items.add('sort', Dropdown.component({
+              buttonClassName: 'Button',
+              label: sortOptions[this.params().sort] || Object.keys(sortMap).map(function (key) {
+                return sortOptions[key];
+              })[0],
+              children: Object.keys(sortOptions).map(function (value) {
+                var label = sortOptions[value];
+                var active = (_this2.params().sort || Object.keys(sortMap)[0]) === value;
+
+                return Button.component({
+                  children: label,
+                  icon: active ? 'check' : true,
+                  onclick: _this2.changeSort.bind(_this2, value),
+                  active: active
+                });
+              })
             }));
 
             return items;
@@ -23928,7 +23936,7 @@ System.register('flarum/components/LogInModal', ['flarum/components/Modal', 'fla
              *
              * @type {Function}
              */
-            this.remember = m.prop(this.props.remember && true);
+            this.remember = m.prop(!!this.props.remember);
           }
         }, {
           key: 'className',
@@ -23965,10 +23973,18 @@ System.register('flarum/components/LogInModal', ['flarum/components/Modal', 'fla
                     disabled: this.loading })
                 ),
                 m(
-                  'label',
-                  { className: 'checkbox' },
-                  m('input', { name: 'remember', type: 'checkbox', bidi: this.remember, disabled: this.loading }),
-                  app.translator.trans('core.forum.log_in.remember_me_label')
+                  'div',
+                  { className: 'Form-group' },
+                  m(
+                    'div',
+                    null,
+                    m(
+                      'label',
+                      { className: 'checkbox' },
+                      m('input', { type: 'checkbox', bidi: this.remember, disabled: this.loading }),
+                      app.translator.trans('core.forum.log_in.remember_me_label')
+                    )
+                  )
                 ),
                 m(
                   'div',
@@ -24356,10 +24372,10 @@ System.register('flarum/components/Navigation', ['flarum/Component', 'flarum/com
             var previous = history.getPrevious() || {};
 
             return LinkButton.component({
-              className: 'Button Navigation-back ' + (previous.title ? '' : 'Button--icon'),
+              className: 'Button Navigation-back Button--icon',
               href: history.backUrl(),
               icon: 'chevron-left',
-              children: previous.title,
+              title: previous.title,
               config: function config() {},
               onclick: function onclick(e) {
                 if (e.shiftKey || e.ctrlKey || e.metaKey || e.which === 2) return;
@@ -24750,33 +24766,31 @@ System.register('flarum/components/NotificationList', ['flarum/Component', 'flar
             var groups = [];
 
             if (app.cache.notifications) {
-              (function () {
-                var discussions = {};
+              var discussions = {};
 
-                // Build an array of discussions which the notifications are related to,
-                // and add the notifications as children.
-                app.cache.notifications.forEach(function (notification) {
-                  var subject = notification.subject();
+              // Build an array of discussions which the notifications are related to,
+              // and add the notifications as children.
+              app.cache.notifications.forEach(function (notification) {
+                var subject = notification.subject();
 
-                  if (typeof subject === 'undefined') return;
+                if (typeof subject === 'undefined') return;
 
-                  // Get the discussion that this notification is related to. If it's not
-                  // directly related to a discussion, it may be related to a post or
-                  // other entity which is related to a discussion.
-                  var discussion = false;
-                  if (subject instanceof Discussion) discussion = subject;else if (subject && subject.discussion) discussion = subject.discussion();
+                // Get the discussion that this notification is related to. If it's not
+                // directly related to a discussion, it may be related to a post or
+                // other entity which is related to a discussion.
+                var discussion = false;
+                if (subject instanceof Discussion) discussion = subject;else if (subject && subject.discussion) discussion = subject.discussion();
 
-                  // If the notification is not related to a discussion directly or
-                  // indirectly, then we will assign it to a neutral group.
-                  var key = discussion ? discussion.id() : 0;
-                  discussions[key] = discussions[key] || { discussion: discussion, notifications: [] };
-                  discussions[key].notifications.push(notification);
+                // If the notification is not related to a discussion directly or
+                // indirectly, then we will assign it to a neutral group.
+                var key = discussion ? discussion.id() : 0;
+                discussions[key] = discussions[key] || { discussion: discussion, notifications: [] };
+                discussions[key].notifications.push(notification);
 
-                  if (groups.indexOf(discussions[key]) === -1) {
-                    groups.push(discussions[key]);
-                  }
-                });
-              })();
+                if (groups.indexOf(discussions[key]) === -1) {
+                  groups.push(discussions[key]);
+                }
+              });
             }
 
             return m(
@@ -25416,7 +25430,7 @@ System.register('flarum/components/PostMeta', ['flarum/Component', 'flarum/helpe
               m(
                 'a',
                 { className: 'Dropdown-toggle', onclick: selectPermalink, 'data-toggle': 'dropdown' },
-                fullTime(time)
+                humanTime(time)
               ),
               m(
                 'div',
@@ -26742,7 +26756,6 @@ System.register('flarum/components/PostUser', ['flarum/Component', 'flarum/compo
             return m(
               'div',
               { className: 'PostUser' },
-              userOnline(user),
               m(
                 'h3',
                 null,
@@ -26750,7 +26763,7 @@ System.register('flarum/components/PostUser', ['flarum/Component', 'flarum/compo
                   'a',
                   { href: app.route.user(user), config: m.route },
                   avatar(user, { className: 'PostUser-avatar' }),
-                  ' ',
+                  userOnline(user),
                   username(user)
                 )
               ),
@@ -26858,17 +26871,17 @@ System.register('flarum/components/RenameDiscussionModal', ['flarum/components/M
               { className: 'Modal-body' },
               m(
                 'div',
-                { className: 'Form' },
+                { className: 'Form Form--centered' },
                 m(
                   'div',
                   { className: 'Form-group' },
-                  m('input', { className: 'FormControl title', placeholder: this.currentTitle, bidi: this.newTitle })
+                  m('input', { className: 'FormControl', bidi: this.newTitle, type: 'text' })
                 ),
                 m(
                   'div',
                   { className: 'Form-group' },
                   Button.component({
-                    className: 'Button Button--primary',
+                    className: 'Button Button--primary Button--block',
                     type: 'submit',
                     loading: this.loading,
                     children: app.translator.trans('core.forum.rename_discussion.submit_button')
@@ -26899,6 +26912,9 @@ System.register('flarum/components/RenameDiscussionModal', ['flarum/components/M
                 }
                 m.redraw();
                 _this2.hide();
+              }).catch(function () {
+                _this2.loading = false;
+                m.redraw();
               });
             } else {
               this.hide();
@@ -27021,25 +27037,23 @@ System.register('flarum/components/ReplyComposer', ['flarum/components/ComposerB
               if (app.viewingDiscussion(discussion)) {
                 app.current.stream.update();
               } else {
-                (function () {
-                  // Otherwise, we'll create an alert message to inform the user that
-                  // their reply has been posted, containing a button which will
-                  // transition to their new post when clicked.
-                  var alert = void 0;
-                  var viewButton = Button.component({
-                    className: 'Button Button--link',
-                    children: app.translator.trans('core.forum.composer_reply.view_button'),
-                    onclick: function onclick() {
-                      m.route(app.route.post(post));
-                      app.alerts.dismiss(alert);
-                    }
-                  });
-                  app.alerts.show(alert = new Alert({
-                    type: 'success',
-                    message: app.translator.trans('core.forum.composer_reply.posted_message'),
-                    controls: [viewButton]
-                  }));
-                })();
+                // Otherwise, we'll create an alert message to inform the user that
+                // their reply has been posted, containing a button which will
+                // transition to their new post when clicked.
+                var alert = void 0;
+                var viewButton = Button.component({
+                  className: 'Button Button--link',
+                  children: app.translator.trans('core.forum.composer_reply.view_button'),
+                  onclick: function onclick() {
+                    m.route(app.route.post(post));
+                    app.alerts.dismiss(alert);
+                  }
+                });
+                app.alerts.show(alert = new Alert({
+                  type: 'success',
+                  message: app.translator.trans('core.forum.composer_reply.posted_message'),
+                  controls: [viewButton]
+                }));
               }
 
               app.composer.hide();
@@ -28779,8 +28793,6 @@ System.register('flarum/components/UserPage', ['flarum/components/Page', 'flarum
              */
             this.user = null;
 
-            app.history.push('user');
-
             this.bodyClass = 'App--user';
           }
         }, {
@@ -28822,7 +28834,6 @@ System.register('flarum/components/UserPage', ['flarum/components/Page', 'flarum
           value: function show(user) {
             this.user = user;
 
-            app.history.push('user', user.username());
             app.setTitle(user.username());
 
             m.redraw();
@@ -29409,7 +29420,7 @@ System.register('flarum/helpers/icon', [], function (_export, _context) {
   function icon(name) {
     var attrs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    attrs.className = 'icon fa fa-fw fa-' + name + ' ' + (attrs.className || '');
+    attrs.className = 'icon fa fa-' + name + ' ' + (attrs.className || '');
 
     return m('i', attrs);
   }
@@ -29654,10 +29665,10 @@ System.register('flarum/initializers/alertEmailConfirmation', ['flarum/component
 });;
 'use strict';
 
-System.register('flarum/initializers/boot', ['flarum/utils/ScrollListener', 'flarum/utils/Pane', 'flarum/utils/Drawer', 'flarum/utils/mapRoutes', 'flarum/helpers/icon', 'flarum/components/Navigation', 'flarum/components/HeaderPrimary', 'flarum/components/HeaderSecondary', 'flarum/components/Composer', 'flarum/components/ModalManager', 'flarum/components/AlertManager'], function (_export, _context) {
+System.register('flarum/initializers/boot', ['flarum/utils/ScrollListener', 'flarum/utils/Pane', 'flarum/utils/Drawer', 'flarum/utils/mapRoutes', 'flarum/components/Navigation', 'flarum/components/HeaderPrimary', 'flarum/components/HeaderSecondary', 'flarum/components/Composer', 'flarum/components/ModalManager', 'flarum/components/AlertManager'], function (_export, _context) {
   "use strict";
 
-  var ScrollListener, Pane, Drawer, mapRoutes, icon, Navigation, HeaderPrimary, HeaderSecondary, Composer, ModalManager, AlertManager;
+  var ScrollListener, Pane, Drawer, mapRoutes, Navigation, HeaderPrimary, HeaderSecondary, Composer, ModalManager, AlertManager;
   function boot(app) {
     // Get the configured default route and update that route's path to be '/'.
     // Push the homepage as the first route, so that the user will always be
@@ -29671,7 +29682,7 @@ System.register('flarum/initializers/boot', ['flarum/utils/ScrollListener', 'fla
     }
 
     app.routes[defaultAction].path = '/';
-    app.history.push(defaultAction, icon('bars'), '/');
+    app.history.push(defaultAction, app.translator.trans('core.forum.header.back_to_index_tooltip'), '/');
 
     m.startComputation();
 
@@ -29735,8 +29746,6 @@ System.register('flarum/initializers/boot', ['flarum/utils/ScrollListener', 'fla
       Drawer = _flarumUtilsDrawer.default;
     }, function (_flarumUtilsMapRoutes) {
       mapRoutes = _flarumUtilsMapRoutes.default;
-    }, function (_flarumHelpersIcon) {
-      icon = _flarumHelpersIcon.default;
     }, function (_flarumComponentsNavigation) {
       Navigation = _flarumComponentsNavigation.default;
     }, function (_flarumComponentsHeaderPrimary) {
@@ -32916,13 +32925,13 @@ System.register('flarum/utils/UserControls', ['flarum/components/Button', 'flaru
     }],
     execute: function () {
       _export('default', {
-        controls: function controls(discussion, context) {
+        controls: function controls(user, context) {
           var _this = this;
 
           var items = new ItemList();
 
           ['user', 'moderation', 'destructive'].forEach(function (section) {
-            var controls = _this[section + 'Controls'](discussion, context).toArray();
+            var controls = _this[section + 'Controls'](user, context).toArray();
             if (controls.length) {
               controls.forEach(function (item) {
                 return items.add(item.itemName, item);

@@ -71,23 +71,29 @@ System.register('flagrow/masquerade/addProfilePane', ['flarum/extend', 'flagrow/
 });;
 "use strict";
 
-System.register("flagrow/masquerade/main", ["flarum/extend", "flarum/app", "flagrow/masquerade/models/Field", "flagrow/masquerade/models/Answer", "flagrow/masquerade/addProfileConfigurePane", "flagrow/masquerade/addProfilePane"], function (_export, _context) {
+System.register("flagrow/masquerade/main", ["flarum/extend", "flarum/app", "flarum/models/User", "flagrow/masquerade/models/Field", "flagrow/masquerade/models/Answer", "flarum/Model", "flagrow/masquerade/addProfileConfigurePane", "flagrow/masquerade/addProfilePane", "flagrow/masquerade/mutateUserBio"], function (_export, _context) {
     "use strict";
 
-    var extend, app, Field, Answer, addProfileConfigurePane, addProfilePane;
+    var extend, app, User, Field, Answer, Model, addProfileConfigurePane, addProfilePane, mutateUserBio;
     return {
         setters: [function (_flarumExtend) {
             extend = _flarumExtend.extend;
         }, function (_flarumApp) {
             app = _flarumApp.default;
+        }, function (_flarumModelsUser) {
+            User = _flarumModelsUser.default;
         }, function (_flagrowMasqueradeModelsField) {
             Field = _flagrowMasqueradeModelsField.default;
         }, function (_flagrowMasqueradeModelsAnswer) {
             Answer = _flagrowMasqueradeModelsAnswer.default;
+        }, function (_flarumModel) {
+            Model = _flarumModel.default;
         }, function (_flagrowMasqueradeAddProfileConfigurePane) {
             addProfileConfigurePane = _flagrowMasqueradeAddProfileConfigurePane.default;
         }, function (_flagrowMasqueradeAddProfilePane) {
             addProfilePane = _flagrowMasqueradeAddProfilePane.default;
+        }, function (_flagrowMasqueradeMutateUserBio) {
+            mutateUserBio = _flagrowMasqueradeMutateUserBio.default;
         }],
         execute: function () {
 
@@ -95,8 +101,12 @@ System.register("flagrow/masquerade/main", ["flarum/extend", "flarum/app", "flag
                 app.store.models['masquerade-field'] = Field;
                 app.store.models['masquerade-answer'] = Answer;
 
+                User.prototype.bioFields = Model.hasMany('bioFields');
+
                 addProfileConfigurePane();
                 addProfilePane();
+
+                mutateUserBio();
             });
         }
     };
@@ -131,7 +141,8 @@ System.register('flagrow/masquerade/models/Answer', ['flarum/Model', 'flarum/uti
                 return Answer;
             }(mixin(Model, {
                 content: Model.attribute('content'),
-                field: Model.hasOne('field')
+                field: Model.hasOne('field'),
+                userId: Model.attribute('user_id')
             }));
 
             _export('default', Answer);
@@ -175,11 +186,47 @@ System.register('flagrow/masquerade/models/Field', ['flarum/Model', 'flarum/util
                 icon: Model.attribute('icon'),
                 sort: Model.attribute('sort'),
                 deleted_at: Model.attribute('deleted_at', Model.transformDate),
-                answer: Model.hasOne('answer')
+                answer: Model.hasOne('answer'),
+                on_bio: Model.attribute('on_bio')
             }));
 
             _export('default', Field);
         }
+    };
+});;
+"use strict";
+
+System.register("flagrow/masquerade/mutateUserBio", ["flarum/extend", "flarum/components/UserBio", "flarum/helpers/icon", "flagrow/masquerade/utils/Mutate"], function (_export, _context) {
+    "use strict";
+
+    var override, UserBio, icon, Mutate;
+
+    _export("default", function () {
+        override(UserBio.prototype, 'view', function (view) {
+            // Load the old user bio.
+            var original = app.forum.attribute('masquerade.disable-user-bio') ? null : view();
+            var answers = app.forum.attribute('canViewMasquerade') ? this.props.user.bioFields() || [] : [];
+
+            return m('div', { className: 'Masquerade-Bio' }, [original, m('div', answers.map(function (answer) {
+                var field = answer.attribute('field');
+                var mutate = new Mutate(field.validation, answer.content());
+
+                return m('div', { className: 'Masquerade-Bio-Set' }, [m('span', { className: 'Masquerade-Bio-Field' }, [field.icon ? icon(field.icon) : '', field.name + ':']), m('span', { className: 'Masquerade-Bio-Answer' }, mutate.parse())]);
+            }))]);
+        });
+    });
+
+    return {
+        setters: [function (_flarumExtend) {
+            override = _flarumExtend.override;
+        }, function (_flarumComponentsUserBio) {
+            UserBio = _flarumComponentsUserBio.default;
+        }, function (_flarumHelpersIcon) {
+            icon = _flarumHelpersIcon.default;
+        }, function (_flagrowMasqueradeUtilsMutate) {
+            Mutate = _flagrowMasqueradeUtilsMutate.default;
+        }],
+        execute: function () {}
     };
 });;
 "use strict";
@@ -296,17 +343,19 @@ System.register("flagrow/masquerade/panes/ProfileConfigurePane", ["flarum/compon
         }
     };
 });;
-'use strict';
+"use strict";
 
-System.register('flagrow/masquerade/panes/ProfilePane', ['flarum/components/UserPage', 'flarum/helpers/icon'], function (_export, _context) {
+System.register("flagrow/masquerade/panes/ProfilePane", ["flarum/components/UserPage", "flarum/helpers/icon", "flagrow/masquerade/utils/Mutate"], function (_export, _context) {
     "use strict";
 
-    var UserPage, icon, ProfileConfigurePane;
+    var UserPage, icon, Mutate, ProfileConfigurePane;
     return {
         setters: [function (_flarumComponentsUserPage) {
             UserPage = _flarumComponentsUserPage.default;
         }, function (_flarumHelpersIcon) {
             icon = _flarumHelpersIcon.default;
+        }, function (_flagrowMasqueradeUtilsMutate) {
+            Mutate = _flagrowMasqueradeUtilsMutate.default;
         }],
         execute: function () {
             ProfileConfigurePane = function (_UserPage) {
@@ -318,41 +367,40 @@ System.register('flagrow/masquerade/panes/ProfilePane', ['flarum/components/User
                 }
 
                 babelHelpers.createClass(ProfileConfigurePane, [{
-                    key: 'init',
+                    key: "init",
                     value: function init() {
-                        babelHelpers.get(ProfileConfigurePane.prototype.__proto__ || Object.getPrototypeOf(ProfileConfigurePane.prototype), 'init', this).call(this);
+                        babelHelpers.get(ProfileConfigurePane.prototype.__proto__ || Object.getPrototypeOf(ProfileConfigurePane.prototype), "init", this).call(this);
                         this.loading = true;
 
                         this.fields = [];
                         this.answers = {};
-                        console.log(m.route.param('username'));
+
                         this.loadUser(m.route.param('username'));
                     }
                 }, {
-                    key: 'content',
+                    key: "content",
                     value: function content() {
                         var _this2 = this;
 
                         return m('div', {
-                            className: 'ProfilePane'
+                            className: 'Masquerade-Bio'
                         }, [m('div', { className: 'Fields' }, this.fields.sort(function (a, b) {
                             return a.sort() - b.sort();
                         }).map(function (field) {
-                            if (!(field.id() in _this2.answers)) {
-                                _this2.answers[field.id()] = field.answer() ? m.prop(field.answer().content()) : m.prop('');
-                            }
+                            _this2.answers[field.id()] = field.answer() && field.answer().userId() == _this2.user.id() ? field.answer().content() : null;
+
                             return _this2.field(field);
                         }))]);
                     }
                 }, {
-                    key: 'field',
+                    key: "field",
                     value: function field(_field) {
-                        return m('fieldset', { className: 'Field' }, [m('legend', [_field.icon() ? icon(_field.icon()) : '', _field.name()]), m('div', { className: 'FormField' }, [_field.prefix() ? m('div', { className: 'prefix' }, _field.prefix()) : '', m('div', {
-                            className: 'FormControl'
-                        }, this.answers[_field.id()]())])]);
+                        var mutate = new Mutate(_field.validation(), this.answers[_field.id()]);
+
+                        return m('div', { className: 'Masquerade-Bio-Set' }, [m('span', { className: 'Masquerade-Bio-Field' }, [_field.icon() ? icon(_field.icon()) : '', _field.name() + ':']), m('span', { className: 'Masquerade-Bio-Answer' }, mutate.parse())]);
                     }
                 }, {
-                    key: 'load',
+                    key: "load",
                     value: function load(user) {
                         app.request({
                             method: 'GET',
@@ -360,16 +408,18 @@ System.register('flagrow/masquerade/panes/ProfilePane', ['flarum/components/User
                         }).then(this.parseResponse.bind(this));
                     }
                 }, {
-                    key: 'show',
+                    key: "show",
                     value: function show(user) {
                         this.load(user);
 
-                        babelHelpers.get(ProfileConfigurePane.prototype.__proto__ || Object.getPrototypeOf(ProfileConfigurePane.prototype), 'show', this).call(this, user);
+                        babelHelpers.get(ProfileConfigurePane.prototype.__proto__ || Object.getPrototypeOf(ProfileConfigurePane.prototype), "show", this).call(this, user);
                     }
                 }, {
-                    key: 'parseResponse',
+                    key: "parseResponse",
                     value: function parseResponse(response) {
+                        this.answers = {};
                         this.fields = app.store.pushPayload(response);
+
                         this.loading = false;
                         m.redraw();
                     }
@@ -377,7 +427,127 @@ System.register('flagrow/masquerade/panes/ProfilePane', ['flarum/components/User
                 return ProfileConfigurePane;
             }(UserPage);
 
-            _export('default', ProfileConfigurePane);
+            _export("default", ProfileConfigurePane);
+        }
+    };
+});;
+"use strict";
+
+System.register("flagrow/masquerade/utils/Mutate", ["flarum/components/Button", "flarum/helpers/icon"], function (_export, _context) {
+    "use strict";
+
+    var Button, icon, Mutate;
+    return {
+        setters: [function (_flarumComponentsButton) {
+            Button = _flarumComponentsButton.default;
+        }, function (_flarumHelpersIcon) {
+            icon = _flarumHelpersIcon.default;
+        }],
+        execute: function () {
+            Mutate = function () {
+                function Mutate(validation, content) {
+                    babelHelpers.classCallCheck(this, Mutate);
+
+                    this.validation = validation || '';
+                    this.content = content;
+                }
+
+                /**
+                 * Parses the field value.
+                 */
+
+
+                babelHelpers.createClass(Mutate, [{
+                    key: "parse",
+                    value: function parse() {
+                        if (!this.content || this.content.length == 0) {
+                            return this.content;
+                        }
+
+                        var type = this.identify();
+
+                        if (type) {
+                            return this[type]();
+                        }
+
+                        return this.content;
+                    }
+                }, {
+                    key: "identify",
+                    value: function identify() {
+                        var _this = this;
+
+                        var validation = this.validation.split(',');
+                        var identified = null;
+
+                        validation.forEach(function (rule) {
+                            rule = rule.trim();
+
+                            if (_this.filtered().indexOf(rule) >= 0) {
+                                identified = rule;
+                            }
+                        });
+
+                        return identified;
+                    }
+                }, {
+                    key: "filtered",
+                    value: function filtered() {
+                        return ['url', 'boolean', 'email'];
+                    }
+                }, {
+                    key: "url",
+                    value: function url() {
+                        var _this2 = this;
+
+                        return Button.component({
+                            onclick: function onclick() {
+                                return _this2.to();
+                            },
+                            className: 'Button Button--text',
+                            icon: 'link',
+                            children: this.content.replace(/^https?:\/\//, '')
+                        });
+                    }
+                }, {
+                    key: "to",
+                    value: function to() {
+                        var popup = window.open();
+                        popup.location = this.content;
+                    }
+                }, {
+                    key: "boolean",
+                    value: function boolean() {
+                        return [1, "1", true, "true", "yes"].indexOf(this.content) === 0 ? icon('check-square-o') : icon('square-o');
+                    }
+                }, {
+                    key: "email",
+                    value: function email() {
+                        var _this3 = this;
+
+                        var email = this.content.split(/@|\./).map(function (segment) {
+                            return segment.replace(/(.{2})./g, '$1*');
+                        }).join('*');
+
+                        return Button.component({
+                            onclick: function onclick() {
+                                return _this3.mailTo();
+                            },
+                            className: 'Button Button--text',
+                            icon: 'envelope-o',
+                            children: email
+                        });
+                    }
+                }, {
+                    key: "mailTo",
+                    value: function mailTo() {
+                        window.location = 'mailto:' + this.content;
+                    }
+                }]);
+                return Mutate;
+            }();
+
+            _export("default", Mutate);
         }
     };
 });

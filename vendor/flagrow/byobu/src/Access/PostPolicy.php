@@ -6,7 +6,7 @@ use Flagrow\Byobu\Traits\ProvidesAccess;
 use Flarum\Core\Discussion;
 use Flarum\Core\Post;
 use Flarum\Core\User;
-use Flarum\Event\ScopePostVisibility;
+use Flarum\Event\ScopePrivatePostVisibility;
 use Flarum\Extension\ExtensionManager;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
@@ -54,9 +54,9 @@ class PostPolicy extends AbstractPolicy
     }
 
     /**
-     * @param ScopePostVisibility $event
+     * @param ScopePrivatePostVisibility $event
      */
-    public function scopePostVisibility(ScopePostVisibility $event)
+    public function scopePrivatePostVisibility(ScopePrivatePostVisibility $event)
     {
         $this->queryConstraints($event->discussion, $event->actor, $event->query);
     }
@@ -71,8 +71,8 @@ class PostPolicy extends AbstractPolicy
     {
         // Close down to only specific users.
         if (!$discussion->recipientUsers->isEmpty() || !$discussion->recipientGroups->isEmpty()) {
-            if (!$actor->exists || !$this->granted($discussion, $actor)) {
-                $query->whereNull('posts.id');
+            if ($actor->exists && $this->granted($discussion, $actor)) {
+                $query->orWhere('is_private', 1);
             }
 
             $this->showWithFlags($query, $actor, 'flags');

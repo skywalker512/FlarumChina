@@ -12,6 +12,7 @@ core:
       developer_text: "If you're a developer, you can <a>read the docs</a> and have a go at building your own extensions."
       install_text: "In the meantime, you can look for extensions at the <a>Flarum Community site</a> and install them manually using Composer."
       temporary_text: "One day in the not-too-distant future, this dialog will allow you to add an extension to your forum with ease. We're building an ecosystem as we speak!"
+      title: Add Extension
 
     # These translations are used in the Appearance page.
     appearance:
@@ -42,6 +43,7 @@ core:
       home_page_heading: Home Page
       home_page_text: "Choose the page which users will first see when they visit your forum. If entering a custom value, use the path relative to the forum root."
       saved_message: Your changes were saved.
+      show_language_selector_label: Show language selector
       submit_button: => core.ref.save_changes
       welcome_banner_heading: Welcome Banner
       welcome_banner_text: Configure the text that displays in the banner on the All Discussions page. Use this to welcome guests to your forum.
@@ -147,6 +149,7 @@ core:
       start_discussions_label: Start discussions
       view_discussions_label: View discussions
       view_post_ips_label: View post IP addresses
+      view_user_list_label: View user list
 
     # These translations are used in the dropdown menus on the Permissions page.
     permissions_controls:
@@ -223,8 +226,7 @@ core:
       delete_confirmation: "Are you sure you want to delete this discussion?"
       delete_forever_button: => core.ref.delete_forever
       log_in_to_reply_button: Log In to Reply
-      rename_button: Rename
-      rename_text: "Enter a new title for this discussion:"
+      rename_button: => core.ref.rename
       reply_button: => core.ref.reply
       restore_button: => core.ref.restore
 
@@ -238,10 +240,16 @@ core:
 
     # These translations are used in the Edit User modal dialog (admin function).
     edit_user:
+      activate_button: Activate User
+      email_heading: => core.ref.email
       email_label: => core.ref.email
+      groups_heading: Groups
+      password_heading: => core.ref.password
       password_label: => core.ref.password
+      set_password_label: Set new password
       submit_button: => core.ref.save_changes
       title: Edit User
+      username_heading: => core.ref.username
       username_label: => core.ref.username
 
     # These translations are used in the Forgot Password modal dialog.
@@ -257,6 +265,7 @@ core:
     # These translations are used in the header and session dropdown menu.
     header:
       admin_button: Administration
+      back_to_index_tooltip: Back to discussion list
       log_in_link: => core.ref.log_in
       log_out_button: => core.ref.log_out
       profile_button: Profile
@@ -286,6 +295,7 @@ core:
       forgot_password_link: "Forgot password?"
       invalid_login_message: Your login details were incorrect.
       password_placeholder: => core.ref.password
+      remember_me_label: Remember Me
       sign_up_text: "Don't have an account? <a>Sign Up</a>"
       submit_button: => core.ref.log_in
       title: => core.ref.log_in
@@ -326,6 +336,11 @@ core:
       load_more_button: => core.ref.load_more
       reply_placeholder: => core.ref.write_a_reply
       time_lapsed_text: "{period} later"
+
+    # These translations are used by the rename discussion modal.
+    rename_discussion:
+      title: Rename Discussion
+      submit_button: => core.ref.rename
 
     # These translations are used by the search results dropdown list.
     search:
@@ -439,6 +454,10 @@ core:
       submit_button: Reset Password
       title: => core.ref.reset_your_password
 
+  # Translations in this namespace are used in messages output by the API.
+  api:
+    invalid_username_message: "The username may only contain letters, numbers, and dashes."
+
   # Translations in this namespace are used in emails sent by the forum.
   email:
 
@@ -505,6 +524,7 @@ core:
     notifications: Notifications
     okay: OK                                     # Referenced by flarum-tags.yml
     password: Password
+    rename: Rename
     reply: Reply                                 # Referenced by flarum-mentions.yml
     reset_your_password: Reset Your Password
     restore: Restore

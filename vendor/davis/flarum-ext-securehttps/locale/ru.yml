@@ -1,0 +1,8 @@
+davis-securehttps:
+  admin:
+    settings:
+      title: Конфигурация
+      replace: Прокси-изображения через HTTPS
+  forum:
+    removed: "Изображение удалено из-за отсутствия поддержки протокола HTTPS."
+    show: Показать в любом случае

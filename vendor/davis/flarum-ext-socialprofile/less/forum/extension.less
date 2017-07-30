@@ -1,0 +1,150 @@
+.Badge--social {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    cursor: pointer;
+}
+.UserCard-info > .social-button {
+    margin-right: 0;
+}
+.social-settings > .fa-cog {
+    border-left: 1px solid white;
+    width: 120%;
+}
+.form-group-social {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px dashed #4D698E;
+    /*display: none;*/
+}
+.iconpicker-item { 
+    float: left;
+    padding: 12px;
+    margin: 0 12px 12px 0;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 14px;
+    box-shadow: 0 0 0 1px #ddd;
+    color: #111;
+}
+.iconpicker-item-invt { 
+    float: left;
+    padding: 12px;
+    margin: 0 12px 12px 0;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 14px;
+    box-shadow: 0 0 0 1px #ddd;
+    color: inherit;
+    background-color: black;
+}
+.iconpicker-item-invt:hover {
+    background-color: #2D2D2D;
+}
+.iconpicker-item:hover {
+    background-color: #F1F1F1;
+}
+.iconpicker--highlighted {
+    background-color: #4D698E;
+    color: white;
+}
+.iconpicker--highlighted:hover, .iconpicker--highlighted:active {
+    background-color: #364A65;
+}
+.social-dropdown-menu {
+    padding-left: 10px !important;
+    padding-top: 10px !important;
+    bottom: inherit !important;
+    position: absolute !important;
+    top: 100% !important;
+    overflow: auto;
+    max-height: 45vh !important;
+    min-width: 190px !important;
+    z-index: 2055;
+    float: left;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.15);
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+}
+.SocialFormControl {
+    margin-bottom: 5px;
+    width: 100%;
+    height: 36px;
+    padding: 8px 13px;
+    font-size: 13px;
+    line-height: 1.5;
+    background-color: #fff;
+    color: #111;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    -webkit-transition: border-color .15s, background .15s;
+    -o-transition: border-color .15s, background .15s;
+    transition: border-color .15s, background .15s;
+    -webkit-appearance: none;
+}
+.Socialurl {
+    margin-left: 3px;
+    width: 260px;
+}
+@media (max-width: 767px) {
+    .Socialurl {
+        width: 293px;
+    }
+}
+.social-greyscale-button {
+    -webkit-filter: grayscale(1) contrast(2) brightness(2);
+    filter: grayscale(1) contrast(2) brightness(2);
+}
+.icondropdown > button {
+    width: 52px !important;
+}
+.icondropdown > button > i {
+    display: inline-block !important;
+}
+.social-moderate--highlighted > .Badge-icon {
+    color: #F22613;
+    transition: .5s;
+    font-size: 23px;
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+.social-button--highlightable:hover {
+    border-radius: 4px;
+    background: #F22613;
+}
+.fa-spin {
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
+}
+.fa-pulse {
+  -webkit-animation: fa-spin 1s infinite steps(8);
+  animation: fa-spin 1s infinite steps(8);
+}
+@-webkit-keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}

@@ -1,0 +1,11 @@
+davis-socialprofile:
+  forum:
+    edit:
+      edit: "Правка"
+      add: "Добавить"
+      headtitle: "Правка кнопок"
+      title: "Надпись"
+      url: "Url"
+      submit: "Сохранить"
+      delete: "Удалить"
+      deletetitle: "кнопка удаления"

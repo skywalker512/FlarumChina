@@ -1,0 +1,43 @@
+flagrow-masquerade:
+    forum:
+        alerts:
+            profile-completion-required: >
+                Maak je profiel compleet door de verplichte velden in te vullen.
+        buttons:
+            view-profile: Bekijk profiel
+            configure-profile: Pas je profiel aan
+            save-profile: Opslaan
+    admin:
+        buttons:
+            add-field: Veld toevoegen
+            edit-field: Veld aanpassen
+            delete-field: Veld wissen
+        permissions:
+            have-profile: Mag een masquerade profiel hebben
+            view-profile: Bekijken van masquerade profielen
+        menu:
+            description: >
+                Stel de profielvelden samen.
+        fields:
+            add: Veld {field} toevoegen
+            edit: Veld {field} aanpassen
+            name: Veldnaam
+            name-help: >
+                Het voor het publiek zichtbare label.
+            description: Veldomschrijving
+            description-help: >
+                Een publiekelijk zichtbare optionele omschrijving van dit veld.
+            required: Maak dit veld verplicht
+            validation: Validatie
+            validation-help: >
+                Bekijk de mogelijke <a>Laravel validatie regels</a>. Eg:
+                "string,min:5" of "url".
+            prefix: Veld prefix
+            prefix-help: >
+                Toont een prefix voor de ingevulde waarden van een veld.
+            icon: Icon
+            icon-help: >
+                Toont een icoon voor het label van een veld. Ter referentie van
+                beschikbare icons, bekijk <a>FontAwesome website</a>. Gebruik
+                "info" zonder "fa-".
+            force-user-to-completion: Verplicht de gebruiker om verplichte velden in te vullen

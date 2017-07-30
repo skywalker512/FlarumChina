@@ -12,6 +12,7 @@ use Flarum\Core\Exception\PermissionDeniedException;
 use Flarum\Core\Exception\ValidationException;
 use Flarum\Core\Repository\UserRepository;
 use Flarum\Event\DiscussionWillBeSaved;
+use Flarum\Event\PostWillBeSaved;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Validation\Factory;
@@ -65,6 +66,17 @@ class SaveRecipientsToDatabase
     public function subscribe(Dispatcher $events)
     {
         $events->listen(DiscussionWillBeSaved::class, [$this, 'whenDiscussionWillBeSaved']);
+        $events->listen(PostWillBeSaved::class, [$this, 'makePostPrivate']);
+    }
+
+    /**
+     * @param PostWillBeSaved $event
+     */
+    public function makePostPrivate(PostWillBeSaved $event)
+    {
+        if ($event->post->discussion->is_private) {
+            $event->post->is_private = $event->post->discussion->is_private;
+        }
     }
 
     /**
@@ -87,6 +99,7 @@ class SaveRecipientsToDatabase
             });
 
         $addsRecipients = !$newUserIds->isEmpty() || !$newGroupIds->isEmpty();
+        $discussion->is_private = $addsRecipients;
 
         // New discussion
         if ($discussion->exists) {

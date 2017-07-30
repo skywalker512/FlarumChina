@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Flarum.
  *
@@ -63,7 +64,7 @@ class ApproveContent
 
         if ($post->number == 1) {
             $post->discussion->is_approved = true;
-            $post->discussion->save();
         }
+        $post->discussion->save();
     }
 }

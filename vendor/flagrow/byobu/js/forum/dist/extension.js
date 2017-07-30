@@ -16,8 +16,8 @@ System.register('flagrow/byobu/addDiscussPrivatelyControl', ['flarum/extend', 'f
                         var deferred = m.deferred();
 
                         var recipients = new ItemList();
-                        recipients.add('to', user);
-                        recipients.add('from', app.session.user);
+                        recipients.add('users:' + user.id(), user);
+                        recipients.add('users:' + app.session.user.id(), app.session.user);
 
                         DiscussionComposer.prototype.recipients = recipients;
 
@@ -372,7 +372,7 @@ System.register("flagrow/byobu/components/AddRecipientModal", ["flarum/component
                     value: function select(e) {
                         // Ctrl + Enter submits the selection, just Enter completes the current entry
                         if (e.metaKey || e.ctrlKey || this.selected.indexOf(this.index) !== -1) {
-                            if (this.selected.length) {
+                            if (this.selected().length) {
                                 this.$('form').submit();
                             }
                         }
@@ -904,6 +904,7 @@ System.register("flagrow/byobu/components/RecipientSearch", ["flarum/components/
                         }, this.props.selected().toArray().map(function (recipient) {
                             return recipientLabel(recipient, {
                                 onclick: function onclick() {
+                                    console.log(recipient);
                                     _this3.removeRecipient(recipient);
                                 }
                             });
@@ -984,7 +985,7 @@ System.register("flagrow/byobu/components/RecipientSearch", ["flarum/components/
                         }
 
                         this.props.selected().remove(type + ":" + recipient.id());
-
+                        console.log(this.props.selected());
                         m.redraw();
                     }
                 }, {

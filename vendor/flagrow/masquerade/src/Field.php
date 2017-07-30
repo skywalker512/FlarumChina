@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property bool $required
  * @property string $validation
  * @property integer $sort
+ * @property bool $on_bio
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
@@ -26,7 +27,7 @@ class Field extends AbstractModel
 
     protected $table = 'flagrow_masquerade_fields';
 
-    protected $casts = ['required' => 'boolean'];
+    protected $casts = ['required' => 'boolean', 'on_bio' => 'boolean'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
