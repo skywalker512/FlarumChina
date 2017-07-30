@@ -217,7 +217,7 @@ System.register('flarum/emoji/addComposerAutocomplete', ['flarum/extend', 'flaru
                   onmouseenter: function onmouseenter() {
                     dropdown.setIndex($(this).parent().index());
                   } },
-                m('img', { alt: code, 'class': 'emoji', draggable: 'false', src: '//cdn.jsdelivr.net/emojione/assets/png/' + imageName + '.png' }),
+                m('img', { alt: code, 'class': 'emoji', draggable: 'false', src: '//cdn.bootcss.com/emojione/2.2.7/assets/png/' + imageName + '.png' }),
                 key
               );
             };

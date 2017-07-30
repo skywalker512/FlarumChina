@@ -104,7 +104,7 @@ class Configurator extends ConfiguratorBase
 	}
 	protected function getEmojiOneSrc()
 	{
-		$src  = '//cdn.jsdelivr.net/emojione/assets/' . $this->imageType . '/';
+		$src  = '//cdn.bootcss.com/emojione/2.2.7/assets/' . $this->imageType . '/';
 		$src .= "<xsl:if test=\"contains(@seq, '-20e3') or @seq = 'a9' or @seq = 'ae'\">00</xsl:if>";
 		$src .= '<xsl:value-of select="@seq"/>';
 		$src .= '.' . $this->imageType;
