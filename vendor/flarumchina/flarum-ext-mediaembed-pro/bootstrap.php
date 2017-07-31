@@ -17,15 +17,31 @@ function subscribe(Dispatcher $events)
             $event->configurator->Autoimage;
             $event->configurator->MediaEmbed->add(
                 'music163',
-                [
-                    'host'    => 'music.163.com',
-                    'extract' => "!music\\.163\\.com/#/song\\?id=(?'id'\\d+)!",
-                    'iframe'  => [
-                        'width'  => 330,
-                        'height' => 86,
-                        'src'    => '//music.163.com/outchain/player?type=2&id={@id}&auto=0&height=66'
-                    ]
-                ]
+	[
+		'host'    => 'music.163.com',
+		'extract' => [
+			"!music\\.163\\.com/#/song\\?id=(?'song_id'\\d+)!",
+			"!music\\.163\\.com/#/album\\?id=(?'playlist_id'\\d+)!",
+			"!music\\.163\\.com/#/playlist\\?id=(?'playlist_id'\\d+)!"
+		],
+		'choose'  => [
+			'when' => [
+				'test' => '@song_id',
+				'iframe'  => [
+					'width'  => 330,
+					'height' => 86,
+					'src'    => 'http://music.163.com/outchain/player?type=2&id={@song_id}&auto=0&height=66'
+				]
+			],
+			'otherwise' => [
+				'iframe'  => [
+					'width'  => 330,
+					'height' => 450,
+					'src'    => 'http://music.163.com/outchain/player?type=1&id={@playlist_id}&auto=0&height=430'
+				]
+			]
+		]
+	]
             );
             $event->configurator->MediaEmbed->add(
                 'youku1',
@@ -43,7 +59,10 @@ function subscribe(Dispatcher $events)
                 'bilibili',
                 [   
                     'host'    => 'www.bilibili.com',
-                    'extract' => "!www.bilibili.com/video/av(?'id'\\d+)/!",
+                    'extract' => [
+                    	"!www.bilibili.com/video/av(?'id'\\d+)/!",
+                    	"!www.bilibili.com/mobile/video/av(?'id'\\d+)\\.html!"
+                    ],
                     'flash'  => [
                         'width'  => 760,
                         'height' => 450,

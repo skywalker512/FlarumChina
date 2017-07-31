@@ -4547,53 +4547,6 @@
         ]
     },
     {
-        "name": "flarumchina/flarum-ext-mediaembed-pro",
-        "version": "0.3.3",
-        "version_normalized": "0.3.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/FlarumChina/flarum-ext-mediaembed-pro.git",
-            "reference": "eb3adfa02c111f44a74b9eeeb5573afb1fb53e09"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-mediaembed-pro/zipball/eb3adfa02c111f44a74b9eeeb5573afb1fb53e09",
-            "reference": "eb3adfa02c111f44a74b9eeeb5573afb1fb53e09",
-            "shasum": ""
-        },
-        "require": {
-            "flarum/core": "^0.1.0-beta.6",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-04-03T14:10:55+00:00",
-        "type": "flarum-extension",
-        "extra": {
-            "flarum-extension": {
-                "title": "MediaEmbed",
-                "icon": {
-                    "name": "youtube-play",
-                    "backgroundColor": "#cc181e",
-                    "color": "#fff"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Embed third-party content in your Flarum.",
-        "keywords": [
-            "embed",
-            "facebook",
-            "flarum",
-            "media",
-            "twitch",
-            "twitter",
-            "youtube"
-        ]
-    },
-    {
         "name": "wiwatsrt/flarum-ext-best-answer",
         "version": "v0.1.0-beta.9",
         "version_normalized": "0.1.0.0-beta9",
@@ -6796,6 +6749,53 @@
             "flarum",
             "profile",
             "social"
+        ]
+    },
+    {
+        "name": "flarumchina/flarum-ext-mediaembed-pro",
+        "version": "0.3.4",
+        "version_normalized": "0.3.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FlarumChina/flarum-ext-mediaembed-pro.git",
+            "reference": "d98084b290978e8cf556bd1aa73409dce7c44b99"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-mediaembed-pro/zipball/d98084b290978e8cf556bd1aa73409dce7c44b99",
+            "reference": "d98084b290978e8cf556bd1aa73409dce7c44b99",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-07-31T06:17:14+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "MediaEmbed",
+                "icon": {
+                    "name": "youtube-play",
+                    "backgroundColor": "#cc181e",
+                    "color": "#fff"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Embed third-party content in your Flarum.",
+        "keywords": [
+            "embed",
+            "facebook",
+            "flarum",
+            "media",
+            "twitch",
+            "twitter",
+            "youtube"
         ]
     }
 ]

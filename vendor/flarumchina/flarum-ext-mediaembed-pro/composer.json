@@ -1,9 +1,9 @@
 {
-	"name": "flarumchina/flarum-ext-mediaembed",
+	"name": "flarumchina/flarum-ext-mediaembed-pro",
 	"description": "Embed third-party content in your Flarum.",
 	"type": "flarum-extension",
 	"keywords": ["flarum","embed","facebook","media","twitter","twitch","youtube"],
-	"version": "0.3.3",
+	"version": "0.3.4",
 	"author": {
 		"name": "JoshyPHP"
 	},

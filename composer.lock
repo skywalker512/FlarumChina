@@ -2569,16 +2569,16 @@
         },
         {
             "name": "flarumchina/flarum-ext-mediaembed-pro",
-            "version": "0.3.3",
+            "version": "0.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FlarumChina/flarum-ext-mediaembed-pro.git",
-                "reference": "eb3adfa02c111f44a74b9eeeb5573afb1fb53e09"
+                "reference": "d98084b290978e8cf556bd1aa73409dce7c44b99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FlarumChina/flarum-ext-mediaembed-pro/zipball/eb3adfa02c111f44a74b9eeeb5573afb1fb53e09",
-                "reference": "eb3adfa02c111f44a74b9eeeb5573afb1fb53e09",
+                "url": "https://api.github.com/repos/FlarumChina/flarum-ext-mediaembed-pro/zipball/d98084b290978e8cf556bd1aa73409dce7c44b99",
+                "reference": "d98084b290978e8cf556bd1aa73409dce7c44b99",
                 "shasum": ""
             },
             "require": {
@@ -2610,7 +2610,7 @@
                 "twitter",
                 "youtube"
             ],
-            "time": "2017-04-03T14:10:55+00:00"
+            "time": "2017-07-31T06:17:14+00:00"
         },
         {
             "name": "flarumchina/flarum-ext-simplified-chinese-pro",
