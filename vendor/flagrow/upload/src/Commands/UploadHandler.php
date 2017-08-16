@@ -84,11 +84,11 @@ class UploadHandler
                 );
 
                 if (!$adapter) {
-                    throw new ValidationException(['upload' => 'Uploading files of this type is not allowed.']);
+                    throw new ValidationException(['upload' => '这种类型的文件上传是不允许的。']);
                 }
 
                 if (!$adapter->forMime($upload->getMimeType())) {
-                    throw new ValidationException(['upload' => "Upload adapter does not support the provided mime type: {$upload->getMimeType()}."]);
+                    throw new ValidationException(['upload' => "上传组件不能上传这种 mime 类型: {$upload->getMimeType()}."]);
                 }
 
                 $file = $this->files->createFileFromUpload($upload, $command->actor);
