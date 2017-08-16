@@ -18,8 +18,8 @@ System.register("flagrow/upload/addUploadPane", ["flarum/extend", "flarum/compon
             // add the Image Upload tab to the admin navigation menu
             items.add('flagrow-upload', AdminLinkButton.component({
                 href: app.route('flagrow-upload'),
-                icon: 'file-o',
-                children: 'File Upload',
+                icon: 'upload',
+                children: app.translator.trans('flagrow-upload.admin.nav.file_upload_button'),
                 description: app.translator.trans('flagrow-upload.admin.help_texts.description')
             }));
         });
@@ -387,7 +387,7 @@ System.register("flagrow/upload/main", ["flarum/extend", "flarum/app", "flarum/c
                 // add the permission option to the relative pane
                 extend(PermissionGrid.prototype, 'startItems', function (items) {
                     items.add('upload', {
-                        icon: 'file-o',
+                        icon: 'upload',
                         label: app.translator.trans('flagrow-upload.admin.permissions.upload_label'),
                         permission: 'flagrow.upload'
                     });

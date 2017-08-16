@@ -7,6 +7,8 @@ flagrow-upload:
             success: Success
             error: Error
     admin:
+        nav:
+            file_upload_button: Upload files
         permissions:
             upload_label: Upload files
             download_label: Download files

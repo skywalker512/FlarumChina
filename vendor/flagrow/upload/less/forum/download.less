@@ -2,7 +2,8 @@
 .flagrow-download.row {
 
     margin: 10px auto 0;
-    min-height: 280px;
+    padding: 20px 0px;
+    a {border-bottom: none;}
 
     .card {
         float: left;
@@ -100,4 +101,32 @@
             padding: 1em 1em 0.1em;
         }
     }
+}
+
+.thumbnail {
+  max-width: 100%;
+}
+
+.lightbox {
+	display: none;
+
+	position: fixed;
+	z-index: 1001;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,0.8);
+}
+
+.lightbox img {
+	max-width: 90%;
+	max-height: 80%;
+	margin-top: 5%;
+}
+.lightbox:target {
+	outline: none;
+
+	display: block;
 }
