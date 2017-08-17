@@ -1,0 +1,39 @@
+# https://github.com/flagrow/users-list/blob/master/locale/en.yml
+
+flagrow-users-list:
+  admin:
+    nav:
+      users_button: => flagrow-users-list.ref.users_title
+      users_text: 查看会员列表
+    page:
+      about_text:  查看注册会员列表。
+      online_text: 在线
+      load_more_button: 加载更多
+      list_title: => flagrow-users-list.ref.users_title
+      mail_all_button: 向所有会员发邮件
+    modal_mail:
+      title_text: 发信给
+      title_all_text: 所有会员
+      email_label: 收件人
+      subject_label: 主题
+      default_subject: => flagrow-users-list.ref.default_subject
+      message_label: 正文
+      submit_button: 发送
+    modal_user:
+      title: 编辑用户
+      username_heading: 用户名
+      username_label: => flagrow-users-list.admin.modal_user.username_heading
+      email_heading: 邮箱
+      email_label: => flagrow-users-list.admin.modal_user.email_heading
+      activate_button: 激活用户
+      password_heading: 密码
+      password_label: 密码
+      set_password_label: 设置新密码
+      groups_heading: 用户组
+      submit_button: 保存设置
+  email:
+    default_subject: => flagrow-users-list.ref.default_subject
+
+  ref:
+    default_subject: 来自论坛管理员的信息
+    users_title: 会员
