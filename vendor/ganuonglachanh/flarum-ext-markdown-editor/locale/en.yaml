@@ -23,3 +23,8 @@ ganuonglachanh-mdeditor:
       link: 'Create Link'
       image: 'Insert Image'
       guide: 'Markdown Guide'
+      details: 'Hide Content'
+      reply_see: 'Reply To See'
+      center: 'center'
+      right: 'right'
+      high_light: 'High Light'

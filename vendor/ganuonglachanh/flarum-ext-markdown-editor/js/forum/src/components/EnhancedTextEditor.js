@@ -236,7 +236,7 @@ export default class EnhancedTextEditor extends TextEditor {
    * Make selected text underline.
    */
   underline() {
-    this.insertAroundCursor('__', '__')
+    this.insertAroundCursor('[u]', '[/u]')
   }
 
   /**
@@ -264,7 +264,7 @@ export default class EnhancedTextEditor extends TextEditor {
    * Insert image.
    */
   image() {
-    this.insertAroundCursor('![](', ' "")')
+    this.insertAroundCursor('![', '](https://)')
   }
 
   /**
@@ -293,5 +293,19 @@ export default class EnhancedTextEditor extends TextEditor {
    */
   unordered_list() {
     this.insertAroundCursor('* ', '')
+  }
+
+  /**
+   * Insert details.
+   */
+  details() {
+    this.insertAroundCursor('[details=?] ', '[/details]')
+  }
+
+  /**
+   * Insert reply_see.
+   */
+  reply_see() {
+    this.insertAroundCursor('[reply] ', '[/reply]')
   }
 }

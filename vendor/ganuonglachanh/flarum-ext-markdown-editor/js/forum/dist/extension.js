@@ -1,4 +1,4 @@
-System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flarum/utils/ItemList', 'flarum/helpers/listItems', 'flarum/components/Button', 'flarum/components/Separator', 'flarum/components/TextEditor'], function (_export) {
+System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flarum/utils/ItemList', 'flarum/helpers/listItems', 'flarum/components/Button', 'flarum/components/Dropdown', 'flarum/components/Separator', 'flarum/components/TextEditor'], function (_export) {
 
   /**
    * The `EnhancedTextEditor` component displays a textarea with controls, including a
@@ -13,7 +13,7 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
    */
   'use strict';
 
-  var ItemList, listItems, Button, Separator, TextEditor, EnhancedTextEditor;
+  var ItemList, listItems, Button, Dropdown, Separator, TextEditor, EnhancedTextEditor;
   return {
     setters: [function (_flarumUtilsItemList) {
       ItemList = _flarumUtilsItemList['default'];
@@ -21,6 +21,8 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
       listItems = _flarumHelpersListItems['default'];
     }, function (_flarumComponentsButton) {
       Button = _flarumComponentsButton['default'];
+    }, function (_flarumComponentsDropdown) {
+      Dropdown = _flarumComponentsDropdown['default'];
     }, function (_flarumComponentsSeparator) {
       Separator = _flarumComponentsSeparator['default'];
     }, function (_flarumComponentsTextEditor) {
@@ -132,13 +134,10 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
               }
             }));
 
-            items.add('heading', Button.component({
+            items.add('heading', Dropdown.component({
               icon: 'header',
               className: 'Button',
-              title: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.heading'),
-              onclick: function onclick() {
-                return _this2.heading();
-              }
+              children: [ Button.component({className: 'hasIcon', children:'H1', onclick: function onclick() {return _this2.heading();}}), Button.component({className: 'hasIcon', children:'H2', onclick: function onclick() {return _this2.heading2();}}), Button.component({className: 'hasIcon', children:'H3', onclick: function onclick() {return _this2.heading3();}}),],buttonClassName: 'Button Button--link',
             }));
 
             items.add('strikethrough', Button.component({
@@ -148,6 +147,18 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
               onclick: function onclick() {
                 return _this2.strikethrough();
               }
+            }));
+
+            items.add('font', Dropdown.component({
+              icon: 'font',
+              className: 'Button',
+              children: [ Button.component({className: 'hasIcon', children:'S', onclick: function onclick() {return _this2.size1();}}), Button.component({className: 'hasIcon', children:'M', onclick: function onclick() {return _this2.size2();}}), Button.component({className: 'hasIcon', children:'L', onclick: function onclick() {return _this2.size3();}}), Button.component({className: 'hasIcon', children:'XL', onclick: function onclick() {return _this2.size4();}}),],buttonClassName: 'Button Button--link',
+            }));
+
+            items.add('tint', Dropdown.component({
+              icon: 'tint',
+              className: 'Button',
+              children: [ Button.component({className: 'hasColor color-t', onclick: function onclick() {return _this2.colort();}}), Button.component({className: 'hasColor color-g', onclick: function onclick() {return _this2.colorg();}}), Button.component({className: 'hasColor color-b', onclick: function onclick() {return _this2.colorb();}}), Button.component({className: 'hasColor color-p', onclick: function onclick() {return _this2.colorp();}}), Button.component({className: 'hasColor color-y', onclick: function onclick() {return _this2.colory();}}), Button.component({className: 'hasColor color-o', onclick: function onclick() {return _this2.coloro();}}), Button.component({className: 'hasColor color-r', onclick: function onclick() {return _this2.colorr();}}),  Button.component({className: 'hasColor color-s', onclick: function onclick() {return _this2.colors();}}),],buttonClassName: 'Button Button--link',
             }));
 
             items.add('sep1', Separator.component());
@@ -170,22 +181,10 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
               }
             }));
 
-            items.add('quote', Button.component({
-              icon: 'quote-right',
+            items.add('qrcode', Dropdown.component({
+              icon: 'qrcode',
               className: 'Button',
-              title: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.quote'),
-              onclick: function onclick() {
-                return _this2.quote();
-              }
-            }));
-
-            items.add('code', Button.component({
-              icon: 'code',
-              className: 'Button',
-              title: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.code'),
-              onclick: function onclick() {
-                return _this2.code();
-              }
+              children: [ Button.component({icon: 'quote-right', className: 'hasIcon', children: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.quote'), onclick: function onclick() {return _this2.quote();}}), Button.component({icon: 'code', className: 'hasIcon', children: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.code'), onclick: function onclick() {return _this2.code();}}), Button.component({icon: 'lightbulb-o', className: 'hasIcon', children: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.high_light'), onclick: function onclick() {return _this2.high_light();}}),],buttonClassName: 'Button Button--link',
             }));
 
             items.add('sep2', Separator.component());
@@ -206,6 +205,31 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
               onclick: function onclick() {
                 return _this2.unordered_list();
               }
+            }));
+
+            items.add('align-left', Dropdown.component({
+              icon: 'align-left',
+              className: 'Button',
+              children: [ Button.component({icon: 'align-center', className: 'hasIcon', children: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.center'), onclick: function onclick() {return _this2.align_center();}}), Button.component({icon: 'align-right', className: 'hasIcon', children: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.right'), onclick: function onclick() {return _this2.align_right();}}),],buttonClassName: 'Button Button--link',
+            }));
+
+            items.add('details', Button.component({
+              icon: 'eye-slash',
+              className: 'Button',
+              title: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.details'),
+              onclick: function onclick() {
+                return _this2.details();
+              }
+            }));
+
+            items.add('reply_see', Button.component({
+              icon: 'reply-all',
+              className: 'Button',
+              title: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.reply_see'),
+              onclick: function onclick() {
+                return _this2.reply_see();
+              }
+
             }));
 
             var symbols = JSON.parse(app.forum.attribute('editorSymbols') || '[]');
@@ -238,7 +262,7 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
            * @param {String} before
            * @param {String} after
            */
-        }, {
+         }, {
           key: 'insertAroundCursor',
           value: function insertAroundCursor(before, after) {
             var textarea = this.$('textarea')[0];
@@ -280,7 +304,7 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
         }, {
           key: 'underline',
           value: function underline() {
-            this.insertAroundCursor('__', '__');
+            this.insertAroundCursor('[u]', '[/u]');
           }
 
           /**
@@ -301,6 +325,96 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
             this.insertAroundCursor('# ', '#');
           }
 
+        }, {
+          key: 'heading2',
+          value: function heading2() {
+            this.insertAroundCursor('## ', '##');
+          }
+
+        }, {
+          key: 'heading3',
+          value: function heading3() {
+            this.insertAroundCursor('### ', '###');
+          }
+
+          /**
+           * Font size.
+           */
+        }, {
+          key: 'size1',
+          value: function size1() {
+            this.insertAroundCursor('[size1]', '[/size1]');
+          }
+
+        }, {
+          key: 'size2',
+          value: function size2() {
+            this.insertAroundCursor('[size2]', '[/size2]');
+          }
+
+        }, {
+          key: 'size3',
+          value: function size3() {
+            this.insertAroundCursor('[size3]', '[/size3]');
+          }
+
+        }, {
+          key: 'size4',
+          value: function size4() {
+            this.insertAroundCursor('[size4]', '[/size4]');
+          }
+
+          /**
+           * Font Colors.
+           */
+        }, {
+          key: 'colort',
+          value: function colort() {
+            this.insertAroundCursor('[colort]', '[/colort]');
+          }
+
+        }, {
+          key: 'colorg',
+          value: function colorg() {
+            this.insertAroundCursor('[colorg]', '[/colorg]');
+          }
+
+        }, {
+          key: 'colorb',
+          value: function colorb() {
+            this.insertAroundCursor('[colorb]', '[/colorb]');
+          }
+
+        }, {
+          key: 'colorp',
+          value: function colorp() {
+            this.insertAroundCursor('[colorp]', '[/colorp]');
+          }
+
+        }, {
+          key: 'colory',
+          value: function colory() {
+            this.insertAroundCursor('[colory]', '[/colory]');
+          }
+
+        }, {
+          key: 'coloro',
+          value: function coloro() {
+            this.insertAroundCursor('[coloro]', '[/coloro]');
+          }
+
+        }, {
+          key: 'colorr',
+          value: function colorr() {
+            this.insertAroundCursor('[colorr]', '[/colorr]');
+          }
+
+        }, {
+          key: 'colors',
+          value: function colors() {
+            this.insertAroundCursor('[colors]', '[/colors]');
+          }
+
           /**
            * Insert link around selected text.
            */
@@ -316,7 +430,7 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
         }, {
           key: 'image',
           value: function image() {
-            this.insertAroundCursor('![](', ' "")');
+            this.insertAroundCursor('![', '](https://)');
           }
 
           /**
@@ -338,6 +452,15 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
           }
 
           /**
+           * Insert code.
+           */
+        }, {
+          key: 'high_light',
+          value: function high_light() {
+            this.insertAroundCursor('[hl]', '[/hl]');
+          }
+
+          /**
            * Insert ordered_list.
            */
         }, {
@@ -349,11 +472,46 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
           /**
            * Insert unordered_list.
            */
+
         }, {
           key: 'unordered_list',
           value: function unordered_list() {
             this.insertAroundCursor('* ', '');
           }
+
+          /**
+           * text align.
+           */
+        }, {
+          key: 'align_center',
+          value: function align_center() {
+            this.insertAroundCursor('[center] ', '[/center]');
+          }
+
+        }, {
+          key: 'align_right',
+          value: function align_right() {
+            this.insertAroundCursor('[right] ', '[/right]');
+          }
+
+          /**
+           * Insert details.
+           */
+        }, {
+          key: 'details',
+          value: function details() {
+            this.insertAroundCursor('[details=?] ', '[/details]');
+          }
+
+          /**
+           * Insert reply_see.
+           */
+        }, {
+          key: 'reply_see',
+          value: function reply_see() {
+            this.insertAroundCursor('[reply] ', '[/reply]');
+          }
+
         }]);
         return EnhancedTextEditor;
       })(TextEditor);

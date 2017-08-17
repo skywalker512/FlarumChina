@@ -1,0 +1,30 @@
+ganuonglachanh-mdeditor:
+  admin:
+    help_texts:
+      title: '编辑器'
+      description: '从编辑器工具栏中选择要使用的按钮。'
+    labels:
+      preferences:
+        title: '首选项'
+        symbols: '要添加到工具栏的按钮 (在 JSON 中): [{"label":"☎","insert":"☎"},{"label":"❄","insert":"❄"}]'
+    buttons:
+      save: '保存'
+  forum:
+    toolbar:
+      bold: '加粗'
+      italic: '斜体'
+      underline: '下划线'
+      strikethrough: '删除线'
+      heading: '标题'
+      quote: '引用'
+      code: '代码'
+      unordered_list: '无序列表'
+      ordered_list: '排序列表'
+      link: '链接'
+      image: '插入图片'
+      guide: 'Markdown 指南'
+      details: '隐藏内容'
+      reply_see: '回复可见'
+      center: '居中'
+      right: '右对齐'
+      high_light: '高亮'
