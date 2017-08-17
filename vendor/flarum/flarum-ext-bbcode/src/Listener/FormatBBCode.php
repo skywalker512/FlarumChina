@@ -42,7 +42,23 @@ class FormatBBCode
         $event->configurator->BBCodes->addFromRepository('DEL');
         $event->configurator->BBCodes->addFromRepository('COLOR');
         $event->configurator->BBCodes->addFromRepository('CENTER');
+        $event->configurator->BBCodes->addFromRepository('RIGHT');
         $event->configurator->BBCodes->addFromRepository('SIZE');
         $event->configurator->BBCodes->addFromRepository('*');
+        $event->configurator->BBCodes->addFromRepository('HL');
+        $event->configurator->BBCodes->addFromRepository('VIDEO');
+        $event->configurator->BBCodes->addFromRepository('AUDIO');
+        $event->configurator->BBCodes->addFromRepository('SIZE1');
+        $event->configurator->BBCodes->addFromRepository('SIZE2');
+        $event->configurator->BBCodes->addFromRepository('SIZE3');
+        $event->configurator->BBCodes->addFromRepository('SIZE4');
+        $event->configurator->BBCodes->addFromRepository('COLORT');
+        $event->configurator->BBCodes->addFromRepository('COLORG');
+        $event->configurator->BBCodes->addFromRepository('COLORB');
+        $event->configurator->BBCodes->addFromRepository('COLORP');
+        $event->configurator->BBCodes->addFromRepository('COLORY');
+        $event->configurator->BBCodes->addFromRepository('COLORO');
+        $event->configurator->BBCodes->addFromRepository('COLORR');
+        $event->configurator->BBCodes->addFromRepository('COLORS');
     }
 }
