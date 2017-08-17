@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter;
@@ -277,7 +277,7 @@ class Parser
 		$this->outputText($this->textLen, 0, \true);
 		do
 		{
-			$this->output = \preg_replace('(<([^ />]++)[^>]*></\\1>)', '', $this->output, -1, $cnt);
+			$this->output = \preg_replace('(<([^ />]+)></\\1>)', '', $this->output, -1, $cnt);
 		}
 		while ($cnt > 0);
 		if (\strpos($this->output, '</i><i>') !== \false)
@@ -568,9 +568,8 @@ class Parser
 					$ancestorName = $ancestor->getName();
 					if (isset($tagConfig['rules']['closeAncestor'][$ancestorName]))
 					{
-						++$this->currentFixingCost;
 						$this->tagStack[] = $tag;
-						$this->addMagicEndTag($ancestor, $tag->getPos(), $tag->getSortPriority() - 1);
+						$this->addMagicEndTag($ancestor, $tag->getPos());
 						return \true;
 					}
 				}
@@ -590,9 +589,8 @@ class Parser
 				$parentName = $parent->getName();
 				if (isset($tagConfig['rules']['closeParent'][$parentName]))
 				{
-					++$this->currentFixingCost;
 					$this->tagStack[] = $tag;
-					$this->addMagicEndTag($parent, $tag->getPos(), $tag->getSortPriority() - 1);
+					$this->addMagicEndTag($parent, $tag->getPos());
 					return \true;
 				}
 			}
@@ -623,7 +621,10 @@ class Parser
 				if (isset($tagConfig['rules']['fosterParent'][$parentName]))
 				{
 					if ($parentName !== $tagName && $this->currentFixingCost < $this->maxFixingCost)
-						$this->addFosterTag($tag, $parent);
+					{
+						$child = $this->addCopyTag($parent, $tag->getPos() + $tag->getLen(), 0, $tag->getSortPriority() + 1);
+						$tag->cascadeInvalidationTo($child);
+					}
 					$this->tagStack[] = $tag;
 					$this->addMagicEndTag($parent, $tag->getPos(), $tag->getSortPriority() - 1);
 					$this->currentFixingCost += 4;
@@ -650,44 +651,20 @@ class Parser
 		}
 		return \false;
 	}
-	protected function addFosterTag(Tag $tag, Tag $fosterTag)
-	{
-		list($childPos, $childPrio) = $this->getMagicStartCoords($tag->getPos() + $tag->getLen());
-		$childTag = $this->addCopyTag($fosterTag, $childPos, 0, $childPrio);
-		$tag->cascadeInvalidationTo($childTag);
-	}
 	protected function addMagicEndTag(Tag $startTag, $tagPos, $prio = 0)
 	{
 		$tagName = $startTag->getName();
-		if (($this->currentTag->getFlags() | $startTag->getFlags()) & self::RULE_IGNORE_WHITESPACE)
-			$tagPos = $this->getMagicEndPos($tagPos);
+		if ($startTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
+			$tagPos = $this->getMagicPos($tagPos);
 		$endTag = $this->addEndTag($tagName, $tagPos, 0, $prio);
 		$endTag->pairWith($startTag);
 		return $endTag;
 	}
-	protected function getMagicEndPos($tagPos)
+	protected function getMagicPos($tagPos)
 	{
 		while ($tagPos > $this->pos && \strpos(self::WHITESPACE, $this->text[$tagPos - 1]) !== \false)
 			--$tagPos;
 		return $tagPos;
-	}
-	protected function getMagicStartCoords($tagPos)
-	{
-		if (empty($this->tagStack))
-		{
-			$nextPos  = $this->textLen + 1;
-			$nextPrio = 0;
-		}
-		else
-		{
-			$nextTag  = \end($this->tagStack);
-			$nextPos  = $nextTag->getPos();
-			$nextPrio = $nextTag->getSortPriority();
-		}
-		while ($tagPos < $nextPos && \strpos(self::WHITESPACE, $this->text[$tagPos]) !== \false)
-			++$tagPos;
-		$prio = ($tagPos === $nextPos) ? $nextPrio - 1 : 0;
-		return array($tagPos, $prio);
 	}
 	protected function isFollowedByClosingTag(Tag $tag)
 	{
@@ -787,9 +764,8 @@ class Parser
 			$tag->invalidate();
 			return;
 		}
-		if ($this->currentFixingCost < $this->maxFixingCost)
-			if ($this->fosterParent($tag) || $this->closeParent($tag) || $this->closeAncestor($tag))
-				return;
+		if ($this->fosterParent($tag) || $this->closeParent($tag) || $this->closeAncestor($tag))
+			return;
 		if ($this->cntOpen[$tagName] >= $tagConfig['nestingLimit'])
 		{
 			$this->logger->err(
@@ -856,10 +832,6 @@ class Parser
 			$this->logger->debug('Skipping end tag with no start tag', array('tag' => $tag));
 			return;
 		}
-		$flags = $tag->getFlags();
-		foreach ($closeTags as $openTag)
-			$flags |= $openTag->getFlags();
-		$ignoreWhitespace = (bool) ($flags & self::RULE_IGNORE_WHITESPACE);
 		$keepReopening = (bool) ($this->currentFixingCost < $this->maxFixingCost);
 		$reopenTags = array();
 		foreach ($closeTags as $openTag)
@@ -871,8 +843,8 @@ class Parser
 				else
 					$keepReopening = \false;
 			$tagPos = $tag->getPos();
-			if ($ignoreWhitespace)
-				$tagPos = $this->getMagicEndPos($tagPos);
+			if ($openTag->getFlags() & self::RULE_IGNORE_WHITESPACE)
+				$tagPos = $this->getMagicPos($tagPos);
 			$endTag = new Tag(Tag::END_TAG, $openTagName, $tagPos, 0);
 			$endTag->setFlags($openTag->getFlags());
 			$this->outputTag($endTag);

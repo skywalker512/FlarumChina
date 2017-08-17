@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
@@ -44,12 +44,9 @@ class Parser extends ParserBase
 		if ($tag->hasAttribute('url'))
 		{
 			$url = $tag->getAttribute('url');
-			if (\preg_match('#^https?://[^<>"\'\\s]+$#Di', $url))
-			{
-				$url = \strtolower(\substr($url, 0, 5)) . \substr($url, 5);
+			if (\preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
 				foreach ($scrapeConfig as $scrape)
 					self::scrapeEntry($url, $tag, $scrape, $cacheDir);
-			}
 		}
 		return \true;
 	}

@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Autolink;
@@ -27,6 +27,16 @@ class Parser extends ParserBase
 	}
 	protected function trimUrl($url)
 	{
-		return \preg_replace('#(?![-=/)])[\\s!-.:-@[-`{-~\\pP]+$#Du', '', $url);
+		while (1)
+		{
+			$url = \preg_replace('#(?![-=/)])[\\s!-.:-@[-`{-~\\pP]+$#Du', '', $url);
+			if (\substr($url, -1) === ')' && \substr_count($url, '(') < \substr_count($url, ')'))
+			{
+				$url = \substr($url, 0, -1);
+				continue;
+			}
+			break;
+		}
+		return $url;
 	}
 }

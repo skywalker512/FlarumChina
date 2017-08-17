@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter;
@@ -177,7 +177,7 @@ class Configurator implements ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -207,7 +207,7 @@ class BundleGenerator
 		$php = array();
 		$php[] = '/**';
 		$php[] = '* @package   s9e\TextFormatter';
-		$php[] = '* @copyright Copyright (c) 2010-2017 The s9e Authors';
+		$php[] = '* @copyright Copyright (c) 2010-2016 The s9e Authors';
 		$php[] = '* @license   http://www.opensource.org/licenses/mit-license.php The MIT License';
 		$php[] = '*/';
 		if ($namespace)
@@ -323,7 +323,7 @@ class BundleGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -334,7 +334,7 @@ interface ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -345,7 +345,7 @@ interface FilterableConfigValue
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -439,7 +439,7 @@ abstract class AVTHelper
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -544,7 +544,7 @@ class CharacterClassBuilder
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -643,7 +643,7 @@ abstract class ConfigHelper
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -1159,7 +1159,7 @@ abstract class RegexpBuilder
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -1313,7 +1313,423 @@ abstract class RulesHelper
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\Helpers;
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
+class TemplateForensics
+{
+	protected $allowChildBitfield = "\0";
+	protected $allowsChildElements = \true;
+	protected $allowsText = \true;
+	protected $contentBitfield = "\0";
+	protected $denyDescendantBitfield = "\0";
+	protected $dom;
+	protected $hasElements = \false;
+	protected $hasRootText = \false;
+	protected $isBlock = \false;
+	protected $isEmpty = \true;
+	protected $isFormattingElement = \false;
+	protected $isPassthrough = \false;
+	protected $isTransparent = \false;
+	protected $isVoid = \true;
+	protected $leafNodes = array();
+	protected $preservesNewLines = \false;
+	protected $rootBitfields = array();
+	protected $rootNodes = array();
+	protected $xpath;
+	public function __construct($template)
+	{
+		$this->dom   = TemplateHelper::loadTemplate($template);
+		$this->xpath = new DOMXPath($this->dom);
+		$this->analyseRootNodes();
+		$this->analyseBranches();
+		$this->analyseContent();
+	}
+	public function allowsChild(self $child)
+	{
+		if (!$this->allowsDescendant($child))
+			return \false;
+		foreach ($child->rootBitfields as $rootBitfield)
+			if (!self::match($rootBitfield, $this->allowChildBitfield))
+				return \false;
+		if (!$this->allowsText && $child->hasRootText)
+			return \false;
+		return \true;
+	}
+	public function allowsDescendant(self $descendant)
+	{
+		if (self::match($descendant->contentBitfield, $this->denyDescendantBitfield))
+			return \false;
+		if (!$this->allowsChildElements && $descendant->hasElements)
+			return \false;
+		return \true;
+	}
+	public function allowsChildElements()
+	{
+		return $this->allowsChildElements;
+	}
+	public function allowsText()
+	{
+		return $this->allowsText;
+	}
+	public function closesParent(self $parent)
+	{
+		foreach ($this->rootNodes as $rootName)
+		{
+			if (empty(self::$htmlElements[$rootName]['cp']))
+				continue;
+			foreach ($parent->leafNodes as $leafName)
+				if (\in_array($leafName, self::$htmlElements[$rootName]['cp'], \true))
+					return \true;
+		}
+		return \false;
+	}
+	public function getDOM()
+	{
+		return $this->dom;
+	}
+	public function isBlock()
+	{
+		return $this->isBlock;
+	}
+	public function isFormattingElement()
+	{
+		return $this->isFormattingElement;
+	}
+	public function isEmpty()
+	{
+		return $this->isEmpty;
+	}
+	public function isPassthrough()
+	{
+		return $this->isPassthrough;
+	}
+	public function isTransparent()
+	{
+		return $this->isTransparent;
+	}
+	public function isVoid()
+	{
+		return $this->isVoid;
+	}
+	public function preservesNewLines()
+	{
+		return $this->preservesNewLines;
+	}
+	protected function analyseContent()
+	{
+		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]';
+		foreach ($this->xpath->query($query) as $node)
+		{
+			$this->contentBitfield |= $this->getBitfield($node->localName, 'c', $node);
+			$this->hasElements = \true;
+		}
+		$this->isPassthrough = (bool) $this->xpath->evaluate('count(//xsl:apply-templates)');
+	}
+	protected function analyseRootNodes()
+	{
+		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
+		foreach ($this->xpath->query($query) as $node)
+		{
+			$elName = $node->localName;
+			$this->rootNodes[] = $elName;
+			if (!isset(self::$htmlElements[$elName]))
+				$elName = 'span';
+			if ($this->elementIsBlock($elName, $node))
+				$this->isBlock = \true;
+			$this->rootBitfields[] = $this->getBitfield($elName, 'c', $node);
+		}
+		$predicate = '[not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
+		$predicate .= '[not(ancestor::xsl:attribute | ancestor::xsl:comment | ancestor::xsl:variable)]';
+		$query = '//text()[normalize-space() != ""]' . $predicate
+		       . '|//xsl:text[normalize-space() != ""]' . $predicate
+		       . '|//xsl:value-of' . $predicate;
+		if ($this->evaluate($query, $this->dom->documentElement))
+			$this->hasRootText = \true;
+	}
+	protected function analyseBranches()
+	{
+		$branchBitfields = array();
+		$isFormattingElement = \true;
+		$this->isTransparent = \true;
+		foreach ($this->getXSLElements('apply-templates') as $applyTemplates)
+		{
+			$nodes = $this->xpath->query(
+				'ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]',
+				$applyTemplates
+			);
+			$allowsChildElements = \true;
+			$allowsText = \true;
+			$branchBitfield = self::$htmlElements['div']['ac'];
+			$isEmpty = \false;
+			$isVoid = \false;
+			$leafNode = \null;
+			$preservesNewLines = \false;
+			foreach ($nodes as $node)
+			{
+				$elName = $leafNode = $node->localName;
+				if (!isset(self::$htmlElements[$elName]))
+					$elName = 'span';
+				if ($this->hasProperty($elName, 'v', $node))
+					$isVoid = \true;
+				if ($this->hasProperty($elName, 'e', $node))
+					$isEmpty = \true;
+				if (!$this->hasProperty($elName, 't', $node))
+				{
+					$branchBitfield = "\0";
+					$this->isTransparent = \false;
+				}
+				if (!$this->hasProperty($elName, 'fe', $node)
+				 && !$this->isFormattingSpan($node))
+					$isFormattingElement = \false;
+				$allowsChildElements = !$this->hasProperty($elName, 'to', $node);
+				$allowsText = !$this->hasProperty($elName, 'nt', $node);
+				$branchBitfield |= $this->getBitfield($elName, 'ac', $node);
+				$this->denyDescendantBitfield |= $this->getBitfield($elName, 'dd', $node);
+				$style = '';
+				if ($this->hasProperty($elName, 'pre', $node))
+					$style .= 'white-space:pre;';
+				if ($node->hasAttribute('style'))
+					$style .= $node->getAttribute('style') . ';';
+				$attributes = $this->xpath->query('.//xsl:attribute[@name="style"]', $node);
+				foreach ($attributes as $attribute)
+					$style .= $attribute->textContent;
+				\preg_match_all(
+					'/white-space\\s*:\\s*(no|pre)/i',
+					\strtolower($style),
+					$matches
+				);
+				foreach ($matches[1] as $match)
+					$preservesNewLines = ($match === 'pre');
+			}
+			$branchBitfields[] = $branchBitfield;
+			if (isset($leafNode))
+				$this->leafNodes[] = $leafNode;
+			if (!$allowsChildElements)
+				$this->allowsChildElements = \false;
+			if (!$allowsText)
+				$this->allowsText = \false;
+			if (!$isEmpty)
+				$this->isEmpty = \false;
+			if (!$isVoid)
+				$this->isVoid = \false;
+			if ($preservesNewLines)
+				$this->preservesNewLines = \true;
+		}
+		if (empty($branchBitfields))
+		{
+			$this->allowsChildElements = \false;
+			$this->isTransparent       = \false;
+		}
+		else
+		{
+			$this->allowChildBitfield = $branchBitfields[0];
+			foreach ($branchBitfields as $branchBitfield)
+				$this->allowChildBitfield &= $branchBitfield;
+			if (!empty($this->leafNodes))
+				$this->isFormattingElement = $isFormattingElement;
+		}
+	}
+	protected function elementIsBlock($elName, DOMElement $node)
+	{
+		$style = $this->getStyle($node);
+		if (\preg_match('(\\bdisplay\\s*:\\s*block)i', $style))
+			return \true;
+		if (\preg_match('(\\bdisplay\\s*:\\s*inline)i', $style))
+			return \false;
+		return $this->hasProperty($elName, 'b', $node);
+	}
+	protected function evaluate($query, DOMElement $node)
+	{
+		return $this->xpath->evaluate('boolean(' . $query . ')', $node);
+	}
+	protected function getStyle(DOMElement $node)
+	{
+		$style = $node->getAttribute('style');
+		$xpath = new DOMXPath($node->ownerDocument);
+		$query = 'xsl:attribute[@name="style"]';
+		foreach ($xpath->query($query, $node) as $attribute)
+			$style .= ';' . $attribute->textContent;
+		return $style;
+	}
+	protected function getXSLElements($elName)
+	{
+		return $this->dom->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', $elName);
+	}
+	protected function isFormattingSpan(DOMElement $node)
+	{
+		if ($node->nodeName !== 'span')
+			return \false;
+		if ($node->getAttribute('class') === ''
+		 && $node->getAttribute('style') === '')
+			return \false;
+		foreach ($node->attributes as $attrName => $attribute)
+			if ($attrName !== 'class' && $attrName !== 'style')
+				return \false;
+		return \true;
+	}
+	protected static $htmlElements = array(
+		'a'=>array('c'=>"\17\0\0\0\0\1",'c3'=>'@href','ac'=>"\0",'dd'=>"\10\0\0\0\0\1",'t'=>1,'fe'=>1),
+		'abbr'=>array('c'=>"\7",'ac'=>"\4"),
+		'address'=>array('c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\45",'b'=>1,'cp'=>array('p')),
+		'article'=>array('c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'aside'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'audio'=>array('c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1),
+		'b'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'base'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'bdi'=>array('c'=>"\7",'ac'=>"\4"),
+		'bdo'=>array('c'=>"\7",'ac'=>"\4"),
+		'blockquote'=>array('c'=>"\203",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'body'=>array('c'=>"\200\0\4",'ac'=>"\1",'b'=>1),
+		'br'=>array('c'=>"\5",'nt'=>1,'e'=>1,'v'=>1),
+		'button'=>array('c'=>"\117",'ac'=>"\4",'dd'=>"\10"),
+		'canvas'=>array('c'=>"\47",'ac'=>"\0",'t'=>1),
+		'caption'=>array('c'=>"\0\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1),
+		'cite'=>array('c'=>"\7",'ac'=>"\4"),
+		'code'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'col'=>array('c'=>"\0\0\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'colgroup'=>array('c'=>"\0\2",'ac'=>"\0\0\20",'ac20'=>'not(@span)','nt'=>1,'e'=>1,'e0'=>'@span','b'=>1),
+		'data'=>array('c'=>"\7",'ac'=>"\4"),
+		'datalist'=>array('c'=>"\5",'ac'=>"\4\200\0\10"),
+		'dd'=>array('c'=>"\0\0\200",'ac'=>"\1",'b'=>1,'cp'=>array('dd','dt')),
+		'del'=>array('c'=>"\5",'ac'=>"\0",'t'=>1),
+		'details'=>array('c'=>"\213",'ac'=>"\1\0\0\2",'b'=>1,'cp'=>array('p')),
+		'dfn'=>array('c'=>"\7\0\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\0\40"),
+		'div'=>array('c'=>"\3",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'dl'=>array('c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\200\200",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'dt'=>array('c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>array('dd','dt')),
+		'em'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'embed'=>array('c'=>"\57",'nt'=>1,'e'=>1,'v'=>1),
+		'fieldset'=>array('c'=>"\303",'ac'=>"\1\0\0\20",'b'=>1,'cp'=>array('p')),
+		'figcaption'=>array('c'=>"\0\0\0\0\0\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'figure'=>array('c'=>"\203",'ac'=>"\1\0\0\0\0\4",'b'=>1,'cp'=>array('p')),
+		'footer'=>array('c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'form'=>array('c'=>"\3\0\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>array('p')),
+		'h1'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h2'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h3'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h4'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h5'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h6'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'head'=>array('c'=>"\0\0\4",'ac'=>"\20",'nt'=>1,'b'=>1),
+		'header'=>array('c'=>"\3\40\0\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'hr'=>array('c'=>"\1\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>array('p')),
+		'html'=>array('c'=>"\0",'ac'=>"\0\0\4",'nt'=>1,'b'=>1),
+		'i'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'iframe'=>array('c'=>"\57",'ac'=>"\4"),
+		'img'=>array('c'=>"\57\20\10",'c3'=>'@usemap','nt'=>1,'e'=>1,'v'=>1),
+		'input'=>array('c'=>"\17\20",'c3'=>'@type!="hidden"','c12'=>'@type!="hidden" or @type="hidden"','c1'=>'@type!="hidden"','nt'=>1,'e'=>1,'v'=>1),
+		'ins'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
+		'kbd'=>array('c'=>"\7",'ac'=>"\4"),
+		'keygen'=>array('c'=>"\117",'nt'=>1,'e'=>1,'v'=>1),
+		'label'=>array('c'=>"\17\20\0\0\4",'ac'=>"\4",'dd'=>"\0\0\1\0\4"),
+		'legend'=>array('c'=>"\0\0\0\20",'ac'=>"\4",'b'=>1),
+		'li'=>array('c'=>"\0\0\0\0\200",'ac'=>"\1",'b'=>1,'cp'=>array('li')),
+		'link'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'main'=>array('c'=>"\3\0\0\0\10",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'mark'=>array('c'=>"\7",'ac'=>"\4"),
+		'media element'=>array('c'=>"\0\0\0\0\0\2",'nt'=>1,'b'=>1),
+		'menu'=>array('c'=>"\1\100",'ac'=>"\0\300",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'menuitem'=>array('c'=>"\0\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'meta'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'meter'=>array('c'=>"\7\0\1\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"),
+		'nav'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
+		'noscript'=>array('c'=>"\25",'nt'=>1),
+		'object'=>array('c'=>"\147",'ac'=>"\0\0\0\0\1",'t'=>1),
+		'ol'=>array('c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'optgroup'=>array('c'=>"\0\0\2",'ac'=>"\0\200\0\10",'nt'=>1,'b'=>1,'cp'=>array('optgroup','option')),
+		'option'=>array('c'=>"\0\0\2\10",'b'=>1,'cp'=>array('option')),
+		'output'=>array('c'=>"\107",'ac'=>"\4"),
+		'p'=>array('c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'param'=>array('c'=>"\0\0\0\0\1",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'picture'=>array('c'=>"\45",'ac'=>"\0\200\10",'nt'=>1),
+		'pre'=>array('c'=>"\3",'ac'=>"\4",'pre'=>1,'b'=>1,'cp'=>array('p')),
+		'progress'=>array('c'=>"\7\0\1\1",'ac'=>"\4",'dd'=>"\0\0\0\1"),
+		'q'=>array('c'=>"\7",'ac'=>"\4"),
+		'rb'=>array('c'=>"\0\10",'ac'=>"\4",'b'=>1),
+		'rp'=>array('c'=>"\0\10\100",'ac'=>"\4",'b'=>1,'cp'=>array('rp','rt')),
+		'rt'=>array('c'=>"\0\10\100",'ac'=>"\4",'b'=>1,'cp'=>array('rp','rt')),
+		'rtc'=>array('c'=>"\0\10",'ac'=>"\4\0\100",'b'=>1),
+		'ruby'=>array('c'=>"\7",'ac'=>"\4\10"),
+		's'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'samp'=>array('c'=>"\7",'ac'=>"\4"),
+		'script'=>array('c'=>"\25\200",'to'=>1),
+		'section'=>array('c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'select'=>array('c'=>"\117",'ac'=>"\0\200\2",'nt'=>1),
+		'small'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'source'=>array('c'=>"\0\0\10\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'span'=>array('c'=>"\7",'ac'=>"\4"),
+		'strong'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'style'=>array('c'=>"\20",'to'=>1,'b'=>1),
+		'sub'=>array('c'=>"\7",'ac'=>"\4"),
+		'summary'=>array('c'=>"\0\0\0\2",'ac'=>"\4\1",'b'=>1),
+		'sup'=>array('c'=>"\7",'ac'=>"\4"),
+		'table'=>array('c'=>"\3\0\0\200",'ac'=>"\0\202",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'tbody'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1,'cp'=>array('tbody','td','tfoot','th','thead','tr')),
+		'td'=>array('c'=>"\200\0\40",'ac'=>"\1",'b'=>1,'cp'=>array('td','th')),
+		'template'=>array('c'=>"\25\200\20",'nt'=>1),
+		'textarea'=>array('c'=>"\117",'pre'=>1,'to'=>1),
+		'tfoot'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1,'cp'=>array('tbody','td','th','thead','tr')),
+		'th'=>array('c'=>"\0\0\40",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>array('td','th')),
+		'thead'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1),
+		'time'=>array('c'=>"\7",'ac'=>"\4",'ac2'=>'@datetime'),
+		'title'=>array('c'=>"\20",'to'=>1,'b'=>1),
+		'tr'=>array('c'=>"\0\2\0\0\100",'ac'=>"\0\200\40",'nt'=>1,'b'=>1,'cp'=>array('td','th','tr')),
+		'track'=>array('c'=>"\0\0\0\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
+		'u'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
+		'ul'=>array('c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'var'=>array('c'=>"\7",'ac'=>"\4"),
+		'video'=>array('c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1),
+		'wbr'=>array('c'=>"\5",'nt'=>1,'e'=>1,'v'=>1)
+	);
+	protected function getBitfield($elName, $k, DOMElement $node)
+	{
+		if (!isset(self::$htmlElements[$elName][$k]))
+			return "\0";
+		$bitfield = self::$htmlElements[$elName][$k];
+		foreach (\str_split($bitfield, 1) as $byteNumber => $char)
+		{
+			$byteValue = \ord($char);
+			for ($bitNumber = 0; $bitNumber < 8; ++$bitNumber)
+			{
+				$bitValue = 1 << $bitNumber;
+				if (!($byteValue & $bitValue))
+					continue;
+				$n = $byteNumber * 8 + $bitNumber;
+				if (isset(self::$htmlElements[$elName][$k . $n]))
+				{
+					$xpath = 'boolean(' . self::$htmlElements[$elName][$k . $n] . ')';
+					if (!$this->evaluate($xpath, $node))
+					{
+						$byteValue ^= $bitValue;
+						$bitfield[$byteNumber] = \chr($byteValue);
+					}
+				}
+			}
+		}
+		return $bitfield;
+	}
+	protected function hasProperty($elName, $propName, DOMElement $node)
+	{
+		if (!empty(self::$htmlElements[$elName][$propName]))
+			if (!isset(self::$htmlElements[$elName][$propName . '0'])
+			 || $this->evaluate(self::$htmlElements[$elName][$propName . '0'], $node))
+				return \true;
+		return \false;
+	}
+	protected static function match($bitfield1, $bitfield2)
+	{
+		return (\trim($bitfield1 & $bitfield2, "\0") !== '');
+	}
+}
+
+/*
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -1690,427 +2106,7 @@ abstract class TemplateHelper
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
-* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
-*/
-namespace s9e\TextFormatter\Configurator\Helpers;
-use DOMDocument;
-use DOMElement;
-use DOMXPath;
-class TemplateInspector
-{
-	protected $allowChildBitfields = array();
-	protected $allowsChildElements = \true;
-	protected $allowsText = \true;
-	protected $contentBitfield = "\0";
-	protected $denyDescendantBitfield = "\0";
-	protected $dom;
-	protected $hasElements = \false;
-	protected $hasRootText = \false;
-	protected $isBlock = \false;
-	protected $isEmpty = \true;
-	protected $isFormattingElement = \false;
-	protected $isPassthrough = \false;
-	protected $isTransparent = \false;
-	protected $isVoid = \true;
-	protected $leafNodes = array();
-	protected $preservesNewLines = \false;
-	protected $rootBitfields = array();
-	protected $rootNodes = array();
-	protected $xpath;
-	public function __construct($template)
-	{
-		$this->dom   = TemplateHelper::loadTemplate($template);
-		$this->xpath = new DOMXPath($this->dom);
-		$this->analyseRootNodes();
-		$this->analyseBranches();
-		$this->analyseContent();
-	}
-	public function allowsChild(TemplateInspector $child)
-	{
-		if (!$this->allowsDescendant($child))
-			return \false;
-		foreach ($child->rootBitfields as $rootBitfield)
-			foreach ($this->allowChildBitfields as $allowChildBitfield)
-				if (!self::match($rootBitfield, $allowChildBitfield))
-					return \false;
-		if (!$this->allowsText && $child->hasRootText)
-			return \false;
-		return \true;
-	}
-	public function allowsDescendant(TemplateInspector $descendant)
-	{
-		if (self::match($descendant->contentBitfield, $this->denyDescendantBitfield))
-			return \false;
-		if (!$this->allowsChildElements && $descendant->hasElements)
-			return \false;
-		return \true;
-	}
-	public function allowsChildElements()
-	{
-		return $this->allowsChildElements;
-	}
-	public function allowsText()
-	{
-		return $this->allowsText;
-	}
-	public function closesParent(TemplateInspector $parent)
-	{
-		foreach ($this->rootNodes as $rootName)
-		{
-			if (empty(self::$htmlElements[$rootName]['cp']))
-				continue;
-			foreach ($parent->leafNodes as $leafName)
-				if (\in_array($leafName, self::$htmlElements[$rootName]['cp'], \true))
-					return \true;
-		}
-		return \false;
-	}
-	public function getDOM()
-	{
-		return $this->dom;
-	}
-	public function isBlock()
-	{
-		return $this->isBlock;
-	}
-	public function isFormattingElement()
-	{
-		return $this->isFormattingElement;
-	}
-	public function isEmpty()
-	{
-		return $this->isEmpty;
-	}
-	public function isIframe()
-	{
-		return ($this->rootNodes === array('iframe'));
-	}
-	public function isPassthrough()
-	{
-		return $this->isPassthrough;
-	}
-	public function isTransparent()
-	{
-		return $this->isTransparent;
-	}
-	public function isVoid()
-	{
-		return $this->isVoid;
-	}
-	public function preservesNewLines()
-	{
-		return $this->preservesNewLines;
-	}
-	protected function analyseContent()
-	{
-		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]';
-		foreach ($this->xpath->query($query) as $node)
-		{
-			$this->contentBitfield |= $this->getBitfield($node->localName, 'c', $node);
-			$this->hasElements = \true;
-		}
-		$this->isPassthrough = (bool) $this->xpath->evaluate('count(//xsl:apply-templates)');
-	}
-	protected function analyseRootNodes()
-	{
-		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
-		foreach ($this->xpath->query($query) as $node)
-		{
-			$elName = $node->localName;
-			$this->rootNodes[] = $elName;
-			if (!isset(self::$htmlElements[$elName]))
-				$elName = 'span';
-			if ($this->elementIsBlock($elName, $node))
-				$this->isBlock = \true;
-			$this->rootBitfields[] = $this->getBitfield($elName, 'c', $node);
-		}
-		$predicate = '[not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
-		$predicate .= '[not(ancestor::xsl:attribute | ancestor::xsl:comment | ancestor::xsl:variable)]';
-		$query = '//text()[normalize-space() != ""]' . $predicate
-		       . '|//xsl:text[normalize-space() != ""]' . $predicate
-		       . '|//xsl:value-of' . $predicate;
-		if ($this->evaluate($query, $this->dom->documentElement))
-			$this->hasRootText = \true;
-	}
-	protected function analyseBranches()
-	{
-		$branchBitfields = array();
-		$isFormattingElement = \true;
-		$this->isTransparent = \true;
-		foreach ($this->getXSLElements('apply-templates') as $applyTemplates)
-		{
-			$nodes = $this->xpath->query(
-				'ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]',
-				$applyTemplates
-			);
-			$allowsChildElements = \true;
-			$allowsText = \true;
-			$branchBitfield = self::$htmlElements['div']['ac'];
-			$isEmpty = \false;
-			$isVoid = \false;
-			$leafNode = \null;
-			$preservesNewLines = \false;
-			foreach ($nodes as $node)
-			{
-				$elName = $leafNode = $node->localName;
-				if (!isset(self::$htmlElements[$elName]))
-					$elName = 'span';
-				if ($this->hasProperty($elName, 'v', $node))
-					$isVoid = \true;
-				if ($this->hasProperty($elName, 'e', $node))
-					$isEmpty = \true;
-				if (!$this->hasProperty($elName, 't', $node))
-				{
-					$branchBitfield = "\0";
-					$this->isTransparent = \false;
-				}
-				if (!$this->hasProperty($elName, 'fe', $node)
-				 && !$this->isFormattingSpan($node))
-					$isFormattingElement = \false;
-				$allowsChildElements = !$this->hasProperty($elName, 'to', $node);
-				$allowsText = !$this->hasProperty($elName, 'nt', $node);
-				$branchBitfield |= $this->getBitfield($elName, 'ac', $node);
-				$this->denyDescendantBitfield |= $this->getBitfield($elName, 'dd', $node);
-				$style = '';
-				if ($this->hasProperty($elName, 'pre', $node))
-					$style .= 'white-space:pre;';
-				if ($node->hasAttribute('style'))
-					$style .= $node->getAttribute('style') . ';';
-				$attributes = $this->xpath->query('.//xsl:attribute[@name="style"]', $node);
-				foreach ($attributes as $attribute)
-					$style .= $attribute->textContent;
-				\preg_match_all(
-					'/white-space\\s*:\\s*(no|pre)/i',
-					\strtolower($style),
-					$matches
-				);
-				foreach ($matches[1] as $match)
-					$preservesNewLines = ($match === 'pre');
-			}
-			$branchBitfields[] = $branchBitfield;
-			if (isset($leafNode))
-				$this->leafNodes[] = $leafNode;
-			if (!$allowsChildElements)
-				$this->allowsChildElements = \false;
-			if (!$allowsText)
-				$this->allowsText = \false;
-			if (!$isEmpty)
-				$this->isEmpty = \false;
-			if (!$isVoid)
-				$this->isVoid = \false;
-			if ($preservesNewLines)
-				$this->preservesNewLines = \true;
-		}
-		if (empty($branchBitfields))
-		{
-			$this->allowChildBitfields = array("\0");
-			$this->allowsChildElements = \false;
-			$this->isTransparent       = \false;
-		}
-		else
-		{
-			$this->allowChildBitfields = $branchBitfields;
-			if (!empty($this->leafNodes))
-				$this->isFormattingElement = $isFormattingElement;
-		}
-	}
-	protected function elementIsBlock($elName, DOMElement $node)
-	{
-		$style = $this->getStyle($node);
-		if (\preg_match('(\\bdisplay\\s*:\\s*block)i', $style))
-			return \true;
-		if (\preg_match('(\\bdisplay\\s*:\\s*(?:inli|no)ne)i', $style))
-			return \false;
-		return $this->hasProperty($elName, 'b', $node);
-	}
-	protected function evaluate($query, DOMElement $node)
-	{
-		return $this->xpath->evaluate('boolean(' . $query . ')', $node);
-	}
-	protected function getStyle(DOMElement $node)
-	{
-		$style = $node->getAttribute('style');
-		$xpath = new DOMXPath($node->ownerDocument);
-		$query = 'xsl:attribute[@name="style"]';
-		foreach ($xpath->query($query, $node) as $attribute)
-			$style .= ';' . $attribute->textContent;
-		return $style;
-	}
-	protected function getXSLElements($elName)
-	{
-		return $this->dom->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', $elName);
-	}
-	protected function isFormattingSpan(DOMElement $node)
-	{
-		if ($node->nodeName !== 'span')
-			return \false;
-		if ($node->getAttribute('class') === ''
-		 && $node->getAttribute('style') === '')
-			return \false;
-		foreach ($node->attributes as $attrName => $attribute)
-			if ($attrName !== 'class' && $attrName !== 'style')
-				return \false;
-		return \true;
-	}
-	protected static $htmlElements = array(
-		'a'=>array('c'=>"\17\0\0\0\0\1",'c3'=>'@href','ac'=>"\0",'dd'=>"\10\0\0\0\0\1",'t'=>1,'fe'=>1),
-		'abbr'=>array('c'=>"\7",'ac'=>"\4"),
-		'address'=>array('c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\45",'b'=>1,'cp'=>array('p')),
-		'article'=>array('c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'aside'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
-		'audio'=>array('c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1),
-		'b'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'base'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'bdi'=>array('c'=>"\7",'ac'=>"\4"),
-		'bdo'=>array('c'=>"\7",'ac'=>"\4"),
-		'blockquote'=>array('c'=>"\203",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'body'=>array('c'=>"\200\0\4",'ac'=>"\1",'b'=>1),
-		'br'=>array('c'=>"\5",'nt'=>1,'e'=>1,'v'=>1),
-		'button'=>array('c'=>"\117",'ac'=>"\4",'dd'=>"\10"),
-		'canvas'=>array('c'=>"\47",'ac'=>"\0",'t'=>1),
-		'caption'=>array('c'=>"\0\2",'ac'=>"\1",'dd'=>"\0\0\0\200",'b'=>1),
-		'cite'=>array('c'=>"\7",'ac'=>"\4"),
-		'code'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'col'=>array('c'=>"\0\0\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'colgroup'=>array('c'=>"\0\2",'ac'=>"\0\0\20",'ac20'=>'not(@span)','nt'=>1,'e'=>1,'e0'=>'@span','b'=>1),
-		'data'=>array('c'=>"\7",'ac'=>"\4"),
-		'datalist'=>array('c'=>"\5",'ac'=>"\4\200\0\10"),
-		'dd'=>array('c'=>"\0\0\200",'ac'=>"\1",'b'=>1,'cp'=>array('dd','dt')),
-		'del'=>array('c'=>"\5",'ac'=>"\0",'t'=>1),
-		'details'=>array('c'=>"\213",'ac'=>"\1\0\0\2",'b'=>1,'cp'=>array('p')),
-		'dfn'=>array('c'=>"\7\0\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\0\40"),
-		'div'=>array('c'=>"\3",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'dl'=>array('c'=>"\3",'c1'=>'dt and dd','ac'=>"\0\200\200",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'dt'=>array('c'=>"\0\0\200",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>array('dd','dt')),
-		'em'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'embed'=>array('c'=>"\57",'nt'=>1,'e'=>1,'v'=>1),
-		'fieldset'=>array('c'=>"\303",'ac'=>"\1\0\0\20",'b'=>1,'cp'=>array('p')),
-		'figcaption'=>array('c'=>"\0\0\0\0\0\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'figure'=>array('c'=>"\203",'ac'=>"\1\0\0\0\0\4",'b'=>1,'cp'=>array('p')),
-		'footer'=>array('c'=>"\3\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
-		'form'=>array('c'=>"\3\0\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\0\20",'b'=>1,'cp'=>array('p')),
-		'h1'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'h2'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'h3'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'h4'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'h5'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'h6'=>array('c'=>"\3\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'head'=>array('c'=>"\0\0\4",'ac'=>"\20",'nt'=>1,'b'=>1),
-		'header'=>array('c'=>"\3\40\0\40",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
-		'hr'=>array('c'=>"\1\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>array('p')),
-		'html'=>array('c'=>"\0",'ac'=>"\0\0\4",'nt'=>1,'b'=>1),
-		'i'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'iframe'=>array('c'=>"\57",'ac'=>"\4"),
-		'img'=>array('c'=>"\57\20\10",'c3'=>'@usemap','nt'=>1,'e'=>1,'v'=>1),
-		'input'=>array('c'=>"\17\20",'c3'=>'@type!="hidden"','c12'=>'@type!="hidden" or @type="hidden"','c1'=>'@type!="hidden"','nt'=>1,'e'=>1,'v'=>1),
-		'ins'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
-		'kbd'=>array('c'=>"\7",'ac'=>"\4"),
-		'keygen'=>array('c'=>"\117",'nt'=>1,'e'=>1,'v'=>1),
-		'label'=>array('c'=>"\17\20\0\0\4",'ac'=>"\4",'dd'=>"\0\0\1\0\4"),
-		'legend'=>array('c'=>"\0\0\0\20",'ac'=>"\4",'b'=>1),
-		'li'=>array('c'=>"\0\0\0\0\200",'ac'=>"\1",'b'=>1,'cp'=>array('li')),
-		'link'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'main'=>array('c'=>"\3\0\0\0\10",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'mark'=>array('c'=>"\7",'ac'=>"\4"),
-		'media element'=>array('c'=>"\0\0\0\0\0\2",'nt'=>1,'b'=>1),
-		'menu'=>array('c'=>"\1\100",'ac'=>"\0\300",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'menuitem'=>array('c'=>"\0\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'meta'=>array('c'=>"\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'meter'=>array('c'=>"\7\0\1\0\2",'ac'=>"\4",'dd'=>"\0\0\0\0\2"),
-		'nav'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\0\0\0\0\10",'b'=>1,'cp'=>array('p')),
-		'noscript'=>array('c'=>"\25",'nt'=>1),
-		'object'=>array('c'=>"\147",'ac'=>"\0\0\0\0\1",'t'=>1),
-		'ol'=>array('c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'optgroup'=>array('c'=>"\0\0\2",'ac'=>"\0\200\0\10",'nt'=>1,'b'=>1,'cp'=>array('optgroup','option')),
-		'option'=>array('c'=>"\0\0\2\10",'b'=>1,'cp'=>array('option')),
-		'output'=>array('c'=>"\107",'ac'=>"\4"),
-		'p'=>array('c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'param'=>array('c'=>"\0\0\0\0\1",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'picture'=>array('c'=>"\45",'ac'=>"\0\200\10",'nt'=>1),
-		'pre'=>array('c'=>"\3",'ac'=>"\4",'pre'=>1,'b'=>1,'cp'=>array('p')),
-		'progress'=>array('c'=>"\7\0\1\1",'ac'=>"\4",'dd'=>"\0\0\0\1"),
-		'q'=>array('c'=>"\7",'ac'=>"\4"),
-		'rb'=>array('c'=>"\0\10",'ac'=>"\4",'b'=>1),
-		'rp'=>array('c'=>"\0\10\100",'ac'=>"\4",'b'=>1,'cp'=>array('rp','rt')),
-		'rt'=>array('c'=>"\0\10\100",'ac'=>"\4",'b'=>1,'cp'=>array('rp','rt')),
-		'rtc'=>array('c'=>"\0\10",'ac'=>"\4\0\100",'b'=>1),
-		'ruby'=>array('c'=>"\7",'ac'=>"\4\10"),
-		's'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'samp'=>array('c'=>"\7",'ac'=>"\4"),
-		'script'=>array('c'=>"\25\200",'to'=>1),
-		'section'=>array('c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
-		'select'=>array('c'=>"\117",'ac'=>"\0\200\2",'nt'=>1),
-		'small'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'source'=>array('c'=>"\0\0\10\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'span'=>array('c'=>"\7",'ac'=>"\4"),
-		'strong'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'style'=>array('c'=>"\20",'to'=>1,'b'=>1),
-		'sub'=>array('c'=>"\7",'ac'=>"\4"),
-		'summary'=>array('c'=>"\0\0\0\2",'ac'=>"\4\1",'b'=>1),
-		'sup'=>array('c'=>"\7",'ac'=>"\4"),
-		'table'=>array('c'=>"\3\0\0\200",'ac'=>"\0\202",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'tbody'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1,'cp'=>array('tbody','td','tfoot','th','thead','tr')),
-		'td'=>array('c'=>"\200\0\40",'ac'=>"\1",'b'=>1,'cp'=>array('td','th')),
-		'template'=>array('c'=>"\25\200\20",'nt'=>1),
-		'textarea'=>array('c'=>"\117",'pre'=>1,'to'=>1),
-		'tfoot'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1,'cp'=>array('tbody','td','th','thead','tr')),
-		'th'=>array('c'=>"\0\0\40",'ac'=>"\1",'dd'=>"\0\5\0\40",'b'=>1,'cp'=>array('td','th')),
-		'thead'=>array('c'=>"\0\2",'ac'=>"\0\200\0\0\100",'nt'=>1,'b'=>1),
-		'time'=>array('c'=>"\7",'ac'=>"\4",'ac2'=>'@datetime'),
-		'title'=>array('c'=>"\20",'to'=>1,'b'=>1),
-		'tr'=>array('c'=>"\0\2\0\0\100",'ac'=>"\0\200\40",'nt'=>1,'b'=>1,'cp'=>array('td','th','tr')),
-		'track'=>array('c'=>"\0\0\0\100",'nt'=>1,'e'=>1,'v'=>1,'b'=>1),
-		'u'=>array('c'=>"\7",'ac'=>"\4",'fe'=>1),
-		'ul'=>array('c'=>"\3",'c1'=>'li','ac'=>"\0\200\0\0\200",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'var'=>array('c'=>"\7",'ac'=>"\4"),
-		'video'=>array('c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\0\104",'ac26'=>'not(@src)','dd'=>"\0\0\0\0\0\2",'dd41'=>'@src','t'=>1),
-		'wbr'=>array('c'=>"\5",'nt'=>1,'e'=>1,'v'=>1)
-	);
-	protected function getBitfield($elName, $k, DOMElement $node)
-	{
-		if (!isset(self::$htmlElements[$elName][$k]))
-			return "\0";
-		$bitfield = self::$htmlElements[$elName][$k];
-		foreach (\str_split($bitfield, 1) as $byteNumber => $char)
-		{
-			$byteValue = \ord($char);
-			for ($bitNumber = 0; $bitNumber < 8; ++$bitNumber)
-			{
-				$bitValue = 1 << $bitNumber;
-				if (!($byteValue & $bitValue))
-					continue;
-				$n = $byteNumber * 8 + $bitNumber;
-				if (isset(self::$htmlElements[$elName][$k . $n]))
-				{
-					$xpath = 'boolean(' . self::$htmlElements[$elName][$k . $n] . ')';
-					if (!$this->evaluate($xpath, $node))
-					{
-						$byteValue ^= $bitValue;
-						$bitfield[$byteNumber] = \chr($byteValue);
-					}
-				}
-			}
-		}
-		return $bitfield;
-	}
-	protected function hasProperty($elName, $propName, DOMElement $node)
-	{
-		if (!empty(self::$htmlElements[$elName][$propName]))
-			if (!isset(self::$htmlElements[$elName][$propName . '0'])
-			 || $this->evaluate(self::$htmlElements[$elName][$propName . '0'], $node))
-				return \true;
-		return \false;
-	}
-	protected static function match($bitfield1, $bitfield2)
-	{
-		return (\trim($bitfield1 & $bitfield2, "\0") !== '');
-	}
-}
-
-/*
-* @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -2574,25 +2570,14 @@ class TemplateParser
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
-use InvalidArgumentException;
 use RuntimeException;
 abstract class XPathHelper
 {
-	public static function export($value)
-	{
-		if (!\is_scalar($value))
-			throw new InvalidArgumentException(__METHOD__ . '() cannot export non-scalar values');
-		if (\is_int($value))
-			return (string) $value;
-		if (\is_float($value))
-			return \preg_replace('(\\.?0+$)', '', \sprintf('%F', $value));
-		return self::exportString($value);
-	}
-	protected static function exportString($str)
+	public static function export($str)
 	{
 		if (\strpos($str, "'") === \false)
 			return "'" . $str . "'";
@@ -2625,7 +2610,7 @@ abstract class XPathHelper
 	{
 		$expr = \strrev(\preg_replace('(\\((?!\\s*(?!vid(?!\\w))\\w))', ' ', \strrev($expr)));
 		$expr = \str_replace(')', ' ', $expr);
-		if (\preg_match('(^\\s*([$@][-\\w]++|-?\\.\\d++|-?\\d++(?:\\.\\d++)?)(?>\\s*(?>[-+*]|div)\\s*(?1))++\\s*$)', $expr))
+		if (\preg_match('(^\\s*([$@][-\\w]++|-?\\d++)(?>\\s*(?>[-+*]|div)\\s*(?1))++\\s*$)', $expr))
 			return \true;
 		return \false;
 	}
@@ -2659,17 +2644,17 @@ abstract class XPathHelper
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
 use DOMDocument;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 class Template
 {
-	protected $inspector;
+	protected $forensics;
 	protected $isNormalized = \false;
 	protected $template;
 	public function __construct($template)
@@ -2678,7 +2663,7 @@ class Template
 	}
 	public function __call($methodName, $args)
 	{
-		return \call_user_func_array(array($this->getInspector(), $methodName), $args);
+		return \call_user_func_array(array($this->getForensics(), $methodName), $args);
 	}
 	public function __toString()
 	{
@@ -2697,11 +2682,11 @@ class Template
 	{
 		return TemplateHelper::getCSSNodes($this->asDOM());
 	}
-	public function getInspector()
+	public function getForensics()
 	{
-		if (!isset($this->inspector))
-			$this->inspector = new TemplateInspector($this->__toString());
-		return $this->inspector;
+		if (!isset($this->forensics))
+			$this->forensics = new TemplateForensics($this->__toString());
+		return $this->forensics;
 	}
 	public function getJSNodes()
 	{
@@ -2723,19 +2708,19 @@ class Template
 	}
 	public function normalize(TemplateNormalizer $templateNormalizer)
 	{
-		$this->inspector    = \null;
+		$this->forensics    = \null;
 		$this->template     = $templateNormalizer->normalizeTemplate($this->template);
 		$this->isNormalized = \true;
 	}
 	public function replaceTokens($regexp, $fn)
 	{
-		$this->inspector    = \null;
+		$this->forensics    = \null;
 		$this->template     = TemplateHelper::replaceTokens($this->template, $regexp, $fn);
 		$this->isNormalized = \false;
 	}
 	public function setContent($template)
 	{
-		$this->inspector    = \null;
+		$this->forensics    = \null;
 		$this->template     = (string) $template;
 		$this->isNormalized = \false;
 	}
@@ -2743,7 +2728,7 @@ class Template
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
@@ -2871,7 +2856,7 @@ class FunctionProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -2882,7 +2867,7 @@ interface RendererGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -2939,7 +2924,7 @@ abstract class AbstractOptimizer
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -3166,7 +3151,7 @@ class BranchOutputOptimizer
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -3369,7 +3354,7 @@ class Optimizer
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -3794,11 +3779,6 @@ class Quick
 			'isset($attributes[$1])',
 			$php
 		);
-		$php = \str_replace(
-			'($node->attributes->length)',
-			'(!empty($attributes))',
-			$php
-		);
 		$php = \preg_replace(
 			"(\\\$node->getAttribute\\(('[^']+')\\))",
 			'htmlspecialchars_decode($attributes[$1])',
@@ -3973,7 +3953,7 @@ class Quick
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -4176,7 +4156,7 @@ class Serializer
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -4196,8 +4176,6 @@ class XPathConvertor
 		$expr = \trim($expr);
 		if (\preg_match('#^@([-\\w]+)$#', $expr, $m))
 			return '$node->hasAttribute(' . \var_export($m[1], \true) . ')';
-		if ($expr === '@*')
-			return '$node->attributes->length';
 		if (\preg_match('#^not\\(@([-\\w]+)\\)$#', $expr, $m))
 			return '!$node->hasAttribute(' . \var_export($m[1], \true) . ')';
 		if (\preg_match('#^\\$(\\w+)$#', $expr, $m))
@@ -4219,7 +4197,7 @@ class XPathConvertor
 			$methodName = \null;
 			foreach ($m as $k => $v)
 			{
-				if (\is_numeric($k) || $v === '' || $v === \null || !\method_exists($this, $k))
+				if (\is_numeric($k) || $v === '' || !\method_exists($this, $k))
 					continue;
 				$methodName = $k;
 				break;
@@ -4546,7 +4524,7 @@ class XPathConvertor
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -4709,7 +4687,7 @@ class Rendering
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -4718,7 +4696,7 @@ use DOMDocument;
 use Iterator;
 use s9e\TextFormatter\Configurator\Collections\RulesGeneratorList;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
@@ -4786,14 +4764,14 @@ class RulesGenerator implements ArrayAccess, Iterator
 	public function getRules(TagCollection $tags, array $options = array())
 	{
 		$parentHTML = (isset($options['parentHTML'])) ? $options['parentHTML'] : '<div>';
-		$rootInspector = $this->generateRootInspector($parentHTML);
-		$templateInspector = array();
+		$rootForensics = $this->generateRootForensics($parentHTML);
+		$templateForensics = array();
 		foreach ($tags as $tagName => $tag)
 		{
 			$template = (isset($tag->template)) ? $tag->template : '<xsl:apply-templates/>';
-			$templateInspector[$tagName] = new TemplateInspector($template);
+			$templateForensics[$tagName] = new TemplateForensics($template);
 		}
-		$rules = $this->generateRulesets($templateInspector, $rootInspector);
+		$rules = $this->generateRulesets($templateForensics, $rootForensics);
 		unset($rules['root']['autoClose']);
 		unset($rules['root']['autoReopen']);
 		unset($rules['root']['breakParagraph']);
@@ -4806,7 +4784,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		unset($rules['root']['requireParent']);
 		return $rules;
 	}
-	protected function generateRootInspector($html)
+	protected function generateRootForensics($html)
 	{
 		$dom = new DOMDocument;
 		$dom->loadHTML($html);
@@ -4818,19 +4796,19 @@ class RulesGenerator implements ArrayAccess, Iterator
 			'http://www.w3.org/1999/XSL/Transform',
 			'xsl:apply-templates'
 		));
-		return new TemplateInspector($dom->saveXML($body));
+		return new TemplateForensics($dom->saveXML($body));
 	}
-	protected function generateRulesets(array $templateInspector, TemplateInspector $rootInspector)
+	protected function generateRulesets(array $templateForensics, TemplateForensics $rootForensics)
 	{
 		$rules = array(
-			'root' => $this->generateRuleset($rootInspector, $templateInspector),
+			'root' => $this->generateRuleset($rootForensics, $templateForensics),
 			'tags' => array()
 		);
-		foreach ($templateInspector as $tagName => $src)
-			$rules['tags'][$tagName] = $this->generateRuleset($src, $templateInspector);
+		foreach ($templateForensics as $tagName => $src)
+			$rules['tags'][$tagName] = $this->generateRuleset($src, $templateForensics);
 		return $rules;
 	}
-	protected function generateRuleset(TemplateInspector $src, array $targets)
+	protected function generateRuleset(TemplateForensics $src, array $targets)
 	{
 		$rules = array();
 		foreach ($this->collection as $rulesGenerator)
@@ -4849,31 +4827,31 @@ class RulesGenerator implements ArrayAccess, Iterator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators\Interfaces;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 interface BooleanRulesGenerator
 {
-	public function generateBooleanRules(TemplateInspector $src);
+	public function generateBooleanRules(TemplateForensics $src);
 }
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators\Interfaces;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 interface TargetedRulesGenerator
 {
-	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg);
+	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg);
 }
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -4887,7 +4865,7 @@ abstract class TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -4997,7 +4975,7 @@ class TemplateChecker implements ArrayAccess, Iterator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -5015,7 +4993,7 @@ abstract class TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license'); The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -5072,7 +5050,6 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		return $this->collection->valid();
 	}
 	protected $collection;
-	protected $maxIterations = 5;
 	public function __construct()
 	{
 		$this->collection = new TemplateNormalizationList;
@@ -5105,26 +5082,28 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	public function normalizeTemplate($template)
 	{
 		$dom = TemplateHelper::loadTemplate($template);
-		$i = 0;
+		$applied = array();
+		$loops = 5;
 		do
 		{
 			$old = $template;
 			foreach ($this->collection as $k => $normalization)
 			{
-				if ($i > 0 && !empty($normalization->onlyOnce))
+				if (isset($applied[$k]) && !empty($normalization->onlyOnce))
 					continue;
 				$normalization->normalize($dom->documentElement);
+				$applied[$k] = 1;
 			}
 			$template = TemplateHelper::saveTemplate($dom);
 		}
-		while (++$i < $this->maxIterations && $template !== $old);
+		while (--$loops && $template !== $old);
 		return $template;
 	}
 }
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Validators;
@@ -5145,7 +5124,7 @@ abstract class AttributeName
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Validators;
@@ -5168,7 +5147,7 @@ abstract class TagName
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -5215,7 +5194,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -5389,7 +5368,7 @@ class Attribute implements ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -5494,7 +5473,7 @@ class ProgrammableCallback implements ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -5572,7 +5551,7 @@ class Regexp implements ConfigProvider, FilterableConfigValue
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -5771,7 +5750,7 @@ class Tag implements ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
@@ -5795,7 +5774,7 @@ class Code implements FilterableConfigValue
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
@@ -6006,7 +5985,7 @@ class PHP implements RendererGenerator
 		           ? $this->className
 		           : $this->defaultClassPrefix . \sha1($php);
 		$this->lastClassName = $className;
-		$header = "\n/**\n* @package   s9e\TextFormatter\n* @copyright Copyright (c) 2010-2017 The s9e Authors\n* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n*/\n";
+		$header = "\n/**\n* @package   s9e\TextFormatter\n* @copyright Copyright (c) 2010-2016 The s9e Authors\n* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n*/\n";
 		$pos = \strrpos($className, '\\');
 		if ($pos !== \false)
 		{
@@ -6027,7 +6006,7 @@ class PHP implements RendererGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -6170,15 +6149,15 @@ class ControlStructuresOptimizer extends AbstractOptimizer
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 class AutoCloseIfVoid implements BooleanRulesGenerator
 {
-	public function generateBooleanRules(TemplateInspector $src)
+	public function generateBooleanRules(TemplateForensics $src)
 	{
 		return ($src->isVoid()) ? array('autoClose' => \true) : array();
 	}
@@ -6186,15 +6165,15 @@ class AutoCloseIfVoid implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 class AutoReopenFormattingElements implements BooleanRulesGenerator
 {
-	public function generateBooleanRules(TemplateInspector $src)
+	public function generateBooleanRules(TemplateForensics $src)
 	{
 		return ($src->isFormattingElement()) ? array('autoReopen' => \true) : array();
 	}
@@ -6202,15 +6181,15 @@ class AutoReopenFormattingElements implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 class BlockElementsFosterFormattingElements implements TargetedRulesGenerator
 {
-	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
+	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
 		return ($src->isBlock() && $src->isPassthrough() && $trg->isFormattingElement()) ? array('fosterParent') : array();
 	}
@@ -6218,15 +6197,15 @@ class BlockElementsFosterFormattingElements implements TargetedRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 class DisableAutoLineBreaksIfNewLinesArePreserved implements BooleanRulesGenerator
 {
-	public function generateBooleanRules(TemplateInspector $src)
+	public function generateBooleanRules(TemplateForensics $src)
 	{
 		return ($src->preservesNewLines()) ? array('disableAutoLineBreaks' => \true) : array();
 	}
@@ -6234,11 +6213,11 @@ class DisableAutoLineBreaksIfNewLinesArePreserved implements BooleanRulesGenerat
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenerator
@@ -6247,10 +6226,10 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	protected $span;
 	public function __construct()
 	{
-		$this->br   = new TemplateInspector('<br/>');
-		$this->span = new TemplateInspector('<span><xsl:apply-templates/></span>');
+		$this->br   = new TemplateForensics('<br/>');
+		$this->span = new TemplateForensics('<span><xsl:apply-templates/></span>');
 	}
-	public function generateBooleanRules(TemplateInspector $src)
+	public function generateBooleanRules(TemplateForensics $src)
 	{
 		$rules = array();
 		if ($src->isTransparent())
@@ -6267,9 +6246,9 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 		}
 		return $rules;
 	}
-	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
+	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
-		if ($src->isIframe())
+		if (!$src->allowsChildElements())
 			$src = $this->span;
 		$rules = array();
 		if (!$src->allowsChild($trg))
@@ -6282,15 +6261,15 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\TargetedRulesGenerator;
 class EnforceOptionalEndTags implements TargetedRulesGenerator
 {
-	public function generateTargetedRules(TemplateInspector $src, TemplateInspector $trg)
+	public function generateTargetedRules(TemplateForensics $src, TemplateForensics $trg)
 	{
 		return ($src->closesParent($trg)) ? array('closeParent') : array();
 	}
@@ -6298,16 +6277,16 @@ class EnforceOptionalEndTags implements TargetedRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 class IgnoreTagsInCode implements BooleanRulesGenerator
 {
-	public function generateBooleanRules(TemplateInspector $src)
+	public function generateBooleanRules(TemplateForensics $src)
 	{
 		$xpath = new DOMXPath($src->getDOM());
 		if ($xpath->evaluate('count(//code//xsl:apply-templates)'))
@@ -6318,15 +6297,15 @@ class IgnoreTagsInCode implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 class IgnoreTextIfDisallowed implements BooleanRulesGenerator
 {
-	public function generateBooleanRules(TemplateInspector $src)
+	public function generateBooleanRules(TemplateForensics $src)
 	{
 		return ($src->allowsText()) ? array() : array('ignoreText' => \true);
 	}
@@ -6334,15 +6313,15 @@ class IgnoreTextIfDisallowed implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 class IgnoreWhitespaceAroundBlockElements implements BooleanRulesGenerator
 {
-	public function generateBooleanRules(TemplateInspector $src)
+	public function generateBooleanRules(TemplateForensics $src)
 	{
 		return ($src->isBlock()) ? array('ignoreSurroundingWhitespace' => \true) : array();
 	}
@@ -6350,16 +6329,16 @@ class IgnoreWhitespaceAroundBlockElements implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\RulesGenerators;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 class TrimFirstLineInCodeBlocks implements BooleanRulesGenerator
 {
-	public function generateBooleanRules(TemplateInspector $src)
+	public function generateBooleanRules(TemplateForensics $src)
 	{
 		$rules = array();
 		$xpath = new DOMXPath($src->getDOM());
@@ -6371,7 +6350,7 @@ class TrimFirstLineInCodeBlocks implements BooleanRulesGenerator
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6507,7 +6486,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6637,7 +6616,7 @@ abstract class AbstractFlashRestriction extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6659,7 +6638,7 @@ class DisallowAttributeSets extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6680,7 +6659,7 @@ class DisallowCopy extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6702,7 +6681,7 @@ class DisallowDisableOutputEscaping extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6723,7 +6702,7 @@ class DisallowDynamicAttributeNames extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6744,7 +6723,7 @@ class DisallowDynamicElementNames extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6771,7 +6750,7 @@ class DisallowElementNS extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6794,7 +6773,7 @@ class DisallowObjectParamsWithGeneratedName extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6829,7 +6808,7 @@ class DisallowPHPTags extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6853,7 +6832,7 @@ class DisallowUnsafeCopyOf extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -6901,7 +6880,7 @@ class DisallowXPathFunction extends TemplateCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6953,7 +6932,7 @@ abstract class AbstractConstantFolding extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -6973,26 +6952,24 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends TemplateNormalization
 	}
 	protected function fixAttribute(DOMAttr $attribute)
 	{
-		if ($attribute->parentNode->namespaceURI === self::XMLNS_XSL)
+		$parentNode = $attribute->parentNode;
+		if ($parentNode->namespaceURI === self::XMLNS_XSL)
 			return;
-		$match = array(
-			'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
-			'((?<!\\{)(?:\\{\\{)*\\{(?!\\{)[^}]*+$)',
-			'((?<!\\{)\\{\\s*(?:"[^"]*"|\'[^\']*\'|[a-z]\\w*(?:\\s|:\\s|:(?:["\']|\\w+\\s*,))))i'
+		$attribute->value = \htmlspecialchars(
+			\preg_replace(
+				'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
+				'$0{',
+				$attribute->value
+			),
+			\ENT_NOQUOTES,
+			'UTF-8'
 		);
-		$replace = array(
-			'$0{',
-			'{$0',
-			'{$0'
-		);
-		$attrValue        = \preg_replace($match, $replace, $attribute->value);
-		$attribute->value = \htmlspecialchars($attrValue, \ENT_NOQUOTES, 'UTF-8');
 	}
 }
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7028,7 +7005,7 @@ class InlineAttributes extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7052,7 +7029,7 @@ class InlineCDATA extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7086,7 +7063,7 @@ class InlineElements extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7146,7 +7123,7 @@ class InlineInferredValues extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7178,7 +7155,7 @@ class InlineTextElements extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7236,7 +7213,7 @@ class InlineXPathLiterals extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7274,7 +7251,7 @@ class MinifyXPathExpressions extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7305,7 +7282,7 @@ class NormalizeAttributeNames extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7346,7 +7323,7 @@ class NormalizeElementNames extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7404,7 +7381,7 @@ class NormalizeUrls extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7466,10 +7443,6 @@ class OptimizeChoose extends TemplateNormalization
 	{
 		return ($el1->namespaceURI === $el2->namespaceURI && $el1->nodeName === $el2->nodeName && $this->getAttributes($el1) === $this->getAttributes($el2));
 	}
-	protected function isXslChoose(DOMNode $node)
-	{
-		return ($node->namespaceURI === self::XMLNS_XSL && $node->localName === 'choose');
-	}
 	protected function matchBranches($childType)
 	{
 		$branches = $this->getBranches();
@@ -7487,8 +7460,6 @@ class OptimizeChoose extends TemplateNormalization
 		if (!isset($branches[0]->firstChild))
 			return \false;
 		$firstChild = $branches[0]->firstChild;
-		if ($this->isXslChoose($firstChild))
-			return \false;
 		foreach ($branches as $branch)
 		{
 			if ($branch->childNodes->length !== 1 || !($branch->firstChild instanceof DOMElement))
@@ -7575,7 +7546,7 @@ class OptimizeChoose extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7602,7 +7573,7 @@ class OptimizeConditionalAttributes extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7633,7 +7604,7 @@ class OptimizeConditionalValueOf extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7657,7 +7628,7 @@ class PreserveSingleSpaces extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7676,7 +7647,7 @@ class RemoveComments extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7696,7 +7667,7 @@ class RemoveInterElementWhitespace extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -7736,7 +7707,7 @@ class SetRelNoreferrerOnTargetedLinks extends TemplateNormalization
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -7791,7 +7762,7 @@ class UrlConfig implements ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -7855,7 +7826,7 @@ class AttributePreprocessorCollection extends Collection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -7955,7 +7926,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8191,7 +8162,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -8201,7 +8172,7 @@ abstract class Filter extends ProgrammableCallback
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -8227,7 +8198,7 @@ class DisallowUnsafeDynamicCSS extends AbstractDynamicContentCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -8253,7 +8224,7 @@ class DisallowUnsafeDynamicJS extends AbstractDynamicContentCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -8292,7 +8263,7 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
@@ -8309,13 +8280,12 @@ class RestrictFlashScriptAccess extends AbstractFlashRestriction
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 use DOMDocument;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 class FoldArithmeticConstants extends AbstractConstantFolding
 {
 	protected $xpath;
@@ -8325,14 +8295,13 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	}
 	protected function getOptimizationPasses()
 	{
-		$n = '-?\\.\\d++|-?\\d++(?:\\.\\d++)?';
 		return array(
-			'(^[-+0-9\\s]+$)'                                            => 'foldOperation',
-			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )'                     => 'foldAdditiveIdentity',
-			'(^((?>' . $n . ' [-+] )*)(' . $n . ') div (' . $n . '))'    => 'foldDivision',
-			'(^((?>' . $n . ' [-+] )*)(' . $n . ') \\* (' . $n . '))'    => 'foldMultiplication',
-			'(\\( (?:' . $n . ') (?>(?>[-+*]|div) (?:' . $n . ') )+\\))' => 'foldSubExpression',
-			'((?<=[-+*\\(]|\\bdiv|^) \\( ([@$][-\\w]+|' . $n . ') \\) (?=[-+*\\)]|div|$))' => 'removeParentheses'
+			'(^[-+0-9\\s]+$)'                        => 'foldOperation',
+			'( \\+ 0(?! [^+\\)])|(?<![-\\w])0 \\+ )' => 'foldAdditiveIdentity',
+			'(^((?>\\d+ [-+] )*)(\\d+) div (\\d+))'  => 'foldDivision',
+			'(^((?>\\d+ [-+] )*)(\\d+) \\* (\\d+))'  => 'foldMultiplication',
+			'(\\( \\d+ (?>(?>[-+*]|div) \\d+ )+\\))' => 'foldSubExpression',
+			'((?<=[-+*\\(]|\\bdiv|^) \\( ([@$][-\\w]+|\\d+(?>\\.\\d+)?) \\) (?=[-+*\\)]|div|$))' => 'removeParentheses'
 		);
 	}
 	public function evaluateExpression($expr)
@@ -8362,15 +8331,15 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	}
 	protected function foldDivision(array $m)
 	{
-		return $m[1] . XPathHelper::export($m[2] / $m[3]);
+		return $m[1] . ($m[2] / $m[3]);
 	}
 	protected function foldMultiplication(array $m)
 	{
-		return $m[1] . XPathHelper::export($m[2] * $m[3]);
+		return $m[1] . ($m[2] * $m[3]);
 	}
 	protected function foldOperation(array $m)
 	{
-		return XPathHelper::export($this->xpath->evaluate($m[0]));
+		return (string) $this->xpath->evaluate($m[0]);
 	}
 	protected function foldSubExpression(array $m)
 	{
@@ -8384,7 +8353,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
@@ -8459,7 +8428,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8491,7 +8460,7 @@ class AttributeCollection extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8539,7 +8508,7 @@ class AttributeFilterCollection extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8609,7 +8578,7 @@ class NormalizedList extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8675,7 +8644,7 @@ class PluginCollection extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8707,7 +8676,7 @@ class TagCollection extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8726,7 +8695,7 @@ class TemplateParameterCollection extends NormalizedCollection
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -8788,7 +8757,7 @@ class AttributeFilter extends Filter
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items;
@@ -8804,7 +8773,7 @@ class TagFilter extends Filter
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8835,7 +8804,7 @@ abstract class FilterChain extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8869,10 +8838,7 @@ class HostnameList extends NormalizedList
 	protected function normalizeHostmask($host)
 	{
 		if (\preg_match('#[\\x80-\xff]#', $host) && \function_exists('idn_to_ascii'))
-		{
-			$variant = (\defined('INTL_IDNA_VARIANT_UTS46')) ? \INTL_IDNA_VARIANT_UTS46 : 0;
-			$host = \idn_to_ascii($host, 0);
-		}
+			$host = \idn_to_ascii($host);
 		if (\substr($host, 0, 1) === '*')
 			$host = \ltrim($host, '*');
 		else
@@ -8887,7 +8853,7 @@ class HostnameList extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8913,7 +8879,7 @@ class RulesGeneratorList extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8936,7 +8902,7 @@ class SchemeList extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8956,7 +8922,7 @@ class TemplateCheckList extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -8977,7 +8943,7 @@ class TemplateNormalizationList extends NormalizedList
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
@@ -9009,7 +8975,7 @@ class UrlFilter extends AttributeFilter
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;
@@ -9029,7 +8995,7 @@ class AttributeFilterChain extends FilterChain
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Collections;

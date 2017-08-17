@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2017 The s9e Authors
+* @copyright Copyright (c) 2010-2016 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Autolink;
@@ -38,7 +38,7 @@ class Configurator extends ConfiguratorBase
 		$anchor = RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes()) . '://';
 		if ($this->matchWww)
 			$anchor = '(?:' . $anchor . '|www\\.)';
-		$regexp = '#\\b' . $anchor . '\\S(?>[^\\s()\\[\\]\\x{FF01}-\\x{FF0F}\\x{FF1A}-\\x{FF20}\\x{FF3B}-\\x{FF40}\\x{FF5B}-\\x{FF65}]|\\([^\\s()]*\\)|\\[\\w*\\])++#Siu';
+		$regexp = '#\\b' . $anchor . '\\S(?>[^\\s\\[\\]\\x{FF01}-\\x{FF0F}\\x{FF1A}-\\x{FF20}\\x{FF3B}-\\x{FF40}\\x{FF5B}-\\x{FF65}]|\\[\\w*\\])++#Siu';
 		return $regexp;
 	}
 }
