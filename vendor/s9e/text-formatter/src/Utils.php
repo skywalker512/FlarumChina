@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter;
@@ -32,11 +32,10 @@ abstract class Utils
 	}
 	public static function removeFormatting($xml)
 	{
-		$dom = self::loadXML($xml);
-		foreach ($dom->getElementsByTagName('s') as $tag)
-			$tag->parentNode->removeChild($tag);
-		foreach ($dom->getElementsByTagName('e') as $tag)
-			$tag->parentNode->removeChild($tag);
+		$dom   = self::loadXML($xml);
+		$xpath = new DOMXPath($dom);
+		foreach ($xpath->query('//e | //s') as $node)
+			$node->parentNode->removeChild($node);
 		return $dom->documentElement->textContent;
 	}
 	public static function removeTag($xml, $tagName, $nestingLevel = 0)
@@ -67,10 +66,7 @@ abstract class Utils
 	protected static function encodeUnicodeSupplementaryCharactersCallback(array $m)
 	{
 		$utf8 = $m[0];
-		$cp   = ((\ord($utf8[0]) & 7)  << 18)
-		      | ((\ord($utf8[1]) & 63) << 12)
-		      | ((\ord($utf8[2]) & 63) << 6)
-		      | (\ord($utf8[3]) & 63);
+		$cp   = (\ord($utf8[0]) << 18) + (\ord($utf8[1]) << 12) + (\ord($utf8[2]) << 6) + \ord($utf8[3]) - 0x3C82080;
 		return '&#' . $cp . ';';
 	}
 	protected static function loadXML($xml)
@@ -100,7 +96,10 @@ abstract class Utils
 		$xml = '';
 		\ksort($attributes);
 		foreach ($attributes as $attrName => $attrValue)
-			$xml .= ' ' . \htmlspecialchars($attrName, \ENT_QUOTES) . '="' . self::encodeUnicodeSupplementaryCharacters(\htmlspecialchars($attrValue, \ENT_COMPAT)) . '"';
-		return $xml;
+			$xml .= ' ' . \htmlspecialchars($attrName, \ENT_QUOTES) . '="' . \htmlspecialchars($attrValue, \ENT_COMPAT) . '"';
+		$xml = \preg_replace('/\\r\\n?/', "\n", $xml);
+		$xml = \preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $xml);
+		$xml = \str_replace("\n", '&#10;', $xml);
+		return self::encodeUnicodeSupplementaryCharacters($xml);
 	}
 }

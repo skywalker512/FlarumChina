@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\JavaScript;
@@ -17,11 +17,14 @@ class StylesheetCompressor
 		'<param name="allowfullscreen" value="true"/>',
 		'<xsl:value-of select="',
 		'<xsl:copy-of select="@',
+		'<iframe allowfullscreen="" scrolling="no"',
 		'overflow:hidden;position:relative;padding-bottom:',
 		'display:inline-block;width:100%;max-width:',
 		' [-:\\w]++="',
-		'(?<=<)[-:\\w]++',
-		'(?<==")[^"]++"'
+		'\\{[^}]++\\}',
+		'@[-\\w]{4,}+',
+		'(?<=<)[-:\\w]{4,}+',
+		'(?<==")[^"]{4,}+"'
 	);
 	protected $dictionary;
 	protected $keyPrefix = '$';
@@ -31,7 +34,7 @@ class StylesheetCompressor
 	public function encode($xsl)
 	{
 		$this->xsl = $xsl;
-		$this->computeSavings();
+		$this->estimateSavings();
 		$this->filterSavings();
 		$this->buildDictionary();
 		$js = \json_encode($this->getCompressedStylesheet());
@@ -53,7 +56,7 @@ class StylesheetCompressor
 			$this->dictionary[$key] = $str;
 		}
 	}
-	protected function computeSavings()
+	protected function estimateSavings()
 	{
 		$this->savings = array();
 		foreach ($this->getStringsFrequency() as $str => $cnt)
@@ -99,10 +102,7 @@ class StylesheetCompressor
 	{
 		$regexp = '(' . \implode('|', $this->deduplicateTargets) . ')S';
 		\preg_match_all($regexp, $this->xsl, $matches);
-		$freq = array();
-		foreach (\array_unique($matches[0]) as $str)
-			$freq[$str] = \substr_count($this->xsl, $str);
-		return $freq;
+		return \array_count_values($matches[0]);
 	}
 	protected function getUnavailableKeys()
 	{

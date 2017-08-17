@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
@@ -41,6 +41,7 @@ class BBCodeMonkey
 	);
 	protected $configurator;
 	public $tokenRegexp = array(
+		'ANYTHING'   => '[\\s\\S]*?',
 		'COLOR'      => '[a-zA-Z]+|#[0-9a-fA-F]+',
 		'EMAIL'      => '[^@]+@.+?',
 		'FLOAT'      => '(?>0|-?[1-9]\\d*)(?>\\.\\d+)?(?>e[1-9]\\d*)?',
@@ -51,6 +52,7 @@ class BBCodeMonkey
 		'NUMBER'     => '\\d+',
 		'RANGE'      => '\\d+',
 		'SIMPLETEXT' => '[-a-zA-Z0-9+.,_ ]+',
+		'TEXT'       => '[\\s\\S]*?',
 		'UINT'       => '0|[1-9]\\d*'
 	);
 	public $unfilteredTokens = array(
@@ -118,7 +120,7 @@ class BBCodeMonkey
 		);
 		$regexp = '(^'
 		        . '\\[(?<bbcodeName>\\S+?)'
-		        . '(?<defaultAttribute>=\\S+?)?'
+		        . '(?<defaultAttribute>=.+?)?'
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*?)?'
 		        . '\\s*(?:/?\\]|\\]\\s*(?<content>.*?)\\s*(?<endTag>\\[/\\1]))$)i';
 		if (!\preg_match($regexp, \trim($usage), $m))
@@ -155,7 +157,8 @@ class BBCodeMonkey
 			if ($name[0] === '$')
 			{
 				$optionName = \substr($name, 1);
-				$bbcode->$optionName = $this->convertValue($value);
+				$object = ($optionName === 'nestingLimit' || $optionName === 'tagLimit') ? $tag : $bbcode;
+				$object->$optionName = $this->convertValue($value);
 			}
 			elseif ($name[0] === '#')
 			{
@@ -248,7 +251,9 @@ class BBCodeMonkey
 					}
 					$table[$tokenId] = $matchName;
 				}
-				$regexp .= \preg_quote(\substr($definition, $lastPos, $token['pos'] - $lastPos), '/');
+				$literal = \preg_quote(\substr($definition, $lastPos, $token['pos'] - $lastPos), '/');
+				$literal = \preg_replace('(\\s+)', '\\s+', $literal);
+				$regexp .= $literal;
 				$expr = (isset($this->tokenRegexp[$tokenType]))
 				      ? $this->tokenRegexp[$tokenType]
 				      : '.+?';

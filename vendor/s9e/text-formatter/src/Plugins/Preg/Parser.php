@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Preg;
@@ -26,16 +26,10 @@ class Parser extends ParserBase
 					$startTagLen = $contentPos - $startTagPos;
 					$endTagPos   = $contentPos + $contentLen;
 					$endTagLen   = $matchLen - ($startTagLen + $contentLen);
-					$tag = $this->parser->addTagPair(
-						$tagName,
-						$startTagPos,
-						$startTagLen,
-						$endTagPos,
-						$endTagLen
-					);
+					$tag = $this->parser->addTagPair($tagName, $startTagPos, $startTagLen, $endTagPos, $endTagLen, -100);
 				}
 				else
-					$tag = $this->parser->addSelfClosingTag($tagName, $startTagPos, $matchLen);
+					$tag = $this->parser->addSelfClosingTag($tagName, $startTagPos, $matchLen, -100);
 				foreach ($map as $i => $attrName)
 					if ($attrName && isset($m[$i]) && $m[$i][0] !== '')
 						$tag->setAttribute($attrName, $m[$i][0]);

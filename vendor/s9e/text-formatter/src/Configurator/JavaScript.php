@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator;
@@ -67,7 +67,7 @@ class JavaScript
 		$this->config = ConfigHelper::filterConfig($this->config, 'JS');
 		$this->config = $this->callbackGenerator->replaceCallbacks($this->config);
 		$src = $this->getHints() . $this->injectConfig($this->getSource());
-		$src .= $this->getExports();
+		$src .= "if (!window['s9e']) window['s9e'] = {};\n" . $this->getExports();
 		$src = $this->getMinifier()->get($src);
 		$src = '(function(){' . $src . '})()';
 		return $src;
@@ -100,7 +100,7 @@ class JavaScript
 		$methods = array();
 		foreach ($this->exportMethods as $method)
 			$methods[] = "'" . $method . "':" . $method;
-		return "window['s9e'] = { 'TextFormatter': {" . \implode(',', $methods) . "} }\n";
+		return "window['s9e']['TextFormatter'] = {" . \implode(',', $methods) . '}';
 	}
 	protected function getHints()
 	{

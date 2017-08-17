@@ -17,7 +17,6 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 
-
 class ExtensionRepository
 {
     use Cachable;
@@ -30,7 +29,7 @@ class ExtensionRepository
      */
     protected $manager;
     /**
-     * @var FlagrowApi
+     * @var Api
      */
     private $client;
     /**
@@ -60,7 +59,8 @@ class ExtensionRepository
         Api $client,
         Dispatcher $events,
         CacheClearJob $flush
-    ) {
+    )
+    {
         $this->manager = $manager;
         $this->client = $client;
         $this->packages = $packages;
@@ -69,9 +69,9 @@ class ExtensionRepository
     }
 
     /**
-     * @return SearchResults
+     * @return Collection all extensions from the remote client
      */
-    public function index($params)
+    public function allExtensionsFromClient()
     {
         $query = [
             'page[size]' => 9999,
@@ -79,29 +79,69 @@ class ExtensionRepository
             'sort' => 'title' // Sort by package name per default
         ];
 
-        if (Arr::has($params, 'filter') && Arr::has($params['filter'], 'search')) {
-            $query['filter[search]'] = $params['filter']['search'];
-        }
-
-        $hash = 'flagrow.io.search.list' . (Arr::has($query, 'filter[search]') ? '.search-' . $query['filter[search]'] : '');
-
-        $response = $this->getOrSetCache($hash, function () use ($query) {
+        $data = $this->getOrSetCache('flagrow.io.search.list', function () use ($query) {
             $response = $this->client->get('packages', compact('query'));
 
-            return (string)$response->getBody();
+            $json = json_decode((string)$response->getBody(), true);
+
+            return Arr::get($json, 'data', []);
         });
 
-        $json = json_decode($response, true);
-
-        $areMoreResults = Arr::get($json, 'meta.pages_total', 0) > Arr::get($json, 'meta.pages_current', 0);
-
-        $extensions = Collection::make(
-            Arr::get($json, 'data', [])
-        )->map(function ($package) {
+        return Collection::make($data)->map(function ($package) {
             return $this->createExtension($package);
         })->keyBy('id');
+    }
 
-        return new SearchResults($extensions, $areMoreResults);
+    /**
+     * Filter by search term
+     * @param Collection $extensions
+     * @param string $search
+     * @return Collection
+     */
+    public function filterSearch(Collection $extensions, $search)
+    {
+        if (empty($search)) {
+            return $extensions;
+        }
+
+        return $extensions->filter(function ($extension) use ($search) {
+            // Look for the serch term in all these things
+            $searchIn = [
+                $extension->getPackage(),
+                $extension->getTitle(),
+                $extension->getDescription(),
+            ];
+
+            foreach ($searchIn as $content) {
+                if (strpos(strtolower($content), strtolower($search)) !== false) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+    }
+
+    /**
+     * @param array $params Request parameters
+     * @return SearchResults
+     * @throws \Exception
+     */
+    public function index(array $params = [])
+    {
+        $extensions = $this->allExtensionsFromClient();
+
+        foreach (Arr::get($params, 'filter', []) as $filter => $value) {
+            switch ($filter) {
+                case 'search':
+                    $extensions = $this->filterSearch($extensions, $value);
+                    break;
+                default:
+                    throw new \Exception('Invalid extension filter ' . $filter);
+            }
+        }
+
+        return new SearchResults($extensions, true);
     }
 
     /**
@@ -135,8 +175,6 @@ class ExtensionRepository
         $extension = Extension::createFromAttributes($apiPackage['attributes']);
 
         $this->refreshInstalledExtension($extension);
-
-        $this->flushCacheKey('flagrow.io.search.list');
 
         return $extension;
     }
@@ -237,8 +275,8 @@ class ExtensionRepository
         $response = $this->client->post('packages/favorite', [
             'form_params' => [
                 'package_id' => $package,
-                'favorite' => $favorite
-            ]
+                'favorite' => $favorite,
+            ],
         ]);
 
         if (in_array($response->getStatusCode(), [200, 201])) {

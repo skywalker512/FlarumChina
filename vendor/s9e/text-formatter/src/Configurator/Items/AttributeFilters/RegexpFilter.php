@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
@@ -39,50 +39,54 @@ class RegexpFilter extends AttributeFilter
 		if (\is_string($regexp))
 			$regexp = new Regexp($regexp);
 		$this->vars['regexp'] = $regexp;
+		$this->resetSafeness();
+		$this->evaluateSafeness();
 	}
-	public function isSafeAsURL()
+	protected function evaluateSafeness()
 	{
 		try
 		{
-			$regexpInfo = RegexpParser::parse($this->vars['regexp']);
-			$captureStart = '(?>\\((?:\\?:)?)*';
-			$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)[a-z0-9]+\\??:#i';
-			if (\preg_match($regexp, $regexpInfo['regexp'])
-			 && \strpos($regexpInfo['modifiers'], 'm') === \false)
-				return \true;
-			$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
-			foreach (ContextSafeness::getDisallowedCharactersAsURL() as $char)
-				if (\preg_match($regexp, $char))
-					return \false;
-			return \true;
+			$this->evaluateSafenessAsURL();
+			$this->evaluateSafenessInCSS();
+			$this->evaluateSafenessInJS();
 		}
 		catch (Exception $e)
 		{
-			return \false;
-		}
+			}
 	}
-	public function isSafeInCSS()
+	protected function evaluateSafenessAsURL()
 	{
-		try
+		$regexpInfo = RegexpParser::parse($this->vars['regexp']);
+		$captureStart = '(?>\\((?:\\?:)?)*';
+		$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)[a-z0-9]+\\??:#i';
+		if (\preg_match($regexp, $regexpInfo['regexp'])
+		 && \strpos($regexpInfo['modifiers'], 'm') === \false)
 		{
-			$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
-			foreach (ContextSafeness::getDisallowedCharactersInCSS() as $char)
-				if (\preg_match($regexp, $char))
-					return \false;
-			return \true;
+			$this->markAsSafeAsURL();
+			return;
 		}
-		catch (Exception $e)
-		{
-			return \false;
-		}
+		$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
+		foreach (ContextSafeness::getDisallowedCharactersAsURL() as $char)
+			if (\preg_match($regexp, $char))
+				return;
+		$this->markAsSafeAsURL();
 	}
-	public function isSafeInJS()
+	protected function evaluateSafenessInCSS()
+	{
+		$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
+		foreach (ContextSafeness::getDisallowedCharactersInCSS() as $char)
+			if (\preg_match($regexp, $char))
+				return;
+		$this->markAsSafeInCSS();
+	}
+	protected function evaluateSafenessInJS()
 	{
 		$safeExpressions = array(
 			'\\d+',
 			'[0-9]+'
 		);
 		$regexp = '(^(?<delim>.)\\^(?:(?<expr>' . \implode('|', \array_map('preg_quote', $safeExpressions)) . ')|\\((?:\\?[:>])?(?&expr)\\))\\$(?&delim)(?=.*D)[Dis]*$)D';
-		return (bool) \preg_match($regexp, $this->vars['regexp']);
+		if (\preg_match($regexp, $this->vars['regexp']))
+			$this->markAsSafeInJS();
 	}
 }

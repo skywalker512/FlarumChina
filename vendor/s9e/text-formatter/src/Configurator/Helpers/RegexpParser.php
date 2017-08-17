@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
@@ -117,7 +117,7 @@ abstract class RegexpParser
 					$pos += 2;
 					break;
 				case '[':
-					if (!\preg_match('#\\[(.*?(?<!\\\\)(?:\\\\\\\\)*+)\\]((?:[+*][+?]?|\\?)?)#', $regexp, $m, 0, $pos))
+					if (!\preg_match('#\\[(.*?(?<!\\\\)(?:\\\\\\\\)*+)\\]((?:[+*][+?]?|\\?)?)#A', $regexp, $m, 0, $pos))
 						throw new RuntimeException('Could not find matching bracket from pos ' . $pos);
 					$ret['tokens'][] = array(
 						'pos'         => $pos,
@@ -129,7 +129,7 @@ abstract class RegexpParser
 					$pos += \strlen($m[0]);
 					break;
 				case '(':
-					if (\preg_match('#\\(\\?([a-z]*)\\)#i', $regexp, $m, 0, $pos))
+					if (\preg_match('#\\(\\?([a-z]*)\\)#iA', $regexp, $m, 0, $pos))
 					{
 						$ret['tokens'][] = array(
 							'pos'     => $pos,

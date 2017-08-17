@@ -72,12 +72,15 @@
         "davis/flarum-ext-securehttps": "^0.1.0@beta",
         "flagrow/byobu": "^0.1.0@beta",
         "davis/flarum-ext-inviteonly": "^0.1.0@beta",
-        "issyrocks12/flarum-ext-users-list": "^0.2.2.1",
         "flagrow/masquerade": "^0.1.0",
         "henter/wechat-oauth": "dev-master",
         "stanleysong/flarum-ext-auth-wechat": "^1.0",
         "flagrow/flarum-ext-analytics": "^0.5.0",
-        "davis/flarum-ext-socialprofile": "^0.2.3"
+        "davis/flarum-ext-socialprofile": "^0.2.3",       
+        "reflar/reactions": "^0.1.0@beta",
+        "ganuonglachanh/flarum-ext-markdown-editor": "^0.9.0",
+        "flagrow/split": "dev-master",
+        "flagrow/users-list": "^0.1.2"
 
     },
     "require-dev": {

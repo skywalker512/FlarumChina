@@ -1,0 +1,100 @@
+.UsersListPage {
+  .UsersListPage-header {
+    background: @control-bg;
+    color: @control-color;
+    padding: 20px 0;
+
+    p {
+      margin-bottom: 20px;
+    }
+    .Button {
+      margin-right: 10px;
+    }
+  }
+
+  .UsersListPage-list {
+    padding: 20px 0;
+
+    .UsersListItems {
+      padding-left: 150px;
+
+      > label {
+        margin-left: -150px;
+        float: left;
+        font-weight: bold;
+        margin-top: 14px;
+      }
+
+      .UsersList {
+        list-style: none;
+        padding: 10px 0;
+        margin: 0;
+        color: @muted-color;
+        font-size: 16px;
+
+        > .sortable-placeholder {
+          height: 34px;
+          margin-bottom: 10px;
+        }
+
+        li {
+          .UsersListItem-info {
+            padding: 5px 10px;
+            border-radius: @border-radius;
+
+            &:hover { background: @control-bg; }
+            & > * { display: inline-block; }
+
+            .UsersListItem-name,
+            .UserCard-lastSeen {
+              width: 200px;
+              margin: 0;
+            }
+
+            .UsersListItem-comments,
+            .UsersListItem-discussions {
+              width: 70px;
+            }
+
+            .Button {
+              float: right;
+              margin: -8px -10px -8px 10px;
+            }
+          }
+        }
+      }
+
+      @media only screen and (max-width: 529px) {
+        .UsersList {
+          li {
+            .UsersListItem-info {
+              font-size: 12px;
+
+              .UsersListItem-name { width: 110px; }
+              .UserCard-lastSeen { display: none; }
+
+              .UsersListItem-comments,
+              .UsersListItem-discussions {
+                width: 50px;
+              }
+
+              .Button {
+                float: right;
+                margin-left: 0;
+                padding: 8px;
+              }
+            }
+          }
+        }
+      }
+
+      @media only screen and (max-width: 1024px) {
+        padding-left: 0;
+        > label {
+          margin-left: 0;
+          float: none;
+        }
+      }
+    }
+  }
+}

@@ -31,7 +31,7 @@ function (tag, sites)
 	*/
 	function filterTag(tag, sites)
 	{
-		if (tag.hasAttribute('media'))
+		if (tag.hasAttribute('site'))
 		{
 			addTagFromMediaId(tag, sites);
 		}
@@ -58,9 +58,7 @@ function (tag, sites)
 			rpos = endTag.getPos() + endTag.getLen();
 
 		// Create a new tag and copy this tag's attributes and priority
-		var newTag = addSelfClosingTag(siteId.toUpperCase(), lpos, rpos - lpos);
-		newTag.setAttributes(tag.getAttributes());
-		newTag.setSortPriority(tag.getSortPriority());
+		addTagPair(siteId.toUpperCase(), lpos, 0, rpos, 0, tag.getSortPriority()).setAttributes(tag.getAttributes());
 	}
 
 	/**
@@ -71,7 +69,7 @@ function (tag, sites)
 	*/
 	function addTagFromMediaId(tag, sites)
 	{
-		var siteId = tag.getAttribute('media').toLowerCase();
+		var siteId = tag.getAttribute('site').toLowerCase();
 		if (in_array(siteId, sites))
 		{
 			addSiteTag(tag, siteId);

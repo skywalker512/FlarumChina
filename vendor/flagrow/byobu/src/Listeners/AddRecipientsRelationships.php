@@ -2,18 +2,13 @@
 
 namespace Flagrow\Byobu\Listeners;
 
-use Flarum\Api\Controller;
-use Flarum\Api\Serializer\DiscussionSerializer;
-use Flarum\Api\Serializer\ForumSerializer;
-use Flarum\Api\Serializer\GroupSerializer;
-use Flarum\Api\Serializer\UserSerializer;
+use Flarum\Api\Serializer;
 use Flarum\Core\Discussion;
 use Flarum\Core\Group;
 use Flarum\Core\User;
 use Flarum\Event\ConfigureApiController;
 use Flarum\Event\GetApiRelationship;
 use Flarum\Event\GetModelRelationship;
-use Flarum\Event\PrepareApiAttributes;
 use Illuminate\Contracts\Events\Dispatcher;
 
 class AddRecipientsRelationships
@@ -43,14 +38,6 @@ class AddRecipientsRelationships
                 ->withTimestamps()
                 ->wherePivot('removed_at', null);
         }
-        if ($event->isRelationship(User::class, 'privateDiscussions')) {
-            return $event->model->belongsToMany(
-                Discussion::class,
-                'recipients'
-            )
-                ->withTimestamps()
-                ->wherePivot('removed_at', null);
-        }
         if ($event->isRelationship(Discussion::class, 'oldRecipientUsers')) {
             return $event->model->belongsToMany(
                 User::class,
@@ -60,18 +47,9 @@ class AddRecipientsRelationships
                 ->wherePivot('removed_at', '!=', 'null');
         }
 
-
         if ($event->isRelationship(Discussion::class, 'recipientGroups')) {
             return $event->model->belongsToMany(
                 Group::class,
-                'recipients'
-            )
-                ->withTimestamps()
-                ->wherePivot('removed_at', null);
-        }
-        if ($event->isRelationship(Group::class, 'privateDiscussions')) {
-            return $event->model->belongsToMany(
-                Discussion::class,
                 'recipients'
             )
                 ->withTimestamps()
@@ -85,6 +63,22 @@ class AddRecipientsRelationships
                 ->withTimestamps()
                 ->wherePivot('removed_at', '!=', 'null');
         }
+        if ($event->isRelationship(User::class, 'privateDiscussions')) {
+            return $event->model->belongsToMany(
+                Discussion::class,
+                'recipients'
+            )
+                ->withTimestamps()
+                ->wherePivot('removed_at', null);
+        }
+        if ($event->isRelationship(Group::class, 'privateDiscussions')) {
+            return $event->model->belongsToMany(
+                Discussion::class,
+                'recipients'
+            )
+                ->withTimestamps()
+                ->wherePivot('removed_at', null);
+        }
     }
 
     /**
@@ -92,14 +86,8 @@ class AddRecipientsRelationships
      */
     public function includeRecipientsRelationship(ConfigureApiController $event)
     {
-        if ($event->isController(Controller\ListDiscussionsController::class)
-            || $event->isController(Controller\ShowDiscussionController::class)
-            || $event->isController(Controller\CreateDiscussionController::class)
-        ) {
-            $event->addInclude('recipientUsers');
-            $event->addInclude('oldRecipientUsers');
-            $event->addInclude('recipientGroups');
-            $event->addInclude('oldRecipientGroups');
+        if ($event->controller->serializer === Serializer\DiscussionSerializer::class) {
+            $event->addInclude(['recipientUsers', 'oldRecipientUsers', 'recipientGroups', 'oldRecipientGroups']);
         }
     }
 
@@ -109,23 +97,22 @@ class AddRecipientsRelationships
      */
     public function getApiRelationship(GetApiRelationship $event)
     {
-        if ($event->isRelationship(DiscussionSerializer::class, 'recipientUsers')) {
-            return $event->serializer->hasMany($event->model, UserSerializer::class, 'recipientUsers');
+        if ($event->isRelationship(Serializer\DiscussionBasicSerializer::class, 'recipientUsers')) {
+            return $event->serializer->hasMany($event->model, Serializer\UserSerializer::class, 'recipientUsers');
         }
-        if ($event->isRelationship(DiscussionSerializer::class, 'oldRecipientUsers')) {
-            return $event->serializer->hasMany($event->model, UserSerializer::class, 'oldRecipientUsers');
-        }
-
-        if ($event->isRelationship(DiscussionSerializer::class, 'recipientGroups')) {
-            return $event->serializer->hasMany($event->model, GroupSerializer::class, 'recipientGroups');
-        }
-        if ($event->isRelationship(DiscussionSerializer::class, 'oldRecipientGroups')) {
-            return $event->serializer->hasMany($event->model, GroupSerializer::class, 'oldRecipientGroups');
+        if ($event->isRelationship(Serializer\DiscussionBasicSerializer::class, 'oldRecipientUsers')) {
+            return $event->serializer->hasMany($event->model, Serializer\UserSerializer::class, 'oldRecipientUsers');
         }
 
+        if ($event->isRelationship(Serializer\DiscussionBasicSerializer::class, 'recipientGroups')) {
+            return $event->serializer->hasMany($event->model, Serializer\GroupSerializer::class, 'recipientGroups');
+        }
+        if ($event->isRelationship(Serializer\DiscussionBasicSerializer::class, 'oldRecipientGroups')) {
+            return $event->serializer->hasMany($event->model, Serializer\GroupSerializer::class, 'oldRecipientGroups');
+        }
 
-        if ($event->isRelationship(UserSerializer::class, 'privateDiscussions')) {
-            return $event->serializer->hasMany($event->model, DiscussionSerializer::class, 'privateDiscussions');
+        if ($event->isRelationship(Serializer\UserSerializer::class, 'privateDiscussions')) {
+            return $event->serializer->hasMany($event->model, Serializer\DiscussionSerializer::class, 'privateDiscussions');
         }
     }
 }

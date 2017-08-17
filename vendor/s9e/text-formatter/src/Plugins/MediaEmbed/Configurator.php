@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
@@ -14,13 +14,14 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\CachedSiteDefinitionProvider;
-use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\CachedDefinitionCollection;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\SiteCollection;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateBuilder;
 class Configurator extends ConfiguratorBase
 {
 	public $allowedFilters = array(
 		'hexdec',
+		'stripslashes',
 		'urldecode'
 	);
 	protected $appendTemplate = '';
@@ -29,14 +30,15 @@ class Configurator extends ConfiguratorBase
 	protected $createMediaBBCode = \true;
 	public $createIndividualBBCodes = \false;
 	public $defaultSites;
+	protected $tagName = 'MEDIA';
 	protected $templateBuilder;
 	protected function setUp()
 	{
-		$this->collection = new MediaSiteCollection;
+		$this->collection = new SiteCollection;
 		$this->configurator->registeredVars['mediasites'] = $this->collection;
-		$tag = $this->configurator->tags->add('MEDIA');
+		$tag = $this->configurator->tags->add($this->tagName);
 		$tag->rules->autoClose();
-		$tag->rules->ignoreTags();
+		$tag->rules->denyChild($this->tagName);
 		$tag->filterChain->clear();
 		$tag->filterChain
 		    ->append(array(__NAMESPACE__ . '\\Parser', 'filterTag'))
@@ -44,9 +46,15 @@ class Configurator extends ConfiguratorBase
 		    ->addParameterByName('mediasites')
 		    ->setJS(\file_get_contents(__DIR__ . '/Parser/tagFilter.js'));
 		if ($this->createMediaBBCode)
-			$this->configurator->BBCodes->set('MEDIA', array('contentAttributes' => array('url')));
+			$this->configurator->BBCodes->set(
+				$this->tagName,
+				array(
+					'contentAttributes' => array('url'),
+					'defaultAttribute'  => 'site'
+				)
+			);
 		if (!isset($this->defaultSites))
-			$this->defaultSites = new CachedSiteDefinitionProvider;
+			$this->defaultSites = new CachedDefinitionCollection;
 		$this->templateBuilder = new TemplateBuilder;
 	}
 	public function asConfig()
@@ -59,7 +67,8 @@ class Configurator extends ConfiguratorBase
 			$regexp = '(?>' . RegexpBuilder::fromList($schemes) . ':|' . $regexp . ')';
 		return array(
 			'quickMatch' => (empty($schemes)) ? '://' : ':',
-			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/S'
+			'regexp'     => '/\\b' . $regexp . '[^["\'\\s]+/Si',
+			'tagName'    => $this->tagName
 		);
 	}
 	public function add($siteId, array $siteConfig = \null)
@@ -70,7 +79,8 @@ class Configurator extends ConfiguratorBase
 		$this->collection[$siteId] = $siteConfig;
 		$tag = new Tag;
 		$tag->rules->autoClose();
-		$tag->rules->ignoreTags();
+		$tag->rules->denyChild($siteId);
+		$tag->rules->denyChild($this->tagName);
 		$attributes = array(
 			'url' => array('type' => 'url')
 		);

@@ -1,6 +1,6 @@
 {
     "name": "reflar/gamification",
-    "description": "Manage your users with style",
+    "description":  "Upvotes and downvotes for your Flarum community",
     "keywords": [
         "misc",
         "settings",
@@ -25,11 +25,11 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/ReFlar/gamification/issues",
-        "source": "https://github.com/ReFlar/gamification"
+        "issues": "https://gitlab.com/ReDevelopers/ReFlar/gamification/issues",
+        "source": "https://gitlab.com/ReDevelopers/ReFlar/gamification"
     },
     "require": {
-        "flarum/core": "^0.1.0-beta.6"
+        "flarum/core": "^0.1.0-beta.7"
     },
       "autoload": {
         "psr-4": {

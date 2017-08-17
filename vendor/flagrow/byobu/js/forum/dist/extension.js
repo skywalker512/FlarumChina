@@ -22,7 +22,9 @@ System.register('flagrow/byobu/addDiscussPrivatelyControl', ['flarum/extend', 'f
                         DiscussionComposer.prototype.recipients = recipients;
 
                         var component = new DiscussionComposer({
-                            user: app.session.user
+                            user: app.session.user,
+                            recipients: recipients,
+                            recipientUsers: recipients
                         });
 
                         app.composer.load(component);
@@ -87,14 +89,14 @@ System.register("flagrow/byobu/addHasRecipientsBadge", ["flarum/extend", "flarum
 });;
 "use strict";
 
-System.register("flagrow/byobu/addRecipientComposer", ["flarum/extend", "flarum/components/DiscussionComposer", "flagrow/byobu/components/AddRecipientModal", "flagrow/byobu/helpers/recipientCountLabel"], function (_export, _context) {
+System.register("flagrow/byobu/addRecipientComposer", ["flarum/extend", "flarum/components/DiscussionComposer", "flagrow/byobu/components/AddRecipientModal", "flagrow/byobu/helpers/recipientCountLabel", "flarum/models/User", "flarum/models/Group", "flarum/utils/ItemList"], function (_export, _context) {
     "use strict";
 
-    var extend, override, DiscussionComposer, AddRecipientModal, recipientCountLabel;
+    var extend, override, DiscussionComposer, AddRecipientModal, recipientCountLabel, User, Group, ItemList;
 
     _export("default", function (app) {
         // Add recipient-selection abilities to the discussion composer.
-        DiscussionComposer.prototype.recipients;
+        DiscussionComposer.prototype.recipients = new ItemList();
         DiscussionComposer.prototype.recipientUsers = [];
         DiscussionComposer.prototype.recipientGroups = [];
 
@@ -104,9 +106,7 @@ System.register("flagrow/byobu/addRecipientComposer", ["flarum/extend", "flarum/
 
             app.modal.show(new AddRecipientModal({
                 selectedRecipients: this.recipients,
-                onsubmit: function onsubmit(recipients, recipientUsers, recipientGroups) {
-                    _this.recipientUsers = recipientUsers;
-                    _this.recipientGroups = recipientGroups;
+                onsubmit: function onsubmit(recipients) {
                     _this.recipients = recipients;
 
                     // Focus on recipient autocomplete field.
@@ -120,11 +120,12 @@ System.register("flagrow/byobu/addRecipientComposer", ["flarum/extend", "flarum/
         extend(DiscussionComposer.prototype, 'headerItems', function (items) {
             if (app.session.user && app.forum.attribute('canStartPrivateDiscussion')) {
 
-                var recipients = this.recipients ? this.recipients.toArray() : [];
+                var recipients = this.recipients.toArray();
 
                 items.add('recipients', m(
                     "a",
-                    { className: "DiscussionComposer-changeRecipients", onclick: this.chooseRecipients.bind(this) },
+                    { className: "DiscussionComposer-changeRecipients",
+                        onclick: this.chooseRecipients.bind(this) },
                     recipients.length ? recipientCountLabel(recipients.length) : m(
                         "span",
                         { className: "RecipientLabel none" },
@@ -136,9 +137,28 @@ System.register("flagrow/byobu/addRecipientComposer", ["flarum/extend", "flarum/
 
         // Add the selected tags as data to submit to the server.
         extend(DiscussionComposer.prototype, 'data', function (data) {
+            var users = [];
+            var groups = [];
+            this.recipients.toArray().forEach(function (recipient) {
+
+                if (recipient instanceof User) {
+                    users.push(recipient);
+                }
+
+                if (recipient instanceof Group) {
+                    groups.push(recipient);
+                }
+            });
+
             data.relationships = data.relationships || {};
-            data.relationships.recipientUsers = this.recipientUsers;
-            data.relationships.recipientGroups = this.recipientGroups;
+
+            if (users.length) {
+                data.relationships.recipientUsers = users;
+            }
+
+            if (groups.length) {
+                data.relationships.recipientGroups = groups;
+            }
         });
     });
 
@@ -152,6 +172,12 @@ System.register("flagrow/byobu/addRecipientComposer", ["flarum/extend", "flarum/
             AddRecipientModal = _flagrowByobuComponentsAddRecipientModal.default;
         }, function (_flagrowByobuHelpersRecipientCountLabel) {
             recipientCountLabel = _flagrowByobuHelpersRecipientCountLabel.default;
+        }, function (_flarumModelsUser) {
+            User = _flarumModelsUser.default;
+        }, function (_flarumModelsGroup) {
+            Group = _flarumModelsGroup.default;
+        }, function (_flarumUtilsItemList) {
+            ItemList = _flarumUtilsItemList.default;
         }],
         execute: function () {}
     };
@@ -303,7 +329,7 @@ System.register("flagrow/byobu/components/AddRecipientModal", ["flarum/component
                         if (this.props.discussion) {
                             // Adds recipients of the currently viewed discussion.
                             this.assignInitialRecipients(this.props.discussion);
-                        } else if (this.props.selectedRecipients) {
+                        } else if (this.props.selectedRecipients.toArray().length > 0) {
                             // Adds previously selected recipients.
                             this.selected().merge(this.props.selectedRecipients);
                         } else {
@@ -389,16 +415,15 @@ System.register("flagrow/byobu/components/AddRecipientModal", ["flarum/component
                         var recipientUsers = [];
 
                         recipients.toArray().forEach(function (recipient) {
-
                             if (recipient instanceof User) {
                                 recipientUsers.push(recipient);
                             }
-
                             if (recipient instanceof Group) {
                                 recipientGroups.push(recipient);
                             }
                         });
 
+                        // Recipients are updated here for existing discussions here.
                         if (discussion) {
                             discussion.save({ relationships: { recipientUsers: recipientUsers, recipientGroups: recipientGroups } }).then(function () {
                                 if (app.current instanceof DiscussionPage) {
@@ -408,7 +433,8 @@ System.register("flagrow/byobu/components/AddRecipientModal", ["flarum/component
                             });
                         }
 
-                        if (this.props.onsubmit) this.props.onsubmit(recipients, recipientUsers, recipientGroups);
+                        // Use the onsubmit callback to trigger an update in the DiscussionComposer
+                        if (this.props.onsubmit) this.props.onsubmit(recipients);
 
                         app.modal.close();
 
@@ -874,7 +900,6 @@ System.register("flagrow/byobu/components/RecipientSearch", ["flarum/components/
                             var target = _this2.$('.SearchResult.active');
 
                             $search.addRecipient(target.data('index'));
-
                             $search.$('.RecipientsInput').focus();
                         });
 
@@ -882,7 +907,6 @@ System.register("flagrow/byobu/components/RecipientSearch", ["flarum/components/
                             var target = _this2.$(e.target.parentNode);
 
                             $search.addRecipient(target.data('index'));
-
                             $search.$('.RecipientsInput').focus();
                         });
 
@@ -897,6 +921,8 @@ System.register("flagrow/byobu/components/RecipientSearch", ["flarum/components/
                             this.value('');
                         }
 
+                        var loading = this.value() && this.value().length >= 3;
+
                         return m('div', {
                             className: 'AddRecipientModal-form-input'
                         }, [m('div', {
@@ -904,7 +930,6 @@ System.register("flagrow/byobu/components/RecipientSearch", ["flarum/components/
                         }, this.props.selected().toArray().map(function (recipient) {
                             return recipientLabel(recipient, {
                                 onclick: function onclick() {
-                                    console.log(recipient);
                                     _this3.removeRecipient(recipient);
                                 }
                             });
@@ -929,8 +954,10 @@ System.register("flagrow/byobu/components/RecipientSearch", ["flarum/components/
                                 return _this3.hasFocus = false;
                             }
                         }), m('ul', {
-                            className: 'Dropdown-menu Search-results'
-                        }, this.value() && this.value().length >= 3 ? this.sources.map(function (source) {
+                            className: 'Dropdown-menu Search-results fade ' + classList({
+                                in: !!loading
+                            })
+                        }, loading ? this.sources.map(function (source) {
                             return source.view(_this3.value());
                         }) : LoadingIndicator.component({ size: 'tiny', className: 'Button Button--icon Button--link' }))]);
                     }
@@ -985,7 +1012,7 @@ System.register("flagrow/byobu/components/RecipientSearch", ["flarum/components/
                         }
 
                         this.props.selected().remove(type + ":" + recipient.id());
-                        console.log(this.props.selected());
+
                         m.redraw();
                     }
                 }, {

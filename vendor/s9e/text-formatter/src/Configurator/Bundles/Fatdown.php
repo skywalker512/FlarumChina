@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Bundles;
@@ -20,6 +20,7 @@ class Fatdown extends Bundle
 		$configurator->FancyPants;
 		$configurator->HTMLComments;
 		$configurator->HTMLEntities;
+		$configurator->PipeTables;
 		$htmlAliases = array(
 			'a'      => array('URL', 'href' => 'url'),
 			'hr'     => 'HR',
@@ -91,6 +92,8 @@ class Fatdown extends Bundle
 		}
 		$configurator->tags['html:dd']->rules->createParagraphs(\false);
 		$configurator->tags['html:dt']->rules->createParagraphs(\false);
+		$configurator->tags['html:td']->rules->createParagraphs(\false);
+		$configurator->tags['html:th']->rules->createParagraphs(\false);
 		$configurator->plugins->load('MediaEmbed', array('createMediaBBCode' => \false));
 		$sites = array(
 			'bandcamp',

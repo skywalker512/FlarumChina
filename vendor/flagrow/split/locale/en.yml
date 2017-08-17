@@ -1,0 +1,12 @@
+flagrow-split:
+    forum:
+        post:
+            was_split_to: "{count} post was split to {target}.|{count} posts were split to {target}."
+            was_split_from: "{count} post was split from {target}.|{count} posts were split from {target}."
+        split:
+            from: Split from here
+            to: Split to here
+        modal:
+            title: Split discussion
+            new_discussion_label: Specify the title for the new discussion
+            submit_button: Split

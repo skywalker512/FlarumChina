@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Parser;
@@ -170,7 +170,10 @@ class BuiltInFilters
 		$parts['scheme'] = \strtolower($parts['scheme']);
 		$parts['host'] = \rtrim(\preg_replace("/\xE3\x80\x82|\xEF(?:\xBC\x8E|\xBD\xA1)/s", '.', $parts['host']), '.');
 		if (\preg_match('#[^[:ascii:]]#', $parts['host']) && \function_exists('idn_to_ascii'))
-			$parts['host'] = \idn_to_ascii($parts['host']);
+		{
+			$variant = (\defined('INTL_IDNA_VARIANT_UTS46')) ? \INTL_IDNA_VARIANT_UTS46 : 0;
+			$parts['host'] = \idn_to_ascii($parts['host'], 0);
+		}
 		return $parts;
 	}
 	protected static function rebuildUrl(array $p)

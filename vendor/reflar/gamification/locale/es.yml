@@ -29,6 +29,7 @@ reflar-gamification:
     permissions:
       vote_label: Publicaciones Positivas/Negativas
       see_votes_label: Ver votos Positivos y Negativos de este post.
+      see_ranking_page: Ver la página de clasificación
     nav:
       desc: Gamificación para tu comunidad Flarum.
     page:

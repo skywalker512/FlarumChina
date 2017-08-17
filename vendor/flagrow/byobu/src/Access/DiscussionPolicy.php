@@ -5,6 +5,7 @@ namespace Flagrow\Byobu\Access;
 use Flagrow\Byobu\Traits\ProvidesAccess;
 use Flarum\Core\Discussion;
 use Flarum\Core\User;
+use Flarum\Event\ScopeHiddenDiscussionVisibility;
 use Flarum\Event\ScopePrivateDiscussionVisibility;
 use Flarum\Extension\ExtensionManager;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -68,6 +69,11 @@ class DiscussionPolicy extends AbstractPolicy
      * @param ScopePrivateDiscussionVisibility $event
      */
     public function scopePrivateDiscussionVisibility(ScopePrivateDiscussionVisibility $event)
+    {
+        $this->transformVisibilityQuery($event->actor, $event->query);
+    }
+
+    public function scopeHiddenDiscussionVisibility(ScopeHiddenDiscussionVisibility $event)
     {
         $this->transformVisibilityQuery($event->actor, $event->query);
     }

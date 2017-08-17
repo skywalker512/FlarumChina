@@ -42,10 +42,10 @@ var undefined;
 /** @typedef {?} */
 var symbol;
 /**
- * @param {string} description
+ * @param {string=} opt_description
  * @return {symbol}
  */
-function Symbol(description) {}
+function Symbol(opt_description) {}
 /**
  * @param {string} uri
  * @return {string}
@@ -92,6 +92,7 @@ function Array(var_args) {}
  * @param {S=} opt_thisobj
  * @this {IArrayLike<T>|string}
  * @template T,S
+ * @return {undefined}
  */
 Array.prototype.forEach = function(callback, opt_thisobj) {};
 /**
@@ -156,6 +157,8 @@ Array.prototype.slice = function(opt_begin, opt_end) {};
  * @param {function(T,T):number=} opt_compareFunction Specifies a function that
  * @this {IArrayLike<T>}
  * @template T
+ * @modifies {this}
+ * @return {!Array<T>}
  */
 Array.prototype.sort = function(opt_compareFunction) {};
 /**
@@ -168,6 +171,13 @@ Array.prototype.sort = function(opt_compareFunction) {};
  * @template T
  */
 Array.prototype.splice = function(opt_index, opt_howMany, var_args) {};
+/**
+ * @param {...*} var_args
+ * @return {number} The new length of the array
+ * @this {IArrayLike<?>}
+ * @modifies {this}
+ */
+Array.prototype.unshift = function(var_args) {};
 /**
  * @param {?=} opt_yr_num
  * @param {?=} opt_mo_num
@@ -495,27 +505,27 @@ function HTMLDocument() {}
  */
 function HTMLElement() {}
 /**
- * @param {string} namespaceURI
+ * @param {?string} namespaceURI
  * @param {string} localName
  * @return {string}
  * @nosideeffects
  */
 Element.prototype.getAttributeNS = function(namespaceURI, localName) {};
 /**
- * @param {string} namespaceURI
+ * @param {?string} namespaceURI
  * @param {string} localName
  * @return {boolean}
  * @nosideeffects
  */
 Element.prototype.hasAttributeNS = function(namespaceURI, localName) {};
 /**
- * @param {string} namespaceURI
+ * @param {?string} namespaceURI
  * @param {string} localName
  * @return {undefined}
  */
 Element.prototype.removeAttributeNS = function(namespaceURI, localName) {};
 /**
- * @param {string} namespaceURI
+ * @param {?string} namespaceURI
  * @param {string} qualifiedName
  * @param {string|number|boolean} value Values are converted to strings with
  * @return {undefined}

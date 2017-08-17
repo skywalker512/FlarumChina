@@ -29,12 +29,15 @@ The config of dependencies is ignored. This makes the `config` field
 ### name
 
 The name of the package. It consists of vendor name and project name,
-separated by `/`.
-
-Examples:
+separated by `/`. Examples:
 
 * monolog/monolog
 * igorw/event-source
+
+The name can contain any character, including white spaces, and it's case
+insensitive (`foo/bar` and `Foo/Bar` are considered the same package). In order
+to simplify its installation, it's recommended to define a short and lowercase
+name that doesn't include non-alphanumeric characters or white spaces.
 
 Required for published packages (libraries).
 
@@ -143,13 +146,9 @@ The recommended notation for the most common licenses is (alphabetical):
 - BSD-3-Clause
 - BSD-4-Clause
 - GPL-2.0
-- GPL-2.0+
 - GPL-3.0
-- GPL-3.0+
 - LGPL-2.1
-- LGPL-2.1+
 - LGPL-3.0
-- LGPL-3.0+
 - MIT
 
 Optional, but it is highly recommended to supply this. More identifiers are
@@ -291,6 +290,10 @@ If one of your dependencies has a dependency on an unstable package you need to
 explicitly require it as well, along with its sufficient stability flag.
 
 Example:
+
+Assuming `doctrine/doctrine-fixtures-bundle` requires `"doctrine/data-fixtures": "dev-master"`
+then inside the root composer.json you need to add the second line below to allow dev
+releases for the `doctrine/data-fixtures` package :
 
 ```json
 {

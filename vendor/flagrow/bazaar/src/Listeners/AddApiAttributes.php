@@ -42,7 +42,8 @@ class AddApiAttributes
     {
         $limit = ini_get('memory_limit');
 
-        if ($limit === -1) {
+        // memory_limit is always returned as a string, '-1' means unlimited
+        if ($limit === '-1') {
             return true;
         }
 

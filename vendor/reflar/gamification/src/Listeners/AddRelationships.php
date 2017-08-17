@@ -111,6 +111,7 @@ class AddRelationships
     public function prepareApiAttributes(PrepareApiAttributes $event)
     {
         if ($event->isSerializer(UserSerializer::class)) {
+            $event->attributes['canViewRankingPage'] = (bool) $event->actor->can('reflar.gamification.viewRankingPage');
             $event->attributes['Points'] = $event->model->votes;
         }
         if ($event->isSerializer(ForumSerializer::class)) {

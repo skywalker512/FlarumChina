@@ -27,17 +27,11 @@ config.generics.forEach(function(entry)
 				endTagPos   = contentPos + contentLen,
 				endTagLen   = matchLen - (startTagLen + contentLen);
 
-			tag = addTagPair(
-				tagName,
-				startTagPos,
-				startTagLen,
-				endTagPos,
-				endTagLen
-			);
+			tag = addTagPair(tagName, startTagPos, startTagLen, endTagPos, endTagLen, -100);
 		}
 		else
 		{
-			tag = addSelfClosingTag(tagName, startTagPos, matchLen);
+			tag = addSelfClosingTag(tagName, startTagPos, matchLen, -100);
 		}
 
 		map.forEach(function(attrName, i)

@@ -28,7 +28,6 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'i' => 
         array (
             'issyrocks12\\filter\\' => 19,
-            'issyrocks12\\UsersList\\' => 22,
         ),
         'Z' => 
         array (
@@ -74,6 +73,7 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'R' => 
         array (
             'Reflar\\gamification\\' => 20,
+            'Reflar\\Reactions\\' => 17,
             'Ramsey\\Uuid\\' => 12,
         ),
         'P' => 
@@ -121,6 +121,7 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
+            'GaNuongLaChanh\\MarkdownEditor\\' => 30,
         ),
         'F' => 
         array (
@@ -143,7 +144,9 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
             'Flarum\\Approval\\' => 16,
             'Flarum\\Akismet\\' => 15,
             'Flarum\\' => 7,
+            'Flagrow\\UsersList\\' => 18,
             'Flagrow\\Upload\\' => 15,
+            'Flagrow\\Split\\' => 14,
             'Flagrow\\Masquerade\\' => 19,
             'Flagrow\\ImageUpload\\' => 20,
             'Flagrow\\Byobu\\' => 14,
@@ -188,10 +191,6 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'issyrocks12\\filter\\' => 
         array (
             0 => __DIR__ . '/..' . '/issyrocks12/flarum-ext-filter/src',
-        ),
-        'issyrocks12\\UsersList\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/issyrocks12/flarum-ext-users-list/src',
         ),
         'Zend\\Stratigility\\' => 
         array (
@@ -313,6 +312,10 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         array (
             0 => __DIR__ . '/..' . '/reflar/gamification/src',
         ),
+        'Reflar\\Reactions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/reflar/reactions/src',
+        ),
         'Ramsey\\Uuid\\' => 
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
@@ -431,6 +434,10 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
+        'GaNuongLaChanh\\MarkdownEditor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ganuonglachanh/flarum-ext-markdown-editor/src',
+        ),
         'Franzl\\Middleware\\Whoops\\' => 
         array (
             0 => __DIR__ . '/..' . '/franzl/whoops-middleware/src',
@@ -507,9 +514,17 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         array (
             0 => __DIR__ . '/..' . '/flarum/core/src',
         ),
+        'Flagrow\\UsersList\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/flagrow/users-list/src',
+        ),
         'Flagrow\\Upload\\' => 
         array (
             0 => __DIR__ . '/..' . '/flagrow/upload/src',
+        ),
+        'Flagrow\\Split\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/flagrow/split/src',
         ),
         'Flagrow\\Masquerade\\' => 
         array (
@@ -1390,6 +1405,15 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'Flagrow\\Masquerade\\Validators\\AnswerValidator' => __DIR__ . '/..' . '/flagrow/masquerade/src/Validators/AnswerValidator.php',
         'Flagrow\\Masquerade\\Validators\\FieldValidator' => __DIR__ . '/..' . '/flagrow/masquerade/src/Validators/FieldValidator.php',
         'Flagrow\\Masquerade\\Validators\\OrderFieldValidator' => __DIR__ . '/..' . '/flagrow/masquerade/src/Validators/OrderFieldValidator.php',
+        'Flagrow\\Split\\Api\\Commands\\SplitDiscussion' => __DIR__ . '/..' . '/flagrow/split/src/Api/Commands/SplitDiscussion.php',
+        'Flagrow\\Split\\Api\\Commands\\SplitDiscussionHandler' => __DIR__ . '/..' . '/flagrow/split/src/Api/Commands/SplitDiscussionHandler.php',
+        'Flagrow\\Split\\Api\\Controllers\\SplitController' => __DIR__ . '/..' . '/flagrow/split/src/Api/Controllers/SplitController.php',
+        'Flagrow\\Split\\Events\\DiscussionWasSplit' => __DIR__ . '/..' . '/flagrow/split/src/Events/DiscussionWasSplit.php',
+        'Flagrow\\Split\\Listeners\\AddClientAssets' => __DIR__ . '/..' . '/flagrow/split/src/Listeners/AddClientAssets.php',
+        'Flagrow\\Split\\Listeners\\AddSplitApi' => __DIR__ . '/..' . '/flagrow/split/src/Listeners/AddSplitApi.php',
+        'Flagrow\\Split\\Listeners\\CreatePostWhenSplit' => __DIR__ . '/..' . '/flagrow/split/src/Listeners/CreatePostWhenSplit.php',
+        'Flagrow\\Split\\Posts\\DiscussionSplitPost' => __DIR__ . '/..' . '/flagrow/split/src/Posts/DiscussionSplitPost.php',
+        'Flagrow\\Split\\Validators\\SplitDiscussionValidator' => __DIR__ . '/..' . '/flagrow/split/src/Validators/SplitDiscussionValidator.php',
         'Flagrow\\Upload\\Adapters\\AwsS3' => __DIR__ . '/..' . '/flagrow/upload/src/Adapters/AwsS3.php',
         'Flagrow\\Upload\\Adapters\\Flysystem' => __DIR__ . '/..' . '/flagrow/upload/src/Adapters/Flysystem.php',
         'Flagrow\\Upload\\Adapters\\Imgur' => __DIR__ . '/..' . '/flagrow/upload/src/Adapters/Imgur.php',
@@ -1434,6 +1458,9 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'Flagrow\\Upload\\Templates\\ImageTemplate' => __DIR__ . '/..' . '/flagrow/upload/src/Templates/ImageTemplate.php',
         'Flagrow\\Upload\\Validators\\DownloadValidator' => __DIR__ . '/..' . '/flagrow/upload/src/Validators/DownloadValidator.php',
         'Flagrow\\Upload\\Validators\\UploadValidator' => __DIR__ . '/..' . '/flagrow/upload/src/Validators/UploadValidator.php',
+        'Flagrow\\UsersList\\Api\\Controller\\SendAdminEmailController' => __DIR__ . '/..' . '/flagrow/users-list/src/Api/Controller/SendAdminEmailController.php',
+        'Flagrow\\UsersList\\Listener\\AddAdminMailApi' => __DIR__ . '/..' . '/flagrow/users-list/src/Listener/AddAdminMailApi.php',
+        'Flagrow\\UsersList\\Listener\\AddClientAssets' => __DIR__ . '/..' . '/flagrow/users-list/src/Listener/AddClientAssets.php',
         'Flarum\\Admin\\AdminServiceProvider' => __DIR__ . '/..' . '/flarum/core/src/Admin/AdminServiceProvider.php',
         'Flarum\\Admin\\Controller\\WebAppController' => __DIR__ . '/..' . '/flarum/core/src/Admin/Controller/WebAppController.php',
         'Flarum\\Admin\\Middleware\\RequireAdministrateAbility' => __DIR__ . '/..' . '/flarum/core/src/Admin/Middleware/RequireAdministrateAbility.php',
@@ -1933,6 +1960,7 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'Franzl\\Middleware\\Whoops\\FormatNegotiator' => __DIR__ . '/..' . '/franzl/whoops-middleware/src/FormatNegotiator.php',
         'Franzl\\Middleware\\Whoops\\Middleware' => __DIR__ . '/..' . '/franzl/whoops-middleware/src/Middleware.php',
         'Franzl\\Middleware\\Whoops\\WhoopsRunner' => __DIR__ . '/..' . '/franzl/whoops-middleware/src/WhoopsRunner.php',
+        'GaNuongLaChanh\\MarkdownEditor\\Listener\\AddApplicationAssets' => __DIR__ . '/..' . '/ganuonglachanh/flarum-ext-markdown-editor/src/Listener/AddApplicationAssets.php',
         'GuzzleHttp\\Client' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Client.php',
         'GuzzleHttp\\ClientInterface' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/ClientInterface.php',
         'GuzzleHttp\\Cookie\\CookieJar' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Cookie/CookieJar.php',
@@ -2797,6 +2825,28 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'RandomLib\\Source\\Sodium' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/Sodium.php',
         'RandomLib\\Source\\URandom' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/URandom.php',
         'RandomLib\\Source\\UniqID' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/UniqID.php',
+        'Reflar\\Reactions\\Api\\Controller\\CreateReactionController' => __DIR__ . '/..' . '/reflar/reactions/src/Api/Controller/CreateReactionController.php',
+        'Reflar\\Reactions\\Api\\Controller\\DeleteReactionController' => __DIR__ . '/..' . '/reflar/reactions/src/Api/Controller/DeleteReactionController.php',
+        'Reflar\\Reactions\\Api\\Controller\\ListReactionsController' => __DIR__ . '/..' . '/reflar/reactions/src/Api/Controller/ListReactionsController.php',
+        'Reflar\\Reactions\\Api\\Controller\\UpdateReactionController' => __DIR__ . '/..' . '/reflar/reactions/src/Api/Controller/UpdateReactionController.php',
+        'Reflar\\Reactions\\Api\\Serializer\\PostReactionSerializer' => __DIR__ . '/..' . '/reflar/reactions/src/Api/Serializer/PostReactionSerializer.php',
+        'Reflar\\Reactions\\Api\\Serializer\\ReactionSerializer' => __DIR__ . '/..' . '/reflar/reactions/src/Api/Serializer/ReactionSerializer.php',
+        'Reflar\\Reactions\\Command\\CreateReaction' => __DIR__ . '/..' . '/reflar/reactions/src/Command/CreateReaction.php',
+        'Reflar\\Reactions\\Command\\CreateReactionHandler' => __DIR__ . '/..' . '/reflar/reactions/src/Command/CreateReactionHandler.php',
+        'Reflar\\Reactions\\Command\\DeleteReaction' => __DIR__ . '/..' . '/reflar/reactions/src/Command/DeleteReaction.php',
+        'Reflar\\Reactions\\Command\\DeleteReactionHandler' => __DIR__ . '/..' . '/reflar/reactions/src/Command/DeleteReactionHandler.php',
+        'Reflar\\Reactions\\Command\\EditReaction' => __DIR__ . '/..' . '/reflar/reactions/src/Command/EditReaction.php',
+        'Reflar\\Reactions\\Command\\EditReactionHandler' => __DIR__ . '/..' . '/reflar/reactions/src/Command/EditReactionHandler.php',
+        'Reflar\\Reactions\\Event\\PostWasReacted' => __DIR__ . '/..' . '/reflar/reactions/src/Event/PostWasReacted.php',
+        'Reflar\\Reactions\\Event\\PostWasUnreacted' => __DIR__ . '/..' . '/reflar/reactions/src/Event/PostWasUnreacted.php',
+        'Reflar\\Reactions\\Listener\\AddClientAssets' => __DIR__ . '/..' . '/reflar/reactions/src/Listener/AddClientAssets.php',
+        'Reflar\\Reactions\\Listener\\AddPostReactionsRelationship' => __DIR__ . '/..' . '/reflar/reactions/src/Listener/AddPostReactionsRelationship.php',
+        'Reflar\\Reactions\\Listener\\AddReactionsApi' => __DIR__ . '/..' . '/reflar/reactions/src/Listener/AddReactionsApi.php',
+        'Reflar\\Reactions\\Listener\\SaveReactionsToDatabase' => __DIR__ . '/..' . '/reflar/reactions/src/Listener/SaveReactionsToDatabase.php',
+        'Reflar\\Reactions\\Listener\\SendNotificationWhenPostIsReacted' => __DIR__ . '/..' . '/reflar/reactions/src/Listener/SendNotificationWhenPostIsReacted.php',
+        'Reflar\\Reactions\\Notification\\PostReactedBlueprint' => __DIR__ . '/..' . '/reflar/reactions/src/Notification/PostReactedBlueprint.php',
+        'Reflar\\Reactions\\Reaction' => __DIR__ . '/..' . '/reflar/reactions/src/Reaction.php',
+        'Reflar\\Reactions\\Validator\\ReactionValidator' => __DIR__ . '/..' . '/reflar/reactions/src/Validator/ReactionValidator.php',
         'Reflar\\gamification\\Api\\Controllers\\ConvertLikesController' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Controllers/ConvertLikesController.php',
         'Reflar\\gamification\\Api\\Controllers\\CreateRankController' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Controllers/CreateRankController.php',
         'Reflar\\gamification\\Api\\Controllers\\DeleteRankController' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Controllers/DeleteRankController.php',
@@ -3295,9 +3345,6 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'Zend\\Stratigility\\NoopFinalHandler' => __DIR__ . '/..' . '/zendframework/zend-stratigility/src/NoopFinalHandler.php',
         'Zend\\Stratigility\\Route' => __DIR__ . '/..' . '/zendframework/zend-stratigility/src/Route.php',
         'Zend\\Stratigility\\Utils' => __DIR__ . '/..' . '/zendframework/zend-stratigility/src/Utils.php',
-        'issyrocks12\\UsersList\\Api\\Controller\\SendAdminEmailController' => __DIR__ . '/..' . '/issyrocks12/flarum-ext-users-list/src/Api/Controller/SendAdminEmailController.php',
-        'issyrocks12\\UsersList\\Listener\\AddAdminMailApi' => __DIR__ . '/..' . '/issyrocks12/flarum-ext-users-list/src/Listener/AddAdminMailApi.php',
-        'issyrocks12\\UsersList\\Listener\\AddClientAssets' => __DIR__ . '/..' . '/issyrocks12/flarum-ext-users-list/src/Listener/AddClientAssets.php',
         'issyrocks12\\filter\\Listener\\AddClientAssets' => __DIR__ . '/..' . '/issyrocks12/flarum-ext-filter/src/Listener/AddClientAssets.php',
         'issyrocks12\\filter\\Listener\\FilterPosts' => __DIR__ . '/..' . '/issyrocks12/flarum-ext-filter/src/Listener/FilterPosts.php',
         'lessc' => __DIR__ . '/..' . '/oyejorge/less.php/lessc.inc.php',
@@ -3347,8 +3394,8 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         's9e\\TextFormatter\\Configurator\\Helpers\\RegexpBuilder' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
         's9e\\TextFormatter\\Configurator\\Helpers\\RegexpParser' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator/Helpers/RegexpParser.php',
         's9e\\TextFormatter\\Configurator\\Helpers\\RulesHelper' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
-        's9e\\TextFormatter\\Configurator\\Helpers\\TemplateForensics' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
         's9e\\TextFormatter\\Configurator\\Helpers\\TemplateHelper' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
+        's9e\\TextFormatter\\Configurator\\Helpers\\TemplateInspector' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
         's9e\\TextFormatter\\Configurator\\Helpers\\TemplateParser' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
         's9e\\TextFormatter\\Configurator\\Helpers\\XPathHelper' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
         's9e\\TextFormatter\\Configurator\\Items\\Attribute' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
@@ -3359,6 +3406,7 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\EmailFilter' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator/Items/AttributeFilters/EmailFilter.php',
         's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\FalseFilter' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator/Items/AttributeFilters/FalseFilter.php',
         's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\FloatFilter' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator/Items/AttributeFilters/FloatFilter.php',
+        's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\FontfamilyFilter' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator/Items/AttributeFilters/FontfamilyFilter.php',
         's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\HashmapFilter' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator/Items/AttributeFilters/HashmapFilter.php',
         's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\IdentifierFilter' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator/Items/AttributeFilters/IdentifierFilter.php',
         's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\IntFilter' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator/Items/AttributeFilters/IntFilter.php',
@@ -3458,6 +3506,7 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         's9e\\TextFormatter\\Configurator\\TemplateNormalizations\\Custom' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator/TemplateNormalizations/Custom.php',
         's9e\\TextFormatter\\Configurator\\TemplateNormalizations\\FixUnescapedCurlyBracesInHtmlAttributes' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
         's9e\\TextFormatter\\Configurator\\TemplateNormalizations\\FoldArithmeticConstants' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
+        's9e\\TextFormatter\\Configurator\\TemplateNormalizations\\FoldConstantXPathExpressions' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
         's9e\\TextFormatter\\Configurator\\TemplateNormalizations\\InlineAttributes' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
         's9e\\TextFormatter\\Configurator\\TemplateNormalizations\\InlineCDATA' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
         's9e\\TextFormatter\\Configurator\\TemplateNormalizations\\InlineElements' => __DIR__ . '/..' . '/s9e/text-formatter/src/Configurator.php',
@@ -3495,6 +3544,8 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         's9e\\TextFormatter\\Plugins\\Autoimage\\Parser' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/Autoimage/Parser.php',
         's9e\\TextFormatter\\Plugins\\Autolink\\Configurator' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/Autolink/Configurator.php',
         's9e\\TextFormatter\\Plugins\\Autolink\\Parser' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/Autolink/Parser.php',
+        's9e\\TextFormatter\\Plugins\\Autovideo\\Configurator' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/Autovideo/Configurator.php',
+        's9e\\TextFormatter\\Plugins\\Autovideo\\Parser' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/Autovideo/Parser.php',
         's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/BBCodes/Configurator.php',
         's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\AttributeValueCollection' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/BBCodes/Configurator/AttributeValueCollection.php',
         's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\BBCode' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/BBCodes/Configurator/BBCode.php',
@@ -3527,10 +3578,10 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         's9e\\TextFormatter\\Plugins\\Litedown\\Configurator' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/Litedown/Configurator.php',
         's9e\\TextFormatter\\Plugins\\Litedown\\Parser' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/Litedown/Parser.php',
         's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator.php',
-        's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\CachedSiteDefinitionProvider' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/CachedSiteDefinitionProvider.php',
-        's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\LiveSiteDefinitionProvider' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/LiveSiteDefinitionProvider.php',
-        's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\MediaSiteCollection' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/MediaSiteCollection.php',
-        's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\SiteDefinitionProvider' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/SiteDefinitionProvider.php',
+        's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\Collections\\CachedDefinitionCollection' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/Collections/CachedDefinitionCollection.php',
+        's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\Collections\\SiteCollection' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/Collections/SiteCollection.php',
+        's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\Collections\\SiteDefinitionCollection' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/Collections/SiteDefinitionCollection.php',
+        's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\Collections\\XmlFileDefinitionCollection' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/Collections/XmlFileDefinitionCollection.php',
         's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\TemplateBuilder' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/TemplateBuilder.php',
         's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\TemplateGenerator' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/TemplateGenerator.php',
         's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\TemplateGenerators\\Choose' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/TemplateGenerators/Choose.php',
@@ -3538,6 +3589,8 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         's9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\TemplateGenerators\\Iframe' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Configurator/TemplateGenerators/Iframe.php',
         's9e\\TextFormatter\\Plugins\\MediaEmbed\\Parser' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/MediaEmbed/Parser.php',
         's9e\\TextFormatter\\Plugins\\ParserBase' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/ParserBase.php',
+        's9e\\TextFormatter\\Plugins\\PipeTables\\Configurator' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/PipeTables/Configurator.php',
+        's9e\\TextFormatter\\Plugins\\PipeTables\\Parser' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/PipeTables/Parser.php',
         's9e\\TextFormatter\\Plugins\\Preg\\Configurator' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/Preg/Configurator.php',
         's9e\\TextFormatter\\Plugins\\Preg\\Parser' => __DIR__ . '/..' . '/s9e/text-formatter/src/Plugins/Preg/Parser.php',
         's9e\\TextFormatter\\Renderer' => __DIR__ . '/..' . '/s9e/text-formatter/src/Renderer.php',

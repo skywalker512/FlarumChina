@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Emoticons;
@@ -67,6 +67,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	public $notAfter = '';
 	public $notBefore = '';
 	public $notIfCondition;
+	protected $onDuplicateAction = 'replace';
 	protected $tagName = 'E';
 	protected function setUp()
 	{

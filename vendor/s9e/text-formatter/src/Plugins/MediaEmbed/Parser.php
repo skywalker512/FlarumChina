@@ -2,14 +2,14 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
-use s9e\TextFormatter\Utils\Http;
 use s9e\TextFormatter\Parser as TagStack;
 use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Plugins\ParserBase;
+use s9e\TextFormatter\Utils\Http;
 class Parser extends ParserBase
 {
 	protected static $client;
@@ -20,14 +20,13 @@ class Parser extends ParserBase
 			$url = $m[0][0];
 			$pos = $m[0][1];
 			$len = \strlen($url);
-			$tag = $this->parser->addSelfClosingTag('MEDIA', $pos, $len);
+			$tag = $this->parser->addSelfClosingTag($this->config['tagName'], $pos, $len, -10);
 			$tag->setAttribute('url', $url);
-			$tag->setSortPriority(-10);
 		}
 	}
 	public static function filterTag(Tag $tag, TagStack $tagStack, array $sites)
 	{
-		if ($tag->hasAttribute('media'))
+		if ($tag->hasAttribute('site'))
 			self::addTagFromMediaId($tag, $tagStack, $sites);
 		elseif ($tag->hasAttribute('url'))
 			self::addTagFromMediaUrl($tag, $tagStack, $sites);
@@ -42,13 +41,16 @@ class Parser extends ParserBase
 	}
 	public static function scrape(Tag $tag, array $scrapeConfig, $cacheDir = \null)
 	{
-		if (!$tag->hasAttribute('url'))
-			return \true;
-		$url = $tag->getAttribute('url');
-		if (!\preg_match('#^https?://[^<>"\'\\s]+$#D', $url))
-			return \true;
-		foreach ($scrapeConfig as $scrape)
-			self::scrapeEntry($url, $tag, $scrape, $cacheDir);
+		if ($tag->hasAttribute('url'))
+		{
+			$url = $tag->getAttribute('url');
+			if (\preg_match('#^https?://[^<>"\'\\s]+$#Di', $url))
+			{
+				$url = \strtolower(\substr($url, 0, 5)) . \substr($url, 5);
+				foreach ($scrapeConfig as $scrape)
+					self::scrapeEntry($url, $tag, $scrape, $cacheDir);
+			}
+		}
 		return \true;
 	}
 	protected static function addSiteTag(Tag $tag, TagStack $tagStack, $siteId)
@@ -56,13 +58,11 @@ class Parser extends ParserBase
 		$endTag = $tag->getEndTag() ?: $tag;
 		$lpos = $tag->getPos();
 		$rpos = $endTag->getPos() + $endTag->getLen();
-		$newTag = $tagStack->addSelfClosingTag(\strtoupper($siteId), $lpos, $rpos - $lpos);
-		$newTag->setAttributes($tag->getAttributes());
-		$newTag->setSortPriority($tag->getSortPriority());
+		$tagStack->addTagPair(\strtoupper($siteId), $lpos, 0, $rpos, 0, $tag->getSortPriority())->setAttributes($tag->getAttributes());
 	}
 	protected static function addTagFromMediaId(Tag $tag, TagStack $tagStack, array $sites)
 	{
-		$siteId = \strtolower($tag->getAttribute('media'));
+		$siteId = \strtolower($tag->getAttribute('site'));
 		if (\in_array($siteId, $sites, \true))
 			self::addSiteTag($tag, $tagStack, $siteId);
 	}

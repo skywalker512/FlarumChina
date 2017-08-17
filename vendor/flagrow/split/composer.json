@@ -1,0 +1,51 @@
+{
+    "name": "flagrow/split",
+    "description": "Separate posts from one discussion into its own, splits discussions.",
+    "keywords": [
+        "split",
+        "flarum",
+        "flagrow"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matteo Pompili",
+            "email": "matpompili@gmail.com"
+        },
+        {
+            "name": "Daniël Klabbers",
+            "email": "daniel@klabbers.email",
+            "homepage": "http://luceos.com"
+        },
+        {
+            "name": "Connor Davis",
+            "email": "davis@produes.co"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/flagrow/split/issues",
+        "source": "https://github.com/flagrow/split"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.6"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Flagrow Split",
+            "icon": {
+                "name": "code-fork",
+                "backgroundColor": "#f4f4f4",
+                "color": "#5f4bb6"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Flagrow\\Split\\": "src/"
+        }
+    }
+}

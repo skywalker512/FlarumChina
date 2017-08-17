@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\HTMLElements;
@@ -25,6 +25,7 @@ class Configurator extends ConfiguratorBase
 		'formaction' => '#url',
 		'href'       => '#url',
 		'icon'       => '#url',
+		'longdesc'   => '#url',
 		'manifest'   => '#url',
 		'poster'     => '#url',
 		'src'        => '#url'
@@ -95,7 +96,7 @@ class Configurator extends ConfiguratorBase
 		if (!$allowUnsafe)
 			if (\substr($attrName, 0, 2) === 'on'
 			 || \in_array($attrName, $this->unsafeAttributes))
-				throw new RuntimeException("'" . $elName . "' elements are unsafe and are disabled by default. Please use " . __CLASS__ . '::allowUnsafeAttribute() to bypass this security measure');
+				throw new RuntimeException("'" . $attrName . "' attributes are unsafe and are disabled by default. Please use " . __CLASS__ . '::allowUnsafeAttribute() to bypass this security measure');
 		$tag = $this->configurator->tags->get($tagName);
 		if (!isset($tag->attributes[$attrName]))
 		{

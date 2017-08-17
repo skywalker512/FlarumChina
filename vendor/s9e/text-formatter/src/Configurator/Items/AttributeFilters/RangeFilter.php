@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
@@ -20,6 +20,9 @@ class RangeFilter extends AttributeFilter
 		$this->addParameterByName('max');
 		$this->addParameterByName('logger');
 		$this->setJS('BuiltInFilters.filterRange');
+		$this->markAsSafeAsURL();
+		$this->markAsSafeInCSS();
+		$this->markAsSafeInJS();
 		if (isset($min))
 			$this->setRange($min, $max);
 	}
@@ -43,17 +46,5 @@ class RangeFilter extends AttributeFilter
 			throw new InvalidArgumentException('Invalid range: min (' . $min . ') > max (' . $max . ')');
 		$this->vars['min'] = $min;
 		$this->vars['max'] = $max;
-	}
-	public function isSafeInCSS()
-	{
-		return \true;
-	}
-	public function isSafeInJS()
-	{
-		return \true;
-	}
-	public function isSafeAsURL()
-	{
-		return \true;
 	}
 }

@@ -1,0 +1,35 @@
+flagrow-byobu:
+    forum:
+        badges:
+            is_private:
+                tooltip: Private Diskussion
+        buttons:
+            add_recipients: Empfänger
+            submit: OK
+            edit_recipients: Empfänger bearbeiten
+            send_pd: "Sende {username} eine Nachricht"
+        labels:
+            recipients: "{count} Empfänger|{count} Empfänger"
+            user_deleted: -gelöscht-
+        nav:
+            private_discussions: Private Diskussionen
+        input:
+            search_recipients: Empfänger suchen durch Eingabe der ersten Buchstaben…
+        search:
+            headings:
+                groups: Berechtigung der Gruppe
+        modal:
+            titles:
+                update_recipients: "Empfänger von {title} bearbeiten"
+                add_recipients: Empfänger zur Diskussion hinzufügen
+        post:
+            recipients_modified:
+                added_and_removed: "{username} hat {added} hinzugefügt und {removed} als Empfänger entfernt."
+                added: "{username} hat Empfänger {added} hinzugefügt."
+                removed: "{username} hat Empfänger {removed} entfernt."
+    admin:
+        permission:
+            create_private_discussions_with_users: Private Diskussionen mit Nutzern erstellen
+            create_private_discussions_with_groups: Private Diskussionen mit Gruppen erstellen
+            edit_user_recipients: Nutzer in privaten Diskussionen bearbeiten
+            edit_group_recipients: Gruppen in privaten Diskussionen bearbeiten

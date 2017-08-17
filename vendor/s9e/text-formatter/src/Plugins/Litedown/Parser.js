@@ -65,13 +65,13 @@ function addInlineCodeTags(left, right)
 */
 function addLinkTag(startTagPos, endTagPos, endTagLen, linkInfo)
 {
-	var tag = addTagPair('URL', startTagPos, 1, endTagPos, endTagLen);
-	setLinkAttributes(tag, linkInfo, 'url');
-
 	// Give the link a slightly worse priority if this is a implicit reference and a slightly
-	// better priority if it's an explicit reference or an inline link or  to give it precedence
+	// better priority if it's an explicit reference or an inline link or to give it precedence
 	// over possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
-	tag.setSortPriority((endTagLen === 1) ? 1 : -1);
+	var priority = (endTagLen === 1) ? 1 : -1;
+
+	var tag = addTagPair('URL', startTagPos, 1, endTagPos, endTagLen, priority);
+	setLinkAttributes(tag, linkInfo, 'url');
 
 	// Overwrite the markup without touching the link's text
 	overwrite(startTagPos, 1);
@@ -494,9 +494,7 @@ function matchBlockLevelMarkup()
 
 			do
 			{
-				var tag = addStartTag('QUOTE', matchPos, 0);
-				tag.setSortPriority(quotesCnt);
-
+				var tag = addStartTag('QUOTE', matchPos, 0, quotesCnt - 999);
 				quotes.push(tag);
 			}
 			while (quoteDepth > ++quotesCnt);
@@ -540,9 +538,8 @@ function matchBlockLevelMarkup()
 				// Overwrite the whole block
 				overwrite(codeTag.getPos(), textBoundary - codeTag.getPos());
 
-				endTag = addEndTag('CODE', textBoundary, 0);
+				endTag = addEndTag('CODE', textBoundary, 0, -1);
 				endTag.pairWith(codeTag);
-				endTag.setSortPriority(-1);
 				codeTag = null;
 				codeFence = null;
 			}
@@ -572,7 +569,7 @@ function matchBlockLevelMarkup()
 				if (!codeTag)
 				{
 					// Create code block
-					codeTag = addStartTag('CODE', matchPos + ignoreLen, 0);
+					codeTag = addStartTag('CODE', matchPos + ignoreLen, 0, -999);
 				}
 
 				// Clear the captures to prevent any further processing
@@ -746,9 +743,8 @@ function matchBlockLevelMarkup()
 
 				if (codeTag && m[5] === codeFence)
 				{
-					endTag = addEndTag('CODE', tagPos, tagLen);
+					endTag = addEndTag('CODE', tagPos, tagLen, -1);
 					endTag.pairWith(codeTag);
-					endTag.setSortPriority(-1);
 
 					addIgnoreTag(textBoundary, tagPos - textBoundary);
 
@@ -813,7 +809,7 @@ function matchBlockLevelMarkup()
 
 		if (ignoreLen)
 		{
-			addIgnoreTag(matchPos, ignoreLen).setSortPriority(1000);
+			addIgnoreTag(matchPos, ignoreLen, 1000);
 		}
 	});
 }
@@ -882,7 +878,7 @@ function matchImages()
 */
 function matchInlineImages()
 {
-	var m, regexp = /!\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(((?:[^\x17\s()]|\([^\x17\s()]*\))*(?: +(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\)))?)\)/g;
+	var m, regexp = /!\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(( *(?:[^\x17\s()]|\([^\x17\s()]*\))*(?=[ )]) *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17)]*\))? *)\)/g;
 	while (m = regexp.exec(text))
 	{
 		var linkInfo    = m[1],
@@ -959,7 +955,7 @@ function matchInlineCode()
 */
 function matchInlineLinks()
 {
-	var m, regexp = /\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(((?:[^\x17\s()]|\([^\x17\s()]*\))*(?: +(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\)))?)\)/g;
+	var m, regexp = /\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(( *(?:[^\x17\s()]|\([^\x17\s()]*\))*(?=[ )]) *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17)]*\))? *)\)/g;
 	while (m = regexp.exec(text))
 	{
 		var linkInfo    = m[1],
@@ -983,10 +979,10 @@ function matchLinkReferences()
 		return;
 	}
 
-	var m, regexp = /^\x1A* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+ *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17\)]*?\))?)[^\x17\n]*\n?/gm;
+	var m, regexp = /^\x1A* {0,3}\[([^\x17\]]+)\]: *([^\s\x17]+ *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17)]*\))?)[^\x17\n]*\n?/gm;
 	while (m = regexp.exec(text))
 	{
-		addIgnoreTag(m['index'], m[0].length).setSortPriority(-2);
+		addIgnoreTag(m['index'], m[0].length, -2);
 
 		// Ignore the reference if it already exists
 		var id = m[1].toLowerCase();
@@ -1189,13 +1185,13 @@ function processEmphasisBlock(block)
 */
 function setLinkAttributes(tag, linkInfo, attrName)
 {
-	var url   = linkInfo,
+	var url   = linkInfo.replace(/^\s*/, '').replace(/\s*$/, ''),
 		title = '',
-		pos   = linkInfo.indexOf(' ')
+		pos   = url.indexOf(' ')
 	if (pos !== -1)
 	{
-		url   = linkInfo.substr(0, pos);
-		title = linkInfo.substr(pos).replace(/^\s*\S/, '').replace(/\S\s*$/, '');
+		title = url.substr(pos).replace(/^\s*\S/, '').replace(/\S\s*$/, '');
+		url   = url.substr(0, pos);
 	}
 
 	tag.setAttribute(attrName, decode(url));

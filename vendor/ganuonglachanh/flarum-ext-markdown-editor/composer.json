@@ -1,0 +1,41 @@
+{
+    "name": "ganuonglachanh/flarum-ext-markdown-editor",
+    "description": "Markdown toolbar for Flarum",
+    "type": "flarum-extension",
+    "keywords": ["flarum","smileys"],
+    "version": "0.9",
+    "authors": [
+        {
+            "name": "XEngine",
+            "email": "tidusdragonh3art@gmail.com"
+        },
+        {
+            "name": "Jan Tojnar",
+            "email": "jtojnar@gmail.com"
+        },
+        {
+            "name": "GaNuongLaChanh",
+            "email": "ganuonglachanh@outlook.com"
+        }
+    ],
+    "license": "Private",
+    "require": {
+		"php": ">=5.4.0",
+        "flarum/core": "^0.1.0-beta.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "GaNuongLaChanh\\MarkdownEditor\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Markdown Editor",
+            "icon": {
+                "name": "pencil",
+                "backgroundColor": "#2e3436",
+                "color": "#eeeeec"
+            }
+        }
+    }
+}

@@ -72,7 +72,6 @@ class SaveVotesToDatabase
         $data = $event->data;
         $actor = $event->actor;
         $user = $post->user;
-        $discussion = $post->discussion;
 
         $this->floodgate->assertNotFlooding($actor);
 
@@ -87,6 +86,61 @@ class SaveVotesToDatabase
         } else {
             $isDownvoted = false;
         }
+
+        $this->vote($post, $isDownvoted, $isUpvoted, $actor, $user);
+    }
+
+    public function sendDownvotedData($post, $user, $actor)
+    {
+        $oldVote = Notification::where([
+            'data' => $actor->id,
+            'subject_id' => $post->id,
+            'type' => 'upvoted',
+        ])->first();
+
+        if ($oldVote !== null) {
+            $oldVote->type = 'downvoted';
+            $oldVote->save();
+        } elseif ($user->id !== $actor->id) {
+            $this->notifications->sync(
+                new DownvotedBlueprint($post, $actor, $user),
+                [$user]);
+        }
+
+        $this->events->fire(
+            new PostWasUpvoted($post, $user, $actor)
+        );
+
+        $this->checkDownUserVotes($user);
+    }
+
+    public function sendUpvotedData($post, $user, $actor)
+    {
+        $oldVote = Notification::where([
+            'data' => $actor->id,
+            'subject_id' => $post->id,
+            'type' => 'downvoted',
+        ])->first();
+
+        if ($oldVote !== null) {
+            $oldVote->type = 'upvoted';
+            $oldVote->save();
+        } elseif ($user->id !== $actor->id) {
+            $this->notifications->sync(
+                new UpvotedBlueprint($post, $actor, $user),
+                [$user]);
+        }
+
+        $this->events->fire(
+            new PostWasDownvoted($post, $user, $actor)
+        );
+
+        $this->checkUpUserVotes($user);
+    }
+
+    public function vote($post, $isDownvoted, $isUpvoted, $actor, $user)
+    {
+        $discussion = $post->discussion;
 
         if ($post->exists) {
             $vote = $this->gamification->findVote($post->id, $actor->id);
@@ -161,54 +215,6 @@ class SaveVotesToDatabase
         }
     }
 
-    public function sendDownvotedData($post, $user, $actor)
-    {
-        $oldVote = Notification::where([
-            'data'       => $actor->id,
-            'subject_id' => $post->id,
-            'type'       => 'upvoted',
-        ])->first();
-
-        if ($oldVote !== null) {
-            $oldVote->type = 'downvoted';
-            $oldVote->save();
-        } elseif ($user->id !== $actor->id) {
-            $this->notifications->sync(
-                new DownvotedBlueprint($post, $actor, $user),
-                [$user]);
-        }
-
-        $this->events->fire(
-            new PostWasUpvoted($post, $user, $actor)
-        );
-
-        $this->checkDownUserVotes($user);
-    }
-
-    public function sendUpvotedData($post, $user, $actor)
-    {
-        $oldVote = Notification::where([
-            'data'       => $actor->id,
-            'subject_id' => $post->id,
-            'type'       => 'downvoted',
-        ])->first();
-
-        if ($oldVote !== null) {
-            $oldVote->type = 'upvoted';
-            $oldVote->save();
-        } elseif ($user->id !== $actor->id) {
-            $this->notifications->sync(
-                new UpvotedBlueprint($post, $actor, $user),
-                [$user]);
-        }
-
-        $this->events->fire(
-            new PostWasDownvoted($post, $user, $actor)
-        );
-
-        $this->checkUpUserVotes($user);
-    }
-
     /**
      * @param $user
      */
@@ -223,6 +229,7 @@ class SaveVotesToDatabase
             }
         }
     }
+
 
     /**
      * @param $user

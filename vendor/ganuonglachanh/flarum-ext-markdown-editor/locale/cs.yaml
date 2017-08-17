@@ -1,0 +1,25 @@
+ganuonglachanh-mdeditor:
+  admin:
+    help_texts:
+      title: 'Editor'
+      description: 'Zvol symboly, které budou dostupné z lišty editoru.'
+    labels:
+      preferences:
+        title: 'Předvolby'
+        symbols: 'Symboly přidané do lišty editoru (in JSON): [{"label":"☎","insert":"☎"},{"label":"❄","insert":"❄"}]'
+    buttons:
+      save: 'Uložit'
+  forum:
+    toolbar:
+      bold: 'Tučné'
+      italic: 'Kurzíva'
+      underline: 'Underline'
+      strikethrough: 'Strikethrough'
+      heading: 'Nadpis'
+      quote: 'Citát'
+      code: 'Code'
+      unordered_list: 'Nečíslovaný seznam'
+      ordered_list: 'Číslovaný seznam'
+      link: 'Vyvořit odkaz'
+      image: 'Vložit obrázek'
+      guide: 'Vysvětlení formátování'

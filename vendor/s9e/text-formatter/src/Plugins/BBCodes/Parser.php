@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\BBCodes;
@@ -19,10 +19,12 @@ class Parser extends ParserBase
 	protected $startPos;
 	protected $text;
 	protected $textLen;
+	protected $uppercaseText;
 	public function parse($text, array $matches)
 	{
-		$this->text = $text;
-		$this->textLen = \strlen($text);
+		$this->text          = $text;
+		$this->textLen       = \strlen($text);
+		$this->uppercaseText = '';
 		foreach ($matches as $m)
 		{
 			$this->bbcodeName = \strtoupper($m[1][0]);
@@ -58,8 +60,10 @@ class Parser extends ParserBase
 	}
 	protected function captureEndTag()
 	{
+		if (empty($this->uppercaseText))
+			$this->uppercaseText = \strtoupper($this->text);
 		$match     = '[/' . $this->bbcodeName . $this->bbcodeSuffix . ']';
-		$endTagPos = \stripos($this->text, $match, $this->pos);
+		$endTagPos = \strpos($this->uppercaseText, $match, $this->pos);
 		if ($endTagPos === \false)
 			return;
 		return $this->parser->addEndTag($this->getTagName(), $endTagPos, \strlen($match));

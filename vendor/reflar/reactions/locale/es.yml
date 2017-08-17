@@ -1,0 +1,36 @@
+reflar-reactions:
+  forum:
+    warning: Tu reacción fue convertida
+    notification: '{username} reaccionó con {reaction} a tu publicación'
+
+  admin:
+    permissions:
+        react_posts_label: Reaccionar a publicaciones
+
+    nav:
+      desc: Añade reacciones personalizadas y cambia la configuración.
+
+    page:
+      reactions:
+        title: Reacciones personalizadas
+         reactions: Reacciones actuales
+         Helptext: Escribe el nombre (identificador) del emoji de FontAwesome y selecciona qué tipo te gustaría.
+         help:
+           identifier: Identificador
+
+      settings:
+        save_settings: Guardar ajustes
+        integrations:
+          legend: Integraciones
+          warning: La misma reacción <strong>no</strong> puede ser convertida a un like <strong>y además</strong> a un voto positivo
+          gamification:
+             legend: Gamificación
+            upvoteLabel: Convertir reacciones a votos positivos
+            upvoteHelptext: Escribe el identificador de la reacción que desees convertir a un voto positivo
+            downvoteLabel: Convertir reacciones a votos negativos
+            downvoteHelptext:  Escribe el identificador de la reacción que desees convertir a un voto negativo
+
+          likes:
+            legend: Likes
+            Label: Convertir reacciones a likes
+            Helptext: Escribe el identificador de la reacción que desees convertir en un like

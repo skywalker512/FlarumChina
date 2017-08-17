@@ -179,27 +179,27 @@ function HTMLDocument() {}
  */
 function HTMLElement() {}
 /**
- * @param {string} namespaceURI
+ * @param {?string} namespaceURI
  * @param {string} localName
  * @return {string}
  * @nosideeffects
  */
 Element.prototype.getAttributeNS = function(namespaceURI, localName) {};
 /**
- * @param {string} namespaceURI
+ * @param {?string} namespaceURI
  * @param {string} localName
  * @return {boolean}
  * @nosideeffects
  */
 Element.prototype.hasAttributeNS = function(namespaceURI, localName) {};
 /**
- * @param {string} namespaceURI
+ * @param {?string} namespaceURI
  * @param {string} localName
  * @return {undefined}
  */
 Element.prototype.removeAttributeNS = function(namespaceURI, localName) {};
 /**
- * @param {string} namespaceURI
+ * @param {?string} namespaceURI
  * @param {string} qualifiedName
  * @param {string|number|boolean} value Values are converted to strings with
  * @return {undefined}

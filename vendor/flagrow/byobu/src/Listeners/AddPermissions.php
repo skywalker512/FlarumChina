@@ -24,14 +24,20 @@ class AddPermissions
     public function prepareApiAttributes(PrepareApiAttributes $event)
     {
         if ($event->isSerializer(ForumSerializer::class)) {
-            $event->attributes['canStartPrivateDiscussion'] = $event->actor->can('startPrivateDiscussionWithUsers') || $event->actor->can('startPrivateDiscussionWithGroups');
-            $event->attributes['canStartPrivateDiscussionWithUsers'] = $event->actor->can('startPrivateDiscussionWithUsers');
-            $event->attributes['canStartPrivateDiscussionWithGroups'] = $event->actor->can('startPrivateDiscussionWithGroups');
+            $users = $event->actor->can('discussion.startPrivateDiscussionWithUsers');
+            $groups = $event->actor->can('discussion.startPrivateDiscussionWithGroups');
+
+            $event->attributes['canStartPrivateDiscussion'] = $users || $groups;
+            $event->attributes['canStartPrivateDiscussionWithUsers'] = $users;
+            $event->attributes['canStartPrivateDiscussionWithGroups'] = $groups;
         }
         if ($event->isSerializer(DiscussionSerializer::class)) {
-            $event->attributes['canEditRecipients'] = $event->actor->can('editUserRecipients', $event->model) || $event->actor->can('editGroupRecipients', $event->model);
-            $event->attributes['canEditUserRecipients'] = $event->actor->can('editUserRecipients', $event->model);
-            $event->attributes['canEditGroupRecipients'] = $event->actor->can('editGroupRecipients', $event->model);
+            $users = $event->actor->can('editUserRecipients', $event->model);
+            $groups = $event->actor->can('editGroupRecipients', $event->model);
+
+            $event->attributes['canEditRecipients'] = $users || $groups;
+            $event->attributes['canEditUserRecipients'] = $users;
+            $event->attributes['canEditGroupRecipients'] = $groups;
         }
     }
 }

@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Plugins\Litedown;
@@ -47,9 +47,9 @@ class Parser extends ParserBase
 	}
 	protected function addLinkTag($startTagPos, $endTagPos, $endTagLen, $linkInfo)
 	{
-		$tag = $this->parser->addTagPair('URL', $startTagPos, 1, $endTagPos, $endTagLen);
+		$priority = ($endTagLen === 1) ? 1 : -1;
+		$tag = $this->parser->addTagPair('URL', $startTagPos, 1, $endTagPos, $endTagLen, $priority);
 		$this->setLinkAttributes($tag, $linkInfo, 'url');
-		$tag->setSortPriority(($endTagLen === 1) ? 1 : -1);
 		$this->overwrite($startTagPos, 1);
 		$this->overwrite($endTagPos,   $endTagLen);
 	}
@@ -266,8 +266,7 @@ class Parser extends ParserBase
 				$newContext = \true;
 				do
 				{
-					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0);
-					$tag->setSortPriority($quotesCnt);
+					$tag = $this->parser->addStartTag('QUOTE', $matchPos, 0, $quotesCnt - 999);
 					$quotes[] = $tag;
 				}
 				while ($quoteDepth > ++$quotesCnt);
@@ -295,9 +294,8 @@ class Parser extends ParserBase
 				if (isset($codeTag))
 				{
 					$this->overwrite($codeTag->getPos(), $textBoundary - $codeTag->getPos());
-					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0);
+					$endTag = $this->parser->addEndTag('CODE', $textBoundary, 0, -1);
 					$endTag->pairWith($codeTag);
-					$endTag->setSortPriority(-1);
 					$codeTag = \null;
 					$codeFence = \null;
 				}
@@ -314,7 +312,7 @@ class Parser extends ParserBase
 				{
 					$ignoreLen += $indentPos;
 					if (!isset($codeTag))
-						$codeTag = $this->parser->addStartTag('CODE', $matchPos + $ignoreLen, 0);
+						$codeTag = $this->parser->addStartTag('CODE', $matchPos + $ignoreLen, 0, -999);
 					$m = array();
 				}
 			}
@@ -417,9 +415,8 @@ class Parser extends ParserBase
 					$tagLen = $lfPos - $tagPos;
 					if (isset($codeTag) && $m[5][0] === $codeFence)
 					{
-						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen);
+						$endTag = $this->parser->addEndTag('CODE', $tagPos, $tagLen, -1);
 						$endTag->pairWith($codeTag);
-						$endTag->setSortPriority(-1);
 						$this->parser->addIgnoreTag($textBoundary, $tagPos - $textBoundary);
 						$this->overwrite($codeTag->getPos(), $tagPos + $tagLen - $codeTag->getPos());
 						$codeTag = \null;
@@ -462,7 +459,7 @@ class Parser extends ParserBase
 			if (!$lineIsEmpty)
 				$textBoundary = $lfPos;
 			if ($ignoreLen)
-				$this->parser->addIgnoreTag($matchPos, $ignoreLen)->setSortPriority(1000);
+				$this->parser->addIgnoreTag($matchPos, $ignoreLen, 1000);
 		}
 	}
 	protected function matchEmphasis()
@@ -500,7 +497,7 @@ class Parser extends ParserBase
 	protected function matchInlineImages()
 	{
 		\preg_match_all(
-			'/!\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(((?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
+			'/!\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(( *(?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?=[ )]) *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17)]*\\))? *)\\)/',
 			$this->text,
 			$matches,
 			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER
@@ -569,7 +566,7 @@ class Parser extends ParserBase
 	protected function matchInlineLinks()
 	{
 		\preg_match_all(
-			'/\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(((?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?: +(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\)))?)\\)/',
+			'/\\[(?:[^\\x17[\\]]|\\[[^\\x17[\\]]*\\])*\\]\\(( *(?:[^\\x17\\s()]|\\([^\\x17\\s()]*\\))*(?=[ )]) *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17)]*\\))? *)\\)/',
 			$this->text,
 			$matches,
 			\PREG_OFFSET_CAPTURE | \PREG_SET_ORDER
@@ -589,11 +586,11 @@ class Parser extends ParserBase
 		$this->refs    = array();
 		if (\strpos($this->text, ']:') === \false)
 			return;
-		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+ *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17\\)]*?\\))?)[^\\x17\\n]*\\n?/m';
+		$regexp = '/^\\x1A* {0,3}\\[([^\\x17\\]]+)\\]: *([^\\s\\x17]+ *(?:"[^\\x17]*?"|\'[^\\x17]*?\'|\\([^\\x17)]*\\))?)[^\\x17\\n]*\\n?/m';
 		\preg_match_all($regexp, $this->text, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
 		foreach ($matches as $m)
 		{
-			$this->parser->addIgnoreTag($m[0][1], \strlen($m[0][0]))->setSortPriority(-2);
+			$this->parser->addIgnoreTag($m[0][1], \strlen($m[0][0]), -2);
 			$id = \strtolower($m[1][0]);
 			if (isset($this->refs[$id]))
 				continue;
@@ -723,13 +720,13 @@ class Parser extends ParserBase
 	}
 	protected function setLinkAttributes(Tag $tag, $linkInfo, $attrName)
 	{
-		$url   = $linkInfo;
+		$url   = \trim($linkInfo);
 		$title = '';
-		$pos   = \strpos($linkInfo, ' ');
+		$pos   = \strpos($url, ' ');
 		if ($pos !== \false)
 		{
-			$url   = \substr($linkInfo, 0, $pos);
-			$title = \substr(\trim(\substr($linkInfo, $pos)), 1, -1);
+			$title = \substr(\trim(\substr($url, $pos)), 1, -1);
+			$url   = \substr($url, 0, $pos);
 		}
 		$tag->setAttribute($attrName, $this->decode($url));
 		if ($title > '')

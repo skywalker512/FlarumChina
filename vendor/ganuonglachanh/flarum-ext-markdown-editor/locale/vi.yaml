@@ -1,0 +1,25 @@
+ganuonglachanh-mdeditor:
+  admin:
+    help_texts:
+      title: 'Trình Soạn thảo'
+      description: 'Thêm các biểu tượng trên Toolbar.'
+    labels:
+      preferences:
+        title: 'Thiết lập'
+        symbols: 'Biểu tượng thêm vào trên toolbar (dưới dạng JSON): [{"label":"☎","insert":"☎"},{"label":"❄","insert":"❄"}]'
+    buttons:
+      save: 'Lưu'
+  forum:
+    toolbar:
+      bold: 'Đậm'
+      italic: 'Nghiêng'
+      underline: 'Gạch chân'
+      strikethrough: 'Gạch ngang'
+      heading: 'Tiêu đề'
+      quote: 'Trích dẫn'
+      code: 'Code'
+      unordered_list: 'Danh sách'
+      ordered_list: 'Danh sách thứ tự'
+      link: 'Tạo Link'
+      image: 'Thêm ảnh'
+      guide: 'Hỗ trợ'

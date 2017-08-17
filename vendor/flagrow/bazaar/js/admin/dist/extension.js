@@ -59,15 +59,19 @@ System.register('flagrow/bazaar/addTasksPage', ['flarum/extend', 'flarum/app', '
 });;
 'use strict';
 
-System.register('flagrow/bazaar/components/BazaarLoader', ['flarum/Component', 'flarum/helpers/icon'], function (_export, _context) {
+System.register('flagrow/bazaar/components/BazaarLoader', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/Button', 'flarum/components/LinkButton'], function (_export, _context) {
     "use strict";
 
-    var Component, icon, BazaarLoader;
+    var Component, icon, Button, LinkButton, BazaarLoader;
     return {
         setters: [function (_flarumComponent) {
             Component = _flarumComponent.default;
         }, function (_flarumHelpersIcon) {
             icon = _flarumHelpersIcon.default;
+        }, function (_flarumComponentsButton) {
+            Button = _flarumComponentsButton.default;
+        }, function (_flarumComponentsLinkButton) {
+            LinkButton = _flarumComponentsLinkButton.default;
         }],
         execute: function () {
             BazaarLoader = function (_Component) {
@@ -81,10 +85,26 @@ System.register('flagrow/bazaar/components/BazaarLoader', ['flarum/Component', '
                 babelHelpers.createClass(BazaarLoader, [{
                     key: 'view',
                     value: function view() {
+                        var error = this.props.loading() === 'error';
+
                         return m('div', {
-                            className: 'Bazaar--Loader',
-                            hidden: !this.props.loading()
-                        }, [m('div', [icon('shopping-cart'), m('span', [app.translator.trans('flagrow-bazaar.admin.loader.is_loading')])])]);
+                            className: 'Bazaar--Loader ' + (error ? 'Error' : null),
+                            hidden: this.props.loading() === false
+                        }, [m('.Loader-modal', [m('.Loader-icon', icon(error ? 'exclamation-triangle' : 'shopping-cart')), m('div', [m('p', app.translator.trans(error ? 'flagrow-bazaar.admin.loader.error' : 'flagrow-bazaar.admin.loader.is_loading')), error ? [Button.component({
+                            className: 'Button Button--block',
+                            icon: 'refresh',
+                            onclick: function onclick() {
+                                return location.reload();
+                            },
+                            children: app.translator.trans('flagrow-bazaar.admin.loader.refresh')
+                        }), LinkButton.component({
+                            className: 'Button Button--block',
+                            icon: 'bug',
+                            href: 'https://github.com/flagrow/bazaar/issues',
+                            target: '_blank',
+                            config: {}, // Disable internal Mithril routing
+                            children: app.translator.trans('flagrow-bazaar.admin.loader.report_issue')
+                        })] : null])])]);
                     }
                 }]);
                 return BazaarLoader;
@@ -145,15 +165,13 @@ System.register("flagrow/bazaar/components/BazaarPage", ["flarum/Component", "fl
                     value: function search() {
                         var _this2 = this;
 
-                        return m('fieldset.ExtensionSearch', [
-                        // m('input[type=text].FormControl', {
-                        //     value: this.repository().searchTerm(),
-                        //     onchange: m.withAttr('value', term => {
-                        //         this.repository().search(term);
-                        //     }),
-                        //     placeholder: app.translator.trans('flagrow-bazaar.admin.search.placeholder')
-                        // }),
-                        CustomCheckbox.component({
+                        return m('fieldset.ExtensionSearch', [m('input[type=text].FormControl', {
+                            value: this.repository().filteredBy('search'),
+                            oninput: m.withAttr('value', function (term) {
+                                _this2.repository().filterBy('search', term);
+                            }),
+                            placeholder: app.translator.trans('flagrow-bazaar.admin.search.placeholder')
+                        }), CustomCheckbox.component({
                             iconChecked: 'toggle-up',
                             state: this.repository().filterUpdateRequired(),
                             onchange: function onchange(checked) {
@@ -173,7 +191,7 @@ System.register("flagrow/bazaar/components/BazaarPage", ["flarum/Component", "fl
                             onchange: function onchange(checked) {
                                 return _this2.repository().filterFavorited(checked);
                             },
-                            children: app.translator.trans('flagrow-bazaar.admin.search.filter_favorites')
+                            children: app.translator.trans('flagrow-bazaar.admin.search.filter_favorited')
                         }) : '']);
                     }
                 }, {
@@ -199,7 +217,8 @@ System.register("flagrow/bazaar/components/BazaarPage", ["flarum/Component", "fl
                             return ExtensionListItem.component({
                                 extension: extension,
                                 repository: _this3.repository,
-                                connected: _this3.connected
+                                connected: _this3.connected,
+                                key: extension.package()
                             });
                         })]);
                     }
@@ -430,6 +449,7 @@ System.register("flagrow/bazaar/components/ExtensionListItem", ["flarum/Componen
                     value: function config(isInitialized) {
                         if (isInitialized) return;
 
+                        // Be careful to always use a `key` with this component or this mis-align the tooltips if items are added or removed
                         if (this.props.extension.description()) this.$('.ExtensionIcon').tooltip({ container: 'body' });
                     }
                 }, {
@@ -1262,38 +1282,76 @@ System.register('flagrow/bazaar/models/Task', ['flarum/Model', 'flarum/utils/mix
 });;
 'use strict';
 
-System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], function (_export, _context) {
+System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app', 'flagrow/bazaar/utils/debounce'], function (_export, _context) {
     "use strict";
 
-    var app, ExtensionRepository;
+    var app, debounce, ExtensionRepository;
     return {
         setters: [function (_flarumApp) {
             app = _flarumApp.default;
+        }, function (_flagrowBazaarUtilsDebounce) {
+            debounce = _flagrowBazaarUtilsDebounce.default;
         }],
         execute: function () {
             ExtensionRepository = function () {
                 function ExtensionRepository(loading) {
+                    var _this = this;
+
                     babelHelpers.classCallCheck(this, ExtensionRepository);
 
                     this.extensions = m.prop([]);
                     this.nextPageUrl = null;
                     this.loading = loading;
                     this.resetNavigation();
-                    this.searchTerm = m.prop('');
                     this.filterInstalled = m.prop(false);
                     this.filterUpdateRequired = m.prop(false);
                     this.filterFavorited = m.prop(false);
+                    this.filters = {
+                        search: ''
+                    };
+
+                    // Code to run once after a serie of filterBy() calls
+                    // Must be done in constructor to save a single reference to the output of debounce
+                    this.filterByDebounce = debounce(function () {
+                        _this.resetNavigation();
+                        _this.loadNextPage();
+                    }, 500);
                 }
 
                 /**
-                 * Loads next page or resets based on nextPageUrl.
+                 * Change the value of a filter
+                 * @param {string} filter
+                 * @param {string} filterBy
                  */
 
 
                 babelHelpers.createClass(ExtensionRepository, [{
+                    key: 'filterBy',
+                    value: function filterBy(filter, _filterBy) {
+                        this.filters[filter] = _filterBy;
+
+                        this.filterByDebounce();
+                    }
+                }, {
+                    key: 'filteredBy',
+                    value: function filteredBy(filter) {
+                        return this.filters[filter];
+                    }
+                }, {
+                    key: 'requestError',
+                    value: function requestError() {
+                        // If an error occured, we can clear the loading overlay
+                        // The error means it's not processing anymore
+                        this.loading('error');
+
+                        // Depending on how fast the "Oops! Something went wrong" popup appears,
+                        // the loading change is not taken into account. Use redraw to force remove the overlay
+                        m.redraw();
+                    }
+                }, {
                     key: 'loadNextPage',
                     value: function loadNextPage() {
-                        var _this = this;
+                        var _this2 = this;
 
                         if (this.loading() || !this.nextPageUrl) {
                             return;
@@ -1301,29 +1359,23 @@ System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], func
 
                         this.loading(true);
 
-                        var data = {
-                            filter: {}
-                        };
-
-                        if (this.searchTerm()) {
-                            data.filter = {
-                                search: this.searchTerm()
-                            };
-                        }
-
                         app.request({
                             method: 'GET',
                             url: this.nextPageUrl,
-                            data: data
+                            data: {
+                                filter: this.filters
+                            }
                         }).then(function (result) {
                             var newExtensions = result.data.map(function (data) {
                                 return app.store.createRecord('bazaar-extensions', data);
                             });
-                            _this.extensions(newExtensions);
-                            _this.nextPageUrl = result.links.next;
-                            _this.loading(false);
+                            _this2.extensions(newExtensions);
+                            _this2.nextPageUrl = result.links.next;
+                            _this2.loading(false);
 
                             m.redraw();
+                        }).catch(function () {
+                            return _this2.requestError();
                         });
                     }
                 }, {
@@ -1336,7 +1388,7 @@ System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], func
                 }, {
                     key: 'installExtension',
                     value: function installExtension(extension) {
-                        var _this2 = this;
+                        var _this3 = this;
 
                         this.loading(true);
 
@@ -1348,7 +1400,9 @@ System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], func
                                 id: extension.id()
                             }
                         }).then(function (response) {
-                            _this2.updateExtensionInRepository(response);
+                            _this3.updateExtensionInRepository(response);
+                        }).catch(function () {
+                            return _this3.requestError();
                         });
                     }
                 }, {
@@ -1360,7 +1414,7 @@ System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], func
                 }, {
                     key: 'uninstallExtension',
                     value: function uninstallExtension(extension) {
-                        var _this3 = this;
+                        var _this4 = this;
 
                         this.loading(true);
 
@@ -1369,7 +1423,9 @@ System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], func
                             timeout: 0,
                             url: app.forum.attribute('apiUrl') + '/bazaar/extensions/' + extension.id()
                         }).then(function (response) {
-                            _this3.updateExtensionInRepository(response);
+                            _this4.updateExtensionInRepository(response);
+                        }).catch(function () {
+                            return _this4.requestError();
                         });
                     }
                 }, {
@@ -1381,7 +1437,7 @@ System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], func
                 }, {
                     key: 'favoriteExtension',
                     value: function favoriteExtension(extension) {
-                        var _this4 = this;
+                        var _this5 = this;
 
                         this.loading(true);
 
@@ -1392,13 +1448,15 @@ System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], func
                                 favorite: extension.favorited() != true
                             }
                         }).then(function (response) {
-                            _this4.updateExtensionInRepository(response);
+                            _this5.updateExtensionInRepository(response);
+                        }).catch(function () {
+                            return _this5.requestError();
                         });
                     }
                 }, {
                     key: 'updateExtension',
                     value: function updateExtension(extension) {
-                        var _this5 = this;
+                        var _this6 = this;
 
                         this.loading(true);
 
@@ -1407,15 +1465,17 @@ System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], func
                             timeout: 0,
                             method: 'PATCH'
                         }).then(function (response) {
-                            _this5.updateExtensionInRepository(response);
+                            _this6.updateExtensionInRepository(response);
                         }).then(function () {
                             location.reload();
+                        }).catch(function () {
+                            return _this6.requestError();
                         });
                     }
                 }, {
                     key: 'toggleExtension',
                     value: function toggleExtension(extension) {
-                        var _this6 = this;
+                        var _this7 = this;
 
                         this.loading(true);
 
@@ -1426,7 +1486,9 @@ System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], func
                             method: 'PATCH',
                             data: { enabled: !enabled }
                         }).then(function (response) {
-                            _this6.updateExtensionInRepository(response);
+                            _this7.updateExtensionInRepository(response);
+                        }).catch(function () {
+                            return _this7.requestError();
                         });
                     }
                 }, {
@@ -1454,13 +1516,6 @@ System.register('flagrow/bazaar/utils/ExtensionRepository', ['flarum/app'], func
                         var extension = app.store.createRecord('bazaar-extensions', response.data);
                         this.extensions()[this.getExtensionIndex(extension)] = extension;
                         m.redraw();
-                    }
-                }, {
-                    key: 'search',
-                    value: function search(term) {
-                        this.searchTerm(term);
-                        this.resetNavigation();
-                        this.loadNextPage();
                     }
                 }]);
                 return ExtensionRepository;
@@ -1528,6 +1583,43 @@ System.register('flagrow/bazaar/utils/TaskRepository', ['flarum/app'], function 
             }();
 
             _export('default', ExtensionRepository);
+        }
+    };
+});;
+"use strict";
+
+System.register("flagrow/bazaar/utils/debounce", [], function (_export, _context) {
+    "use strict";
+
+    _export("default", function (func, wait, immediate) {
+        var timeout = void 0;
+        return function () {
+            var context = this,
+                args = arguments;
+            var later = function later() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    });
+
+    return {
+        setters: [],
+        execute: function () {
+            ; /**
+               * Based on _.debounce from underscore.js
+               * Copyright (c) 2009-2017 Jeremy Ashkenas, DocumentCloud and Investigative
+               * @see https://davidwalsh.name/javascript-debounce-function
+               *
+               * Returns a function, that, as long as it continues to be invoked, will not
+               * be triggered. The function will be called after it stops being called for
+               * N milliseconds. If `immediate` is passed, trigger the function on the
+               * leading edge, instead of the trailing.
+               */
         }
     };
 });

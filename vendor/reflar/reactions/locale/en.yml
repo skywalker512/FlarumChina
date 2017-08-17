@@ -1,0 +1,36 @@
+reflar-reactions:
+  forum:
+    warning: Your reaction was converted
+    notification: '{username} reacted with {reaction} to your post'
+
+  admin:
+    permissions:
+        react_posts_label: React to posts
+  
+    nav:
+      desc: Add custom reactions and change settings.
+
+    page:
+      reactions:
+        title: Custom Reactions
+        reactions: Current Reactions
+        Helptext: Input the name (identifier) of the emoji or font-awesome icon and select which type you would like.
+        help:
+          identifier: Identifier
+
+      settings:
+        save_settings: Save Settings
+        integrations:
+          legend: Integrations
+          warning: The same reaction <strong>cannot</strong> be converted to a like <strong>and</strong> an upvote
+          gamification:
+            legend: Gamification
+            upvoteLabel: Convert reactions to upvotes
+            upvoteHelptext: Input the identifier of the reaction you would like to automatically convert into an upvote
+            downvoteLabel: Convert reactions to downvotes
+            downvoteHelptext: Input the identifier of the reaction you would like to automatically convert into an downvote
+
+          likes:
+            legend: Likes
+            Label: Convert reactions to likes
+            Helptext: Input the identifier of the reaction you would like to automatically convert into an likes

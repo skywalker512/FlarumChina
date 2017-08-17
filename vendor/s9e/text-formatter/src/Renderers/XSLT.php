@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Renderers;
@@ -40,8 +40,7 @@ class XSLT extends Renderer
 	}
 	public function setParameter($paramName, $paramValue)
 	{
-		if (\strpos($paramValue, '"') !== \false
-		 && \strpos($paramValue, "'") !== \false)
+		if (\strpos($paramValue, '"') !== \false && \strpos($paramValue, "'") !== \false)
 			$paramValue = \str_replace('"', "\xEF\xBC\x82", $paramValue);
 		else
 			$paramValue = (string) $paramValue;
@@ -61,6 +60,8 @@ class XSLT extends Renderer
 		$output = \str_replace('</embed>', '', $output);
 		if (\substr($output, -1) === "\n")
 			$output = \substr($output, 0, -1);
+		if (\strpos($output, "='") !== \false)
+			$output = $this->normalizeAttributes($output);
 		return $output;
 	}
 	protected function load()
@@ -71,5 +72,21 @@ class XSLT extends Renderer
 			$this->proc = new XSLTProcessor;
 			$this->proc->importStylesheet($xsl);
 		}
+	}
+	protected function normalizeAttribute(array $m)
+	{
+		if ($m[0][0] === '"')
+			return $m[0];
+		return '"' . \str_replace('"', '&quot;', \substr($m[0], 1, -1)) . '"';
+	}
+	protected function normalizeAttributes($html)
+	{
+		return \preg_replace_callback('(<\\S++ [^>]++>)', array($this, 'normalizeElement'), $html);
+	}
+	protected function normalizeElement(array $m)
+	{
+		if (\strpos($m[0], "='") === \false)
+			return $m[0];
+		return \preg_replace_callback('((?:"[^"]*"|\'[^\']*\'))S', array($this, 'normalizeAttribute'), $m[0]);
 	}
 }

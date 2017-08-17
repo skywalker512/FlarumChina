@@ -1,17 +1,22 @@
 /**
 * @constructor
 *
-* @param {!number} type Tag's type
-* @param {!string} name Name of the tag
-* @param {!number} pos  Position of the tag in the text
-* @param {!number} len  Length of text consumed by the tag
+* @param {!number} type     Tag's type
+* @param {!string} name     Name of the tag
+* @param {!number} pos      Position of the tag in the text
+* @param {!number} len      Length of text consumed by the tag
+* @param {number}  priority This tag's sorting tiebreaker
 */
-function Tag(type, name, pos, len)
+function Tag(type, name, pos, len, priority)
 {
-	this.type = type;
+	this.type = +type;
 	this.name = name;
-	this.pos  = pos;
-	this.len  = len;
+	this.pos  = +pos;
+	this.len  = +len;
+	if (typeof priority !== 'undefined')
+	{
+		this.sortPriority = +priority;
+	}
 
 	this.attributes = {};
 	this.cascade    = [];
@@ -71,7 +76,7 @@ Tag.prototype.pos;
 /**
 * @type {!number} Tiebreaker used when sorting identical tags
 */
-Tag.prototype.sortPriority = 0;
+Tag.prototype.sortPriority;
 
 /**
 * @type {Tag} Start tag that is unconditionally closed this end tag
@@ -108,18 +113,6 @@ Tag.prototype.cascadeInvalidationTo = function(tag)
 		tag.invalidate();
 	}
 };
-
-/**
-* Destroy all references contained in this tag
-*
-* Can be used after a tag has been processed to help with garbage collection
-*/
-Tag.prototype.gc = function()
-{
-	this.cascade = [];
-	delete this.endTag;
-	delete this.startTag;
-}
 
 /**
 * Invalidate this tag, as well as tags bound to this tag

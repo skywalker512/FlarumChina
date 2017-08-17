@@ -32,11 +32,6 @@ var RULES_INHERITANCE = RULE_ENABLE_AUTO_BR;
 var WHITESPACE = " \n\t";
 
 /**
-* @type {!Array.<Tag>} Every tag created by this parser, used for garbage collection
-*/
-var createdTags;
-
-/**
 * @type {!Object.<string,!number>} Number of open tags for each tag name
 */
 var cntOpen;
@@ -204,9 +199,6 @@ function parse(_text)
 	executePluginParsers();
 	processTags();
 
-	// Remove old references
-	gc();
-
 	// Finalize the document
 	finalizeOutput();
 
@@ -226,18 +218,6 @@ function parse(_text)
 }
 
 /**
-* Remove old references to tags
-*/
-function gc()
-{
-	createdTags.forEach(function(tag)
-	{
-		tag.gc();
-	});
-	createdTags = [];
-}
-
-/**
 * Reset the parser for a new parsing
 *
 * @param {!string} _text Text to be parsed
@@ -252,21 +232,20 @@ function reset(_text)
 	logger.clear();
 
 	// Initialize the rest
-	cntOpen     = {};
-	cntTotal    = {};
-	createdTags = [];
+	cntOpen           = {};
+	cntTotal          = {};
 	currentFixingCost = 0;
-	currentTag  = null;
-	isRich      = false;
-	namespaces  = {};
-	openTags    = [];
-	output      = '';
-	pos         = 0;
-	tagStack    = [];
-	tagStackIsSorted = true;
-	text        = _text;
-	textLen     = text.length;
-	wsPos       = 0;
+	currentTag        = null;
+	isRich            = false;
+	namespaces        = {};
+	openTags          = [];
+	output            = '';
+	pos               = 0;
+	tagStack          = [];
+	tagStackIsSorted  = false;
+	text              = _text;
+	textLen           = text.length;
+	wsPos             = 0;
 
 	// Initialize the root context
 	context = rootContext;
@@ -599,7 +578,7 @@ function finalizeOutput()
 	do
 	{
 		tmp = output;
-		output = output.replace(/<([^ />]+)><\/\1>/g, '');
+		output = output.replace(/<([^ />]+)[^>]*><\/\1>/g, '');
 	}
 	while (output !== tmp);
 
@@ -1201,11 +1180,13 @@ function closeAncestor(tag)
 
 				if (tagConfig.rules.closeAncestor[ancestorName])
 				{
+					++currentFixingCost;
+
 					// We have to close this ancestor. First we reinsert this tag...
 					tagStack.push(tag);
 
-					// ...then we add a new end tag for it
-					addMagicEndTag(ancestor, tag.getPos());
+					// ...then we add a new end tag for it with a better priority
+					addMagicEndTag(ancestor, tag.getPos(), tag.getSortPriority() - 1);
 
 					return true;
 				}
@@ -1241,11 +1222,13 @@ function closeParent(tag)
 
 			if (tagConfig.rules.closeParent[parentName])
 			{
+				++currentFixingCost;
+
 				// We have to close that parent. First we reinsert the tag...
 				tagStack.push(tag);
 
-				// ...then we add a new end tag for it
-				addMagicEndTag(parent, tag.getPos());
+				// ...then we add a new end tag for it with a better priority
+				addMagicEndTag(parent, tag.getPos(), tag.getSortPriority() - 1);
 
 				return true;
 			}
@@ -1275,7 +1258,7 @@ function createChild(tag)
 			tagPos   = pos + _text.length - _text.replace(/^[ \n\r\t]+/, '').length;
 		tagConfig.rules.createChild.forEach(function(tagName)
 		{
-			addStartTag(tagName, tagPos, 0).setSortPriority(++priority);
+			addStartTag(tagName, tagPos, 0, ++priority);
 		});
 	}
 }
@@ -1314,11 +1297,7 @@ function fosterParent(tag)
 			{
 				if (parentName !== tagName && currentFixingCost < maxFixingCost)
 				{
-					// Add a 0-width copy of the parent tag right after this tag, with a worse
-					// priority and make it depend on this tag
-					var child = addCopyTag(parent, tag.getPos() + tag.getLen(), 0);
-					tag.cascadeInvalidationTo(child);
-					child.setSortPriority(tag.getSortPriority() + 1);
+					addFosterTag(tag, parent)
 				}
 
 				// Reinsert current tag
@@ -1326,11 +1305,10 @@ function fosterParent(tag)
 
 				// And finally close its parent with a priority that ensures it is processed
 				// before this tag
-				addMagicEndTag(parent, tag.getPos()).setSortPriority(tag.getSortPriority() - 1);
+				addMagicEndTag(parent, tag.getPos(), tag.getSortPriority() - 1);
 
-				// Adjust the fixing cost commensurately with the size of the tag stack which
-				// has to be sorted
-				currentFixingCost += tagStack.length;
+				// Adjust the fixing cost to account for the additional tags/processing
+				currentFixingCost += 4;
 
 				return true;
 			}
@@ -1384,6 +1362,23 @@ function requireAncestor(tag)
 //==========================================================================
 
 /**
+* Create and add a copy of a tag as a child of a given tag
+*
+* @param {!Tag} tag       Current tag
+* @param {!Tag} fosterTag Tag to foster
+*/
+function addFosterTag(tag, fosterTag)
+{
+	var coords    = getMagicStartCoords(tag.getPos() + tag.getLen()),
+		childPos  = coords[0],
+		childPrio = coords[1];
+
+	// Add a 0-width copy of the parent tag after this tag and make it depend on this tag
+	var childTag = addCopyTag(fosterTag, childPos, 0, childPrio);
+	tag.cascadeInvalidationTo(childTag);
+}
+
+/**
 * Create and add an end tag for given start tag at given position
 *
 * @param  {!Tag}    startTag Start tag
@@ -1395,9 +1390,9 @@ function addMagicEndTag(startTag, tagPos)
 	var tagName = startTag.getName();
 
 	// Adjust the end tag's position if whitespace is to be minimized
-	if (HINT.RULE_IGNORE_WHITESPACE && (startTag.getFlags() & RULE_IGNORE_WHITESPACE))
+	if (HINT.RULE_IGNORE_WHITESPACE && ((currentTag.getFlags() | startTag.getFlags()) & RULE_IGNORE_WHITESPACE))
 	{
-		tagPos = getMagicPos(tagPos);
+		tagPos = getMagicEndPos(tagPos);
 	}
 
 	// Add a 0-width end tag that is paired with the given start tag
@@ -1413,7 +1408,7 @@ function addMagicEndTag(startTag, tagPos)
 * @param  {!number} tagPos Rightmost possible position for the tag
 * @return {!number}
 */
-function getMagicPos(tagPos)
+function getMagicEndPos(tagPos)
 {
 	// Back up from given position to the cursor's position until we find a character that
 	// is not whitespace
@@ -1423,6 +1418,40 @@ function getMagicPos(tagPos)
 	}
 
 	return tagPos;
+}
+
+/**
+* Compute the position and priority of a magic start tag, adjusted for whitespace
+*
+* @param  {!number}   tagPos Leftmost possible position for the tag
+* @return {!number[]}        [Tag pos, priority]
+*/
+function getMagicStartCoords(tagPos)
+{
+	var nextPos, nextPrio, nextTag, prio;
+	if (!tagStack.length)
+	{
+		// Set the next position outside the text boundaries
+		nextPos  = textLen + 1;
+		nextPrio = 0;
+	}
+	else
+	{
+		nextTag  = tagStack[tagStack.length - 1];
+		nextPos  = nextTag.getPos();
+		nextPrio = nextTag.getSortPriority();
+	}
+
+	// Find the first non-whitespace position before next tag or the end of text
+	while (tagPos < nextPos && WHITESPACE.indexOf(text[tagPos]) > -1)
+	{
+		++tagPos;
+	}
+
+	// Set a priority that ensures this tag appears before the next tag
+	prio = (tagPos === nextPos) ? nextPrio - 1 : 0;
+
+	return [tagPos, prio];
 }
 
 /**
@@ -1464,18 +1493,6 @@ function processTags()
 			}
 
 			currentTag = tagStack.pop();
-
-			// Skip current tag if tags are disabled and current tag would not close the last
-			// open tag and is not a special tag such as a line/paragraph break or an ignore tag
-			if (context.flags & RULE_IGNORE_TAGS)
-			{
-				if (!currentTag.canClose(openTags[openTags.length - 1])
-				 && !currentTag.isSystemTag())
-				{
-					continue;
-				}
-			}
-
 			processCurrentTag();
 		}
 
@@ -1496,16 +1513,20 @@ function processTags()
 */
 function processCurrentTag()
 {
-	if (currentTag.isInvalid())
+	// Invalidate current tag if tags are disabled and current tag would not close the last open
+	// tag and is not a system tag
+	if ((context.flags & RULE_IGNORE_TAGS)
+	 && !currentTag.canClose(openTags[openTags.length - 1])
+	 && !currentTag.isSystemTag())
 	{
-		return;
+		currentTag.invalidate();
 	}
 
 	var tagPos = currentTag.getPos(),
 		tagLen = currentTag.getLen();
 
 	// Test whether the cursor passed this tag's position already
-	if (pos > tagPos)
+	if (pos > tagPos && !currentTag.isInvalid())
 	{
 		// Test whether this tag is paired with a start tag and this tag is still open
 		var startTag = currentTag.getStartTag();
@@ -1540,7 +1561,10 @@ function processCurrentTag()
 
 		// Skipped tags are invalidated
 		currentTag.invalidate();
+	}
 
+	if (currentTag.isInvalid())
+	{
 		return;
 	}
 
@@ -1617,10 +1641,13 @@ function processStartTag(tag)
 		return;
 	}
 
-	if (fosterParent(tag) || closeParent(tag) || closeAncestor(tag))
+	if (currentFixingCost < maxFixingCost)
 	{
-		// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
-		return;
+		if (fosterParent(tag) || closeParent(tag) || closeAncestor(tag))
+		{
+			// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
+			return;
+		}
 	}
 
 	if (cntOpen[tagName] >= tagConfig.nestingLimit)
@@ -1735,6 +1762,14 @@ function processEndTag(tag)
 		return;
 	}
 
+	// Accumulate flags to determine whether whitespace should be trimmed
+	var flags = tag.getFlags();
+	closeTags.forEach(function(openTag)
+	{
+		flags |= openTag.getFlags();
+	});
+	var ignoreWhitespace = (HINT.RULE_IGNORE_WHITESPACE && (flags & RULE_IGNORE_WHITESPACE));
+
 	// Only reopen tags if we haven't exceeded our "fixing" budget
 	var keepReopening = HINT.RULE_AUTO_REOPEN && (currentFixingCost < maxFixingCost),
 		reopenTags    = [];
@@ -1757,9 +1792,9 @@ function processEndTag(tag)
 
 		// Find the earliest position we can close this open tag
 		var tagPos = tag.getPos();
-		if (HINT.RULE_IGNORE_WHITESPACE && openTag.getFlags() & RULE_IGNORE_WHITESPACE)
+		if (ignoreWhitespace)
 		{
-			tagPos = getMagicPos(tagPos);
+			tagPos = getMagicEndPos(tagPos);
 		}
 
 		// Output an end tag to close this start tag, then update the context
@@ -1934,11 +1969,12 @@ function tagIsAllowed(tagName)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addStartTag(name, pos, len)
+function addStartTag(name, pos, len, prio)
 {
-	return addTag(Tag.START_TAG, name, pos, len);
+	return addTag(Tag.START_TAG, name, pos, len, prio || 0);
 }
 
 /**
@@ -1947,11 +1983,12 @@ function addStartTag(name, pos, len)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addEndTag(name, pos, len)
+function addEndTag(name, pos, len, prio)
 {
-	return addTag(Tag.END_TAG, name, pos, len);
+	return addTag(Tag.END_TAG, name, pos, len, prio || 0);
 }
 
 /**
@@ -1960,22 +1997,24 @@ function addEndTag(name, pos, len)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addSelfClosingTag(name, pos, len)
+function addSelfClosingTag(name, pos, len, prio)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, name, pos, len);
+	return addTag(Tag.SELF_CLOSING_TAG, name, pos, len, prio || 0);
 }
 
 /**
 * Add a 0-width "br" tag to force a line break at given position
 *
 * @param  {!number} pos  Position of the tag in the text
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addBrTag(pos)
+function addBrTag(pos, prio)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, 'br', pos, 0);
+	return addTag(Tag.SELF_CLOSING_TAG, 'br', pos, 0, prio || 0);
 }
 
 /**
@@ -1983,11 +2022,12 @@ function addBrTag(pos)
 *
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addIgnoreTag(pos, len)
+function addIgnoreTag(pos, len, prio)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, 'i', pos, Math.min(len, textLen - pos));
+	return addTag(Tag.SELF_CLOSING_TAG, 'i', pos, Math.min(len, textLen - pos), prio || 0);
 }
 
 /**
@@ -1996,11 +2036,12 @@ function addIgnoreTag(pos, len)
 * Uses a zero-width tag that is actually never output in the result
 *
 * @param  {!number} pos  Position of the tag in the text
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addParagraphBreak(pos)
+function addParagraphBreak(pos, prio)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, 'pb', pos, 0);
+	return addTag(Tag.SELF_CLOSING_TAG, 'pb', pos, 0, prio || 0);
 }
 
 /**
@@ -2009,13 +2050,13 @@ function addParagraphBreak(pos)
 * @param  {!Tag}    tag Original tag
 * @param  {!number} pos Copy's position
 * @param  {!number} len Copy's length
-* @return {!Tag}        Copy tag
+* @param  {number}  prio Tags' priority
+* @return {!Tag}         Copy tag
 */
-function addCopyTag(tag, pos, len)
+function addCopyTag(tag, pos, len, prio)
 {
-	var copy = addTag(tag.getType(), tag.getName(), pos, len);
+	var copy = addTag(tag.getType(), tag.getName(), pos, len, tag.getSortPriority());
 	copy.setAttributes(tag.getAttributes());
-	copy.setSortPriority(tag.getSortPriority());
 
 	return copy;
 }
@@ -2027,15 +2068,13 @@ function addCopyTag(tag, pos, len)
 * @param  {!string} name Name of the tag
 * @param  {!number} pos  Position of the tag in the text
 * @param  {!number} len  Length of text consumed by the tag
+* @param  {number}  prio Tags' priority
 * @return {!Tag}
 */
-function addTag(type, name, pos, len)
+function addTag(type, name, pos, len, prio)
 {
 	// Create the tag
-	var tag = new Tag(type, name, pos, len);
-
-	// Keep a copy of this tag to destroy its references after processing
-	createdTags.push(tag);
+	var tag = new Tag(type, name, pos, len, prio || 0);
 
 	// Set this tag's rules bitfield
 	if (tagsConfig[name])
@@ -2066,22 +2105,34 @@ function addTag(type, name, pos, len)
 	}
 	else
 	{
-		// If the stack is sorted we check whether this tag should be stored at a lower offset
-		// than the last tag which would mean we need to sort the stack. Note that we cannot use
-		// compareTags() to break ties here because setSortPriority() can be called *after* tags
-		// have been put on the stack, therefore we need to properly sort the stack if the
-		// positions are the same
-		if (tagStackIsSorted
-		 && tagStack.length
-		 && tag.getPos() >= tagStack[tagStack.length - 1].getPos())
-		{
-			tagStackIsSorted = false;
-		}
-
-		tagStack.push(tag);
+		insertTag(tag);
 	}
 
 	return tag;
+}
+
+/**
+* Insert given tag in the tag stack
+*
+* @param {!Tag} tag
+*/
+function insertTag(tag)
+{
+	if (!tagStackIsSorted)
+	{
+		tagStack.push(tag);
+	}
+	else
+	{
+		// Scan the stack and copy every tag to the next slot until we find the correct index
+		var i = tagStack.length;
+		while (i > 0 && compareTags(tagStack[i - 1], tag) > 0)
+		{
+			tagStack[i] = tagStack[i - 1];
+			--i;
+		}
+		tagStack[i] = tag;
+	}
 }
 
 /**
@@ -2089,17 +2140,20 @@ function addTag(type, name, pos, len)
 *
 * @param  {!string} name     Name of the tags
 * @param  {!number} startPos Position of the start tag
-* @param  {!number} startLen Length of the starttag
+* @param  {!number} startLen Length of the start tag
 * @param  {!number} endPos   Position of the start tag
-* @param  {!number} endLen   Length of the starttag
+* @param  {!number} endLen   Length of the start tag
+* @param  {number}  prio     Start tag's priority (the end tag will be set to minus that value)
 * @return {!Tag}             Start tag
 */
-function addTagPair(name, startPos, startLen, endPos, endLen)
+function addTagPair(name, startPos, startLen, endPos, endLen, prio)
 {
-	var tag = addStartTag(name, startPos, startLen);
-	tag.pairWith(addEndTag(name, endPos, endLen));
+	// NOTE: the end tag is added first to try to keep the stack in the correct order
+	var endTag   = addEndTag(name, endPos, endLen, -prio || 0),
+		startTag = addStartTag(name, startPos, startLen, prio || 0);
+	startTag.pairWith(endTag);
 
-	return tag;
+	return startTag;
 }
 
 /**
@@ -2109,9 +2163,9 @@ function addTagPair(name, startPos, startLen, endPos, endLen)
 * @param  {!number} len  Length of text consumed by the tag
 * @return {!Tag}
 */
-function addVerbatim(pos, len)
+function addVerbatim(pos, len, prio)
 {
-	return addTag(Tag.SELF_CLOSING_TAG, 'v', pos, len);
+	return addTag(Tag.SELF_CLOSING_TAG, 'v', pos, len, prio || 0);
 }
 
 /**

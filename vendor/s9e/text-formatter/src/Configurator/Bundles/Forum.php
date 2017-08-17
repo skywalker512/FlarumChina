@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Bundles;
@@ -35,6 +35,10 @@ class Forum extends Bundle
 			'showStr'    => '{L_SHOW}',
 			'spoilerStr' => '{L_SPOILER}',
 		));
+		$configurator->BBCodes->addFromRepository('TABLE');
+		$configurator->BBCodes->addFromRepository('TD');
+		$configurator->BBCodes->addFromRepository('TH');
+		$configurator->BBCodes->addFromRepository('TR');
 		$configurator->BBCodes->addFromRepository('U');
 		$configurator->BBCodes->addFromRepository('UL');
 		$configurator->BBCodes->addFromRepository('URL');
@@ -45,31 +49,32 @@ class Forum extends Bundle
 			'L_SPOILER' => 'Spoiler'
 		);
 		$emoticons = array(
-			':)'  => 'smile',
-			':-)' => 'smile',
-			';)'  => 'wink',
-			';-)' => 'wink',
-			':D'  => 'grin',
-			':-D' => 'grin',
-			':('  => 'frown',
-			':-(' => 'frown',
-			':-*' => 'kiss',
-			':P'  => 'razz',
-			':-P' => 'razz',
-			':p'  => 'razz',
-			':-p' => 'razz',
-			':?'  => 'confused',
-			':-?' => 'confused',
-			':|'  => 'neutral',
-			':-|' => 'neutral',
-			':o'  => 'shock',
-			':lol:' => 'laugh'
+			':)'  => '1F642',
+			':-)' => '1F642',
+			';)'  => '1F609',
+			';-)' => '1F609',
+			':D'  => '1F600',
+			':-D' => '1F600',
+			':('  => '2639',
+			':-(' => '2639',
+			':-*' => '1F618',
+			':P'  => '1F61B',
+			':-P' => '1F61B',
+			':p'  => '1F61B',
+			':-p' => '1F61B',
+			';P'  => '1F61C',
+			';-P' => '1F61C',
+			';p'  => '1F61C',
+			';-p' => '1F61C',
+			':?'  => '1F615',
+			':-?' => '1F615',
+			':|'  => '1F610',
+			':-|' => '1F610',
+			':o'  => '1F62E',
+			':lol:' => '1F602'
 		);
-		foreach ($emoticons as $code => $filename)
-			$configurator->Emoticons->add(
-				$code,
-				'<img src="{$EMOTICONS_PATH}/' . $filename . '.png" alt="' . $code . '"/>'
-			);
+		foreach ($emoticons as $code => $hex)
+			$configurator->Emoji->addAlias($code, \html_entity_decode('&#x' . $hex . ';'));
 		$configurator->MediaEmbed->createIndividualBBCodes = \true;
 		$configurator->MediaEmbed->add('bandcamp');
 		$configurator->MediaEmbed->add('dailymotion');

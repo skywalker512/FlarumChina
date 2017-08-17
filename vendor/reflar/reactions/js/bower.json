@@ -1,0 +1,6 @@
+{
+"name": "reflar-reactions",
+  "dependencies": {
+    "emojione": "^3.1.1"
+  }
+}

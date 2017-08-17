@@ -1,0 +1,45 @@
+{
+  "name": "reflar/reactions",
+  "description": "Reactions for Flarum",
+  "keywords": [
+    "misc",
+    "settings",
+    "flarum",
+    "reflar",
+    "reactions"
+  ],
+  "type": "flarum-extension",
+  "license": "MIT",
+  "require": {
+    "flarum/core": "^0.1.0-beta-7"
+  },
+  "authors": [
+    {
+      "name": "David Sevilla Martín",
+      "email": "dsevilla192@icloud.com",
+      "homepage": "https://redevs.org",
+      "role": "Developer"
+    },
+    {
+      "name": "Charlie K",
+      "email": "issyrocks12@reflar.email",
+      "homepage": "https://redevs.org",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Reflar\\Reactions\\": "src/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "ReFlar Reactions",
+      "icon": {
+        "name": "smile-o",
+        "backgroundColor": "#263238",
+        "color": "#FFF"
+      }
+    }
+  }
+}

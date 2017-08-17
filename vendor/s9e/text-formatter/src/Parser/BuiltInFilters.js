@@ -368,7 +368,7 @@ var BuiltInFilters =
 		parts['host'] = parts['host'].replace(/[\u3002\uff0e\uff61]/g, '.').replace(/\.+$/g, '');
 
 		// Test whether host has non-ASCII characters and punycode it if possible
-		if (/[^\x00-\x7F]/.test(parts['host']) && punycode)
+		if (/[^\x00-\x7F]/.test(parts['host']) && typeof punycode !== 'undefined')
 		{
 			parts['host'] = punycode.toASCII(parts['host']);
 		}

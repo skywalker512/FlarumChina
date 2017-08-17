@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
@@ -34,33 +34,40 @@ class HashmapFilter extends AttributeFilter
 		if (!\is_bool($strict))
 			throw new InvalidArgumentException('Argument 2 passed to ' . __METHOD__ . ' must be a boolean');
 		if (!$strict)
-			foreach ($map as $k => $v)
-				if ($k === $v)
-					unset($map[$k]);
+			$map = $this->optimizeLooseMap($map);
 		\ksort($map);
 		$this->vars['map']    = $map;
 		$this->vars['strict'] = $strict;
+		$this->resetSafeness();
+		if (!empty($this->vars['strict']))
+		{
+			$this->evaluateSafenessInCSS();
+			$this->evaluateSafenessInJS();
+		}
 	}
-	public function isSafeInCSS()
+	protected function evaluateSafenessInCSS()
 	{
-		if (!isset($this->vars['map']) || empty($this->vars['strict']))
-			return \false;
 		$disallowedChars = ContextSafeness::getDisallowedCharactersInCSS();
 		foreach ($this->vars['map'] as $value)
 			foreach ($disallowedChars as $char)
 				if (\strpos($value, $char) !== \false)
-					return \false;
-		return \true;
+					return;
+		$this->markAsSafeInCSS();
 	}
-	public function isSafeInJS()
+	protected function evaluateSafenessInJS()
 	{
-		if (!isset($this->vars['map']) || empty($this->vars['strict']))
-			return \false;
 		$disallowedChars = ContextSafeness::getDisallowedCharactersInJS();
 		foreach ($this->vars['map'] as $value)
 			foreach ($disallowedChars as $char)
 				if (\strpos($value, $char) !== \false)
-					return \false;
-		return \true;
+					return;
+		$this->markAsSafeInJS();
+	}
+	protected function optimizeLooseMap(array $map)
+	{
+		foreach ($map as $k => $v)
+			if ($k === $v)
+				unset($map[$k]);
+		return $map;
 	}
 }

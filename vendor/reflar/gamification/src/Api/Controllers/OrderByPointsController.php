@@ -13,6 +13,7 @@
 namespace Reflar\gamification\Api\Controllers;
 
 use Flarum\Api\Controller\AbstractCollectionController;
+use Flarum\Core\Exception\PermissionDeniedException;
 use Psr\Http\Message\ServerRequestInterface;
 use Reflar\gamification\Gamification;
 use Tobscure\JsonApi\Document;
@@ -46,6 +47,10 @@ class OrderByPointsController extends AbstractCollectionController
      */
     protected function data(ServerRequestInterface $request, Document $document)
     {
+        if ($request->getAttribute('actor')->cannot('reflar.gamification.viewRankingPage')) {
+            throw new PermissionDeniedException();
+        }
+
         $limit = $this->extractLimit($request);
         $offset = $this->extractOffset($request);
 

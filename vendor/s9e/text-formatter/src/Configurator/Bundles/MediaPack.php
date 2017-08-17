@@ -2,7 +2,7 @@
 
 /*
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2016 The s9e Authors
+* @copyright Copyright (c) 2010-2017 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Bundles;
@@ -18,7 +18,7 @@ class MediaPack extends Bundle
 			$pluginOptions = array('createMediaBBCode' => isset($configurator->BBCodes));
 			$configurator->plugins->load('MediaEmbed', $pluginOptions);
 		}
-		foreach ($configurator->MediaEmbed->defaultSites->getIds() as $siteId)
+		foreach ($configurator->MediaEmbed->defaultSites as $siteId => $siteConfig)
 			$configurator->MediaEmbed->add($siteId);
 	}
 }

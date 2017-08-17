@@ -27,13 +27,10 @@ function linkifyUrl(tagPos, url)
 		url = 'http://' + url;
 	}
 
-	// Create a zero-width start tag right before the URL
-	var startTag = addStartTag(config.tagName, tagPos, 0);
+	// Create a zero-width start tag right before the URL, with a slightly worse priority to
+	// allow specialized plugins to use the URL instead
+	var startTag = addStartTag(config.tagName, tagPos, 0, 1);
 	startTag.setAttribute(config.attrName, url);
-
-	// Give this tag a slightly lower priority than default to allow specialized plugins
-	// to use the URL instead
-	startTag.setSortPriority(1);
 
 	// Pair the tags together
 	startTag.pairWith(endTag);
@@ -54,16 +51,5 @@ function linkifyUrl(tagPos, url)
 */
 function trimUrl(url)
 {
-	while (1)
-	{
-		url = url.replace(/(?![-=\/)])[\s!-.:-@[-`{-~]+$/, '');
-		if (url.substr(-1) === ')' && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length)
-		{
-			url = url.substr(0, url.length - 1);
-			continue;
-		}
-		break;
-	}
-
-	return url;
+	return url.replace(/(?![-=\/)])[\s!-.:-@[-`{-~]+$/, '');
 }

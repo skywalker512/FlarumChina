@@ -33,6 +33,11 @@ var startPos;
 */
 var textLen = text.length;
 
+/**
+* @type {!string} Text being parsed, normalized to uppercase
+*/
+var uppercaseText = '';
+
 matches.forEach(function(m)
 {
 	bbcodeName = m[1][0].toUpperCase();
@@ -97,8 +102,12 @@ function addBBCodeStartTag()
 */
 function captureEndTag()
 {
+	if (!uppercaseText)
+	{
+		uppercaseText = text.toUpperCase();
+	}
 	var match     = '[/' + bbcodeName + bbcodeSuffix + ']',
-		endTagPos = text.toUpperCase().indexOf(match, pos);
+		endTagPos = uppercaseText.indexOf(match, pos);
 	if (endTagPos < 0)
 	{
 		return null;

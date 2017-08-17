@@ -83,11 +83,16 @@
         background: fade(@overlay-bg, 60%);
         position: absolute;
 
-        div {
+        &.Error .Loader-modal {
+            width: 300px;
+        }
+
+        .Loader-modal {
             width: 150px;
-            height: 150px;
+            min-height: 150px;
             margin-top: 75px;
             margin-left: -75px;
+            padding: 10px 2px;
             left: 50%;
             background-color: @body-bg;
             color: @text-color;
@@ -97,13 +102,13 @@
 
             border-radius: @border-radius @border-radius @border-radius @border-radius;
 
-            span {
-                width: 100%;
-            }
-
-            i {
+            .Loader-icon i {
                 font-size: 110px;
                 margin: 0 5px;
+            }
+
+            .Button {
+                margin-top: 2em;
             }
         }
     }

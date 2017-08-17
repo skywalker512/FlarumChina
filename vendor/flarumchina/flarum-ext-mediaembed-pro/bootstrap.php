@@ -16,35 +16,42 @@ function subscribe(Dispatcher $events)
 		{
             $event->configurator->Autoimage;
             $event->configurator->MediaEmbed->add(
-                'music163',
-	[
-		'host'    => 'music.163.com',
-		'extract' => [
-			"!music\\.163\\.com/#/song\\?id=(?'song_id'\\d+)!",
-			"!music\\.163\\.com/#/album\\?id=(?'playlist_id'\\d+)!",
-			"!music\\.163\\.com/#/playlist\\?id=(?'playlist_id'\\d+)!"
-		],
-		'choose'  => [
-			'when' => [
-				'test' => '@song_id',
-				'iframe'  => [
-					'width'  => 330,
-					'height' => 86,
-					'src'    => 'http://music.163.com/outchain/player?type=2&id={@song_id}&auto=0&height=66'
-				]
-			],
-			'otherwise' => [
-				'iframe'  => [
-					'width'  => 330,
-					'height' => 450,
-					'src'    => 'http://music.163.com/outchain/player?type=1&id={@playlist_id}&auto=0&height=430'
-				]
-			]
-		]
-	]
+            	'music163',
+            	[
+            		'host'    => 'music.163.com',
+            		'extract' => '!music\\.163\\.com/#/(?\'mode\'song|album|playlist)\\?id=(?\'id\'\\d+)!',
+            		'choose'  => [
+            			'when' => [
+            				[
+            					'test' => '@mode = \'album\'',
+            					'iframe'  => [
+            						'width'  => 380,
+            						'height' => 450,
+            						'src'    => '//music.163.com/outchain/player?type=1&id={@id}&auto=0&height=450'
+            					]
+            				],
+            				[
+            					'test' => '@mode = \'song\'',
+            					'iframe'  => [
+            						'width'  => 380,
+            						'height' => 86,
+            						'src'    => '//music.163.com/outchain/player?type=2&id={@id}&auto=0&height=66'
+            					]
+            				]
+            			],
+            			'otherwise' => [
+            				'iframe'  => [
+            					'width'  => 380,
+            					'height' => 450,
+            					'src'    => '//music.163.com/outchain/player?type=0&id={@id}&auto=0&height=450'
+            				]
+            			]
+            		]
+               ]
             );
+                    
             $event->configurator->MediaEmbed->add(
-                'youku1',
+                'youku',
                 [
                     'host'    => 'v.youku.com',
                     'extract' => "!v\\.youku\\.com/v_show/\\id_(?'id'[-0-9A-Z_a-z]+)!",
