@@ -25,3 +25,8 @@ ganuonglachanh-mdeditor:
       link: '创建链接'
       image: '创建图片'
       guide: 'Markdown Guide'
+      details: '隐藏内容'
+      reply_see: '回复可见'
+      center: '居中'
+      right: '右对齐'
+      high_light: '高亮'
