@@ -17,7 +17,18 @@ flagrow-users-list:
       default_subject: => flagrow-users-list.ref.default_subject
       message_label: Message
       submit_button: Send
-
+    modal_user:
+      title: => core.forum.edit_user.title
+      username_heading: => core.forum.edit_user.username_heading
+      username_label: => core.forum.edit_user.username_label
+      email_heading: => core.forum.edit_user.email_heading
+      email_label: => core.forum.edit_user.email_label
+      activate_button: => core.forum.edit_user.activate_button
+      password_heading: => core.forum.edit_user.password_heading
+      password_label: => core.forum.edit_user.password_label
+      set_password_label: => core.forum.edit_user.set_password_label
+      groups_heading: => core.forum.edit_user.groups_heading
+      submit_button: => core.forum.edit_user.submit_button
   email:
     default_subject: => flagrow-users-list.ref.default_subject
 

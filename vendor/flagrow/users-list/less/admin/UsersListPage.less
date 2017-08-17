@@ -16,10 +16,10 @@
     padding: 20px 0;
 
     .UsersListItems {
-      padding-left: 150px;
+      padding-left: 80px;
 
       > label {
-        margin-left: -150px;
+        margin-left: -80px;
         float: left;
         font-weight: bold;
         margin-top: 14px;
@@ -31,6 +31,7 @@
         margin: 0;
         color: @muted-color;
         font-size: 16px;
+
 
         > .sortable-placeholder {
           height: 34px;
@@ -47,13 +48,21 @@
 
             .UsersListItem-name,
             .UserCard-lastSeen {
-              width: 200px;
+              width: 8em;
               margin: 0;
             }
 
             .UsersListItem-comments,
             .UsersListItem-discussions {
-              width: 70px;
+              width: 4em;
+            }
+
+            .badges {
+              width: 2.2em;
+            }
+
+            .online {
+              color: #58A400;
             }
 
             .Button {
@@ -94,6 +103,10 @@
           margin-left: 0;
           float: none;
         }
+      }
+
+      @media only screen and (max-width: 1260px) {
+	.jointime { display: none !important }
       }
     }
   }

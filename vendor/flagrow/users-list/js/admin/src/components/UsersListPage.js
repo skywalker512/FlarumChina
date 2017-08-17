@@ -5,6 +5,7 @@ import LoadingIndicator from 'flarum/components/LoadingIndicator';
 import humanTime from 'flarum/helpers/humanTime';
 import icon from 'flarum/helpers/icon';
 
+import EditUserModal from 'flarum/components/EditUserModal';
 import EmailUserModal from 'flagrow/users-list/components/EmailUserModal';
 
 function UserItem(user) {
