@@ -12,3 +12,6 @@ flagrow-split:
             title: 分割贴文
             new_discussion_label: 指定新贴文标题
             submit_button: 分割
+    admin:
+        permissions:
+            split_discussion_label: 分割文章
