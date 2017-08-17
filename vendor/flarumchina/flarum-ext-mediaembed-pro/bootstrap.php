@@ -77,6 +77,18 @@ function subscribe(Dispatcher $events)
                     ]
                 ]
             );
+            $event->configurator->MediaEmbed->add(
+                'open163',
+                [   
+                    'host'    => 'open.163.com',
+                    'extract' => "!open\\.163\\.com/movie/[^/]+/[^/]+/[^/]+/[^/]+/(?'id'\\w+)\\.html!",
+                    'flash'  => [
+                        'width'  => 760,
+                        'height' => 450,
+                        'src'    => '//swf.ws.126.net/openplayer/v01/-0-2_{@id}-.swf'
+                    ]
+                ]
+            );
              $event->configurator->MediaEmbed->add(
                 'qq',
                 [
