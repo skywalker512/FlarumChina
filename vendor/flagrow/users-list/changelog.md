@@ -1,3 +1,0 @@
-- 0.1.2
-  - Compatibility with 0.1.0-beta.6 and dev-master.
-- previous version maintained by another author.
