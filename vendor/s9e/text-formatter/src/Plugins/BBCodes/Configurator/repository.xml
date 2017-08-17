@@ -43,6 +43,13 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="RIGHT">
+		<usage>[RIGHT]{TEXT}[/RIGHT]</usage>
+		<template><![CDATA[
+			<div style="text-align:right">{TEXT}</div>
+		]]></template>
+	</bbcode>
+
 	<!-- [CODE] BBCode, uses Hightlight.js for highlighting: https://highlightjs.org/ -->
 	<bbcode name="CODE">
 		<usage>[CODE lang={IDENTIFIER;optional}]{TEXT}[/CODE]</usage>
@@ -53,7 +60,7 @@
 				</xsl:if>
 				<xsl:apply-templates />
 			</code></pre>
-			<script>if("undefined"!==typeof hljs)hljs._ha();else if("undefined"===typeof hljsLoading){hljsLoading=1;var a=document.getElementsByTagName("head")[0],e=document.createElement("link");e.type="text/css";e.rel="stylesheet";e.href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css";a.appendChild(e);e=document.createElement("script");e.type="text/javascript";e.onload=function(){var d={},f=0;hljs._hb=function(b){b.removeAttribute("data-hljs");var c=b.innerHTML;c in d?b.innerHTML=d[c]:(7&lt;++f&amp;&amp;(d={},f=0),hljs.highlightBlock(b.firstChild),d[c]=b.innerHTML)};hljs._ha=function(){for(var b=document.querySelectorAll("pre[data-hljs]"),c=b.length;0&lt;c;)hljs._hb(b.item(--c))};hljs._ha()};e.async=!0;e.src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js";a.appendChild(e)}</script>
+			<script>if("undefined"!==typeof hljs)hljs._ha();else if("undefined"===typeof hljsLoading){hljsLoading=1;var a=document.getElementsByTagName("head")[0],e=document.createElement("link");e.type="text/css";e.rel="stylesheet";e.href="//cdn.bootcss.com/highlight.js/9.7.0/styles/default.min.css";a.appendChild(e);e=document.createElement("script");e.type="text/javascript";e.onload=function(){var d={},f=0;hljs._hb=function(b){b.removeAttribute("data-hljs");var c=b.innerHTML;c in d?b.innerHTML=d[c]:(7&lt;++f&amp;&amp;(d={},f=0),hljs.highlightBlock(b.firstChild),d[c]=b.innerHTML)};hljs._ha=function(){for(var b=document.querySelectorAll("pre[data-hljs]"),c=b.length;0&lt;c;)hljs._hb(b.item(--c))};hljs._ha()};e.async=!0;e.src="//cdn.bootcss.com/highlight.js/9.7.0/highlight.min.js";a.appendChild(e)}</script>
 		]]></template>
 		<ignore><![CDATA[
 			if (typeof hljs !== 'undefined')
@@ -69,7 +76,7 @@
 
 				el.type = 'text/css';
 				el.rel  = 'stylesheet';
-				el.href = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css';
+				el.href = '//cdn.bootcss.com/highlight.js/9.7.0/styles/default.min.css';
 
 				head.appendChild(el);
 
@@ -114,7 +121,7 @@
 					hljs['_ha']();
 				};
 				el.async = true;
-				el.src   = '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js';
+				el.src   = '//cdn.bootcss.com/highlight.js/9.7.0/highlight.min.js';
 
 				head.appendChild(el);
 			}
@@ -427,13 +434,6 @@
 		]]></template>
 	</bbcode>
 
-	<bbcode name="TBODY">
-		<usage>[TBODY]{ANYTHING}[/TBODY]</usage>
-		<template><![CDATA[
-			<tbody>{ANYTHING}</tbody>
-		]]></template>
-	</bbcode>
-
 	<bbcode name="TD">
 		<usage>[TD align={CHOICE=left,center,right,justify;caseSensitive;optional;preFilter=strtolower} #createParagraphs=false]{TEXT}[/TD]</usage>
 		<template><![CDATA[
@@ -455,13 +455,6 @@
 				</xsl:if>
 				<xsl:apply-templates/>
 			</th>
-		]]></template>
-	</bbcode>
-
-	<bbcode name="THEAD">
-		<usage>[THEAD]{ANYTHING}[/THEAD]</usage>
-		<template><![CDATA[
-			<thead>{ANYTHING}</thead>
 		]]></template>
 	</bbcode>
 
@@ -499,5 +492,111 @@
 			<var>{TEXT}</var>
 		]]></template>
 	</bbcode>
+
+	<bbcode name="HL">
+		<usage>[HL]{TEXT}[/HL]</usage>
+		<template><![CDATA[
+			<mark>{TEXT}</mark>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="AUDIO">
+    		<usage>[AUDIO]{URL}[/AUDIO]</usage>
+    		<template><![CDATA[
+        	<audio controls><source src="{URL}" type="audio/mpeg">你的浏览器不支持 HTML5 音频，请使用 chrome 浏览器访问。</audio>
+    		]]></template>
+	</bbcode>
+
+	<bbcode name="VIDEO">
+    		<usage>[video]{URL}[/video]</usage>
+    		<template><![CDATA[
+        	<video width="100%" controls><source src="{URL}" type="video/mp4">你的浏览器不支持 HTML5 视频，请使用 chrome 浏览器访问。</video>
+    		]]></template>
+	</bbcode>
+
+	<bbcode name="SIZE1">
+		<usage>[SIZE1]{TEXT}[/SIZE1]</usage>
+		<template><![CDATA[
+			<span style="font-size: 12px;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="SIZE2">
+		<usage>[SIZE2]{TEXT}[/SIZE2]</usage>
+		<template><![CDATA[
+			<span style="font-size: 15px;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="SIZE3">
+		<usage>[SIZE3]{TEXT}[/SIZE3]</usage>
+		<template><![CDATA[
+			<span style="font-size: 22px;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="SIZE4">
+		<usage>[SIZE4]{TEXT}[/SIZE4]</usage>
+		<template><![CDATA[
+			<span style="font-size: 26px;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="COLORT">
+		<usage>[COLORT]{TEXT}[/COLORT]</usage>
+		<template><![CDATA[
+			<span style="color: #1abc9c;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="COLORG">
+		<usage>[COLORG]{TEXT}[/COLORG]</usage>
+		<template><![CDATA[
+			<span style="color: #2ecc71;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="COLORB">
+		<usage>[COLORB]{TEXT}[/COLORB]</usage>
+		<template><![CDATA[
+			<span style="color: #3498db;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="COLORP">
+		<usage>[COLORP]{TEXT}[/COLORP]</usage>
+		<template><![CDATA[
+			<span style="color: #9b59b6;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="COLORY">
+		<usage>[COLORY]{TEXT}[/COLORY]</usage>
+		<template><![CDATA[
+			<span style="color: #f1c40f;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="COLORO">
+		<usage>[COLORO]{TEXT}[/COLORO]</usage>
+		<template><![CDATA[
+			<span style="color: #e67e22;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="COLORR">
+		<usage>[COLORR]{TEXT}[/COLORR]</usage>
+		<template><![CDATA[
+			<span style="color: #e74c3c;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="COLORS">
+		<usage>[COLORS]{TEXT}[/COLORS]</usage>
+		<template><![CDATA[
+			<span style="color: #95a5a6;">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
 
 </repository>
