@@ -1,0 +1,38 @@
+# https://gitlab.com/ReDevelopers/ReFlar/reactions/blob/master/locale/en.yml
+
+reflar-reactions:
+  forum:
+    warning: 你的表态改变了
+    notification: '{username} 对你的帖子 {reaction} '
+
+  admin:
+    permissions:
+        react_posts_label: 对帖子表态
+  
+    nav:
+      desc: 对帖子表态插件进行管理和设置
+
+    page:
+      reactions:
+        title: 自定义表态
+        reactions: 最近的表态
+        Helptext: 填入 (identifier) emoji名称或者 font-awesome 名称来作为图标.
+        help:
+          identifier: 标识符
+
+      settings:
+        save_settings: 保存
+        integrations:
+          legend: 集成
+          warning: 同一个表态不能多次使用
+          gamification:
+            legend: Gamification
+            upvoteLabel: 将一种表态作为“顶”
+            upvoteHelptext: 当用户点击该表态时将作为顶来使用，并不显示表态
+            downvoteLabel: 将一种表态作为“踩”
+            downvoteHelptext: 当用户点击该表态时将作为踩来使用，并不显示表态
+
+          likes:
+            legend: 喜欢
+            Label: 将一种表态作为“喜欢”
+            Helptext: 当用户点击该表态时将作为喜欢来使用，并不显示表态
