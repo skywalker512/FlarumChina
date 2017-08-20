@@ -131,7 +131,6 @@ System.register('Reflar/gamification/components/AddAttributes', ['flarum/helpers
       return m(
                 'div',
                 { className: 'PostUser' },
-                userOnline(user),
                 m(
                     'h3',
                     null,
@@ -139,7 +138,7 @@ System.register('Reflar/gamification/components/AddAttributes', ['flarum/helpers
                         'a',
                         { href: app.route.user(user), config: m.route },
                         avatar(user, { className: 'PostUser-avatar' }),
-                        ' ',
+						userOnline(user),
                         username(user)
                     ),
                     user.ranks().map(function (rank, i) {
@@ -199,13 +198,14 @@ System.register('Reflar/gamification/components/AddAttributes', ['flarum/helpers
 })
 'use strict'
 
-System.register('Reflar/gamification/components/AddHotnessSort', ['flarum/extend', 'flarum/components/IndexPage', 'flarum/utils/ItemList', 'flarum/components/DiscussionList', 'flarum/components/Select'], function (_export, _context) {
+System.register('Reflar/gamification/components/AddHotnessSort', ['flarum/extend', 'flarum/components/IndexPage', 'flarum/utils/ItemList', 'flarum/components/DiscussionList', 'flarum/components/Dropdown', 'flarum/components/Button'], function (_export, _context) {
   'use strict'
 
-  var extend, IndexPage, ItemList, DiscussionList, Select
+  var extend, IndexPage, ItemList, DiscussionList, Dropdown, Button
 
   _export('default', function () {
     IndexPage.prototype.viewItems = function () {
+      var _this2 = this;
       var items = new ItemList()
       var sortMap = app.cache.discussionList.sortMap()
 
@@ -220,10 +220,22 @@ System.register('Reflar/gamification/components/AddHotnessSort', ['flarum/extend
         sort = 'hot'
       }
 
-      items.add('sort', Select.component({
-        options: sortOptions,
-        value: sort || Object.keys(sortMap)[0],
-        onchange: this.changeSort.bind(this)
+      items.add('sort', Dropdown.component({
+        buttonClassName: 'Button',
+        label: sortOptions[sort] || Object.keys(sortMap).map(function (key) {
+	  return sortOptions[key];
+	})[0],
+	children: Object.keys(sortOptions).map(function (value) {
+	  var label = sortOptions[value];
+	  var active = (sort || Object.keys(sortMap)[0]) === value;
+
+          return Button.component({
+            children: label,
+            icon: active ? 'check' : true,
+            onclick: _this2.changeSort.bind(_this2, value),
+            active: active
+          });
+       })
       }))
 
       return items
@@ -268,8 +280,10 @@ System.register('Reflar/gamification/components/AddHotnessSort', ['flarum/extend
       ItemList = _flarumUtilsItemList.default
     }, function (_flarumComponentsDiscussionList) {
       DiscussionList = _flarumComponentsDiscussionList.default
-    }, function (_flarumComponentsSelect) {
-      Select = _flarumComponentsSelect.default
+    }, function (_flarumComponentsDropdown) {
+      Dropdown = _flarumComponentsDropdown.default
+    }, function (_flarumComponentsButton) {
+      Button = _flarumComponentsButton.default
     }],
     execute: function () {}
   }
