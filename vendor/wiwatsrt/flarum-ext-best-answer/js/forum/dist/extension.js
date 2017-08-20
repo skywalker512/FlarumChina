@@ -134,7 +134,7 @@ System.register('wiwatSrt/bestAnswer/addBestAnswerFirstPost', ['flarum/app', 'fl
                 var post = discussion.bestAnswerPost();
                 if (post.isHidden()) return;
                 var user = discussion.bestAnswerPost().user();
-                items.add('bestAnswerPost', m('div', { className: 'CommentPost' }, m(".Post-header", m('ul', m('li', { className: 'item-user' }, m('.PostUser', userOnline(user), m('h3', m('a', { href: app.route.user(user), config: m.route }, username(user))))), m('li', { className: 'item-meta' }, PostMeta.component({ post: post })), m('li', { className: 'item-bestAnswerButton' }, m('a', {
+                items.add('bestAnswerPost', m('div', { className: 'CommentPost' }, m(".Post-header", m('ul', m('li', { className: 'item-user' }, m('.PostUser', m('h3', m('a', { href: app.route.user(user), config: m.route }, userOnline(user), username(user))))), m('li', { className: 'item-meta' }, PostMeta.component({ post: post })), m('li', { className: 'item-bestAnswerButton' }, m('a', {
                     href: app.route.post(post),
                     config: m.route,
                     'data-number': post.number()
