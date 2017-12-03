@@ -70,10 +70,10 @@ function subscribe(Dispatcher $events)
                     	"!www.bilibili.com/video/av(?'id'\\d+)/!",
                     	"!www.bilibili.com/mobile/video/av(?'id'\\d+)\\.html!"
                     ],
-                    'flash'  => [
+                    'iframe'  => [
                         'width'  => 760,
                         'height' => 450,
-                        'src'    => '//static.hdslb.com/miniloader.swf?aid={@id}'
+                        'src'    => '//www.bilibili.com/html/player.html?aid={@id}&as_wide=1'
                     ]
                 ]
             );
