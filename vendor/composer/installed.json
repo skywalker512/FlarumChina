@@ -1763,6 +1763,63 @@
         }
     },
     {
+        "name": "flarum/flarum-ext-akismet",
+        "version": "v0.1.0-beta.6",
+        "version_normalized": "0.1.0.0-beta6",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/flarum/flarum-ext-akismet.git",
+            "reference": "556b0ed5feade265b4ea9684bddbb01917099ee6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/flarum/flarum-ext-akismet/zipball/556b0ed5feade265b4ea9684bddbb01917099ee6",
+            "reference": "556b0ed5feade265b4ea9684bddbb01917099ee6",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6",
+            "flarum/flarum-ext-approval": "^0.1.0-beta.6",
+            "tijsverkoyen/akismet": "^1.1"
+        },
+        "time": "2016-10-19T10:42:05+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.1.x-dev"
+            },
+            "flarum-extension": {
+                "title": "Akismet",
+                "icon": {
+                    "image": "icon.jpg",
+                    "backgroundSize": "cover",
+                    "backgroundColor": "#5e8e14",
+                    "color": "#fff"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Flarum\\Akismet\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Toby Zerner",
+                "email": "toby.zerner@gmail.com"
+            }
+        ],
+        "description": "Stop spam using the Akismet anti-spam service.",
+        "keywords": [
+            "moderation"
+        ]
+    },
+    {
         "name": "flarum/flarum-ext-approval",
         "version": "v0.1.0-beta.7",
         "version_normalized": "0.1.0.0-beta7",
@@ -1818,6 +1875,61 @@
         ]
     },
     {
+        "name": "flarum/flarum-ext-auth-facebook",
+        "version": "v0.1.0-beta.6",
+        "version_normalized": "0.1.0.0-beta6",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/flarum/flarum-ext-auth-facebook.git",
+            "reference": "ac3591b7a32b7c6788620e80f48359ffc51d71a2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/flarum/flarum-ext-auth-facebook/zipball/ac3591b7a32b7c6788620e80f48359ffc51d71a2",
+            "reference": "ac3591b7a32b7c6788620e80f48359ffc51d71a2",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6",
+            "league/oauth2-facebook": "~1.0"
+        },
+        "time": "2016-10-19T10:42:20+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.1.x-dev"
+            },
+            "flarum-extension": {
+                "title": "Facebook Login",
+                "icon": {
+                    "name": "facebook",
+                    "backgroundColor": "#3b5998",
+                    "color": "#fff"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Flarum\\Auth\\Facebook\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Toby Zerner",
+                "email": "toby.zerner@gmail.com"
+            }
+        ],
+        "description": "Allow users to log in with Facebook.",
+        "keywords": [
+            "Authentication"
+        ]
+    },
+    {
         "name": "flarum/flarum-ext-auth-github",
         "version": "v0.1.0-beta.6",
         "version_normalized": "0.1.0.0-beta6",
@@ -1868,6 +1980,61 @@
             }
         ],
         "description": "Allow users to log in with GitHub.",
+        "keywords": [
+            "Authentication"
+        ]
+    },
+    {
+        "name": "flarum/flarum-ext-auth-twitter",
+        "version": "v0.1.0-beta.6",
+        "version_normalized": "0.1.0.0-beta6",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/flarum/flarum-ext-auth-twitter.git",
+            "reference": "23118d40d3a31d7dbdcf9734d9b8b8dca2358e80"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/flarum/flarum-ext-auth-twitter/zipball/23118d40d3a31d7dbdcf9734d9b8b8dca2358e80",
+            "reference": "23118d40d3a31d7dbdcf9734d9b8b8dca2358e80",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6",
+            "league/oauth1-client": "^1.6"
+        },
+        "time": "2016-10-19T10:42:36+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.1.x-dev"
+            },
+            "flarum-extension": {
+                "title": "Twitter Login",
+                "icon": {
+                    "name": "twitter",
+                    "backgroundColor": "#55ADEE",
+                    "color": "#fff"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Flarum\\Auth\\Twitter\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Toby Zerner",
+                "email": "toby.zerner@gmail.com"
+            }
+        ],
+        "description": "Allow users to log in with Twitter.",
         "keywords": [
             "Authentication"
         ]
@@ -2620,23 +2787,23 @@
     },
     {
         "name": "flarumchina/flarum-ext-simplified-chinese-pro",
-        "version": "v0.1.0-beta.7.3",
-        "version_normalized": "0.1.0.0-beta7.3",
+        "version": "v0.1.0-beta.7.4",
+        "version_normalized": "0.1.0.0-beta7.4",
         "source": {
             "type": "git",
             "url": "https://github.com/FlarumChina/flarum-ext-simplified-chinese-pro.git",
-            "reference": "f43815a8447fd88908f34430a174891b70d362eb"
+            "reference": "0be1b9f4390e887c826ce5282c0e50fd0e883108"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/f43815a8447fd88908f34430a174891b70d362eb",
-            "reference": "f43815a8447fd88908f34430a174891b70d362eb",
+            "url": "https://api.github.com/repos/FlarumChina/flarum-ext-simplified-chinese-pro/zipball/0be1b9f4390e887c826ce5282c0e50fd0e883108",
+            "reference": "0be1b9f4390e887c826ce5282c0e50fd0e883108",
             "shasum": ""
         },
         "require": {
             "flarum/core": "^0.1.0-beta.7"
         },
-        "time": "2018-02-15T02:05:17+00:00",
+        "time": "2018-02-15T11:41:19+00:00",
         "type": "flarum-extension",
         "extra": {
             "branch-alias": {
@@ -4037,6 +4204,62 @@
         "homepage": "https://github.com/ircmaxell/SecurityLib"
     },
     {
+        "name": "issyrocks12/flarum-ext-filter",
+        "version": "1.2.2",
+        "version_normalized": "1.2.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/CDK2020/flarum-ext-filter.git",
+            "reference": "b66bc5754745285d09436fd006e3060466fdf3d4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/CDK2020/flarum-ext-filter/zipball/b66bc5754745285d09436fd006e3060466fdf3d4",
+            "reference": "b66bc5754745285d09436fd006e3060466fdf3d4",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.6",
+            "flarum/flarum-ext-approval": "^0.1.0-beta.6",
+            "flarum/flarum-ext-flags": "^v0.1.0-beta.6"
+        },
+        "time": "2017-05-20T02:24:55+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.1.x-dev"
+            },
+            "flarum-extension": {
+                "title": "Filter",
+                "icon": {
+                    "name": "filter",
+                    "backgroundColor": "#263238",
+                    "color": "#fff"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "issyrocks12\\filter\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Charlie K",
+                "email": "charlie@jailbreakhub.org"
+            }
+        ],
+        "description": "Filter out words and phrases from forum posts",
+        "keywords": [
+            "moderation"
+        ]
+    },
+    {
         "name": "justinrainbow/json-schema",
         "version": "5.2.7",
         "version_normalized": "5.2.7.0",
@@ -4191,6 +4414,71 @@
         ]
     },
     {
+        "name": "league/oauth1-client",
+        "version": "1.7.0",
+        "version_normalized": "1.7.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/thephpleague/oauth1-client.git",
+            "reference": "fca5f160650cb74d23fc11aa570dd61f86dcf647"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/thephpleague/oauth1-client/zipball/fca5f160650cb74d23fc11aa570dd61f86dcf647",
+            "reference": "fca5f160650cb74d23fc11aa570dd61f86dcf647",
+            "shasum": ""
+        },
+        "require": {
+            "guzzlehttp/guzzle": "^6.0",
+            "php": ">=5.5.0"
+        },
+        "require-dev": {
+            "mockery/mockery": "^0.9",
+            "phpunit/phpunit": "^4.0",
+            "squizlabs/php_codesniffer": "^2.0"
+        },
+        "time": "2016-08-17T00:36:58+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "League\\OAuth1\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Ben Corlett",
+                "email": "bencorlett@me.com",
+                "homepage": "http://www.webcomm.com.au",
+                "role": "Developer"
+            }
+        ],
+        "description": "OAuth 1.0 Client Library",
+        "keywords": [
+            "Authentication",
+            "SSO",
+            "authorization",
+            "bitbucket",
+            "identity",
+            "idp",
+            "oauth",
+            "oauth1",
+            "single sign on",
+            "trello",
+            "tumblr",
+            "twitter"
+        ]
+    },
+    {
         "name": "league/oauth2-client",
         "version": "1.4.2",
         "version_normalized": "1.4.2.0",
@@ -4253,6 +4541,59 @@
             "oauth",
             "oauth2",
             "single sign on"
+        ]
+    },
+    {
+        "name": "league/oauth2-facebook",
+        "version": "1.4.5",
+        "version_normalized": "1.4.5.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/thephpleague/oauth2-facebook.git",
+            "reference": "c68e09f67b1364eefcc7614897100391dac71518"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/thephpleague/oauth2-facebook/zipball/c68e09f67b1364eefcc7614897100391dac71518",
+            "reference": "c68e09f67b1364eefcc7614897100391dac71518",
+            "shasum": ""
+        },
+        "require": {
+            "league/oauth2-client": "~1.0",
+            "php": ">=5.5.0"
+        },
+        "require-dev": {
+            "mockery/mockery": "~0.9",
+            "phpunit/phpunit": "~4.0",
+            "squizlabs/php_codesniffer": "~2.0"
+        },
+        "time": "2017-07-22T01:43:12+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "League\\OAuth2\\Client\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Sammy Kaye Powers",
+                "email": "me@sammyk.me",
+                "homepage": "http://www.sammyk.me"
+            }
+        ],
+        "description": "Facebook OAuth 2.0 Client Provider for The PHP League OAuth2-Client",
+        "keywords": [
+            "Authentication",
+            "authorization",
+            "client",
+            "facebook",
+            "oauth",
+            "oauth2"
         ]
     },
     {
@@ -4947,6 +5288,68 @@
             "guid",
             "identifier",
             "uuid"
+        ]
+    },
+    {
+        "name": "reflar/gamification",
+        "version": "2.0.2",
+        "version_normalized": "2.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://gitlab.com/ReDevelopers/ReFlar/gamification.git",
+            "reference": "f3a008c97f88cc10dceb97cd47c67d2a97d0579a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://gitlab.com/api/v4/projects/ReDevelopers%2FReFlar%2Fgamification/repository/archive.zip?sha=f3a008c97f88cc10dceb97cd47c67d2a97d0579a",
+            "reference": "f3a008c97f88cc10dceb97cd47c67d2a97d0579a",
+            "shasum": ""
+        },
+        "require": {
+            "flarum/core": "^0.1.0-beta.7"
+        },
+        "time": "2017-09-26T20:52:45+00:00",
+        "type": "flarum-extension",
+        "extra": {
+            "flarum-extension": {
+                "title": "ReFlar Gamification",
+                "icon": {
+                    "name": "thumbs-up",
+                    "backgroundColor": "#263238",
+                    "color": "#fff"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Reflar\\gamification\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Christian Lopez",
+                "email": "ralkage@reflar.email",
+                "homepage": "https://reflar.io"
+            },
+            {
+                "name": "Charlie K",
+                "email": "issyrocks12@reflar.email",
+                "homepage": "https://reflar.io"
+            }
+        ],
+        "description": "Upvotes and downvotes for your Flarum community",
+        "keywords": [
+            "Gamification",
+            "Settings",
+            "flarum",
+            "misc",
+            "points",
+            "reflar"
         ]
     },
     {
@@ -6170,6 +6573,47 @@
             "issues": "https://github.com/terabin/flarum-ext-sitemap/issues",
             "source": "https://github.com/terabin/flarum-ext-sitemap"
         }
+    },
+    {
+        "name": "tijsverkoyen/akismet",
+        "version": "1.1.1",
+        "version_normalized": "1.1.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tijsverkoyen/Akismet.git",
+            "reference": "6f7987fe181fd0fddbc9832f2ddeaf088425c83f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tijsverkoyen/Akismet/zipball/6f7987fe181fd0fddbc9832f2ddeaf088425c83f",
+            "reference": "6f7987fe181fd0fddbc9832f2ddeaf088425c83f",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "php": ">=5.2.0"
+        },
+        "time": "2016-07-19T13:50:18+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                ""
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD"
+        ],
+        "authors": [
+            {
+                "name": "Tijs Verkoyen",
+                "email": "akismet@verkoyen.eu",
+                "role": "Developer"
+            }
+        ],
+        "description": "Akismet is a wrapper-class to communicate with the Akismet API.",
+        "homepage": "https://github.com/tijsverkoyen/Akismet"
     },
     {
         "name": "tobscure/json-api",

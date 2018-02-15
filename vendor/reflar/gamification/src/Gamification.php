@@ -47,53 +47,6 @@ class Gamification
     }
 
     /**
-     * @return mixed
-     */
-    public function query()
-    {
-        return posts_votes::query();
-    }
-
-    /**
-     * @param $post_id
-     * @param $user_id
-     * @param $type
-     */
-    public function saveVote($post_id, $user_id, $type)
-    {
-        $vote = new Vote();
-        $vote->post_id = $post_id;
-        $vote->user_id = $user_id;
-        $vote->type = $type;
-        $vote->save();
-    }
-
-    /**
-     * @param $post_id
-     * @param User $actor
-     */
-    public function upvote($post_id, User $actor)
-    {
-        $post = $this->posts->query()->where('id', $post_id)->first();
-
-        if ($post !== null) {
-            $this->saveVote($post->id, $actor->id, 'Up');
-        }
-    }
-
-    /**
-     * @param $post_id
-     * @param User $actor
-     */
-    public function downvote($post_id, User $actor)
-    {
-        $post = $this->posts->findOrFail($post_id, $actor);
-        $user = $post->user;
-
-        $this->saveVote($post->id, $actor->id, 'Down');
-    }
-
-    /**
      * The Reddit hotness algorithm from https://github.com/reddit/reddit.
      *
      * @param $discussion
@@ -118,20 +71,6 @@ class Gamification
         $discussion->hotness = round($sign * $order + $seconds / 45000, 10);
 
         $discussion->save();
-    }
-
-    /**
-     * @param $post_id
-     * @param $user_id
-     *
-     * @return mixed
-     */
-    public function findVote($post_id, $user_id)
-    {
-        return Vote::where([
-            'post_id' => $post_id,
-            'user_id' => $user_id,
-        ])->first();
     }
 
     /**

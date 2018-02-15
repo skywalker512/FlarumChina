@@ -21,4 +21,6 @@ return function (Dispatcher $events) {
     $events->subscribe(Listeners\AddClientAssets::class);
     $events->subscribe(Listeners\SaveVotesToDatabase::class);
     $events->subscribe(Listeners\FilterDiscussionListByHotness::class);
+
+    $events->subscribe(Access\DiscussionPolicy::class);
 };

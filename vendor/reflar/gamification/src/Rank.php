@@ -12,15 +12,10 @@
 
 namespace Reflar\gamification;
 
-use Flarum\Core\Support\EventGeneratorTrait;
-use Flarum\Core\Support\ScopeVisibilityTrait;
 use Flarum\Database\AbstractModel;
 
 class Rank extends AbstractModel
 {
-    use EventGeneratorTrait;
-    use ScopeVisibilityTrait;
-
     /**
      * {@inheritdoc}
      */

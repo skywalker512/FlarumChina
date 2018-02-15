@@ -13,11 +13,8 @@ reflar-gamification:
       name: Usuario
       amount: Puntos
     notification:
-      upvote: Alguien ha dado un voto positivo en tu publicación
-      downvote: Alguien ha dado un voto negativo en tu publicación
-      grid:
-        upvoted: Alguien dió un voto positivo en una de mis publicaciones
-        downvoted: Alguien dió un voto negativo en una de mis publicaciones
+      upvote: "{username} ha dado un voto positivo en tu publicación"
+      downvote: "{username} ha dado un voto negativo en tu publicación"
     user:
       points: "Puntos: {points}"
       rank: "{rank}"

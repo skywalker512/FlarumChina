@@ -1,30 +1,38 @@
 # https://github.com/flagrow/flarum-ext-analytics/blob/master/locale/en.yml
 
 flagrow-analytics:
+    admin:
+        popup:
+            title: 统计设置
 
-  ##
-  # UNIQUE KEYS - The following keys are used in only one location each.
-  ##
+            section:
+                googleAnalytics: Google Analytics
+                piwik: Piwik
 
-  # Strings in this namespace are used by the admin interface.
-  admin:
-    popup:
-      title: 统计设置
+            field:
+                statusGoogle: 开启 Google Analytics
+                googleTrackingCode: Tracking Code ID
+                statusPiwik: 开启 Piwik
+                piwikUrl: Piwik 链接
+                piwikSiteId: 站点 ID
+                piwikTrackSubdomain: 跟踪所有 Flarum 子域的访问者
+                piwikPrependDomain: 跟踪时将网站域名添加到页面标题
+                piwikHideAliasUrl: 在「外链」报告中，隐藏已知别名链接的点击量
+                piwikAliasUrl: 别名链接
+                piwikTrackAccounts: 跟踪个人用户帐户
+                piwikAuthToken: 验证令牌
 
-      field:
-        googleTrackingCode: 跟踪代码 ID
-        piwikUrl: Piwik 链接
-        piwikSiteId: 站点 ID
-        piwikAliasUrl: 别名链接
-        piwikAuthToken: 验证令牌 config->users
+            placeholder:
+                piwikAuthToken: |
+                    填写此令牌以在管理面板中启用Piwik统计信息选项。
+                    你可以在 Settings > Personal > API Authentication Token 中找到.
 
-      checkbox:
-        label:
-          piwikTrackSubdomain: 跟踪所有 Flarum 子域的访问者
-          piwikPrependDomain: 跟踪时将网站域名添加到页面标题
-          piwikHideAliasUrl: 在「外链」报告中，隐藏已知别名链接的点击量
+            trackAccounts:
+                none: 不追踪
+                username: 用户名跟踪
+                email: 通过电子邮件跟踪
 
-    page:
-      nav:
-        title: 站点统计
-        description: 查看站点统计数据
+        page:
+            nav:
+                title: 统计分析
+                description: 查看统计分析

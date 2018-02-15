@@ -26,6 +26,10 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
             'samdark\\sitemap\\' => 16,
             's9e\\TextFormatter\\' => 18,
         ),
+        'i' => 
+        array (
+            'issyrocks12\\filter\\' => 19,
+        ),
         'Z' => 
         array (
             'Zend\\Stratigility\\' => 18,
@@ -70,6 +74,7 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         ),
         'R' => 
         array (
+            'Reflar\\gamification\\' => 20,
             'Reflar\\Reactions\\' => 17,
             'ReCaptcha\\' => 10,
             'Ramsey\\Uuid\\' => 12,
@@ -88,6 +93,7 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'L' => 
         array (
             'League\\OAuth2\\Client\\' => 21,
+            'League\\OAuth1\\' => 14,
             'League\\Flysystem\\' => 17,
         ),
         'J' => 
@@ -135,8 +141,11 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
             'Flarum\\Flags\\' => 13,
             'Flarum\\Emoji\\' => 13,
             'Flarum\\BBCode\\' => 14,
+            'Flarum\\Auth\\Twitter\\' => 20,
             'Flarum\\Auth\\GitHub\\' => 19,
+            'Flarum\\Auth\\Facebook\\' => 21,
             'Flarum\\Approval\\' => 16,
+            'Flarum\\Akismet\\' => 15,
             'Flarum\\' => 7,
             'Flagrow\\UsersList\\' => 18,
             'Flagrow\\Upload\\' => 15,
@@ -181,6 +190,10 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         's9e\\TextFormatter\\' => 
         array (
             0 => __DIR__ . '/..' . '/s9e/text-formatter/src',
+        ),
+        'issyrocks12\\filter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/issyrocks12/flarum-ext-filter/src',
         ),
         'Zend\\Stratigility\\' => 
         array (
@@ -302,6 +315,10 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         array (
             0 => __DIR__ . '/..' . '/seld/cli-prompt/src',
         ),
+        'Reflar\\gamification\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/reflar/gamification/src',
+        ),
         'Reflar\\Reactions\\' => 
         array (
             0 => __DIR__ . '/..' . '/reflar/reactions/src',
@@ -337,7 +354,12 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'League\\OAuth2\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/oauth2-client/src',
-            1 => __DIR__ . '/..' . '/league/oauth2-github/src',
+            1 => __DIR__ . '/..' . '/league/oauth2-facebook/src',
+            2 => __DIR__ . '/..' . '/league/oauth2-github/src',
+        ),
+        'League\\OAuth1\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/oauth1-client/src',
         ),
         'League\\Flysystem\\' => 
         array (
@@ -479,13 +501,25 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         array (
             0 => __DIR__ . '/..' . '/flarum/flarum-ext-bbcode/src',
         ),
+        'Flarum\\Auth\\Twitter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/flarum/flarum-ext-auth-twitter/src',
+        ),
         'Flarum\\Auth\\GitHub\\' => 
         array (
             0 => __DIR__ . '/..' . '/flarum/flarum-ext-auth-github/src',
         ),
+        'Flarum\\Auth\\Facebook\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/flarum/flarum-ext-auth-facebook/src',
+        ),
         'Flarum\\Approval\\' => 
         array (
             0 => __DIR__ . '/..' . '/flarum/flarum-ext-approval/src',
+        ),
+        'Flarum\\Akismet\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/flarum/flarum-ext-akismet/src',
         ),
         'Flarum\\' => 
         array (
@@ -1454,6 +1488,8 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'Flarum\\Admin\\Server' => __DIR__ . '/..' . '/flarum/core/src/Admin/Server.php',
         'Flarum\\Admin\\UrlGenerator' => __DIR__ . '/..' . '/flarum/core/src/Admin/UrlGenerator.php',
         'Flarum\\Admin\\WebApp' => __DIR__ . '/..' . '/flarum/core/src/Admin/WebApp.php',
+        'Flarum\\Akismet\\Listener\\AddClientAssets' => __DIR__ . '/..' . '/flarum/flarum-ext-akismet/src/Listener/AddClientAssets.php',
+        'Flarum\\Akismet\\Listener\\FilterNewPosts' => __DIR__ . '/..' . '/flarum/flarum-ext-akismet/src/Listener/FilterNewPosts.php',
         'Flarum\\Api\\ApiKey' => __DIR__ . '/..' . '/flarum/core/src/Api/ApiKey.php',
         'Flarum\\Api\\ApiServiceProvider' => __DIR__ . '/..' . '/flarum/core/src/Api/ApiServiceProvider.php',
         'Flarum\\Api\\Client' => __DIR__ . '/..' . '/flarum/core/src/Api/Client.php',
@@ -1537,9 +1573,15 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'Flarum\\Asset\\JsCompiler' => __DIR__ . '/..' . '/flarum/core/src/Asset/JsCompiler.php',
         'Flarum\\Asset\\LessCompiler' => __DIR__ . '/..' . '/flarum/core/src/Asset/LessCompiler.php',
         'Flarum\\Asset\\RevisionCompiler' => __DIR__ . '/..' . '/flarum/core/src/Asset/RevisionCompiler.php',
+        'Flarum\\Auth\\Facebook\\FacebookAuthController' => __DIR__ . '/..' . '/flarum/flarum-ext-auth-facebook/src/FacebookAuthController.php',
+        'Flarum\\Auth\\Facebook\\Listener\\AddClientAssets' => __DIR__ . '/..' . '/flarum/flarum-ext-auth-facebook/src/Listener/AddClientAssets.php',
+        'Flarum\\Auth\\Facebook\\Listener\\AddFacebookAuthRoute' => __DIR__ . '/..' . '/flarum/flarum-ext-auth-facebook/src/Listener/AddFacebookAuthRoute.php',
         'Flarum\\Auth\\GitHub\\GitHubAuthController' => __DIR__ . '/..' . '/flarum/flarum-ext-auth-github/src/GitHubAuthController.php',
         'Flarum\\Auth\\GitHub\\Listener\\AddClientAssets' => __DIR__ . '/..' . '/flarum/flarum-ext-auth-github/src/Listener/AddClientAssets.php',
         'Flarum\\Auth\\GitHub\\Listener\\AddGitHubAuthRoute' => __DIR__ . '/..' . '/flarum/flarum-ext-auth-github/src/Listener/AddGitHubAuthRoute.php',
+        'Flarum\\Auth\\Twitter\\Listener\\AddClientAssets' => __DIR__ . '/..' . '/flarum/flarum-ext-auth-twitter/src/Listener/AddClientAssets.php',
+        'Flarum\\Auth\\Twitter\\Listener\\AddTwitterAuthRoute' => __DIR__ . '/..' . '/flarum/flarum-ext-auth-twitter/src/Listener/AddTwitterAuthRoute.php',
+        'Flarum\\Auth\\Twitter\\TwitterAuthController' => __DIR__ . '/..' . '/flarum/flarum-ext-auth-twitter/src/TwitterAuthController.php',
         'Flarum\\BBCode\\Listener\\FormatBBCode' => __DIR__ . '/..' . '/flarum/flarum-ext-bbcode/src/Listener/FormatBBCode.php',
         'Flarum\\Console\\Command\\AbstractCommand' => __DIR__ . '/..' . '/flarum/core/src/Console/Command/AbstractCommand.php',
         'Flarum\\Console\\Command\\GenerateMigrationCommand' => __DIR__ . '/..' . '/flarum/core/src/Console/Command/GenerateMigrationCommand.php',
@@ -2515,16 +2557,41 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'League\\Flysystem\\Util\\ContentListingFormatter' => __DIR__ . '/..' . '/league/flysystem/src/Util/ContentListingFormatter.php',
         'League\\Flysystem\\Util\\MimeType' => __DIR__ . '/..' . '/league/flysystem/src/Util/MimeType.php',
         'League\\Flysystem\\Util\\StreamHasher' => __DIR__ . '/..' . '/league/flysystem/src/Util/StreamHasher.php',
+        'League\\OAuth1\\Client\\Credentials\\ClientCredentials' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Credentials/ClientCredentials.php',
+        'League\\OAuth1\\Client\\Credentials\\ClientCredentialsInterface' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Credentials/ClientCredentialsInterface.php',
+        'League\\OAuth1\\Client\\Credentials\\Credentials' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Credentials/Credentials.php',
+        'League\\OAuth1\\Client\\Credentials\\CredentialsException' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Credentials/CredentialsException.php',
+        'League\\OAuth1\\Client\\Credentials\\CredentialsInterface' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Credentials/CredentialsInterface.php',
+        'League\\OAuth1\\Client\\Credentials\\TemporaryCredentials' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Credentials/TemporaryCredentials.php',
+        'League\\OAuth1\\Client\\Credentials\\TokenCredentials' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Credentials/TokenCredentials.php',
+        'League\\OAuth1\\Client\\Server\\Bitbucket' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Server/Bitbucket.php',
+        'League\\OAuth1\\Client\\Server\\Magento' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Server/Magento.php',
+        'League\\OAuth1\\Client\\Server\\Server' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Server/Server.php',
+        'League\\OAuth1\\Client\\Server\\Trello' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Server/Trello.php',
+        'League\\OAuth1\\Client\\Server\\Tumblr' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Server/Tumblr.php',
+        'League\\OAuth1\\Client\\Server\\Twitter' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Server/Twitter.php',
+        'League\\OAuth1\\Client\\Server\\User' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Server/User.php',
+        'League\\OAuth1\\Client\\Server\\Uservoice' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Server/Uservoice.php',
+        'League\\OAuth1\\Client\\Server\\Xing' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Server/Xing.php',
+        'League\\OAuth1\\Client\\Signature\\HmacSha1Signature' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Signature/HmacSha1Signature.php',
+        'League\\OAuth1\\Client\\Signature\\PlainTextSignature' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Signature/PlainTextSignature.php',
+        'League\\OAuth1\\Client\\Signature\\Signature' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Signature/Signature.php',
+        'League\\OAuth1\\Client\\Signature\\SignatureInterface' => __DIR__ . '/..' . '/league/oauth1-client/src/Client/Signature/SignatureInterface.php',
         'League\\OAuth2\\Client\\Grant\\AbstractGrant' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/AbstractGrant.php',
         'League\\OAuth2\\Client\\Grant\\AuthorizationCode' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/AuthorizationCode.php',
         'League\\OAuth2\\Client\\Grant\\ClientCredentials' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/ClientCredentials.php',
         'League\\OAuth2\\Client\\Grant\\Exception\\InvalidGrantException' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/Exception/InvalidGrantException.php',
+        'League\\OAuth2\\Client\\Grant\\FbExchangeToken' => __DIR__ . '/..' . '/league/oauth2-facebook/src/Grant/FbExchangeToken.php',
         'League\\OAuth2\\Client\\Grant\\GrantFactory' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/GrantFactory.php',
         'League\\OAuth2\\Client\\Grant\\Password' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/Password.php',
         'League\\OAuth2\\Client\\Grant\\RefreshToken' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/RefreshToken.php',
         'League\\OAuth2\\Client\\Provider\\AbstractProvider' => __DIR__ . '/..' . '/league/oauth2-client/src/Provider/AbstractProvider.php',
+        'League\\OAuth2\\Client\\Provider\\AppSecretProof' => __DIR__ . '/..' . '/league/oauth2-facebook/src/Provider/AppSecretProof.php',
+        'League\\OAuth2\\Client\\Provider\\Exception\\FacebookProviderException' => __DIR__ . '/..' . '/league/oauth2-facebook/src/Provider/Exception/FacebookProviderException.php',
         'League\\OAuth2\\Client\\Provider\\Exception\\GithubIdentityProviderException' => __DIR__ . '/..' . '/league/oauth2-github/src/Provider/Exception/GithubIdentityProviderException.php',
         'League\\OAuth2\\Client\\Provider\\Exception\\IdentityProviderException' => __DIR__ . '/..' . '/league/oauth2-client/src/Provider/Exception/IdentityProviderException.php',
+        'League\\OAuth2\\Client\\Provider\\Facebook' => __DIR__ . '/..' . '/league/oauth2-facebook/src/Provider/Facebook.php',
+        'League\\OAuth2\\Client\\Provider\\FacebookUser' => __DIR__ . '/..' . '/league/oauth2-facebook/src/Provider/FacebookUser.php',
         'League\\OAuth2\\Client\\Provider\\GenericProvider' => __DIR__ . '/..' . '/league/oauth2-client/src/Provider/GenericProvider.php',
         'League\\OAuth2\\Client\\Provider\\GenericResourceOwner' => __DIR__ . '/..' . '/league/oauth2-client/src/Provider/GenericResourceOwner.php',
         'League\\OAuth2\\Client\\Provider\\Github' => __DIR__ . '/..' . '/league/oauth2-github/src/Provider/Github.php',
@@ -2809,6 +2876,35 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'Reflar\\Reactions\\Notification\\PostReactedBlueprint' => __DIR__ . '/..' . '/reflar/reactions/src/Notification/PostReactedBlueprint.php',
         'Reflar\\Reactions\\Reaction' => __DIR__ . '/..' . '/reflar/reactions/src/Reaction.php',
         'Reflar\\Reactions\\Validator\\ReactionValidator' => __DIR__ . '/..' . '/reflar/reactions/src/Validator/ReactionValidator.php',
+        'Reflar\\gamification\\Access\\DiscussionPolicy' => __DIR__ . '/..' . '/reflar/gamification/src/Access/DiscussionPolicy.php',
+        'Reflar\\gamification\\Api\\Controllers\\ConvertLikesController' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Controllers/ConvertLikesController.php',
+        'Reflar\\gamification\\Api\\Controllers\\CreateRankController' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Controllers/CreateRankController.php',
+        'Reflar\\gamification\\Api\\Controllers\\DeleteRankController' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Controllers/DeleteRankController.php',
+        'Reflar\\gamification\\Api\\Controllers\\ListRanksController' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Controllers/ListRanksController.php',
+        'Reflar\\gamification\\Api\\Controllers\\OrderByPointsController' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Controllers/OrderByPointsController.php',
+        'Reflar\\gamification\\Api\\Controllers\\UpdateRankController' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Controllers/UpdateRankController.php',
+        'Reflar\\gamification\\Api\\Controllers\\UploadTopImageController' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Controllers/UploadTopImageController.php',
+        'Reflar\\gamification\\Api\\Serializers\\RankSerializer' => __DIR__ . '/..' . '/reflar/gamification/src/Api/Serializers/RankSerializer.php',
+        'Reflar\\gamification\\Commands\\CreateRank' => __DIR__ . '/..' . '/reflar/gamification/src/Commands/CreateRank.php',
+        'Reflar\\gamification\\Commands\\CreateRankHandler' => __DIR__ . '/..' . '/reflar/gamification/src/Commands/CreateRankHandler.php',
+        'Reflar\\gamification\\Commands\\DeleteRank' => __DIR__ . '/..' . '/reflar/gamification/src/Commands/DeleteRank.php',
+        'Reflar\\gamification\\Commands\\DeleteRankHandler' => __DIR__ . '/..' . '/reflar/gamification/src/Commands/DeleteRankHandler.php',
+        'Reflar\\gamification\\Commands\\EditRank' => __DIR__ . '/..' . '/reflar/gamification/src/Commands/EditRank.php',
+        'Reflar\\gamification\\Commands\\EditRankHandler' => __DIR__ . '/..' . '/reflar/gamification/src/Commands/EditRankHandler.php',
+        'Reflar\\gamification\\Events\\PostWasVoted' => __DIR__ . '/..' . '/reflar/gamification/src/Events/PostWasVoted.php',
+        'Reflar\\gamification\\Gambit\\HotGambit' => __DIR__ . '/..' . '/reflar/gamification/src/Gambit/HotGambit.php',
+        'Reflar\\gamification\\Gamification' => __DIR__ . '/..' . '/reflar/gamification/src/Gamification.php',
+        'Reflar\\gamification\\Likes' => __DIR__ . '/..' . '/reflar/gamification/src/Likes.php',
+        'Reflar\\gamification\\Listeners\\AddApiAttributes' => __DIR__ . '/..' . '/reflar/gamification/src/Listeners/AddApiAttributes.php',
+        'Reflar\\gamification\\Listeners\\AddClientAssets' => __DIR__ . '/..' . '/reflar/gamification/src/Listeners/AddClientAssets.php',
+        'Reflar\\gamification\\Listeners\\AddRelationships' => __DIR__ . '/..' . '/reflar/gamification/src/Listeners/AddRelationships.php',
+        'Reflar\\gamification\\Listeners\\EventHandlers' => __DIR__ . '/..' . '/reflar/gamification/src/Listeners/EventHandlers.php',
+        'Reflar\\gamification\\Listeners\\FilterDiscussionListByHotness' => __DIR__ . '/..' . '/reflar/gamification/src/Listeners/FilterDiscussionListByHotness.php',
+        'Reflar\\gamification\\Listeners\\SaveVotesToDatabase' => __DIR__ . '/..' . '/reflar/gamification/src/Listeners/SaveVotesToDatabase.php',
+        'Reflar\\gamification\\Notification\\VoteBlueprint' => __DIR__ . '/..' . '/reflar/gamification/src/Notification/VoteBlueprint.php',
+        'Reflar\\gamification\\Rank' => __DIR__ . '/..' . '/reflar/gamification/src/Rank.php',
+        'Reflar\\gamification\\Validator\\RankValidator' => __DIR__ . '/..' . '/reflar/gamification/src/Validator/RankValidator.php',
+        'Reflar\\gamification\\Vote' => __DIR__ . '/..' . '/reflar/gamification/src/Vote.php',
         'SecurityLib\\AbstractFactory' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/AbstractFactory.php',
         'SecurityLib\\BaseConverter' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/BaseConverter.php',
         'SecurityLib\\BigMath' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/BigMath.php',
@@ -3178,6 +3274,8 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'Symfony\\Component\\Yaml\\Yaml' => __DIR__ . '/..' . '/symfony/yaml/Yaml.php',
         'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
         'Terabin\\Sitemap\\Listener\\GenerateSitemap' => __DIR__ . '/..' . '/terabin/flarum-ext-sitemap/src/Listener/GenerateSitemap.php',
+        'TijsVerkoyen\\Akismet\\Akismet' => __DIR__ . '/..' . '/tijsverkoyen/akismet/Akismet.php',
+        'TijsVerkoyen\\Akismet\\Exception' => __DIR__ . '/..' . '/tijsverkoyen/akismet/Exception.php',
         'Tobscure\\JsonApi\\AbstractSerializer' => __DIR__ . '/..' . '/tobscure/json-api/src/AbstractSerializer.php',
         'Tobscure\\JsonApi\\Collection' => __DIR__ . '/..' . '/tobscure/json-api/src/Collection.php',
         'Tobscure\\JsonApi\\Document' => __DIR__ . '/..' . '/tobscure/json-api/src/Document.php',
@@ -3281,6 +3379,8 @@ class ComposerStaticInit22115d18056dbc3517ba285e84cdea19
         'Zend\\Stratigility\\NoopFinalHandler' => __DIR__ . '/..' . '/zendframework/zend-stratigility/src/NoopFinalHandler.php',
         'Zend\\Stratigility\\Route' => __DIR__ . '/..' . '/zendframework/zend-stratigility/src/Route.php',
         'Zend\\Stratigility\\Utils' => __DIR__ . '/..' . '/zendframework/zend-stratigility/src/Utils.php',
+        'issyrocks12\\filter\\Listener\\AddClientAssets' => __DIR__ . '/..' . '/issyrocks12/flarum-ext-filter/src/Listener/AddClientAssets.php',
+        'issyrocks12\\filter\\Listener\\FilterPosts' => __DIR__ . '/..' . '/issyrocks12/flarum-ext-filter/src/Listener/FilterPosts.php',
         'lessc' => __DIR__ . '/..' . '/oyejorge/less.php/lessc.inc.php',
         's9e\\TextFormatter\\Bundle' => __DIR__ . '/..' . '/s9e/text-formatter/src/Bundle.php',
         's9e\\TextFormatter\\Bundles\\Fatdown' => __DIR__ . '/..' . '/s9e/text-formatter/src/Bundles/Fatdown.php',

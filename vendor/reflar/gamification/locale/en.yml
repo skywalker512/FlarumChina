@@ -13,11 +13,8 @@ reflar-gamification:
       name: User
       amount: Points
     notification:
-      upvote: Someone upvoted your post
-      downvote: Someone downvoted your post
-      grid:
-        upvoted: Someone upvoted one of my posts
-        downvoted: Someone downvoted one of my posts
+      upvote: "{username} upvoted your post"
+      downvote: "{username} downvoted your post"
     user:
       points: "Points: {points}"
       rank: "{rank}"

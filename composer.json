@@ -76,7 +76,12 @@
         "flagrow/masquerade": "^0.1.0",
         "henter/wechat-oauth": "dev-master",
         "antoinefr/flarum-ext-money": "0.5.0",
-        "stanleysong/flarum-ext-auth-wechat": "^1.0.3"
+        "stanleysong/flarum-ext-auth-wechat": "^1.0.3",
+        "reflar/gamification": "^2.0",
+        "issyrocks12/flarum-ext-filter": "^1.2",
+        "flarum/flarum-ext-auth-twitter": "^0.1.0@beta",
+        "flarum/flarum-ext-auth-facebook": "^0.1.0@beta",
+        "flarum/flarum-ext-akismet": "^0.1.0@beta"
     },
     "require-dev": {
         "franzl/studio": "^0.11.0"

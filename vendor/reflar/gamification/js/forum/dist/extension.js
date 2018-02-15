@@ -131,6 +131,7 @@ System.register('Reflar/gamification/components/AddAttributes', ['flarum/helpers
       return m(
                 'div',
                 { className: 'PostUser' },
+                userOnline(user),
                 m(
                     'h3',
                     null,
@@ -138,7 +139,7 @@ System.register('Reflar/gamification/components/AddAttributes', ['flarum/helpers
                         'a',
                         { href: app.route.user(user), config: m.route },
                         avatar(user, { className: 'PostUser-avatar' }),
-						userOnline(user),
+                        ' ',
                         username(user)
                     ),
                     user.ranks().map(function (rank, i) {
@@ -198,14 +199,15 @@ System.register('Reflar/gamification/components/AddAttributes', ['flarum/helpers
 })
 'use strict'
 
-System.register('Reflar/gamification/components/AddHotnessSort', ['flarum/extend', 'flarum/components/IndexPage', 'flarum/utils/ItemList', 'flarum/components/DiscussionList', 'flarum/components/Dropdown', 'flarum/components/Button'], function (_export, _context) {
+System.register('Reflar/gamification/components/AddHotnessSort', ['flarum/extend', 'flarum/components/IndexPage', 'flarum/utils/ItemList', 'flarum/components/DiscussionList', 'flarum/components/Dropdown', 'flarum/components/Button', 'flarum/components/LinkButton'], function (_export, _context) {
   'use strict'
 
-  var extend, IndexPage, ItemList, DiscussionList, Dropdown, Button
+  var extend, IndexPage, ItemList, DiscussionList, Dropdown, Button, LinkButton
 
   _export('default', function () {
     IndexPage.prototype.viewItems = function () {
-      var _this2 = this;
+      var _this = this
+
       var items = new ItemList()
       var sortMap = app.cache.discussionList.sortMap()
 
@@ -214,29 +216,60 @@ System.register('Reflar/gamification/components/AddHotnessSort', ['flarum/extend
         sortOptions[i] = app.translator.trans('core.forum.index_sort.' + i + '_button')
       }
 
-      var sort = this.params().sort
+      var dropDownLabel = sortOptions[this.params().sort] || Object.keys(sortMap).map(function (key) {
+        return sortOptions[key]
+      })[0]
 
-      if (this.props.routeName == 'index.filter') {
-        sort = 'hot'
+      if (/^.*?\/hot/.test(m.route())) {
+        dropDownLabel = app.translator.trans('core.forum.index_sort.hot_button')
       }
 
       items.add('sort', Dropdown.component({
         buttonClassName: 'Button',
-        label: sortOptions[sort] || Object.keys(sortMap).map(function (key) {
-	  return sortOptions[key];
-	})[0],
-	children: Object.keys(sortOptions).map(function (value) {
-	  var label = sortOptions[value];
-	  var active = (sort || Object.keys(sortMap)[0]) === value;
+        label: dropDownLabel,
+        children: Object.keys(sortOptions).map(function (value) {
+          var label = sortOptions[value]
+          var active = (_this.params().sort || Object.keys(sortMap)[0]) === value
+
+          if (/^.*?\/hot/.test(m.route()) && value === 'hot') {
+            active = true
+          }
+
+          if (/^.*?\/hot/.test(m.route()) && value === 'latest') {
+            active = false
+            m.redraw()
+          }
 
           return Button.component({
             children: label,
             icon: active ? 'check' : true,
-            onclick: _this2.changeSort.bind(_this2, value),
+            onclick: _this.changeSort.bind(_this, value),
             active: active
-          });
-       })
+          })
+        })
       }))
+
+      return items
+    }
+
+    IndexPage.prototype.navItems = function () {
+      var items = new ItemList()
+      var params = this.stickyParams()
+
+      items.add('allDiscussions', LinkButton.component({
+        href: app.route('index', params),
+        active: m.route() === '/' || /^.*?\/(\?sort=.*|hot)/.test(m.route()),
+        children: app.translator.trans('core.forum.index.all_discussions_link'),
+        icon: 'comments-o'
+      }), 100)
+
+      if (app.session.user === undefined || app.session.user.data.attributes.canViewRankingPage === false) {} else {
+        items.add('rankings', LinkButton.component({
+          href: app.route('rankings', {}),
+          children: app.translator.trans('reflar-gamification.forum.nav.name'),
+          icon: 'trophy'
+        }), 80)
+      }
 
       return items
     }
@@ -253,7 +286,7 @@ System.register('Reflar/gamification/components/AddHotnessSort', ['flarum/extend
         } else {
           params.sort = sort
         }
-        if (params.filter == 'hot') {
+        if (params.filter === 'hot') {
           delete params.filter
         }
         m.route(app.route('index', params))
@@ -284,6 +317,8 @@ System.register('Reflar/gamification/components/AddHotnessSort', ['flarum/extend
       Dropdown = _flarumComponentsDropdown.default
     }, function (_flarumComponentsButton) {
       Button = _flarumComponentsButton.default
+    }, function (_flarumComponentsLinkButton) {
+      LinkButton = _flarumComponentsLinkButton.default
     }],
     execute: function () {}
   }
@@ -331,6 +366,7 @@ System.register('Reflar/gamification/components/AddVoteButtons', ['flarum/extend
         icon: icon + '-up',
         className: 'Post-vote Post-upvote',
         style: isUpvoted !== false ? 'color:' + color : 'color:',
+        disabled: !post.discussion().canVote(),
         onclick: function onclick () {
           if (!app.session.user) {
             app.modal.show(new LogInModal())
@@ -368,7 +404,7 @@ System.register('Reflar/gamification/components/AddVoteButtons', ['flarum/extend
 
       items.add('points', m(
         'button',
-        { title: app.translator.trans('reflar-gamification.forum.vote_title'),
+        { disabled: !post.discussion().canSeeVotes(),
           className: 'Post-points',
           onclick: function onclick () {
             if (!post.discussion().canSeeVotes()) return
@@ -381,6 +417,7 @@ System.register('Reflar/gamification/components/AddVoteButtons', ['flarum/extend
         icon: icon + '-down',
         className: 'Post-vote Post-downvote',
         style: isDownvoted !== false ? 'color:' + color : '',
+        disabled: !post.discussion().canVote(),
         onclick: function onclick () {
           if (!app.session.user) {
             app.modal.show(new LogInModal())
@@ -437,57 +474,10 @@ System.register('Reflar/gamification/components/AddVoteButtons', ['flarum/extend
 })
 'use strict'
 
-System.register('Reflar/gamification/components/DownvotedNotification', ['flarum/components/Notification'], function (_export, _context) {
+System.register('Reflar/gamification/components/RankingsPage', ['flarum/extend', 'flarum/helpers/avatar', 'flarum/components/Page', 'flarum/components/IndexPage', 'flarum/components/Button', 'flarum/utils/ItemList', 'flarum/components/LogInModal', 'flarum/components/LoadingIndicator', 'flarum/helpers/listItems', 'flarum/helpers/icon', 'flarum/helpers/username'], function (_export, _context) {
   'use strict'
 
-  var Notification, DownvotedNotification
-  return {
-    setters: [function (_flarumComponentsNotification) {
-      Notification = _flarumComponentsNotification.default
-    }],
-    execute: function () {
-      DownvotedNotification = (function (_Notification) {
-        babelHelpers.inherits(DownvotedNotification, _Notification)
-
-        function DownvotedNotification () {
-          babelHelpers.classCallCheck(this, DownvotedNotification)
-          return babelHelpers.possibleConstructorReturn(this, (DownvotedNotification.__proto__ || Object.getPrototypeOf(DownvotedNotification)).apply(this, arguments))
-        }
-
-        babelHelpers.createClass(DownvotedNotification, [{
-          key: 'icon',
-          value: function icon () {
-            return 'thumbs-down'
-          }
-        }, {
-          key: 'href',
-          value: function href () {
-            return app.route.post(this.props.notification.subject())
-          }
-        }, {
-          key: 'content',
-          value: function content () {
-            return app.translator.trans('reflar-gamification.forum.notification.downvote')
-          }
-        }, {
-          key: 'excerpt',
-          value: function excerpt () {
-            return this.props.notification.subject().contentPlain()
-          }
-        }])
-        return DownvotedNotification
-      }(Notification))
-
-      _export('default', DownvotedNotification)
-    }
-  }
-})
-'use strict'
-
-System.register('Reflar/gamification/components/RankingsPage', ['flarum/extend', 'flarum/helpers/avatar', 'flarum/components/Page', 'flarum/components/IndexPage', 'flarum/components/Button', 'flarum/utils/ItemList', 'flarum/components/LogInModal', 'flarum/components/LoadingIndicator', 'flarum/components/LinkButton', 'flarum/helpers/listItems', 'flarum/helpers/icon', 'flarum/helpers/username', 'flarum/components/SelectDropdown'], function (_export, _context) {
-  'use strict'
-
-  var extend, avatar, Page, IndexPage, Button, ItemList, LogInModal, LoadingIndicator, LinkButton, listItems, icon, username, SelectDropdown, RankingsPage
+  var extend, avatar, Page, IndexPage, Button, ItemList, LogInModal, LoadingIndicator, listItems, icon, username, RankingsPage
   return {
     setters: [function (_flarumExtend) {
       extend = _flarumExtend.extend
@@ -504,18 +494,14 @@ System.register('Reflar/gamification/components/RankingsPage', ['flarum/extend',
     }, function (_flarumComponentsLogInModal) {
       LogInModal = _flarumComponentsLogInModal.default
     }, function (_flarumComponentsLoadingIndicator) {
-        LoadingIndicator = _flarumComponentsLoadingIndicator.default
-      }, function (_flarumComponentsLinkButton) {
-        LinkButton = _flarumComponentsLinkButton.default
-      }, function (_flarumHelpersListItems) {
-          listItems = _flarumHelpersListItems.default
-        }, function (_flarumHelpersIcon) {
-          icon = _flarumHelpersIcon.default
-        }, function (_flarumHelpersUsername) {
-          username = _flarumHelpersUsername.default
-        }, function (_flarumComponentsSelectDropdown) {
-          SelectDropdown = _flarumComponentsSelectDropdown.default
-        }],
+      LoadingIndicator = _flarumComponentsLoadingIndicator.default
+    }, function (_flarumHelpersListItems) {
+      listItems = _flarumHelpersListItems.default
+    }, function (_flarumHelpersIcon) {
+      icon = _flarumHelpersIcon.default
+    }, function (_flarumHelpersUsername) {
+      username = _flarumHelpersUsername.default
+    }],
     execute: function () {
       RankingsPage = (function (_Page) {
         babelHelpers.inherits(RankingsPage, _Page)
@@ -555,114 +541,114 @@ System.register('Reflar/gamification/components/RankingsPage', ['flarum/extend',
               })
             }
             return m(
-                            'div',
-                            { className: 'IndexPage' },
-                            IndexPage.prototype.hero(),
-                            m(
-                                'div',
-                                { className: 'container' },
-                                m(
-                                    'div',
-                                    { className: 'IndexPage-results' },
-                                    m(
-                                        'div',
-                                        { className: 'RankingPage' },
-                                        m(
-                                            'div',
-                                            { className: 'container' },
-                                            m(
-                                                'nav',
-                                                { className: 'IndexPage-nav sideNav' },
-                                                m(
-                                                    'ul',
-                                                    null,
-                                                    listItems(IndexPage.prototype.sidebarItems().toArray())
-                                                )
-                                            ),
-                                            m(
-                                                'div',
-                                                { className: 'sideNavOffset' },
-                                                m(
-                                                    'table',
-                                                    { 'class': 'rankings' },
-                                                    m(
-                                                        'tr',
-                                                        null,
-                                                        m(
-                                                            'th',
-                                                            { className: 'rankings-mobile' },
-                                                            app.translator.trans('reflar-gamification.forum.ranking.rank')
-                                                        ),
-                                                        m(
-                                                            'th',
-                                                            null,
-                                                            app.translator.trans('reflar-gamification.forum.ranking.name')
-                                                        ),
-                                                        m(
-                                                            'th',
-                                                            null,
-                                                            app.translator.trans('reflar-gamification.forum.ranking.amount')
-                                                        )
-                                                    ),
-                                                    this.users.map(function (user, i) {
-                                                      ++i
-                                                      return [m(
-                                                            'tr',
-                                                            { className: 'ranking-' + i },
-                                                            i < 4 ? app.forum.attribute('CustomRankingImages') == '1' ? m('img', { className: 'rankings-mobile rankings-image',
-                                                              src: app.forum.attribute('baseUrl') + '/assets/' + app.forum.attribute('TopImage' + i) }) : m(
-                                                                'td',
-                                                                { className: 'rankings-mobile rankings-' + i },
-                                                                ' ',
-                                                                icon('trophy')
-                                                            ) : m(
-                                                                'td',
-                                                                { className: 'rankings-4 rankings-mobile' },
-                                                                _this2.addOrdinalSuffix(i)
-                                                            ),
-                                                            m(
-                                                                'td',
-                                                                null,
-                                                                m(
-                                                                    'div',
-                                                                    { className: 'PostUser' },
-                                                                    m(
-                                                                        'h3',
-                                                                        { className: 'rankings-info' },
-                                                                        m(
-                                                                            'a',
-                                                                            { href: app.route.user(user), config: m.route },
-                                                                            i < 4 ? avatar(user, { className: 'info-avatar rankings-' + i + '-avatar' }) : '',
-                                                                            ' ',
-                                                                            username(user)
-                                                                        )
-                                                                    )
-                                                                )
-                                                            ),
-                                                            i < 4 ? m(
-                                                                'td',
-                                                                { className: 'rankings-' + i },
-                                                                user.data.attributes.Points
-                                                            ) : m(
-                                                                'td',
-                                                                { className: 'rankings-4' },
-                                                                user.data.attributes.Points
-                                                            )
-                                                        )]
-                                                    })
-                                                ),
-                                                m(
-                                                    'div',
-                                                    { className: 'rankings-loadmore' },
-                                                    ' ',
-                                                    loading
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
+              'div',
+              { className: 'IndexPage' },
+              IndexPage.prototype.hero(),
+              m(
+                'div',
+                { className: 'container' },
+                m(
+                  'div',
+                  { className: 'IndexPage-results' },
+                  m(
+                    'div',
+                    { className: 'RankingPage' },
+                    m(
+                      'div',
+                      { className: 'container' },
+                      m(
+                        'nav',
+                        { className: 'IndexPage-nav sideNav' },
+                        m(
+                          'ul',
+                          null,
+                          listItems(IndexPage.prototype.sidebarItems().toArray())
                         )
+                      ),
+                      m(
+                        'div',
+                        { className: 'sideNavOffset' },
+                        m(
+                          'table',
+                          { 'class': 'rankings' },
+                          m(
+                            'tr',
+                            null,
+                            m(
+                              'th',
+                              { className: 'rankings-mobile' },
+                              app.translator.trans('reflar-gamification.forum.ranking.rank')
+                            ),
+                            m(
+                              'th',
+                              null,
+                              app.translator.trans('reflar-gamification.forum.ranking.name')
+                            ),
+                            m(
+                              'th',
+                              null,
+                              app.translator.trans('reflar-gamification.forum.ranking.amount')
+                            )
+                          ),
+                          this.users.map(function (user, i) {
+                            ++i
+                            return [m(
+                              'tr',
+                              { className: 'ranking-' + i },
+                              i < 4 ? app.forum.attribute('CustomRankingImages') == '1' ? m('img', { className: 'rankings-mobile rankings-image',
+                                src: app.forum.attribute('baseUrl') + '/assets/' + app.forum.attribute('TopImage' + i) }) : m(
+                                'td',
+                                { className: 'rankings-mobile rankings-' + i },
+                                ' ',
+                                icon('trophy')
+                              ) : m(
+                                'td',
+                                { className: 'rankings-4 rankings-mobile' },
+                                _this2.addOrdinalSuffix(i)
+                              ),
+                              m(
+                                'td',
+                                null,
+                                m(
+                                  'div',
+                                  { className: 'PostUser' },
+                                  m(
+                                    'h3',
+                                    { className: 'rankings-info' },
+                                    m(
+                                      'a',
+                                      { href: app.route.user(user), config: m.route },
+                                      i < 4 ? avatar(user, { className: 'info-avatar rankings-' + i + '-avatar' }) : '',
+                                      ' ',
+                                      username(user)
+                                    )
+                                  )
+                                )
+                              ),
+                              i < 4 ? m(
+                                'td',
+                                { className: 'rankings-' + i },
+                                user.data.attributes.Points
+                              ) : m(
+                                'td',
+                                { className: 'rankings-4' },
+                                user.data.attributes.Points
+                              )
+                            )]
+                          })
+                        ),
+                        m(
+                          'div',
+                          { className: 'rankings-loadmore' },
+                          ' ',
+                          loading
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
           }
         }, {
           key: 'refresh',
@@ -688,111 +674,111 @@ System.register('Reflar/gamification/components/RankingsPage', ['flarum/extend',
           key: 'addOrdinalSuffix',
           value: function addOrdinalSuffix (i) {
             if (app.forum.attribute('DefaultLocale') == 'en') {
-                var j = i % 10,
-                  k = i % 100
-                if (j == 1 && k != 11) {
-                  return i + 'st'
-                }
-                if (j == 2 && k != 12) {
-                  return i + 'nd'
-                }
-                if (j == 3 && k != 13) {
-                  return i + 'rd'
-                }
-                return i + 'th'
-              } else {
-                return i
+              var j = i % 10,
+                k = i % 100
+              if (j == 1 && k != 11) {
+                return i + 'st'
               }
+              if (j == 2 && k != 12) {
+                return i + 'nd'
+              }
+              if (j == 3 && k != 13) {
+                return i + 'rd'
+              }
+              return i + 'th'
+            } else {
+              return i
+            }
           }
         }, {
           key: 'stickyParams',
           value: function stickyParams () {
-              return {
-                sort: m.route.param('sort'),
-                q: m.route.param('q')
-              }
+            return {
+              sort: m.route.param('sort'),
+              q: m.route.param('q')
             }
+          }
         }, {
-            key: 'actionItems',
-            value: function actionItems () {
-              var items = new ItemList()
+          key: 'actionItems',
+          value: function actionItems () {
+            var items = new ItemList()
 
-              items.add('refresh', Button.component({
-                  title: app.translator.trans('core.forum.index.refresh_tooltip'),
-                  icon: 'refresh',
-                  className: 'Button Button--icon',
-                  onclick: function onclick () {
-                        app.cache.discussionList.refresh()
-                        if (app.session.user) {
-                          app.store.find('users', app.session.user.id())
-                          m.redraw()
-                        }
-                      }
-                }))
-
-              return items
-            }
-          }, {
-            key: 'newDiscussion',
-            value: function newDiscussion () {
-                var deferred = m.deferred()
-
+            items.add('refresh', Button.component({
+              title: app.translator.trans('core.forum.index.refresh_tooltip'),
+              icon: 'refresh',
+              className: 'Button Button--icon',
+              onclick: function onclick () {
+                app.cache.discussionList.refresh()
                 if (app.session.user) {
-                      this.composeNewDiscussion(deferred)
-                    } else {
-                      app.modal.show(new LogInModal({
-                        onlogin: this.composeNewDiscussion.bind(this, deferred)
-                      }))
-                    }
-
-                return deferred.promise
+                  app.store.find('users', app.session.user.id())
+                  m.redraw()
+                }
               }
-          }, {
-              key: 'composeNewDiscussion',
-              value: function composeNewDiscussion (deferred) {
-                    var component = new DiscussionComposer({ user: app.session.user })
+            }))
 
-                    app.composer.load(component)
-                    app.composer.show()
+            return items
+          }
+        }, {
+          key: 'newDiscussion',
+          value: function newDiscussion () {
+            var deferred = m.deferred()
 
-                    deferred.resolve(component)
+            if (app.session.user) {
+              this.composeNewDiscussion(deferred)
+            } else {
+              app.modal.show(new LogInModal({
+                onlogin: this.composeNewDiscussion.bind(this, deferred)
+              }))
+            }
 
-                    return deferred.promise
-                  }
-            }, {
-                  key: 'loadResults',
-                  value: function loadResults (offset) {
-                    var params = {}
-                    params.page = {
-                      offset: offset,
-                      limit: '10'
-                    }
+            return deferred.promise
+          }
+        }, {
+          key: 'composeNewDiscussion',
+          value: function composeNewDiscussion (deferred) {
+            var component = new DiscussionComposer({ user: app.session.user })
 
-                    return app.store.find('rankings', params)
-                  }
-                }, {
-                  key: 'loadMore',
-                  value: function loadMore () {
-                    this.loading = true
+            app.composer.load(component)
+            app.composer.show()
 
-                    this.loadResults(this.users.length).then(this.parseResults.bind(this))
-                  }
-                }, {
-                  key: 'parseResults',
-                  value: function parseResults (results) {
-                    [].push.apply(this.users, results)
+            deferred.resolve(component)
 
-                    this.loading = false
+            return deferred.promise
+          }
+        }, {
+          key: 'loadResults',
+          value: function loadResults (offset) {
+            var params = {}
+            params.page = {
+              offset: offset,
+              limit: '10'
+            }
 
-                    this.users.sort(function (a, b) {
-                      return parseFloat(b.data.attributes.Points) - parseFloat(a.data.attributes.Points)
-                    })
+            return app.store.find('rankings', params)
+          }
+        }, {
+          key: 'loadMore',
+          value: function loadMore () {
+            this.loading = true
 
-                    m.lazyRedraw()
+            this.loadResults(this.users.length).then(this.parseResults.bind(this))
+          }
+        }, {
+          key: 'parseResults',
+          value: function parseResults (results) {
+            [].push.apply(this.users, results)
 
-                    return results
-                  }
-                }])
+            this.loading = false
+
+            this.users.sort(function (a, b) {
+              return parseFloat(b.data.attributes.Points) - parseFloat(a.data.attributes.Points)
+            })
+
+            m.lazyRedraw()
+
+            return results
+          }
+        }])
         return RankingsPage
       }(Page))
 
@@ -802,7 +788,7 @@ System.register('Reflar/gamification/components/RankingsPage', ['flarum/extend',
 })
 'use strict'
 
-System.register('Reflar/gamification/components/UpvotedNotification', ['flarum/components/Notification'], function (_export, _context) {
+System.register('Reflar/gamification/components/VoteNotification', ['flarum/components/Notification'], function (_export, _context) {
   'use strict'
 
   var Notification, UpvotedNotification
@@ -822,7 +808,11 @@ System.register('Reflar/gamification/components/UpvotedNotification', ['flarum/c
         babelHelpers.createClass(UpvotedNotification, [{
           key: 'icon',
           value: function icon () {
-            return 'thumbs-up'
+            if (this.props.notification.content() === 'Up') {
+              return 'thumbs-up'
+            } else {
+              return 'thumbs-down'
+            }
           }
         }, {
           key: 'href',
@@ -832,7 +822,11 @@ System.register('Reflar/gamification/components/UpvotedNotification', ['flarum/c
         }, {
           key: 'content',
           value: function content () {
-            return app.translator.trans('reflar-gamification.forum.notification.upvote')
+            if (this.props.notification.content() === 'Up') {
+              return app.translator.trans('reflar-gamification.forum.notification.upvote', { username: this.props.notification.sender().username() })
+            } else {
+              return app.translator.trans('reflar-gamification.forum.notification.downvote', { username: this.props.notification.sender().username() })
+            }
           }
         }, {
           key: 'excerpt',
@@ -969,70 +963,39 @@ System.register('Reflar/gamification/helpers/rankLabel', [], function (_export, 
 })
 'use strict'
 
-System.register('Reflar/gamification/main', ['flarum/extend', 'flarum/app', 'flarum/components/IndexPage', 'flarum/components/LinkButton', 'flarum/components/NotificationGrid', 'Reflar/gamification/components/AddAttributes', 'Reflar/gamification/components/AddHotnessSort', 'Reflar/gamification/components/AddVoteButtons', 'Reflar/gamification/models/Rank', 'Reflar/gamification/components/DownvotedNotification', 'Reflar/gamification/components/UpvotedNotification', 'Reflar/gamification/components/RankingsPage'], function (_export, _context) {
+System.register('Reflar/gamification/main', ['flarum/extend', 'flarum/app', 'Reflar/gamification/components/AddAttributes', 'Reflar/gamification/components/AddHotnessSort', 'Reflar/gamification/components/AddVoteButtons', 'Reflar/gamification/models/Rank', 'Reflar/gamification/components/RankingsPage', 'Reflar/gamification/components/VoteNotification'], function (_export, _context) {
   'use strict'
 
-  var extend, app, IndexPage, LinkButton, NotificationGrid, AddAttributes, AddHotnessFilter, AddVoteButtons, Rank, DownvotedNotification, UpvotedNotification, RankingsPage
+  var extend, app, AddAttributes, AddHotnessFilter, AddVoteButtons, Rank, RankingsPage, VoteNotification
   return {
     setters: [function (_flarumExtend) {
       extend = _flarumExtend.extend
     }, function (_flarumApp) {
       app = _flarumApp.default
-    }, function (_flarumComponentsIndexPage) {
-      IndexPage = _flarumComponentsIndexPage.default
-    }, function (_flarumComponentsLinkButton) {
-      LinkButton = _flarumComponentsLinkButton.default
-    }, function (_flarumComponentsNotificationGrid) {
-      NotificationGrid = _flarumComponentsNotificationGrid.default
     }, function (_ReflarGamificationComponentsAddAttributes) {
       AddAttributes = _ReflarGamificationComponentsAddAttributes.default
     }, function (_ReflarGamificationComponentsAddHotnessSort) {
       AddHotnessFilter = _ReflarGamificationComponentsAddHotnessSort.default
     }, function (_ReflarGamificationComponentsAddVoteButtons) {
-        AddVoteButtons = _ReflarGamificationComponentsAddVoteButtons.default
-      }, function (_ReflarGamificationModelsRank) {
-        Rank = _ReflarGamificationModelsRank.default
-      }, function (_ReflarGamificationComponentsDownvotedNotification) {
-          DownvotedNotification = _ReflarGamificationComponentsDownvotedNotification.default
-        }, function (_ReflarGamificationComponentsUpvotedNotification) {
-          UpvotedNotification = _ReflarGamificationComponentsUpvotedNotification.default
-        }, function (_ReflarGamificationComponentsRankingsPage) {
-          RankingsPage = _ReflarGamificationComponentsRankingsPage.default
-        }],
+      AddVoteButtons = _ReflarGamificationComponentsAddVoteButtons.default
+    }, function (_ReflarGamificationModelsRank) {
+      Rank = _ReflarGamificationModelsRank.default
+    }, function (_ReflarGamificationComponentsRankingsPage) {
+      RankingsPage = _ReflarGamificationComponentsRankingsPage.default
+    }, function (_ReflarGamificationComponentsVoteNotification) {
+      VoteNotification = _ReflarGamificationComponentsVoteNotification.default
+    }],
     execute: function () {
       app.initializers.add('Reflar-gamification', function (app) {
         app.store.models.ranks = Rank
 
-        app.notificationComponents.downvoted = DownvotedNotification
-        app.notificationComponents.upvoted = UpvotedNotification
+        app.notificationComponents.vote = VoteNotification
 
         app.routes.rankings = { path: '/rankings', component: RankingsPage.component() }
 
         AddVoteButtons()
         AddHotnessFilter()
         AddAttributes()
-
-        extend(IndexPage.prototype, 'navItems', function (items) {
-          items.add('rankings', LinkButton.component({
-            href: app.route('rankings', {}),
-            children: app.translator.trans('reflar-gamification.forum.nav.name'),
-            icon: 'trophy'
-          }), 80)
-        })
-
-        extend(NotificationGrid.prototype, 'notificationTypes', function (items) {
-          items.add('upvoted', {
-            name: 'upvoted',
-            icon: 'thumbs-up',
-            label: app.translator.trans('reflar-gamification.forum.notification.grid.upvoted')
-          })
-
-          items.add('downvoted', {
-            name: 'downvoted',
-            icon: 'thumbs-down',
-            label: app.translator.trans('reflar-gamification.forum.notification.grid.downvoted')
-          })
-        })
       })
     }
   }

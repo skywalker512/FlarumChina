@@ -6,11 +6,9 @@ import Button from 'flarum/components/Button'
 import ItemList from 'flarum/utils/ItemList'
 import LogInModal from 'flarum/components/LogInModal'
 import LoadingIndicator from 'flarum/components/LoadingIndicator'
-import LinkButton from 'flarum/components/LinkButton'
 import listItems from 'flarum/helpers/listItems'
 import icon from 'flarum/helpers/icon'
 import username from 'flarum/helpers/username'
-import SelectDropdown from 'flarum/components/SelectDropdown'
 
 export default class RankingsPage extends Page {
   init () {
@@ -50,37 +48,37 @@ export default class RankingsPage extends Page {
                 <div className='sideNavOffset'>
                   <table class='rankings'>
                     <tr>
-                        <th className='rankings-mobile'>{app.translator.trans('reflar-gamification.forum.ranking.rank')}</th>
-                        <th>{app.translator.trans('reflar-gamification.forum.ranking.name')}</th>
-                        <th>{app.translator.trans('reflar-gamification.forum.ranking.amount')}</th>
-                      </tr>
+                      <th className='rankings-mobile'>{app.translator.trans('reflar-gamification.forum.ranking.rank')}</th>
+                      <th>{app.translator.trans('reflar-gamification.forum.ranking.name')}</th>
+                      <th>{app.translator.trans('reflar-gamification.forum.ranking.amount')}</th>
+                    </tr>
                     {this.users.map((user, i) => {
-                        ++i
-                        return [
-                                <tr className={'ranking-' + i}>
-                                    {i < 4 ? (app.forum.attribute('CustomRankingImages') == '1' ? (
-                                        <img className='rankings-mobile rankings-image'
-                                            src={app.forum.attribute('baseUrl') + '/assets/' + app.forum.attribute('TopImage' + i)} />)
-                                                            : (
-                                                              <td className={'rankings-mobile rankings-' + i}> {icon('trophy')}</td>))
-                                                            : (
-                                                              <td className='rankings-4 rankings-mobile'>{this.addOrdinalSuffix(i)}</td>)}
-                                    <td>
-                                        <div className='PostUser'>
-                                            <h3 className='rankings-info'>
-                                                <a href={app.route.user(user)} config={m.route}>
-                                                    {i < 4 ? (avatar(user, {className: 'info-avatar rankings-' + i + '-avatar'})) : ''} {username(user)}
-                                                  </a>
-                                              </h3>
-                                          </div>
-                                      </td>
-                                    {i < 4 ? (
-                                        <td className={'rankings-' + i}>{user.data.attributes.Points}</td>)
-                                                            : (
-                                                              <td className='rankings-4'>{user.data.attributes.Points}</td>)}
-                                  </tr>
-                              ]
-                      })}
+                      ++i
+                      return [
+                        <tr className={'ranking-' + i}>
+                          {i < 4 ? (app.forum.attribute('CustomRankingImages') == '1' ? (
+                            <img className='rankings-mobile rankings-image'
+                              src={app.forum.attribute('baseUrl') + '/assets/' + app.forum.attribute('TopImage' + i)} />)
+                                                        : (
+                                                          <td className={'rankings-mobile rankings-' + i}> {icon('trophy')}</td>))
+                                                        : (
+                                                          <td className='rankings-4 rankings-mobile'>{this.addOrdinalSuffix(i)}</td>)}
+                          <td>
+                            <div className='PostUser'>
+                              <h3 className='rankings-info'>
+                                <a href={app.route.user(user)} config={m.route}>
+                                  {i < 4 ? (avatar(user, {className: 'info-avatar rankings-' + i + '-avatar'})) : ''} {username(user)}
+                                </a>
+                              </h3>
+                            </div>
+                          </td>
+                          {i < 4 ? (
+                            <td className={'rankings-' + i}>{user.data.attributes.Points}</td>)
+                                                        : (
+                                                          <td className='rankings-4'>{user.data.attributes.Points}</td>)}
+                        </tr>
+                      ]
+                    })}
                   </table>
                   <div className='rankings-loadmore'> {loading}</div>
                 </div>
