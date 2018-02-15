@@ -131,23 +131,15 @@ EOT
             ->setApcuAutoloader($apcu)
             ->setUpdate(true)
             ->setUpdateWhitelist($packages)
-            ->setWhitelistDependencies(!$input->getOption('no-update-with-dependencies'))
+            ->setWhitelistTransitiveDependencies(!$input->getOption('no-update-with-dependencies'))
             ->setIgnorePlatformRequirements($input->getOption('ignore-platform-reqs'))
             ->setRunScripts(!$input->getOption('no-scripts'))
         ;
 
-        $exception = null;
-        try {
-            $status = $install->run();
-        } catch (\Exception $exception) {
-            $status = 1;
-        }
+        $status = $install->run();
         if ($status !== 0) {
             $io->writeError("\n".'<error>Removal failed, reverting '.$file.' to its original content.</error>');
             file_put_contents($jsonFile->getPath(), $composerBackup);
-        }
-        if ($exception) {
-            throw $exception;
         }
 
         return $status;

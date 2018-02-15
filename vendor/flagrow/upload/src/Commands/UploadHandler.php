@@ -20,11 +20,11 @@ use Flagrow\Upload\Events;
 use Flagrow\Upload\File;
 use Flagrow\Upload\Helpers\Settings;
 use Flagrow\Upload\Repositories\FileRepository;
-use Flagrow\Upload\Templates\FileTemplate;
 use Flarum\Core\Access\AssertPermissionTrait;
 use Flarum\Core\Exception\ValidationException;
 use Flarum\Foundation\Application;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Support\Arr;
 use Psr\Http\Message\UploadedFileInterface;
 
 class UploadHandler
@@ -77,18 +77,21 @@ class UploadHandler
 
             try {
                 $upload = $this->files->moveUploadedFileToTemp($file);
-                $adapter = $this->identifyUploadAdapterForMime($upload->getMimeType());
+
+                $mimeConfiguration = $this->getMimeConfiguration($upload->getMimeType());
+                $adapter = $this->getAdapter(Arr::get($mimeConfiguration, 'adapter'));
+                $template = $this->getTemplate(Arr::get($mimeConfiguration, 'template', 'file'));
 
                 $this->events->fire(
                     new Events\Adapter\Identified($command->actor, $upload, $adapter)
                 );
 
                 if (!$adapter) {
-                    throw new ValidationException(['upload' => '这种类型的文件上传是不允许的。']);
+                    throw new ValidationException(['upload' => 'Uploading files of this type is not allowed.']);
                 }
 
                 if (!$adapter->forMime($upload->getMimeType())) {
-                    throw new ValidationException(['upload' => "上传组件不能上传这种 mime 类型: {$upload->getMimeType()}."]);
+                    throw new ValidationException(['upload' => "Upload adapter does not support the provided mime type: {$upload->getMimeType()}."]);
                 }
 
                 $file = $this->files->createFileFromUpload($upload, $command->actor);
@@ -112,8 +115,7 @@ class UploadHandler
                 $file = $response;
 
                 $file->upload_method = $adapter;
-                // Set the default tag for the template.
-                $file->tag = (new FileTemplate())->tag();
+                $file->tag = $template;
 
                 $this->events->fire(
                     new Events\File\WillBeSaved($command->actor, $file, $upload)
@@ -136,26 +138,42 @@ class UploadHandler
                 throw $e;
             }
 
-            return $file;
+            return $template->preview($file);
         });
 
         return $savedFiles->filter();
     }
 
     /**
-     * @param $mime
+     * @param $adapter
      * @return UploadAdapter|null
      */
-    protected function identifyUploadAdapterForMime($mime)
+    protected function getAdapter($adapter)
     {
-        $adapter = $this->settings->getMimeTypesConfiguration()->first(function ($regex) use ($mime) {
-            return preg_match("/$regex/", $mime);
-        });
-
         if (!$adapter) {
             return null;
         }
 
         return app("flagrow.upload-adapter.$adapter");
+    }
+
+    /**
+     * @param $template
+     * @return \Flagrow\Upload\Templates\AbstractTemplate|null
+     */
+    protected function getTemplate($template)
+    {
+        return $this->settings->getTemplate($template);
+    }
+
+    /**
+     * @param $mime
+     * @return mixed
+     */
+    protected function getMimeConfiguration($mime)
+    {
+        return $this->settings->getMimeTypesConfiguration()->first(function ($regex) use ($mime) {
+            return preg_match("/$regex/", $mime);
+        });
     }
 }

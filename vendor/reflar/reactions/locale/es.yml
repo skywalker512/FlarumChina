@@ -13,10 +13,10 @@ reflar-reactions:
     page:
       reactions:
         title: Reacciones personalizadas
-         reactions: Reacciones actuales
-         Helptext: Escribe el nombre (identificador) del emoji de FontAwesome y selecciona qué tipo te gustaría.
-         help:
-           identifier: Identificador
+        reactions: Reacciones actuales
+        Helptext: Escribe el nombre (identificador) del emoji de FontAwesome y selecciona qué tipo te gustaría.
+        help:
+          identifier: Identificador
 
       settings:
         save_settings: Guardar ajustes
@@ -24,7 +24,7 @@ reflar-reactions:
           legend: Integraciones
           warning: La misma reacción <strong>no</strong> puede ser convertida a un like <strong>y además</strong> a un voto positivo
           gamification:
-             legend: Gamificación
+            legend: Gamificación
             upvoteLabel: Convertir reacciones a votos positivos
             upvoteHelptext: Escribe el identificador de la reacción que desees convertir a un voto positivo
             downvoteLabel: Convertir reacciones a votos negativos

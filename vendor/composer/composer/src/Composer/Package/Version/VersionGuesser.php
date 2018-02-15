@@ -59,28 +59,40 @@ class VersionGuesser
      * @param array  $packageConfig
      * @param string $path          Path to guess into
      *
-     * @return array versionData, 'version', 'pretty_version' and 'commit' keys
+     * @return null|array versionData, 'version', 'pretty_version' and 'commit' keys
      */
     public function guessVersion(array $packageConfig, $path)
     {
         if (function_exists('proc_open')) {
             $versionData = $this->guessGitVersion($packageConfig, $path);
             if (null !== $versionData && null !== $versionData['version']) {
-                return $versionData;
+                return $this->postprocess($versionData);
             }
 
             $versionData = $this->guessHgVersion($packageConfig, $path);
             if (null !== $versionData && null !== $versionData['version']) {
-                return $versionData;
+                return $this->postprocess($versionData);
             }
 
             $versionData = $this->guessFossilVersion($packageConfig, $path);
             if (null !== $versionData && null !== $versionData['version']) {
-                return $versionData;
+                return $this->postprocess($versionData);
             }
 
-            return $this->guessSvnVersion($packageConfig, $path);
+            $versionData = $this->guessSvnVersion($packageConfig, $path);
+            if (null !== $versionData && null !== $versionData['version']) {
+                return $this->postprocess($versionData);
+            }
         }
+    }
+
+    private function postprocess(array $versionData)
+    {
+        if ('-dev' === substr($versionData['version'], -4) && preg_match('{\.9{7}}', $versionData['version'])) {
+            $versionData['pretty_version'] = preg_replace('{(\.9{7})+}', '.x', $versionData['version']);
+        }
+
+        return $versionData;
     }
 
     private function guessGitVersion(array $packageConfig, $path)
@@ -108,9 +120,6 @@ class VersionGuesser
                         $version = $this->versionParser->normalizeBranch($match[1]);
                         $prettyVersion = 'dev-' . $match[1];
                         $isFeatureBranch = 0 === strpos($version, 'dev-');
-                        if ('9999999-dev' === $version) {
-                            $version = $prettyVersion;
-                        }
                     }
 
                     if ($match[2]) {

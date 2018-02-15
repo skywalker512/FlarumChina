@@ -123,7 +123,7 @@ class ProgressHelper extends Helper
     public function __construct($triggerDeprecationError = true)
     {
         if ($triggerDeprecationError) {
-            @trigger_error('The '.__CLASS__.' class is deprecated since version 2.5 and will be removed in 3.0. Use the Symfony\Component\Console\Helper\ProgressBar class instead.', E_USER_DEPRECATED);
+            @trigger_error('The '.__CLASS__.' class is deprecated since Symfony 2.5 and will be removed in 3.0. Use the Symfony\Component\Console\Helper\ProgressBar class instead.', E_USER_DEPRECATED);
         }
     }
 
@@ -424,7 +424,7 @@ class ProgressHelper extends Helper
         $text = '';
         foreach ($this->timeFormats as $format) {
             if ($secs < $format[0]) {
-                if (count($format) == 2) {
+                if (2 == count($format)) {
                     $text = $format[1];
                     break;
                 } else {

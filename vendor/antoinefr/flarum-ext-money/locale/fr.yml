@@ -2,9 +2,10 @@ antoinefr-money:
   admin:
     settings:
       title: Paramètres
-      moneyforpost: Argent donné pour un nouveau post
-      moneyfordiscussion: Argent donné pour une nouvelle discussion
-      moneyname: Nom de la monnaie (ex: points)
+      moneyforpost: Monnaie donnée pour un nouveau post
+      moneyfordiscussion: Monnaie donnée pour une nouvelle discussion
+      moneyname: Nom de la monnaie (ex: {money} points)
+      postminimumlength: Taille minimale du post pour gagner la monnaie (0 pour désactiver)
     permissions:
       edit_money_label: Modifier la monnaie
   forum:

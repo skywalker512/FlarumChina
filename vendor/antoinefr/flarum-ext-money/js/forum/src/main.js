@@ -11,7 +11,7 @@ app.initializers.add('antoinefr-money', function() {
   
   extend(UserCard.prototype, 'infoItems', function(items) {
     items.add('money',
-      app.forum.data.attributes['antoinefr-money.moneyname'].replace('{money}', this.props.user.data.attributes['antoinefr-money.money'])
+      app.forum.data.attributes['antoinefr-money.moneyname'].replace('{money}', this.props.user.data.attributes['money'])
     );
   });
   

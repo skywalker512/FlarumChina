@@ -37,12 +37,8 @@ class Shell
     private $processIsolation = false;
 
     /**
-     * Constructor.
-     *
      * If there is no readline support for the current PHP executable
      * a \RuntimeException exception is thrown.
-     *
-     * @param Application $application An application instance
      */
     public function __construct(Application $application)
     {

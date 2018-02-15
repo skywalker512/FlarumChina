@@ -18,8 +18,6 @@ use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
 
 /**
- * Translator.
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class Translator implements TranslatorInterface, TranslatorBagInterface
@@ -70,8 +68,6 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     private $configCacheFactory;
 
     /**
-     * Constructor.
-     *
      * @param string               $locale   The locale
      * @param MessageSelector|null $selector The message selector for pluralization
      * @param string|null          $cacheDir The directory to use for the cache
@@ -87,11 +83,6 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
         $this->debug = $debug;
     }
 
-    /**
-     * Sets the ConfigCache factory to use.
-     *
-     * @param ConfigCacheFactoryInterface $configCacheFactory
-     */
     public function setConfigCacheFactory(ConfigCacheFactoryInterface $configCacheFactory)
     {
         $this->configCacheFactory = $configCacheFactory;
@@ -163,7 +154,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      */
     public function setFallbackLocale($locales)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.3 and will be removed in 3.0. Use the setFallbackLocales() method instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.3 and will be removed in 3.0. Use the setFallbackLocales() method instead.', E_USER_DEPRECATED);
 
         $this->setFallbackLocales(is_array($locales) ? $locales : array($locales));
     }
@@ -443,7 +434,7 @@ EOF
             $locales[] = $fallback;
         }
 
-        if (strrchr($locale, '_') !== false) {
+        if (false !== strrchr($locale, '_')) {
             array_unshift($locales, substr($locale, 0, -strlen(strrchr($locale, '_'))));
         }
 

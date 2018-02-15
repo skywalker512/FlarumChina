@@ -7,22 +7,35 @@ flagrow-upload:
             success: Sukces
             error: Błąd
     admin:
+        templates:
+            image: Domyślny szablon grafik
+            image_description: >
+                Wyświetla miniaturę grafiki i przekierowuje pobieranie przez php.
+                Pozwala na zbieranie statystyk i ochronę przed hotlinkowaniem.
+            file: Domyślny szablon pobierania pliku
+            file_description: >
+                Wyświetla nazwę pliku i kilka informacji o nim. Przekierowuje pobieranie
+                przez php, zezwalając na zbieranie statystyk i ochronę przed hotlinkowaniem.
+            image-preview: Szablon podglądu całej grafiki
+            image-preview_description: >
+                Wyświetla całe zdjęcie w jednej linii. Brak funkcjonalności pobierania,
+                statystyki nie są zbierane i hotlinkowanie nie będzie blokowane.
         permissions:
             upload_label: Prześlij pliki
+            download_label: Pobierz pliki
         upload_methods:
             local: Lokalnie
             aws-s3: Amazon S3
             imgur: Imgur
             ovh-svfs: OVH SVFS
         labels:
-            upload_method: Metoda przesyłu
             preferences:
-                title: Generalne preferencje
+                title: Preferencje ogólne
                 max_file_size: Maksymalna wielkość pliku (w kilobajtach)
-                mime_types_allowed: Uściśl na jakie typy mime chcesz pozwolić używając wyrażenia regularnego
+                mime_types: Skonfiguruj typy MIME i mapowania adaptera przesyłania
             resize:
-                title: Zmiana wielkości obrazów
-                toggle: Zmieniaj wielkości obrazów
+                title: Zmiana rozmiaru obrazów
+                toggle: Zmieniaj rozmiar obrazów
                 max_width: Maksymalna szerokość obrazu
                 max_height: Maksymalna wysokość obrazu
             watermark:
@@ -45,19 +58,28 @@ flagrow-upload:
             ovh-svfs:
                 title: Ustawienia magazynu OVH SVFS
                 container: Kontener
-                tenantid: ID Tenant
+                tenantid: Tenant ID
                 username: Nazwa użytkownika
                 password: Hasło
                 region: Region
+            disable-hotlink-protection:
+                title: Wyłącz ochronę przed hotlinkowaniem
+                toggle: Wyłącz
+            disable-download-logging:
+                title: Wyłącz rejestrowanie pobierania obrazów
+                toggle: Wyłącz
         buttons:
             save: Zapisz ustawienia
         help_texts:
             description: >
-                Ustaw usługi przesyłania.
-            upload_method: >
-                Tutaj możesz wybrać metodę, którą chcesz użyć
-                do przesłania swoich plików. Kiedy wybierzesz jedną
-                z nich pojawi się karta ustawień.
+                Ustaw usługi i preferencje przesyłania plików.
+            mime_types: >
+                Proszę skonfiguruj poniżej mapowanie. Każde wyrażenie
+                regularne typu mime będzie obsłużone przez odpowiedni
+                adapter przesyłu i szablon pobierania.
+            download_templates: >
+                Szablony pobierania decydują o tym jak przesłane pliki są wyświetlane na twoim forum.
+                na przykład podgląd miniatury, przyciski. Obecnie dostępne:
             resize: >
                 Wybierz czy chcesz zmienić rozmiar swoich obrazów zanim
                 zostaną przesłane. Możesz wybrać maksymalną szerokość
@@ -66,3 +88,10 @@ flagrow-upload:
             watermark: >
                 Wybierz, czy obrazy będą miały dodany znak wodny podczas przesyłania.
                 Znaki wodne są dodawane do nie-gifów bazując na twoich preferencjach poniżej.
+            disable-hotlink-protection: >
+                Ochrona przed hotlinkowaniem zapobiega otwieraniu tutejszych grafik na innych stronach.
+                Obecna metoda wymaga tokenu CSRF i identyfikatora postu.
+            disable-download-logging: >
+                Wyłącz rejestrowanie pobierania grafiki przez użytkowników twojego forum.
+                Pozostawienie tej opcji włączonej pozwoli ci na zobaczenie ilości
+                pobrań i innych statystyk w niedalekiej przyszłości.

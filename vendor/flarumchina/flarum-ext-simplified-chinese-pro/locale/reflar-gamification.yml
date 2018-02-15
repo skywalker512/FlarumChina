@@ -30,6 +30,7 @@ reflar-gamification:
     permissions:
       vote_label: 顶/踩 帖子
       see_votes_label: 查看帖子的 顶/踩
+      see_ranking_page: 查看排名页面
     nav:
       desc: 丰富你的论坛
     page:
@@ -61,6 +62,7 @@ reflar-gamification:
       ranks:
         title: 等级
         ranks: 自定等级
+        number_title: 当达到多少分数是会显示在排行榜中
         help:
           color: '#ffffff'
           help: "输入所需数个赞，排名的用户的名字，和排名的十六进制颜色"

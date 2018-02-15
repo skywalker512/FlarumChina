@@ -83,7 +83,7 @@ class SaveReactionsToDatabase
                 $currentlyReacted = $post->reactions()->where('user_id', $actor->id)->exists();
 
                 if ($reacted && !$currentlyReacted) {
-                    $reaction = Reaction::where('identifier', $reactionType)->first();
+                    $reaction = Reaction::where('identifier', $reactionType)->firstOrFail();
 
                     $post->reactions()->attach($reaction, ['user_id' => $actor->id, 'reaction_id' => $reaction->identifier]);
 

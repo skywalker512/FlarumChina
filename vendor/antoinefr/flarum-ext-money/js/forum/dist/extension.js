@@ -21,7 +21,7 @@ System.register('antoinefr/money/components/UserMoneyModal', ['flarum/components
           key: 'init',
           value: function init() {
             babelHelpers.get(Object.getPrototypeOf(UserMoneyModal.prototype), 'init', this).call(this);
-            this.money = m.prop(this.props.user.data.attributes['antoinefr-money.money']);
+            this.money = m.prop(this.props.user.data.attributes['money']);
           }
         }, {
           key: 'className',
@@ -50,7 +50,7 @@ System.register('antoinefr/money/components/UserMoneyModal', ['flarum/components
                     null,
                     app.translator.trans('antoinefr-money.forum.modal.current'),
                     ' ',
-                    app.forum.data.attributes['antoinefr-money.moneyname'].replace('{money}', this.props.user.data.attributes['antoinefr-money.money'])
+                    app.forum.data.attributes['antoinefr-money.moneyname'].replace('{money}', this.props.user.data.attributes['money'])
                   ),
                   m('input', { required: true, className: 'FormControl', type: 'number', step: 'any', value: this.money(), oninput: m.withAttr('value', this.money) })
                 ),
@@ -113,7 +113,7 @@ System.register('antoinefr/money/main', ['flarum/extend', 'flarum/components/Use
         User.prototype.canEditMoney = Model.attribute('canEditMoney');
 
         extend(UserCard.prototype, 'infoItems', function (items) {
-          items.add('money', app.forum.data.attributes['antoinefr-money.moneyname'].replace('{money}', this.props.user.data.attributes['antoinefr-money.money']));
+          items.add('money', app.forum.data.attributes['antoinefr-money.moneyname'].replace('{money}', this.props.user.data.attributes['money']));
         });
 
         extend(UserControls, 'moderationControls', function (items, user) {

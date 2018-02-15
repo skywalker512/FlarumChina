@@ -3,7 +3,9 @@
 namespace Flagrow\Byobu\Traits;
 
 use Flarum\Core\Discussion;
+use Flarum\Core\Group;
 use Flarum\Core\User;
+use Illuminate\Database\Eloquent\Collection;
 
 trait ProvidesAccess
 {
@@ -21,15 +23,11 @@ trait ProvidesAccess
         }
 
         /** @var Collection $groups */
-        $groups = $discussion->recipientGroups->pluck('id');
+        $groups = $discussion->recipientGroups;
 
-        $groups->each(function ($requiredGroupId) use ($actor) {
-            if ($actor->groups()->find($requiredGroupId)) {
-                return true;
-            }
-        });
-
-        return false;
+        return $groups->first(function ($_, $group) use ($actor) {
+            return $actor->groups->find($group);
+        }, false);
     }
 
     /**

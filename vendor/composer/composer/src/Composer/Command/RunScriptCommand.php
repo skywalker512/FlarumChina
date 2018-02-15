@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
 
 /**
  * @author Fabien Potencier <fabien.potencier@gmail.com>
@@ -68,7 +69,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('list')) {
-            return $this->listScripts();
+            return $this->listScripts($output);
         } elseif (!$input->getArgument('script')) {
             throw new \RuntimeException('Missing required argument "script"');
         }
@@ -90,7 +91,7 @@ EOT
 
         $args = $input->getArgument('args');
 
-        if (!is_null($timeout = $input->getOption('timeout'))) {
+        if (null !== $timeout = $input->getOption('timeout')) {
             if (!ctype_digit($timeout)) {
                 throw new \RuntimeException('Timeout value must be numeric and positive if defined, or 0 for forever');
             }
@@ -101,7 +102,7 @@ EOT
         return $composer->getEventDispatcher()->dispatchScript($script, $devMode, $args);
     }
 
-    protected function listScripts()
+    protected function listScripts(OutputInterface $output)
     {
         $scripts = $this->getComposer()->getPackage()->getScripts();
 
@@ -111,9 +112,21 @@ EOT
 
         $io = $this->getIO();
         $io->writeError('<info>scripts:</info>');
+        $table = array();
         foreach ($scripts as $name => $script) {
-            $io->write('  ' . $name);
+            $cmd = $this->getApplication()->find($name);
+            $description = '';
+            if ($cmd instanceof ScriptAliasCommand) {
+                $description = $cmd->getDescription();
+            }
+            $table[] = array('  '.$name, $description);
         }
+
+        $renderer = new Table($output);
+        $renderer->setStyle('compact');
+        $renderer->getStyle()->setVerticalBorderChar('');
+        $renderer->getStyle()->setCellRowContentFormat('%s  ');
+        $renderer->setRows($table)->render();
 
         return 0;
     }

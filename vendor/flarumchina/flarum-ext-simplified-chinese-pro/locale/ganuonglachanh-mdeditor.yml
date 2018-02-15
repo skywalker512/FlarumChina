@@ -1,0 +1,32 @@
+# https://github.com/ganuonglachanh/flarum-ext-markdown-editor/blob/master/locale/en.yaml
+
+ganuonglachanh-mdeditor:
+  admin:
+    help_texts:
+      title: '编辑器'
+      description: '添加编辑按钮在编辑器'
+    labels:
+      preferences:
+        title: '自定义'
+        symbols: '添加编辑按钮在编辑器 (in JSON): [{"label":"☎","insert":"☎"},{"label":"❄","insert":"❄"}]'
+    buttons:
+      save: 'Save'
+  forum:
+    toolbar:
+      bold: '粗体'
+      italic: '斜体'
+      underline: '下划线'
+      strikethrough: '遗弃'
+      heading: '标题'
+      quote: '应用'
+      code: '代码'
+      unordered_list: '通用列表'
+      ordered_list: '数字列表'
+      link: '创建链接'
+      image: '创建图片'
+      guide: 'Markdown 指南'
+      details: '隐藏内容'
+      reply_see: '回复可见'
+      center: '居中'
+      right: '右对齐'
+      high_light: '高亮'

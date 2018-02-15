@@ -228,6 +228,21 @@ class Git
         return true;
     }
 
+    public function fetchRefOrSyncMirror($url, $dir, $ref)
+    {
+        if (is_dir($dir) && 0 === $this->process->execute('git rev-parse --git-dir', $output, $dir) && trim($output) === '.') {
+            $escapedRef = ProcessExecutor::escape($ref.'^{commit}');
+            $exitCode = $this->process->execute(sprintf('git rev-parse --quiet --verify %s', $escapedRef), $output, $dir);
+            if ($exitCode === 0) {
+                return true;
+            }
+        }
+
+        $this->syncMirror($url, $dir);
+
+        return false;
+    }
+
     private function isAuthenticationFailure($url, &$match)
     {
         if (!preg_match('{(https?://)([^/]+)(.*)$}i', $url, $match)) {

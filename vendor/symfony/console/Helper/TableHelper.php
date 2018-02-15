@@ -30,15 +30,12 @@ class TableHelper extends Helper
     const LAYOUT_BORDERLESS = 1;
     const LAYOUT_COMPACT = 2;
 
-    /**
-     * @var Table
-     */
     private $table;
 
     public function __construct($triggerDeprecationError = true)
     {
         if ($triggerDeprecationError) {
-            @trigger_error('The '.__CLASS__.' class is deprecated since version 2.5 and will be removed in 3.0. Use the Symfony\Component\Console\Helper\Table class instead.', E_USER_DEPRECATED);
+            @trigger_error('The '.__CLASS__.' class is deprecated since Symfony 2.5 and will be removed in 3.0. Use the Symfony\Component\Console\Helper\Table class instead.', E_USER_DEPRECATED);
         }
 
         $this->table = new Table(new NullOutput());
@@ -247,8 +244,6 @@ class TableHelper extends Helper
      * | 9971-5-0210-0 | A Tale of Two Cities  | Charles Dickens  |
      * | 960-425-059-0 | The Lord of the Rings | J. R. R. Tolkien |
      * +---------------+-----------------------+------------------+
-     *
-     * @param OutputInterface $output
      */
     public function render(OutputInterface $output)
     {

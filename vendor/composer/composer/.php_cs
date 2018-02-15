@@ -12,10 +12,10 @@ EOF;
 
 $finder = PhpCsFixer\Finder::create()
     ->files()
-    ->name('*.php')
-    ->exclude('Fixtures')
     ->in(__DIR__.'/src')
     ->in(__DIR__.'/tests')
+    ->name('*.php')
+    ->notPath('Fixtures')
 ;
 
 return PhpCsFixer\Config::create()
@@ -39,6 +39,7 @@ return PhpCsFixer\Config::create()
         'no_leading_namespace_whitespace' => true,
         'no_trailing_comma_in_singleline_array' => true,
         'no_unused_imports' => true,
+        'no_useless_else' => true,
         'no_whitespace_in_blank_line' => true,
         'object_operator_without_whitespace' => true,
         'phpdoc_align' => true,

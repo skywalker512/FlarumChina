@@ -417,7 +417,7 @@ class JsonManipulator
     {
         $decoded = JsonFile::parseJson($this->contents);
 
-        if (!isset($decoded[$key])) {
+        if (!array_key_exists($key, $decoded)) {
             return true;
         }
 
@@ -428,6 +428,11 @@ class JsonManipulator
             // invalid match due to un-regexable content, abort
             if (!@json_decode('{'.$matches['removal'].'}')) {
                 return false;
+            }
+
+            // check that we are not leaving a dangling comma on the previous line if the last line was removed
+            if (preg_match('#,\s*$#', $matches['start']) && preg_match('#^\}$#', $matches['end'])) {
+                $matches['start'] = rtrim(preg_replace('#,(\s*)$#', '$1', $matches['start']), $this->indent);
             }
 
             $this->contents = $matches['start'] . $matches['end'];

@@ -1,13 +1,29 @@
 .EnhancedTextEditor-toolbar {
   border: none;
   margin-left: -20px;
+  margin-top: -15px;
+
 
   .Button {
-    padding: 4px 6px;
+    padding: 4px 3px;
+    background: white;
+  }
+  .Button:hover {
+    color:#f90;
+    background:none;
   }
 
   .Dropdown {
     padding: 0px 4px;
+  }
+
+  .Dropdown-separator {
+    margin-left: -5px;
+    margin-top: 5px;
+    width: 1px;
+    height: 20px;
+    position: absolute;
+    background-color: Silver;
   }
 
   .Button-caret {
@@ -51,5 +67,10 @@
   }
   @media (max-width: 767px) {
     display: none;
+  }
+}
+@media @tablet-up {
+  .TextEditor-controls {
+    margin-top: -15px;
   }
 }

@@ -23,10 +23,11 @@ class LoadSettingsFromDatabase
             $event->attributes['antoinefr-money.moneyname'] = $this->settings->get('antoinefr-money.moneyname');
             $event->attributes['antoinefr-money.moneyforpost'] = $this->settings->get('antoinefr-money.moneyforpost');
             $event->attributes['antoinefr-money.moneyfordiscussion'] = $this->settings->get('antoinefr-money.moneyfordiscussion');
+            $event->attributes['antoinefr-money.postminimumlength'] = $this->settings->get('antoinefr-money.postminimumlength');
         }
         if ($event->isSerializer(UserSerializer::class)) {
             $canEditMoney = $event->actor->can('edit_money', $event->model);
-            $event->attributes['antoinefr-money.money'] = $event->model->money;
+            $event->attributes['money'] = $event->model->money;
             $event->attributes['canEditMoney'] = $canEditMoney;
         }
     }

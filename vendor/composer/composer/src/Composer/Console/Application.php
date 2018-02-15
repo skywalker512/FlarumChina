@@ -127,7 +127,7 @@ class Application extends BaseApplication
         }
 
         // prompt user for dir change if no composer.json is present in current dir
-        if ($io->isInteractive() && !in_array($commandName, array('init', 'about', 'help', 'diagnose', 'self-update', 'global'), true) && !file_exists(Factory::getComposerFile())) {
+        if ($io->isInteractive() && !$newWorkDir && !in_array($commandName, array('', 'list', 'init', 'about', 'help', 'diagnose', 'self-update', 'global', 'create-project'), true) && !file_exists(Factory::getComposerFile())) {
             $dir = dirname(getcwd());
             $home = realpath(getenv('HOME') ?: getenv('USERPROFILE') ?: '/');
 
@@ -228,7 +228,13 @@ class Application extends BaseApplication
                             if ($this->has($script)) {
                                 $io->writeError('<warning>A script named '.$script.' would override a Composer command and has been skipped</warning>');
                             } else {
-                                $this->add(new Command\ScriptAliasCommand($script));
+                                $description = null;
+
+                                if (isset($composer['scripts-descriptions'][$script])) {
+                                    $description = $composer['scripts-descriptions'][$script];
+                                }
+
+                                $this->add(new Command\ScriptAliasCommand($script, $description));
                             }
                         }
                     }
@@ -397,6 +403,7 @@ class Application extends BaseApplication
             new Command\HomeCommand(),
             new Command\ExecCommand(),
             new Command\OutdatedCommand(),
+            new Command\CheckPlatformReqsCommand(),
         ));
 
         if ('phar:' === substr(__FILE__, 0, 5)) {

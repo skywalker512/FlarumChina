@@ -184,10 +184,10 @@ System.register("flagrow/byobu/addRecipientComposer", ["flarum/extend", "flarum/
 });;
 "use strict";
 
-System.register("flagrow/byobu/addRecipientLabels", ["flarum/extend", "flarum/components/DiscussionListItem", "flarum/components/DiscussionPage", "flarum/components/DiscussionHero", "flagrow/byobu/helpers/recipientsLabel"], function (_export, _context) {
+System.register("flagrow/byobu/addRecipientLabels", ["flarum/extend", "flarum/components/DiscussionListItem", "flarum/components/DiscussionPage", "flarum/components/DiscussionHero", "flarum/components/DiscussionList", "flagrow/byobu/helpers/recipientsLabel"], function (_export, _context) {
     "use strict";
 
-    var extend, DiscussionListItem, DiscussionPage, DiscussionHero, recipientsLabel;
+    var extend, DiscussionListItem, DiscussionPage, DiscussionHero, DiscussionList, recipientsLabel;
 
     _export("default", function () {
 
@@ -227,6 +227,10 @@ System.register("flagrow/byobu/addRecipientLabels", ["flarum/extend", "flarum/co
             params.include.push('recipientUsers');
             params.include.push('recipientGroups');
         });
+        extend(DiscussionList.prototype, 'requestParams', function (params) {
+            params.include.push('recipientUsers');
+            params.include.push('recipientGroups');
+        });
 
         /**
          * Adds User labels on the discussion Hero.
@@ -247,6 +251,8 @@ System.register("flagrow/byobu/addRecipientLabels", ["flarum/extend", "flarum/co
             DiscussionPage = _flarumComponentsDiscussionPage.default;
         }, function (_flarumComponentsDiscussionHero) {
             DiscussionHero = _flarumComponentsDiscussionHero.default;
+        }, function (_flarumComponentsDiscussionList) {
+            DiscussionList = _flarumComponentsDiscussionList.default;
         }, function (_flagrowByobuHelpersRecipientsLabel) {
             recipientsLabel = _flagrowByobuHelpersRecipientsLabel.default;
         }],

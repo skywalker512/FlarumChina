@@ -361,7 +361,8 @@ class InstallCommand extends AbstractCommand
             'issyrocks12-filter',
             'stanleysong-auth-wechat',
             'reflar-reactions',
-            'flarum-ext-split'
+            'flarum-ext-split',
+            'sijad-recaptcha'
         ];
 
         foreach ($extensions->getExtensions() as $name => $extension) {

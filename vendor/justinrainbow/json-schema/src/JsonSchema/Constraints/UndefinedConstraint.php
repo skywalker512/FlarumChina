@@ -142,7 +142,13 @@ class UndefinedConstraint extends Constraint
             } elseif (isset($schema->required) && !is_array($schema->required)) {
                 // Draft 3 - Required attribute - e.g. "foo": {"type": "string", "required": true}
                 if ($schema->required && $value instanceof self) {
-                    $this->addError($path, 'Is missing and it is required', 'required');
+                    $propertyPaths = $path->getPropertyPaths();
+                    $propertyName = end($propertyPaths);
+                    $this->addError(
+                        $path,
+                        'The property ' . $propertyName . ' is required',
+                        'required'
+                    );
                 }
             }
         }
@@ -237,6 +243,7 @@ class UndefinedConstraint extends Constraint
         if (isset($schema->properties) && LooseTypeCheck::isObject($value)) {
             // $value is an object or assoc array, and properties are defined - treat as an object
             foreach ($schema->properties as $currentProperty => $propertyDefinition) {
+                $propertyDefinition = $this->factory->getSchemaStorage()->resolveRefSchema($propertyDefinition);
                 if (
                     !LooseTypeCheck::propertyExists($value, $currentProperty)
                     && property_exists($propertyDefinition, 'default')
@@ -260,6 +267,7 @@ class UndefinedConstraint extends Constraint
             }
             // $value is an array, and items are defined - treat as plain array
             foreach ($items as $currentItem => $itemDefinition) {
+                $itemDefinition = $this->factory->getSchemaStorage()->resolveRefSchema($itemDefinition);
                 if (
                     !array_key_exists($currentItem, $value)
                     && property_exists($itemDefinition, 'default')

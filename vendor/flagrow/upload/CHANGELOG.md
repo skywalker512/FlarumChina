@@ -1,0 +1,115 @@
+- 0.1.0
+  - initial release
+  - local adapter implemented
+  - intelligently parse markdown string for images
+  - added plenty of events to allow others to hook into the extension
+
+- 0.1.1
+  - cdn_url works again for local storage
+  - added AWS S3 adapter
+  - image resizing works again. We're now able to define mime type [Processors](https://github.com/flagrow/upload/blob/master/src/Processors/ImageProcessor.php)
+  - Simplified Chinese added.
+
+- 0.1.2
+  - Fixed admin layout
+  - Added missing translation for aws title section in admin.
+
+- 0.2.0
+  - S3 uploads.
+  - Imgur adapter, please note it does not allow any other file uploads except for images.
+  - File model now saves the upload adapter and possibly a unique Id, this will be used later on to remove files no longer in use.
+  - Mime type is now partially configurable, you can use a regular expression to whitelist mime types.
+  - You can now upload multiple files at once, simply select them in the dialog. Please note that mismatching files will be dropped and files that cannot be processed by the adapter will quit the upload process.
+
+- 0.2.1
+  - better url generation, fixes issues for forums installed in sub directories.
+  - added Turkish language.
+- 0.3.0
+  - Drag and drop support, an open composer area now works as a drop field, dragging files onto the composer will make it become greyish, files are injected in the same way as using the upload button.
+  - File processing based on mime type is moved outside of the handler into an event listener. I've included a fix for showing non-image files as image markdown links.
+  - The mark down string of a file is now saved in the database.
+- 0.3.1
+  - Added watermarking; in your admin area upload the watermark image and set the position the watermark should take. Watermarks currently work for all images, except gifs. Please be aware to set a sensible size, I haven't tested different sizes for watermarks yet.
+  - Fixed the file extension being dropped (`-ext`, now `.ext`). Which should allow for easier downloading again.
+- 0.3.2
+  - French translation added.
+- 0.3.3
+  - Fixes issue with AWS link URL when using the default region.
+- 0.3.4
+  - Fixes issue of strict standards complaining about property inheritance between trait and class.
+- 0.3.5
+  - Fixes sharing all settings to the frontend, at this point none were needed anyway.
+- 0.3.6
+  - filename is now properly sluggified.
+  - added example regex in readme.
+- 0.3.7
+  - Polish translation.
+- 0.3.8
+  - Italian translation.
+- 0.4.0
+  - Spanish translation.
+  - OVH upload adapter.
+  - Multiple mime types configurable that each map to their own upload adapter.
+  - Watermarking of images added.
+- 0.4.1
+  - Russian translation.
+- 0.4.2
+  - Indonesian translation.
+- 0.4.3
+  - Fixed #41 where filenames held the original file extension.
+- 0.4.4
+  - French translation updated.
+- 0.4.5
+  - Fixed local uploads on Windows systems.
+  - Fixed multiple uploads of file with filenames in foreign characters.
+- 0.4.6
+  - Imgur links are now without protocol, allowing loading via http & https.
+- 0.4.7
+  - Pasting from clipboard implemented.
+- 0.4.8
+  - Fixed unable to paste by removing preventDefault.
+- 0.4.9
+  - Updated Italian locale.
+- 0.4.10
+  - Fixed triggering an internal server error in case no upload adapter was found for an uploaded file.
+- 0.4.11
+  - Fixed introduced error from 0.4.10.
+- 0.4.12
+  - Naming convention altered for files, now using timestamp.
+  - Event dispatching now works.
+- 0.4.13
+  - Allows svg images to be parsed as images.
+  - Added CS locale.
+  - Fixed allowing mutation of adapter and uploaded file from event.
+- 0.5.0
+  - WasUploaded event is removed. It was a duplicate for WillBeSaved.
+  - Adds file download templates; a button as default and an image preview. Includes file size.
+  - Added WillBeDownloaded and WasLoaded events used in the downloading functionality.
+  - Removed markdown string generation and dependency. Now using raw xsl documents.
+  - Added ability to inject a custom downloader instance, mutating how downloads are handled.
+  - Refactored uploading by separating code into repository. Catching errors properly now.
+  - Added a download permission.
+  - Added a PHP proxy, by which:
+    - The extension can now track downloads, enabled by default (disable in the admin settings page).
+    - The extension can prevent hotlinking, enabled by default (disable in the admin settings page).
+    - Understands where files are located in your forum once downloads are tracked.
+    - Streams remote files, which automatically upgrades downloads to https in case your forum has SSL.
+- 0.5.1
+  - Fixed error on download when download logging was disabled.
+  - Fixed triggering download multiple times on files in firefox by disabling propagation.
+  - Allowing downloads by everyone again.
+- 0.5.2, 0.5.3
+  - Fixed public downloads.
+  - Possible solution for multiple download triggering on firefox.
+- 0.5.4
+  - Modified Flysystem based upload adapters to use native Flysystem instead of the Illuminate Filesystem implementation.
+  - Patched up the AWS S3 implementation to allow for preview of images.
+- 0.5.6
+  - Fixed issue on Windows server with created URLs.
+- 0.6.0-beta
+  - Added template functionality, allowing to configure per mime type / adapter how files are shown in your forum.
+  - Vietnamese, Polish, Korean and Chinese translations are updated or added. Thanks to tdtgit, Rylat, Comocozy and BeefOnionDumplings. 
+- 0.6.0
+  - Added backward compatibility for 0.5 and lower.
+  - Updated Polish locale.
+  - Added Slovak locale.

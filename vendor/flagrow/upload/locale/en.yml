@@ -7,8 +7,19 @@ flagrow-upload:
             success: Success
             error: Error
     admin:
-        nav:
-            file_upload_button: Upload files
+        templates:
+            image: Default image download template
+            image_description: >
+                Shows a thumbnail of the image and proxies download through php.
+                Allowing statistics to be gathered and hotlink protection.
+            file: Default file download template
+            file_description: >
+                Shows the file name and some general information. Proxies downloads
+                through php, allowing for statistics gathering and hotlink protection.
+            image-preview: Complete image preview template
+            image-preview_description: >
+                Shows the complete image in-line. No download functionality, no statistics
+                are gathered and hotlink protection is ignored.
         permissions:
             upload_label: Upload files
             download_label: Download files
@@ -66,7 +77,10 @@ flagrow-upload:
             mime_types: >
                 Please configure your mapping here. Each mime type
                 regular expression will be handled by a specific
-                upload adapter.
+                upload adapter and download template.
+            download_templates: >
+                Download templates are how uploads are shown on your forum,
+                eg like previews, buttons. Currently available:
             resize: >
                 Choose whether you want to resize your images before
                 they get uploaded. You can choose a maximum width

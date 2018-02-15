@@ -7,6 +7,7 @@ flagrow-byobu:
             add_recipients: Adresaci
             submit: OK
             edit_recipients: Edytuj adresatów
+            send_pd: "Wyślij wiadomość do {username}"
         labels:
             recipients: "{count} adresat|{count} adresatów"
             user_deleted: -usunięte-
@@ -32,4 +33,3 @@ flagrow-byobu:
             create_private_discussions_with_groups: Tworzenie prywatnych dyskusji z grupami
             edit_user_recipients: Edytowanie użytkowników biorących udział w prywatnych dyskusjach
             edit_group_recipients: Edytowanie grup biorących udział w prywatnych dyskusjach
-0

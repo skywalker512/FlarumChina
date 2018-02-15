@@ -14,6 +14,7 @@
 namespace Flagrow\Upload\Helpers;
 
 use Aws\AwsClient;
+use Flagrow\Upload\Templates\AbstractTemplate;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -26,6 +27,13 @@ class Settings
 {
     const DEFAULT_MAX_FILE_SIZE = 2048;
     const DEFAULT_MAX_IMAGE_WIDTH = 100;
+
+    /**
+     * The templates used to render files.
+     *
+     * @var array
+     */
+    protected $renderTemplates = [];
 
     /**
      * The settings shared with the frontend.
@@ -42,6 +50,7 @@ class Settings
      */
     protected $definition = [
         'mimeTypes',
+        'templates',
 
         // Images
         'mustResize',
@@ -229,7 +238,61 @@ class Settings
     {
         return $this->getJsonValue(
             'mimeTypes',
-            collect(['^image\/.*' => 'local'])
-        );
+            collect(['^image\/.*' => ['adapter' => 'local', 'template' => 'image-preview']])
+        )->filter();
+    }
+
+    /**
+     * @param AbstractTemplate $template
+     */
+    public function addRenderTemplate(AbstractTemplate $template)
+    {
+        $this->renderTemplates[$template->tag()] = $template;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRenderTemplates()
+    {
+        return $this->renderTemplates;
+    }
+
+    /**
+     * @param array $templates
+     */
+    public function setRenderTemplates(array $templates)
+    {
+        $this->renderTemplates = $templates;
+    }
+
+    /**
+     * @return Collection|AbstractTemplate[]
+     */
+    public function getAvailableTemplates()
+    {
+        $collect = [];
+
+        /**
+         * @var string $tag
+         * @var AbstractTemplate $template
+         */
+        foreach ($this->renderTemplates as $tag => $template) {
+            $collect[$tag] = [
+                'name' => $template->name(),
+                'description' => $template->description()
+            ];
+        }
+
+        return collect($collect);
+    }
+
+    /**
+     * @param string $template
+     * @return AbstractTemplate|null
+     */
+    public function getTemplate($template)
+    {
+        return Arr::get($this->renderTemplates, $template);
     }
 }

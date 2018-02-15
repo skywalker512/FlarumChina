@@ -160,7 +160,7 @@ class FileRepository
 
         return sprintf("%s.%s",
             empty($slug) ? $uuid : $slug,
-            $upload->guessExtension() ? $upload->guessExtension() : $upload->getClientOriginalExtension()
+            $upload->guessExtension() ?: $upload->getClientOriginalExtension()
         );
     }
 

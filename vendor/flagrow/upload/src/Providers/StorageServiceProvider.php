@@ -18,6 +18,7 @@ use Flagrow\Upload\Adapters;
 use Flagrow\Upload\Helpers\Settings;
 use GuzzleHttp\Client as Guzzle;
 use Illuminate\Container\Container;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Adapter as FlyAdapters;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
@@ -55,9 +56,14 @@ class StorageServiceProvider extends ServiceProvider
         $settings = $app->make(Settings::class);
 
         $settings->getMimeTypesConfiguration()
-            ->unique()
-            ->values()
-            ->each(function ($adapter) use ($app, $settings) {
+            ->each(function ($mimetype) use ($app, $settings) {
+                $adapter = Arr::get($mimetype, 'adapter', $mimetype);
+
+                // Skip if already bound.
+                if ($app->bound("flagrow.upload-adapter.$adapter")) {
+                    return;
+                }
+
                 $app->bind("flagrow.upload-adapter.$adapter", function () use ($settings, $adapter) {
                     switch ($adapter) {
                         case 'aws-s3':

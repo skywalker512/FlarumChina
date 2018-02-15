@@ -1,0 +1,15 @@
+davis-inviteonly:
+  admin:
+    settings:
+      title: Options de l'extension "Invite Only"
+      maximumkeys: Nombre de clés qu'un utilisateur peut créer
+  forum:
+    loading: "Chargement..."
+    edit:
+      title: Vos clés d'inscription
+      key: Clés
+      used: Status
+      used_by: Utilisé par
+      expire: Valide pour
+    sign_up:
+referal_placeholder: Code d'invitation

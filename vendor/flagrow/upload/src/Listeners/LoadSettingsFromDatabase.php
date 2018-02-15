@@ -40,6 +40,7 @@ class LoadSettingsFromDatabase
     public function subscribe(Dispatcher $events)
     {
         $events->listen(PrepareUnserializedSettings::class, [$this, 'addUploadMethods']);
+        $events->listen(PrepareUnserializedSettings::class, [$this, 'addTemplates']);
         $events->listen(PrepareApiAttributes::class, [$this, 'prepareApiAttributes']);
     }
 
@@ -57,13 +58,18 @@ class LoadSettingsFromDatabase
     }
 
     /**
-     * Check for installed packages and provide the upload methods option
-     * in the admin page-
-     *
      * @param PrepareUnserializedSettings $event
      */
     public function addUploadMethods(PrepareUnserializedSettings $event)
     {
         $event->settings['flagrow.upload.availableUploadMethods'] = $this->settings->getAvailableUploadMethods()->toArray();
+    }
+
+    /**
+     * @param PrepareUnserializedSettings $event
+     */
+    public function addTemplates(PrepareUnserializedSettings $event)
+    {
+        $event->settings['flagrow.upload.availableTemplates'] = $this->settings->getAvailableTemplates()->toArray();
     }
 }

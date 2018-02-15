@@ -41,19 +41,28 @@ class GiveMoney
     public function postWasPosted(PostWasPosted $event) {
         // If it's not the first post of a discussion
         if ($event->post['number'] > 1) {
-            $money = (float)$this->settings->get('antoinefr-money.moneyforpost', 0);
-            $this->giveMoney($event->actor, $money);
+            $minimumLength = (int)$this->settings->get('antoinefr-money.postminimumlength', 0);
+            if (strlen($event->post->content) >= $minimumLength) {
+                $money = (float)$this->settings->get('antoinefr-money.moneyforpost', 0);
+                $this->giveMoney($event->actor, $money);
+            }
         }
     }
     
     public function postWasRestored(PostWasRestored $event) {
-        $money = (float)$this->settings->get('antoinefr-money.moneyforpost', 0);
-        $this->giveMoney($event->post->user, $money);
+        $minimumLength = (int)$this->settings->get('antoinefr-money.postminimumlength', 0);
+        if (strlen($event->post->content) >= $minimumLength) {
+            $money = (float)$this->settings->get('antoinefr-money.moneyforpost', 0);
+            $this->giveMoney($event->post->user, $money);
+        }
     }
     
     public function postWasHidden(PostWasHidden $event) {
-        $money = (float)$this->settings->get('antoinefr-money.moneyforpost', 0);
-        $this->giveMoney($event->post->user, -$money);
+        $minimumLength = (int)$this->settings->get('antoinefr-money.postminimumlength', 0);
+        if (strlen($event->post->content) >= $minimumLength) {
+            $money = (float)$this->settings->get('antoinefr-money.moneyforpost', 0);
+            $this->giveMoney($event->post->user, -$money);
+        }
     }
     
     public function discussionWasStarted(DiscussionWasStarted $event) {

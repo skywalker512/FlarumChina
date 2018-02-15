@@ -20661,6 +20661,9 @@ System.register('flarum/components/Composer', ['flarum/Component', 'flarum/utils
             if (!isInitialized) {
               defaultHeight = this.$().height();
             }
+			// Set the height of the Composer element and its contents on each redraw,
+			// so that they do not lose it if their DOM elements are recreated.
+			this.updateHeight();
 
             if (isInitialized) return;
 

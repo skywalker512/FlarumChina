@@ -1,0 +1,80 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: Thêm tập tin
+        states:
+            loading: Đang tải
+            success: Thành công
+            error: Lỗi
+    admin:
+        permissions:
+            upload_label: Tải tập tin lên
+            download_label: Tải tập tin xuống
+        upload_methods:
+            local: Local
+            aws-s3: Amazon S3
+            imgur: Imgur
+            ovh-svfs: OVH SVFS
+        labels:
+            preferences:
+                title: Cài đặt chung
+                max_file_size: Dung lượng tối đa (tính theo kilobytes)
+                mime_types: Cấu hình MIME type, upload adapter mapping
+            resize:
+                title: Resize hình ảnh
+                toggle: Bật
+                max_width: Kích thước chiều rộng tối đa
+                max_height: Kích thước chiều cao tối đa
+            watermark:
+                title: Gắn watermark
+                toggle: Bật
+                position: Vị trí watermark
+                file: Tải lên hình watermark của bạn
+            local:
+                title: Cài đặt lưu trữ local
+                cdn_url: Content Delivery URL (tiền tố của các tập tin)
+            imgur:
+                title: Cài đặt lưu trữ trên Imgur
+                client_id: Imgur client ID
+            aws-s3:
+                title: Cài đặt lưu trữ trên AWS S3
+                key: Key
+                secret: Secret
+                bucket: Bucket
+                region: Region
+            ovh-svfs:
+                title: Cài đặt lưu trữ trên OVH SVFS
+                container: Container
+                tenantid: Tenant ID
+                username: Username
+                password: Password
+                region: Region
+            disable-hotlink-protection:
+                title: Vô hiệu hóa hotlink protection
+                toggle: Bật
+            disable-download-logging:
+                title: Vô hiệu hóa bản ghi log khi tải xuống
+                toggle: Bật
+
+        buttons:
+            save: Lưu cài đặt
+        help_texts:
+            description: >
+                Cấu hình dịch vụ và cài đặt chung.
+            mime_types: >
+                Vui lòng cấu hình mapping ở đây. Mỗi MIME type theo regular expression
+                sẽ được xử lý bởi mỗi adapter khác nhau. Ví dụ hình ảnh sẽ được lưu trữ
+                trên local hoặc Imgur, văn bản sẽ được lưu trữ trên AWS S3.
+            resize: >
+                Chọn liệu bạn có muốn resize hình ảnh trước khi hình ảnh được tải lên.
+                Bạn có thể quy định chiều rộng và chiều cao tối đa, tính theo đơn vị pixel.
+                Quá trình resize giữ nguyên tỉ lệ hình ảnh.
+            watermark: >
+                Chọn liên bạn có muốn hình ảnh khi tải lên được chèn watermark (bản quyền).
+                Watermark sẽ được chèn vào những hình ảnh không phải ảnh GIF dựa vào cài đặt của bạn bên dưới.
+            disable-hotlink-protection: >
+                Hotlink protection ngăn chặn hình ảnh được tải từ trang khác.
+                Phương pháp hiện tại yêu cầu một token CSRF và ID bài viết.
+            disable-download-logging: >
+                Vô hiệu hóa bản ghi log cho mỗi lượt tải về do thành viên diễn đàn tạo nên.
+                Tắt tính năng này giúp bạn xem được số lượt tải xuống và những số liệu khác trong những bản cập nhật sắp tới.

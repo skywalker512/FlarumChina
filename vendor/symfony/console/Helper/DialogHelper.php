@@ -34,7 +34,7 @@ class DialogHelper extends InputAwareHelper
     public function __construct($triggerDeprecationError = true)
     {
         if ($triggerDeprecationError) {
-            @trigger_error('"Symfony\Component\Console\Helper\DialogHelper" is deprecated since version 2.5 and will be removed in 3.0. Use "Symfony\Component\Console\Helper\QuestionHelper" instead.', E_USER_DEPRECATED);
+            @trigger_error('"Symfony\Component\Console\Helper\DialogHelper" is deprecated since Symfony 2.5 and will be removed in 3.0. Use "Symfony\Component\Console\Helper\QuestionHelper" instead.', E_USER_DEPRECATED);
         }
     }
 
@@ -161,7 +161,7 @@ class DialogHelper extends InputAwareHelper
                         $output->write("\033[1D");
                     }
 
-                    if ($i === 0) {
+                    if (0 === $i) {
                         $ofs = -1;
                         $matches = $autocomplete;
                         $numMatches = count($matches);
@@ -326,7 +326,7 @@ class DialogHelper extends InputAwareHelper
 
         if (false !== $shell = $this->getShell()) {
             $output->write($question);
-            $readCmd = $shell === 'csh' ? 'set mypassword = $<' : 'read -r mypassword';
+            $readCmd = 'csh' === $shell ? 'set mypassword = $<' : 'read -r mypassword';
             $command = sprintf("/usr/bin/env %s -c 'stty -echo; %s; stty echo; echo \$mypassword'", $shell, $readCmd);
             $value = rtrim(shell_exec($command));
             $output->writeln('');
@@ -464,7 +464,7 @@ class DialogHelper extends InputAwareHelper
 
         exec('stty 2>&1', $output, $exitcode);
 
-        return self::$stty = $exitcode === 0;
+        return self::$stty = 0 === $exitcode;
     }
 
     /**

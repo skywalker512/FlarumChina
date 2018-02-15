@@ -2,15 +2,16 @@
 
 namespace Flagrow\Upload\Listeners;
 
+use Flagrow\Upload\Helpers\Settings;
 use Flagrow\Upload\Repositories\FileRepository;
 use Flagrow\Upload\Templates\AbstractTemplate;
-use Flagrow\Upload\Templates\FileTemplate;
-use Flagrow\Upload\Templates\ImageTemplate;
 use Flarum\Event\ConfigureFormatter;
 use Flarum\Event\ConfigureFormatterParser;
 use Flarum\Forum\UrlGenerator;
 use Illuminate\Events\Dispatcher;
+use InvalidArgumentException;
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 
 class AddPostDownloadTags
 {
@@ -26,15 +27,17 @@ class AddPostDownloadTags
     /**
      * @var array|AbstractTemplate[]
      */
-    protected static $templates = [];
+    protected $templates = [];
+    /**
+     * @var Settings
+     */
+    private $settings;
 
-    function __construct(UrlGenerator $url, FileRepository $files)
+    function __construct(UrlGenerator $url, FileRepository $files, Settings $settings)
     {
         $this->url = $url;
         $this->files = $files;
-
-        static::addTemplate(app()->make(FileTemplate::class));
-        static::addTemplate(app()->make(ImageTemplate::class));
+        $this->settings = $settings;
     }
 
     /**
@@ -51,7 +54,7 @@ class AddPostDownloadTags
      */
     public function configure(ConfigureFormatter $event)
     {
-        foreach (static::$templates as $name => $template) {
+        foreach ($this->settings->getRenderTemplates() as $name => $template) {
             $this->createTag($event->configurator, $name, $template);
         }
     }
@@ -63,23 +66,16 @@ class AddPostDownloadTags
      */
     protected function createTag(Configurator &$configurator, $name, AbstractTemplate $template)
     {
-        $tagName = strtoupper("FLAGROW_FILE_$name");
-
-        $tag = $configurator->tags->add($tagName);
-
-        $template->configureAttributes($tag);
-
-        $tag->template = $template->template();
-
-        $tag->filterChain->prepend([$template, 'addAttributes'])
-            ->addParameterByName('fileRepository')
-            ->setJS('function() { return true; }')
-        ;
-
-        $configurator->Preg->match(
-            '/' . preg_quote('$' . $name . '-') . '(?<uuid>[a-z0-9-]{36})/',
-            $tagName
-        );
+        try {
+            $configurator->BBCodes->addCustom(
+                $template->bbcode(),
+                $template->template()
+            );
+        } catch (InvalidArgumentException $e) {
+            throw new InvalidArgumentException("Failed importing $name due to {$e->getMessage()}");
+        } catch (UnsafeTemplateException $e) {
+            throw new UnsafeTemplateException("Failed importing $name due to {$e->getMessage()}", $e->getNode());
+        }
     }
 
     /**
@@ -88,13 +84,5 @@ class AddPostDownloadTags
     public function parse(ConfigureFormatterParser $event)
     {
         $event->parser->registeredVars['fileRepository'] = $this->files;
-    }
-
-    /**
-     * @param AbstractTemplate $template
-     */
-    public static function addTemplate(AbstractTemplate $template)
-    {
-        static::$templates[$template->tag()] = $template;
     }
 }

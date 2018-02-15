@@ -1,0 +1,12 @@
+flarum-best-answer:
+    admin:
+        permissions:
+            best_answer: => flarum-best-answer.ref.best_answer
+    forum:
+        this_best_answer: "Bu en iyi cevap"
+        remove_best_answer: "En iyi cevap seçimini kaldır"
+        header_best_answer: "Konuyu yazarı tarafından en iyi cevap olarak işaretlendi"
+        best_answer_button: => flarum-best-answer.ref.best_answer
+        best_answer: => flarum-best-answer.ref.best_answer
+    ref:
+      best_answer: 'En İyi Cevap'

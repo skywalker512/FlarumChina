@@ -16,6 +16,7 @@ namespace Flagrow\Upload;
 
 use Carbon\Carbon;
 use Flagrow\Upload\Contracts\UploadAdapter;
+use Flagrow\Upload\Templates\AbstractTemplate;
 use Flarum\Core\Discussion;
 use Flarum\Core\Post;
 use Flarum\Core\User;
@@ -99,6 +100,14 @@ class File extends AbstractModel
         }
 
         $this->attributes['upload_method'] = $value;
+    }
+
+    /**
+     * @param AbstractTemplate $template
+     */
+    public function setTagAttribute(AbstractTemplate $template)
+    {
+        $this->attributes['tag'] = $template->tag();
     }
 
     /**

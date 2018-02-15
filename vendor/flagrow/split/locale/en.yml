@@ -1,4 +1,7 @@
 flagrow-split:
+    admin:
+        permissions:
+            split_discussion_label: Split posts from discussions
     forum:
         post:
             was_split_to: "{count} post was split to {target}.|{count} posts were split to {target}."

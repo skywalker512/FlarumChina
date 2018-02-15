@@ -16,4 +16,5 @@ return array(
     '37a3dc5111fe8f707ab4c132ef1dbc62' => $vendorDir . '/guzzlehttp/guzzle/src/functions_include.php',
     '253c157292f75eb38082b5acb06f3f01' => $vendorDir . '/nikic/fast-route/src/functions.php',
     '84245cb95409c51c4ae97f8e59da883a' => $vendorDir . '/flarum/core/src/helpers.php',
+    'e4ccf71de638ae9edd3ec4c796a3ffcf' => $vendorDir . '/flagrow/upload/src/Helpers/functions.php',
 );

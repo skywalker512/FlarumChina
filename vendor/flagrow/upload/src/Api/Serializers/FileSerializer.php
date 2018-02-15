@@ -15,12 +15,28 @@
 namespace Flagrow\Upload\Api\Serializers;
 
 use Flagrow\Upload\File;
+use Flagrow\Upload\Helpers\Settings;
 use Flarum\Api\Serializer\AbstractSerializer;
+use Flarum\Formatter\Formatter;
 use Illuminate\Support\Arr;
 
 class FileSerializer extends AbstractSerializer
 {
     protected $type = 'files';
+    /**
+     * @var Settings
+     */
+    private $settings;
+    /**
+     * @var Formatter
+     */
+    private $formatter;
+
+    public function __construct(Settings $settings, Formatter $formatter)
+    {
+        $this->settings = $settings;
+        $this->formatter = $formatter;
+    }
 
     /**
      * Get the default set of serialized attributes for a model.
@@ -30,9 +46,11 @@ class FileSerializer extends AbstractSerializer
      */
     protected function getDefaultAttributes($model)
     {
-        return Arr::only(
+        $attributes = Arr::only(
             $model->attributesToArray(),
             ['uuid', 'base_name', 'tag']
         );
+
+        return $attributes;
     }
 }

@@ -1,0 +1,77 @@
+flagrow-upload:
+    forum:
+        buttons:
+            attach: 파일 첨부
+        states:
+            loading: 로딩 중
+            success: 성공
+            error: 실패
+    admin:
+        permissions:
+            upload_label: 파일 업로드
+            download_label: 파일 다운로드
+        upload_methods:
+            local: 로컬
+            aws-s3: Amazon S3
+            imgur: Imgur
+            ovh-svfs: OVH SVFS
+        labels:
+            preferences:
+                title: 기본 설정
+                max_file_size: 최대 파일 크기 (kilobytes 단위)
+                mime_types: MIME type 및 업로드 설정
+            resize:
+                title: 이미지 크기 조절
+                toggle: 이미지 크기 조절하기
+                max_width: 최대 이미지 넓이 (width)
+                max_height: 최대 이미지 높이 (height)
+            watermark:
+                title: Watermark 이미지
+                toggle: Watermark 이미지
+                position: Watermark 위치
+                file: Watermark 이미지 업로드
+            local:
+                title: 로컬 저장소 설정
+                cdn_url: Content Delivery URL (prefixes files)
+            imgur:
+                title: Imgur 이미지 저장소 설정
+                client_id: Imgur client ID
+            aws-s3:
+                title: AWS S3 저장소 설정
+                key: Key
+                secret: Secret
+                bucket: 버킷 (Bucket)
+                region: 지역 (Region)
+            ovh-svfs:
+                title: OVH SVFS 저장소 설정
+                container: Container
+                tenantid: Tenant ID
+                username: Username
+                password: Password
+                region: 지역 (Region)
+            disable-hotlink-protection:
+                title: Hotlink 보호 기능 비활성화
+                toggle: 비활성화
+            disable-download-logging:
+                title: 다운로드 기록 비활성화
+                toggle: 비활성화
+
+        buttons:
+            save: 변경 사항 저장
+        help_texts:
+            description: >
+                파일 업로드 서비스 설정.
+            mime_types: >
+                알맞은 MIME 타입을 입력하세요. 정규식 형식으로 처리됩니다.
+            resize: >
+                업로드 할 이미지의 크기를 선택하세요.
+                최대 넓이 (width)를 픽셀 단위로 설정할 수 있습니다.
+                크기 변경은 업로드하는 원본 이미지의 비율 (ratio)가 유지됩니다.
+            watermark: >
+                Watermark로 사용될 이미지를 고르세요. 아래 설정 값이 적용되어 업로드 됩니다.
+            disable-hotlink-protection: >
+                Hotlink 보호 기능은 다른 사이트에서 다운로드 하는 것을 막습니다.
+                현재 방법은 CSRF 토큰과 post ID를 요구합니다.
+            disable-download-logging: >
+                사용자들이 다운로드한 내역을 기록하지 않습니다.
+                추후 다운로드 횟수와 다른 기능들이 표시될 예정입니다.

@@ -1,0 +1,38 @@
+{
+    "name": "sijad/flarum-ext-recaptcha",
+    "description": "Google reCAPTCHA for flarum",
+    "type": "flarum-extension",
+    "keywords": ["captcha", "validate", "verify"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sajjad Hashemian",
+            "email": "wolaws@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/sijad/flarum-ext-recaptcha/issues",
+        "source": "https://github.com/sijad/flarum-ext-recaptcha"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.5",
+        "google/recaptcha": "~1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sijad\\ReCaptcha\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Google reCAPTCHA",
+            "icon": {
+                "image": "icon.svg",
+                "backgroundColor": "#fff",
+                "backgroundSize": "contain",
+                "backgroundPosition": "center",
+                "backgroundRepeat": "no-repeat"
+            }
+        }
+    }
+}

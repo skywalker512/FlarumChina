@@ -140,6 +140,8 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
               children: [ Button.component({className: 'hasIcon', children:'H1', onclick: function onclick() {return _this2.heading();}}), Button.component({className: 'hasIcon', children:'H2', onclick: function onclick() {return _this2.heading2();}}), Button.component({className: 'hasIcon', children:'H3', onclick: function onclick() {return _this2.heading3();}}),],buttonClassName: 'Button Button--link',
             }));
 
+            items.add('sep1', Separator.component());
+
             items.add('strikethrough', Button.component({
               icon: 'strikethrough',
               className: 'Button',
@@ -161,7 +163,7 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
               children: [ Button.component({className: 'hasColor color-t', onclick: function onclick() {return _this2.colort();}}), Button.component({className: 'hasColor color-g', onclick: function onclick() {return _this2.colorg();}}), Button.component({className: 'hasColor color-b', onclick: function onclick() {return _this2.colorb();}}), Button.component({className: 'hasColor color-p', onclick: function onclick() {return _this2.colorp();}}), Button.component({className: 'hasColor color-y', onclick: function onclick() {return _this2.colory();}}), Button.component({className: 'hasColor color-o', onclick: function onclick() {return _this2.coloro();}}), Button.component({className: 'hasColor color-r', onclick: function onclick() {return _this2.colorr();}}),  Button.component({className: 'hasColor color-s', onclick: function onclick() {return _this2.colors();}}),],buttonClassName: 'Button Button--link',
             }));
 
-            items.add('sep1', Separator.component());
+            items.add('sep2', Separator.component());
 
             items.add('link', Button.component({
               icon: 'link',
@@ -187,8 +189,6 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
               children: [ Button.component({icon: 'quote-right', className: 'hasIcon', children: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.quote'), onclick: function onclick() {return _this2.quote();}}), Button.component({icon: 'code', className: 'hasIcon', children: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.code'), onclick: function onclick() {return _this2.code();}}), Button.component({icon: 'lightbulb-o', className: 'hasIcon', children: app.translator.trans('ganuonglachanh-mdeditor.forum.toolbar.high_light'), onclick: function onclick() {return _this2.high_light();}}),],buttonClassName: 'Button Button--link',
             }));
 
-            items.add('sep2', Separator.component());
-
             items.add('ordered_list', Button.component({
               icon: 'list-ol',
               className: 'Button',
@@ -206,6 +206,8 @@ System.register('ganuonglachanh/mdeditor/components/EnhancedTextEditor', ['flaru
                 return _this2.unordered_list();
               }
             }));
+
+            items.add('sep3', Separator.component());
 
             items.add('align-left', Dropdown.component({
               icon: 'align-left',

@@ -14,18 +14,17 @@
 
 namespace Flagrow\Upload\Api\Controllers;
 
-use Flagrow\Upload\Api\Serializers\FileSerializer;
 use Flagrow\Upload\Commands\Upload;
-use Flarum\Api\Controller\AbstractCollectionController;
+use Flagrow\Upload\Exceptions\InvalidUploadException;
+use Flarum\Http\Controller\ControllerInterface;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
+use Zend\Diactoros\Response\JsonResponse;
 
-class UploadController extends AbstractCollectionController
+class UploadController implements ControllerInterface
 {
-    public $serializer = FileSerializer::class;
-
     /**
      * @var Dispatcher
      */
@@ -37,19 +36,24 @@ class UploadController extends AbstractCollectionController
     }
 
     /**
-     * Get the data to be serialized and assigned to the response document.
-     *
      * @param ServerRequestInterface $request
-     * @param Document $document
-     * @return mixed
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws InvalidUploadException
      */
-    protected function data(ServerRequestInterface $request, Document $document)
+    public function handle(ServerRequestInterface $request)
     {
         $actor = $request->getAttribute('actor');
         $files = collect(Arr::get($request->getUploadedFiles(), 'files', []));
 
-        return $this->bus->dispatch(
+        /** @var Collection $collection */
+        $collection = $this->bus->dispatch(
             new Upload($files, $actor)
         );
+
+        if ($collection->isEmpty()) {
+            throw new InvalidUploadException('No files were uploaded');
+        }
+
+        return new JsonResponse($collection->toArray(), 201);
     }
 }

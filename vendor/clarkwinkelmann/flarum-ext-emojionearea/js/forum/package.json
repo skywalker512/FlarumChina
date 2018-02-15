@@ -3,6 +3,6 @@
     "devDependencies": {
         "gulp": "^3.8.11",
         "flarum-gulp": "^0.1.0",
-        "emojionearea": "^3.1.5"
+        "emojionearea": "3.1.5"
     }
 }

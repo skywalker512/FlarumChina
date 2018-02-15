@@ -1,0 +1,36 @@
+{
+    "name": "terabin/flarum-ext-sitemap",
+    "description": "Generate a Sitemap for Flarum automatically",
+    "type": "flarum-extension",
+    "keywords": ["sitemap", "generator"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Allyson S Bacon",
+            "email": "allyson_198@hotmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/terabin/flarum-ext-sitemap/issues",
+        "source": "https://github.com/terabin/flarum-ext-sitemap"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.5",
+        "samdark/sitemap": "^2.0.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Terabin\\Sitemap\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Sitemap",
+            "icon": {
+                "name": "sitemap",
+                "backgroundColor": "#000",
+                "color": "#fff"
+            }
+        }
+    }
+}

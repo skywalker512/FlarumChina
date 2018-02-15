@@ -1,28 +1,36 @@
 flagrow-analytics:
+    admin:
+        popup:
+            title: Analytics Settings
 
-  ##
-  # UNIQUE KEYS - The following keys are used in only one location each.
-  ##
+            section:
+                googleAnalytics: Google Analytics
+                piwik: Piwik
 
-  # Strings in this namespace are used by the admin interface.
-  admin:
-    popup:
-      title: Analytics Settings
+            field:
+                statusGoogle: Enable Google Analytics
+                googleTrackingCode: Tracking Code ID
+                statusPiwik: Enable Piwik
+                piwikUrl: Piwik domain or url
+                piwikSiteId: Site ID
+                piwikTrackSubdomain: Track visitors across all subdomains of Flarum
+                piwikPrependDomain: Prepend the site domain to the page title when tracking
+                piwikHideAliasUrl: In the "Outlinks" report, hide clicks to known alias URLs
+                piwikAliasUrl: Alias Url
+                piwikTrackAccounts: Track individual user accounts
+                piwikAuthToken: Authentication Token
 
-      field:
-        googleTrackingCode: Tracking Code ID
-        piwikUrl: Piwik's url
-        piwikSiteId: Site Id
-        piwikAliasUrl: Alias Url
-        piwikAuthToken: Authentication token config->users
+            placeholder:
+                piwikAuthToken: |
+                    Fill this token to enable a Piwik stats tab in the admin panel.
+                    You can find it in Settings > Personal > API Authentication Token.
 
-      checkbox:
-        label:
-          piwikTrackSubdomain: Track visitors across all subdomains of Flarum
-          piwikPrependDomain: Prepend the site domain to the page title when tracking
-          piwikHideAliasUrl: In the "Outlinks" report, hide clicks to known alias URLs
+            trackAccounts:
+                none: Do not track
+                username: Track by username
+                email: Track by email
 
-    page:
-      nav:
-        title: Analytics
-        description: Take a look at Statistics
+        page:
+            nav:
+                title: Analytics
+                description: Take a look at Statistics

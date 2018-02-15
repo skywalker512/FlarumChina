@@ -180,7 +180,7 @@ export default class PostReactAction extends Component {
       isReacted = false
     }
 
-    let reaction = el && el.srcElement && el.srcElement.attributes['data-reaction'] ? el.srcElement.attributes['data-reaction'].value : ''
+    let reaction = el && el.target && el.target.attributes['data-reaction'] ? el.target.attributes['data-reaction'].value : ''
 
     if (reaction === '') {
       reaction = el

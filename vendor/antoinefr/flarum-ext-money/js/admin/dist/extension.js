@@ -48,7 +48,13 @@ System.register('antoinefr/money/components/MoneySettingsModal', ['flarum/compon
                 null,
                 app.translator.trans('antoinefr-money.admin.settings.moneyfordiscussion')
               ),
-              m('input', { required: true, className: 'FormControl', type: 'number', step: 'any', bidi: this.setting('antoinefr-money.moneyfordiscussion') })
+              m('input', { required: true, className: 'FormControl', type: 'number', step: 'any', bidi: this.setting('antoinefr-money.moneyfordiscussion') }),
+              m(
+                'label',
+                null,
+                app.translator.trans('antoinefr-money.admin.settings.postminimumlength')
+              ),
+              m('input', { required: true, className: 'FormControl', type: 'number', step: 'any', bidi: this.setting('antoinefr-money.postminimumlength') })
             )];
           }
         }]);

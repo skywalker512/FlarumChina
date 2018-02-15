@@ -30,6 +30,9 @@
                 "backgroundColor": "#74000E",
                 "color": "#BE1E31"
             }
+        },
+        "flagrow": {
+            "discuss": "https://discuss.flarum.org/d/1983-flagrow-analytics-extension-tracking-user-visits"
         }
     },
     "autoload": {

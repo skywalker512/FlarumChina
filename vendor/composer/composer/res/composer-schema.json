@@ -278,6 +278,10 @@
                 "htaccess-protect": {
                     "type": "boolean",
                     "description": "Defaults to true. If set to false, Composer will not create .htaccess files in the composer home, cache, and data directories."
+                },
+                "sort-packages": {
+                    "type": "boolean",
+                    "description": "Defaults to false. If set to true, Composer will sort packages when adding/updating a new dependency."
                 }
             }
         },
@@ -364,8 +368,8 @@
             "description": "If set to true, stable packages will be preferred to dev packages when possible, even if the minimum-stability allows unstable packages."
         },
         "bin": {
-            "type": ["array"],
-            "description": "A set of files that should be treated as binaries and symlinked into bin-dir (from config).",
+            "type": ["string", "array"],
+            "description": "A set of files, or a single file, that should be treated as binaries and symlinked into bin-dir (from config).",
             "items": {
                 "type": "string"
             }
@@ -379,7 +383,7 @@
         },
         "scripts": {
             "type": ["object"],
-            "description": "Scripts listeners that will be executed before/after some events.",
+            "description": "Script listeners that will be executed before/after some events.",
             "properties": {
                 "pre-install-cmd": {
                     "type": ["array", "string"],
@@ -445,6 +449,13 @@
                     "type": ["array", "string"],
                     "description": "Occurs after the create-project command is executed, contains one or more Class::method callables or shell commands."
                 }
+            }
+        },
+        "scripts-descriptions": {
+            "type": ["object"],
+            "description": "Descriptions for custom commands, shown in console help.",
+            "additionalProperties": {
+                "type": "string"
             }
         },
         "support": {
@@ -765,8 +776,8 @@
                     }
                 },
                 "bin": {
-                    "type": ["array"],
-                    "description": "A set of files that should be treated as binaries and symlinked into bin-dir (from config).",
+                    "type": ["string", "array"],
+                    "description": "A set of files, or a single file, that should be treated as binaries and symlinked into bin-dir (from config).",
                     "items": {
                         "type": "string"
                     }

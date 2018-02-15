@@ -1,4 +1,13 @@
 <?php
+/**
+ * CSS Minifier
+ *
+ * Please report bugs on https://github.com/matthiasmullie/minify/issues
+ *
+ * @author Matthias Mullie <minify@mullie.eu>
+ * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
+ * @license MIT License
+ */
 
 namespace MatthiasMullie\Minify;
 
@@ -7,10 +16,11 @@ use MatthiasMullie\PathConverter\ConverterInterface;
 use MatthiasMullie\PathConverter\Converter;
 
 /**
- * CSS minifier.
+ * CSS minifier
  *
  * Please report bugs on https://github.com/matthiasmullie/minify/issues
  *
+ * @package Minify
  * @author Matthias Mullie <minify@mullie.eu>
  * @author Tijs Verkoyen <minify@verkoyen.eu>
  * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
@@ -19,12 +29,12 @@ use MatthiasMullie\PathConverter\Converter;
 class CSS extends Minify
 {
     /**
-     * @var int
+     * @var int maximum inport size in kB
      */
     protected $maxImportSize = 5;
 
     /**
-     * @var string[]
+     * @var string[] valid import extensions
      */
     protected $importExtensions = array(
         'gif' => 'data:image/gif',
@@ -76,14 +86,14 @@ class CSS extends Minify
      */
     protected function moveImportsToTop($content)
     {
-        if (preg_match_all('/@import[^;]+;/', $content, $matches)) {
+        if (preg_match_all('/(;?)(@import (?<url>url\()?(?P<quotes>["\']?).+?(?P=quotes)(?(url)\)))/', $content, $matches)) {
             // remove from content
             foreach ($matches[0] as $import) {
                 $content = str_replace($import, '', $content);
             }
 
             // add to top
-            $content = implode('', $matches[0]).$content;
+            $content = implode(';', $matches[2]).';'.trim($content, ';');
         }
 
         return $content;
@@ -437,12 +447,14 @@ class CSS extends Minify
              * Urls with `)` (as could happen with data: uris) should also be
              * quoted to avoid being confused for the url() closing parentheses.
              * And urls with a # have also been reported to cause issues.
+             * Urls with quotes inside should also remain escaped.
              *
              * @see https://developer.mozilla.org/nl/docs/Web/CSS/url#The_url()_functional_notation
              * @see https://hg.mozilla.org/mozilla-central/rev/14abca4e7378
+             * @see https://github.com/matthiasmullie/minify/issues/193
              */
             $url = trim($url);
-            if (preg_match('/[\s\)#\x{7f}-\x{9f}]/u', $url)) {
+            if (preg_match('/[\s\)\'"#\x{7f}-\x{9f}]/u', $url)) {
                 $url = $match['quotes'] . $url . $match['quotes'];
             }
 
@@ -541,6 +553,16 @@ class CSS extends Minify
      */
     protected function shortenZeroes($content)
     {
+        // we don't want to strip units in `calc()` expressions:
+        // `5px - 0px` is valid, but `5px - 0` is not
+        // `10px * 0` is valid (equates to 0), and so is `10 * 0px`, but
+        // `10 * 0` is invalid
+        // best to just leave `calc()`s alone, even if they could be optimized
+        // (which is a whole other undertaking, where units & order of
+        // operations all need to be considered...)
+        $calcs = $this->findCalcs($content);
+        $content = str_replace($calcs, array_keys($calcs), $content);
+
         // reusable bits of code throughout these regexes:
         // before & after are used to make sure we don't match lose unintended
         // 0-like values (e.g. in #000, or in http://url/1.0)
@@ -569,29 +591,15 @@ class CSS extends Minify
         // strip negative zeroes (-0 -> 0) & truncate zeroes (00 -> 0)
         $content = preg_replace('/'.$before.'-?0+'.$units.'?'.$after.'/', '0\\1', $content);
 
-        // remove zeroes where they make no sense in calc: e.g. calc(100px - 0)
-        // the 0 doesn't have any effect, and this isn't even valid without unit
-        // strip all `+ 0` or `- 0` occurrences: calc(10% + 0) -> calc(10%)
-        // looped because there may be multiple 0s inside 1 group of parentheses
-        do {
-            $previous = $content;
-            $content = preg_replace('/\(([^\(\)]+) [\+\-] 0( [^\(\)]+)?\)/', '(\\1\\2)', $content);
-        } while ($content !== $previous);
-        // strip all `0 +` occurrences: calc(0 + 10%) -> calc(10%)
-        $content = preg_replace('/\(0 \+ ([^\(\)]+)\)/', '(\\1)', $content);
-        // strip all `0 -` occurrences: calc(0 - 10%) -> calc(-10%)
-        $content = preg_replace('/\(0 \- ([^\(\)]+)\)/', '(-\\1)', $content);
-        // I'm not going to attempt to optimize away `x * 0` instances:
-        // it's dumb enough code already that it likely won't occur, and it's
-        // too complex to do right (order of operations would have to be
-        // respected etc)
-        // what I cared about most here was fixing incorrectly truncated units
-
-        // IE doesn't seem to understand a unitless flex-basis value, so let's
-        // add it in again (make it `%`, which is only 1 char: 0%, 0px, 0
-        // anything, it's all just the same)
-        $content = preg_replace('/flex:([^ ]+ [^ ]+ )0([;\}])/', 'flex:${1}0%${2}', $content);
+        // IE doesn't seem to understand a unitless flex-basis value (correct -
+        // it goes against the spec), so let's add it in again (make it `%`,
+        // which is only 1 char: 0%, 0px, 0 anything, it's all just the same)
+        // @see https://developer.mozilla.org/nl/docs/Web/CSS/flex
+        $content = preg_replace('/flex:([0-9]+\s[0-9]+\s)0([;\}])/', 'flex:${1}0%${2}', $content);
         $content = preg_replace('/flex-basis:0([;\}])/', 'flex-basis:0%${1}', $content);
+
+        // restore `calc()` expressions
+        $content = str_replace(array_keys($calcs), $calcs, $content);
 
         return $content;
     }
@@ -605,7 +613,10 @@ class CSS extends Minify
      */
     protected function stripEmptyTags($content)
     {
-        return preg_replace('/(^|\}|;)[^\{\};]+\{\s*\}/', '\\1', $content);
+        $content = preg_replace('/(?<=^)[^\{\};]+\{\s*\}/', '', $content);
+        $content = preg_replace('/(?<=(\}|;))[^\{\};]+\{\s*\}/', '', $content);
+
+        return $content;
     }
 
     /**
@@ -639,15 +650,50 @@ class CSS extends Minify
         $content = preg_replace('/\s+([\]\)])/', '$1', $content);
         $content = preg_replace('/\s+(:)(?![^\}]*\{)/', '$1', $content);
 
-        // whitespace around + and - can only be stripped in selectors, like
-        // :nth-child(3+2n), not in things like calc(3px + 2px) or shorthands
-        // like 3px -2px
-        $content = preg_replace('/\s*([+-])\s*(?=[^}]*{)/', '$1', $content);
+        // whitespace around + and - can only be stripped inside some pseudo-
+        // classes, like `:nth-child(3+2n)`
+        // not in things like `calc(3px + 2px)`, shorthands like `3px -2px`, or
+        // selectors like `div.weird- p`
+        $pseudos = array('nth-child', 'nth-last-child', 'nth-last-of-type', 'nth-of-type');
+        $content = preg_replace('/:('.implode('|', $pseudos).')\(\s*([+-]?)\s*(.+?)\s*([+-]?)\s*(.*?)\s*\)/', ':$1($2$3$4$5)', $content);
 
         // remove semicolon/whitespace followed by closing bracket
         $content = str_replace(';}', '}', $content);
 
         return trim($content);
+    }
+
+    /**
+     * Find all `calc()` occurrences.
+     *
+     * @param string $content The CSS content to find `calc()`s in.
+     *
+     * @return string[]
+     */
+    protected function findCalcs($content)
+    {
+        $results = array();
+        preg_match_all('/calc(\(.+?)(?=$|;|calc\()/', $content, $matches, PREG_SET_ORDER);
+
+        foreach ($matches as $match) {
+            $length = strlen($match[1]);
+            $expr = '';
+            $opened = 0;
+
+            for ($i = 0; $i < $length; $i++) {
+                $char = $match[1][$i];
+                $expr .= $char;
+                if ($char === '(') {
+                    $opened++;
+                } elseif ($char === ')' && --$opened === 0) {
+                    break;
+                }
+            }
+
+            $results['calc('.count($results).')'] = 'calc'.$expr;
+        }
+
+        return $results;
     }
 
     /**

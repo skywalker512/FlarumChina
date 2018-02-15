@@ -66,7 +66,12 @@ class GitLabDriver extends VcsDriver
      */
     private $isPrivate = true;
 
-    const URL_REGEX = '#^(?:(?P<scheme>https?)://(?P<domain>.+?)/|git@(?P<domain2>[^:]+):)(?P<parts>.+)/(?P<repo>[^/]+?)(?:\.git|/)?$#';
+    /**
+     * @var int port number
+     */
+    protected $portNumber;
+
+    const URL_REGEX = '#^(?:(?P<scheme>https?)://(?P<domain>.+?)(?::(?P<port>[0-9]+))?/|git@(?P<domain2>[^:]+):)(?P<parts>.+)/(?P<repo>[^/]+?)(?:\.git|/)?$#';
 
     /**
      * Extracts information from the repository url.
@@ -90,6 +95,12 @@ class GitLabDriver extends VcsDriver
             : (isset($this->repoConfig['secure-http']) && $this->repoConfig['secure-http'] === false ? 'http' : 'https')
         ;
         $this->originUrl = $this->determineOrigin($configuredDomains, $guessedDomain, $urlParts);
+
+        if (!empty($match['port']) && true === is_numeric($match['port'])) {
+            // If it is an HTTP based URL, and it has a port
+            $this->portNumber = (int) $match['port'];
+        }
+
         $this->namespace = implode('/', $urlParts);
         $this->repository = preg_replace('#(\.git)$#', '', $match['repo']);
 
@@ -248,7 +259,10 @@ class GitLabDriver extends VcsDriver
      */
     public function getApiUrl()
     {
-        return $this->scheme.'://'.$this->originUrl.'/api/v4/projects/'.$this->urlEncodeAll($this->namespace).'%2F'.$this->urlEncodeAll($this->repository);
+        $domainName = $this->originUrl;
+        $portNumber = (true === is_numeric($this->portNumber)) ? sprintf(':%s', $this->portNumber) : '';
+
+        return $this->scheme.'://'.$domainName.$portNumber.'/api/v4/projects/'.$this->urlEncodeAll($this->namespace).'%2F'.$this->urlEncodeAll($this->repository);
     }
 
     /**
@@ -278,7 +292,8 @@ class GitLabDriver extends VcsDriver
      */
     protected function getReferences($type)
     {
-        $resource = $this->getApiUrl().'/repository/'.$type.'?per_page=100';
+        $perPage = 100;
+        $resource = $this->getApiUrl().'/repository/'.$type.'?per_page='.$perPage;
 
         $references = array();
         do {
@@ -287,11 +302,16 @@ class GitLabDriver extends VcsDriver
             foreach ($data as $datum) {
                 $references[$datum['name']] = $datum['commit']['id'];
 
-              // Keep the last commit date of a reference to avoid
-             // unnecessary API call when retrieving the composer file.
-              $this->commits[$datum['commit']['id']] = $datum['commit'];
+                // Keep the last commit date of a reference to avoid
+                // unnecessary API call when retrieving the composer file.
+                $this->commits[$datum['commit']['id']] = $datum['commit'];
             }
-            $resource = $this->getNextPage();
+
+            if (count($data) >= $perPage) {
+                $resource = $this->getNextPage();
+            } else {
+                $resource = false;
+            }
         } while ($resource);
 
         return $references;
@@ -302,7 +322,12 @@ class GitLabDriver extends VcsDriver
         // we need to fetch the default branch from the api
         $resource = $this->getApiUrl();
         $this->project = JsonFile::parseJson($this->getContents($resource, true), $resource);
-        $this->isPrivate = $this->project['visibility'] !== 'public';
+        if (isset($this->project['visibility'])) {
+            $this->isPrivate = $this->project['visibility'] !== 'public';
+        } else {
+            // client is not authendicated, therefore repository has to be public
+            $this->isPrivate = false;
+        }
     }
 
     protected function attemptCloneFallback()
@@ -340,7 +365,7 @@ class GitLabDriver extends VcsDriver
 
     protected function generatePublicUrl()
     {
-        return 'https://' . $this->originUrl . '/'.$this->namespace.'/'.$this->repository.'.git';
+        return $this->scheme . '://' . $this->originUrl . '/'.$this->namespace.'/'.$this->repository.'.git';
     }
 
     protected function setupGitDriver($url)

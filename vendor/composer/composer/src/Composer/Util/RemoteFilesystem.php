@@ -195,6 +195,23 @@ class RemoteFilesystem
             $originUrl = 'github.com';
         }
 
+        // Gitlab can be installed in a non-root context (i.e. gitlab.com/foo). When downloading archives the originUrl
+        // is the host without the path, so we look for the registered gitlab-domains matching the host here
+        if (
+            $this->config
+            && is_array($this->config->get('gitlab-domains'))
+            && false === strpos($originUrl, '/')
+            && !in_array($originUrl, $this->config->get('gitlab-domains'))
+        ) {
+            foreach ($this->config->get('gitlab-domains') as $gitlabDomain) {
+                if (0 === strpos($gitlabDomain, $originUrl)) {
+                    $originUrl = $gitlabDomain;
+                    break;
+                }
+            }
+            unset($gitlabDomain);
+        }
+
         $this->scheme = parse_url($fileUrl, PHP_URL_SCHEME);
         $this->bytesMax = 0;
         $this->originUrl = $originUrl;
@@ -207,7 +224,7 @@ class RemoteFilesystem
         $this->redirects = 1; // The first request counts.
 
         // capture username/password from URL if there is one
-        if (preg_match('{^https?://(.+):(.+)@([^/]+)}i', $fileUrl, $match)) {
+        if (preg_match('{^https?://([^:/]+):([^@/]+)@([^/]+)}i', $fileUrl, $match)) {
             $this->io->setAuthentication($originUrl, urldecode($match[1]), urldecode($match[2]));
         }
 
@@ -228,7 +245,6 @@ class RemoteFilesystem
 
         $options = $this->getOptionsForUrl($originUrl, $tempAdditionalOptions);
         unset($tempAdditionalOptions);
-        $userlandFollow = isset($options['http']['follow_location']) && !$options['http']['follow_location'];
 
         $origFileUrl = $fileUrl;
 
@@ -354,9 +370,20 @@ class RemoteFilesystem
             }
         }
 
-        // handle 3xx redirects for php<5.6, 304 Not Modified is excluded
+        // check for gitlab 404 when downloading archives
+        if ($statusCode === 404
+            && $this->config && in_array($originUrl, $this->config->get('gitlab-domains'), true)
+            && false !== strpos($fileUrl, 'archive.zip')
+        ) {
+            $result = false;
+            if ($this->retryAuthFailure) {
+                $this->promptAuthAndRetry(401);
+            }
+        }
+
+        // handle 3xx redirects, 304 Not Modified is excluded
         $hasFollowedRedirect = false;
-        if ($userlandFollow && $statusCode >= 300 && $statusCode <= 399 && $statusCode !== 304 && $this->redirects < $this->maxRedirects) {
+        if ($statusCode >= 300 && $statusCode <= 399 && $statusCode !== 304 && $this->redirects < $this->maxRedirects) {
             $hasFollowedRedirect = true;
             $result = $this->handleRedirect($http_response_header, $additionalOptions, $result);
         }
@@ -666,11 +693,7 @@ class RemoteFilesystem
         if ($this->disableTls === false && PHP_VERSION_ID < 50600 && !stream_is_local($this->fileUrl)) {
             $host = parse_url($this->fileUrl, PHP_URL_HOST);
 
-            if (PHP_VERSION_ID >= 50304) {
-                // Must manually follow when setting CN_match because this causes all
-                // redirects to be validated against the same CN_match value.
-                $userlandFollow = true;
-            } else {
+            if (PHP_VERSION_ID < 50304) {
                 // PHP < 5.3.4 does not support follow_location, for those people
                 // do some really nasty hard coded transformations. These will
                 // still breakdown if the site redirects to a domain we don't
@@ -716,10 +739,6 @@ class RemoteFilesystem
             $headers[] = 'Connection: close';
         }
 
-        if (isset($userlandFollow)) {
-            $options['http']['follow_location'] = 0;
-        }
-
         if ($this->io->hasAuthentication($originUrl)) {
             $auth = $this->io->getAuthentication($originUrl);
             if ('github.com' === $originUrl && 'x-oauth-basic' === $auth['password']) {
@@ -741,6 +760,8 @@ class RemoteFilesystem
                 $headers[] = 'Authorization: Basic '.$authStr;
             }
         }
+
+        $options['http']['follow_location'] = 0;
 
         if (isset($options['http']['header']) && !is_array($options['http']['header'])) {
             $options['http']['header'] = explode("\r\n", trim($options['http']['header'], "\r\n"));
@@ -782,7 +803,7 @@ class RemoteFilesystem
 
             $additionalOptions['redirects'] = $this->redirects;
 
-            return $this->get($this->originUrl, $targetUrl, $additionalOptions, $this->fileName, $this->progress);
+            return $this->get(parse_url($targetUrl, PHP_URL_HOST), $targetUrl, $additionalOptions, $this->fileName, $this->progress);
         }
 
         if (!$this->retry) {
@@ -876,17 +897,7 @@ class RemoteFilesystem
         if (!isset($defaults['ssl']['cafile']) && !isset($defaults['ssl']['capath'])) {
             $result = CaBundle::getSystemCaRootBundlePath($caBundleLogger);
 
-            if (preg_match('{^phar://}', $result)) {
-                $hash = hash_file('sha256', $result);
-                $targetPath = rtrim(sys_get_temp_dir(), '\\/') . '/composer-cacert-' . $hash . '.pem';
-
-                if (!file_exists($targetPath) || $hash !== hash_file('sha256', $targetPath)) {
-                    $this->streamCopy($result, $targetPath);
-                    chmod($targetPath, 0666);
-                }
-
-                $defaults['ssl']['cafile'] = $targetPath;
-            } elseif (is_dir($result)) {
+            if (is_dir($result)) {
                 $defaults['ssl']['capath'] = $result;
             } else {
                 $defaults['ssl']['cafile'] = $result;
@@ -909,24 +920,6 @@ class RemoteFilesystem
         }
 
         return $defaults;
-    }
-
-    /**
-     * Uses stream_copy_to_stream instead of copy to work around https://bugs.php.net/bug.php?id=64634
-     *
-     * @param string $source
-     * @param string $target
-     */
-    private function streamCopy($source, $target)
-    {
-        $source = fopen($source, 'r');
-        $target = fopen($target, 'w+');
-
-        stream_copy_to_stream($source, $target);
-        fclose($source);
-        fclose($target);
-
-        unset($source, $target);
     }
 
     /**
@@ -1020,10 +1013,7 @@ class RemoteFilesystem
         // Path for a public download follows this pattern /{user}/{repo}/downloads/{whatever}
         // {@link https://blog.bitbucket.org/2009/04/12/new-feature-downloads/}
         $pathParts = explode('/', $path);
-        if (count($pathParts) >= 4 && $pathParts[3] == 'downloads') {
-            return true;
-        }
 
-        return false;
+        return count($pathParts) >= 4 && $pathParts[3] == 'downloads';
     }
 }

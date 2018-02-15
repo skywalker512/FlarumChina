@@ -135,7 +135,7 @@
 
 			filters: {
 				tones: {
-					title: "种族",
+					title: "Diversity",
 					emoji: "santa runner surfer swimmer lifter ear nose point_up_2 point_down point_left point_right punch " +
 					"wave ok_hand thumbsup thumbsdown clap open_hands boy girl man woman cop bride_with_veil person_with_blond_hair " +
 					"man_with_gua_pi_mao man_with_turban older_man grandma baby construction_worker princess angel " +
@@ -146,13 +146,13 @@
 
 				recent: {
 					icon: "clock3",
-					title: "最近",
+					title: "Recent",
 					emoji: ""
 				},
 
 				smileys_people: {
 					icon: "yum",
-					title: "笑脸与人",
+					title: "Smileys & People",
 					emoji: "grinning grimacing grin joy smiley smile sweat_smile laughing innocent wink blush slight_smile " +
 					"upside_down relaxed yum relieved heart_eyes kissing_heart kissing kissing_smiling_eyes " +
 					"kissing_closed_eyes stuck_out_tongue_winking_eye stuck_out_tongue_closed_eyes stuck_out_tongue " +
@@ -178,7 +178,7 @@
 
 				animals_nature: {
 					icon: "hamster",
-					title: "动物与自然",
+					title: "Animals & Nature",
 					emoji: "dog cat mouse hamster rabbit bear panda_face koala tiger lion_face cow pig pig_nose frog " +
 					"octopus monkey_face see_no_evil hear_no_evil speak_no_evil monkey chicken penguin bird baby_chick " +
 					"hatching_chick hatched_chick wolf boar horse unicorn bee bug snail beetle ant spider scorpion crab " +
@@ -198,7 +198,7 @@
 
 				food_drink: {
 					icon: "pizza",
-					title: "食物与饮品",
+					title: "Food & Drink",
 					emoji: "green_apple apple pear tangerine lemon banana watermelon grapes strawberry melon cherries peach " +
 					"pineapple tomato eggplant hot_pepper corn sweet_potato honey_pot bread cheese poultry_leg meat_on_bone " +
 					"fried_shrimp egg hamburger fries hotdog pizza spaghetti taco burrito ramen stew fish_cake sushi bento " +
@@ -209,7 +209,7 @@
 
 				activity: {
 					icon: "basketball",
-					title: "活动",
+					title: "Activity",
 					emoji: "soccer basketball football baseball tennis volleyball rugby_football 8ball golf golfer ping_pong " +
 					"badminton hockey field_hockey cricket ski skier snowboarder ice_skate bow_and_arrow fishing_pole_and_fish " +
 					"rowboat swimmer surfer bath basketball_player lifter bicyclist mountain_bicyclist horse_racing levitate " +
@@ -220,7 +220,7 @@
 
 				travel_places: {
 					icon: "rocket",
-					title: "旅游与景点",
+					title: "Travel & Places",
 					emoji: "red_car taxi blue_car bus trolleybus race_car police_car ambulance fire_engine minibus truck " +
 					"articulated_lorry tractor motorcycle bike rotating_light oncoming_police_car oncoming_bus " +
 					"oncoming_automobile oncoming_taxi aerial_tramway mountain_cableway suspension_railway railway_car " +
@@ -238,7 +238,7 @@
 
 				objects: {
 					icon: "bulb",
-					title: "物体",
+					title: "Objects",
 					emoji: "watch iphone calling computer keyboard desktop printer mouse_three_button trackball joystick " +
 					"compression minidisc floppy_disk cd dvd vhs camera camera_with_flash video_camera movie_camera projector " +
 					"film_frames telephone_receiver telephone pager fax tv radio microphone2 level_slider control_knobs " +
@@ -261,7 +261,7 @@
 
 				symbols: {
 					icon: "heartpulse",
-					title: "符号",
+					title: "Symbols",
 					emoji: "heart yellow_heart green_heart blue_heart purple_heart broken_heart heart_exclamation two_hearts " +
 					"revolving_hearts heartbeat heartpulse sparkling_heart cupid gift_heart heart_decoration peace cross " +
 					"star_and_crescent om_symbol wheel_of_dharma star_of_david six_pointed_star menorah yin_yang orthodox_cross " +
@@ -294,7 +294,7 @@
 
 				flags: {
 					icon: "flag_gb",
-					title: "国旗",
+					title: "Flags",
 					emoji: "ac af al dz ad ao ai ag ar am aw au at az bs bh bd bb by be bz bj bm bt bo ba bw br bn bg bf bi " +
 					"cv kh cm ca ky cf td flag_cl cn co km cg flag_cd cr hr cu cy cz dk dj dm do ec eg sv gq er ee et fk fo " +
 					"fj fi fr pf ga gm ge de gh gi gr gl gd gu gt gn gw gy ht hn hk hu is in flag_id ir iq ie il it ci jm jp " +
@@ -1009,7 +1009,7 @@
     };
     var emojioneVersion = window.emojioneVersion || '2.1.4';
     var cdn = { 
-		defaultBase: "https://cdn.bootcss.com/emojione/",
+		defaultBase: "https://cdnjs.cloudflare.com/ajax/libs/emojione/",
 		base: null,
 		isLoading: false
 	};
@@ -1215,9 +1215,12 @@ System.register("clarkwinkelmann/emojionearea/components/EmojiAreaButton", ["fla
      * See README.md for details and license
      */
 
+    /* global m, $ */
+
     "use strict";
 
-    var Component, icon, EmojiAreaButton;
+    var Component, icon, _default;
+
     return {
         setters: [function (_flarumComponent) {
             Component = _flarumComponent["default"];
@@ -1225,32 +1228,35 @@ System.register("clarkwinkelmann/emojionearea/components/EmojiAreaButton", ["fla
             icon = _flarumHelpersIcon["default"];
         }],
         execute: function () {
-            EmojiAreaButton = (function (_Component) {
-                babelHelpers.inherits(EmojiAreaButton, _Component);
+            _default = (function (_Component) {
+                babelHelpers.inherits(_default, _Component);
 
-                function EmojiAreaButton() {
-                    babelHelpers.classCallCheck(this, EmojiAreaButton);
-                    babelHelpers.get(Object.getPrototypeOf(EmojiAreaButton.prototype), "constructor", this).apply(this, arguments);
+                function _default() {
+                    babelHelpers.classCallCheck(this, _default);
+                    babelHelpers.get(Object.getPrototypeOf(_default.prototype), "constructor", this).apply(this, arguments);
                 }
 
-                babelHelpers.createClass(EmojiAreaButton, [{
+                babelHelpers.createClass(_default, [{
                     key: "init",
                     value: function init() {
-                        this.textEditor = null;
+                        this.textEditor = this.props.textEditor;
                     }
                 }, {
                     key: "view",
                     value: function view() {
-                        return m('div', { config: this.configArea.bind(this), className: 'Button Button-emojionearea hasIcon Button--icon' }, [icon('smile-o', { className: 'Button-icon' }), m('span', { className: 'Button-label' }, 'Emojis'), // TODO: translate ?
-                        m('span', { className: 'Button-emojioneareaContainer' })]);
+                        return m('.Button.Button-emojionearea.hasIcon.Button--icon', {
+                            config: this.configArea.bind(this)
+                        }, [icon('smile-o', { className: 'Button-icon' }), m('span.Button-label', 'Emojis'), // TODO: translate ?
+                        m('.Button-emojioneareaContainer')]);
                     }
                 }, {
                     key: "configArea",
-                    value: function configArea(element, isInitialized) {
+                    value: function configArea(element, isInitialized, context) {
+                        var _this = this;
+
                         if (isInitialized) return;
 
                         var $container = $(element).find('.Button-emojioneareaContainer');
-                        var editor = this.textEditor;
 
                         $('<div />').emojioneArea({
                             container: $container,
@@ -1259,45 +1265,72 @@ System.register("clarkwinkelmann/emojionearea/components/EmojiAreaButton", ["fla
                             autocomplete: false, // Do not try to provide autocomplete - not sure if useful in standalone mode but safer
                             sprite: false, // Not used by the actual picker, but loads an additional CSS file if enabled
                             useInternalCDN: false, // Use the same CDN as Flarum so images are not fetched twice
+                            buttonTitle: 'Emoji', // The default text includes something with TAB, even for the standalone version where it is useless
                             events: { // Listen for clicks to sync with Flarum editor
-                                emojibtn_click: function emojibtn_click(button, event) {
-                                    var shortcode = button.data('name');
-                                    editor.insertAtCursor(shortcode);
+                                emojibtn_click: function emojibtn_click(button) {
+                                    _this.textEditor.insertAtCursor(button.data('name')); // Insert shortcode
                                 }
                             }
                         });
+
+                        document.addEventListener('click', this.clickedOutside);
+
+                        context.onunload = function () {
+                            document.removeEventListener('click', _this.clickedOutside);
+                        };
+                    }
+                }, {
+                    key: "clickedOutside",
+                    value: function clickedOutside(event) {
+                        var $target = $(event.target);
+
+                        // If we clicked on the popup or its content we don't do anything
+                        if ($target.is('.Button-emojioneareaContainer') || $target.parents('.Button-emojioneareaContainer').size()) {
+                            return;
+                        }
+
+                        var $button = $('.Button-emojioneareaContainer .emojionearea-button');
+
+                        // If the popup is currently open we close it
+                        if ($button.is('.active')) {
+                            $button.trigger('click');
+                        }
                     }
                 }]);
-                return EmojiAreaButton;
+                return _default;
             })(Component);
 
-            _export("default", EmojiAreaButton);
+            _export("default", _default);
         }
     };
 });;
-System.register("clarkwinkelmann/emojionearea/main", ["flarum/extend", "flarum/components/TextEditor", "clarkwinkelmann/emojionearea/components/EmojiAreaButton"], function (_export) {
+System.register('clarkwinkelmann/emojionearea/main', ['flarum/app', 'flarum/extend', 'flarum/components/TextEditor', 'clarkwinkelmann/emojionearea/components/EmojiAreaButton'], function (_export) {
     /**
      * This file is part of clarkwinkelmann/flarum-ext-emojionearea
      * See README.md for details and license
      */
 
-    "use strict";
+    'use strict';
 
-    var extend, TextEditor, EmojiAreaButton;
+    var app, extend, TextEditor, EmojiAreaButton;
     return {
-        setters: [function (_flarumExtend) {
+        setters: [function (_flarumApp) {
+            app = _flarumApp['default'];
+        }, function (_flarumExtend) {
             extend = _flarumExtend.extend;
         }, function (_flarumComponentsTextEditor) {
-            TextEditor = _flarumComponentsTextEditor["default"];
+            TextEditor = _flarumComponentsTextEditor['default'];
         }, function (_clarkwinkelmannEmojioneareaComponentsEmojiAreaButton) {
-            EmojiAreaButton = _clarkwinkelmannEmojioneareaComponentsEmojiAreaButton["default"];
+            EmojiAreaButton = _clarkwinkelmannEmojioneareaComponentsEmojiAreaButton['default'];
         }],
         execute: function () {
 
             app.initializers.add('clarkwinkelmann-emojionearea', function () {
                 extend(TextEditor.prototype, 'controlItems', function (items) {
-                    var emojiButton = new EmojiAreaButton();
-                    emojiButton.textEditor = this;
+                    var emojiButton = new EmojiAreaButton({
+                        textEditor: this
+                    });
+
                     items.add('clarkwinkelmann-emojionearea', emojiButton, 0);
                 });
             });

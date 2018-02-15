@@ -2,10 +2,8 @@
 
 namespace Flagrow\Upload\Templates;
 
-use Flagrow\Upload\Repositories\FileRepository;
+use Flagrow\Upload\File;
 use Illuminate\Contracts\View\Factory;
-use s9e\TextFormatter\Parser\Tag as ParserTag;
-use s9e\TextFormatter\Configurator\Items\Tag as Tag;
 
 abstract class AbstractTemplate
 {
@@ -14,6 +12,19 @@ abstract class AbstractTemplate
      */
     protected $tag;
 
+    /**
+     * The human readable name of the template.
+     *
+     * @return string
+     */
+    abstract public function name();
+
+    /**
+     * A clarification of how this template works.
+     *
+     * @return string
+     */
+    abstract public function description();
     /**
      * The unique tag for this template.
      *
@@ -35,31 +46,52 @@ abstract class AbstractTemplate
     }
 
     /**
-     * The xsl template to use with this tag.
+     * @param $key
+     * @param array $params
+     * @return mixed
+     */
+    protected function trans($key, array $params = [])
+    {
+        return app('translator')->trans($key, $params);
+    }
+
+    /**
+     * The rendered template to use with this tag.
      *
      * @return string
      */
     abstract public function template();
 
     /**
-     * Used to configure attributes and their filtering.
+     * The bbcode to be parsed.
      *
-     * @param Tag $tag
+     * @return string
      */
-    public function configureAttributes(Tag &$tag)
-    {
-        // ..
-    }
+    abstract public function bbcode();
 
     /**
-     * Can be used to inject more file attributes into the template.
+     * Generates a preview bbcode string.
      *
-     * @param ParserTag $tag
-     * @param FileRepository $files
-     * @return bool
+     * @param File $file
+     * @return string
      */
-    public static function addAttributes(ParserTag $tag, FileRepository $files)
+    public function preview(File $file)
     {
-        return true;
+        $bbcode = $this->bbcode();
+
+        return preg_replace_callback_array([
+            '/\](?<find>.*)\[/' => function ($m) use ($file) {
+                return str_replace($m['find'], $file->base_name, $m[0]);
+            },
+            '/size=(?<find>{.*?})/' => function ($m) use ($file) {
+                return str_replace($m['find'], $file->humanSize, $m[0]);
+            },
+            '/uuid=(?<find>{.*?})/' => function ($m) use ($file) {
+                return str_replace($m['find'], $file->uuid, $m[0]);
+            },
+            '/url=(?<find>{.*?})/' => function ($m) use ($file) {
+                return str_replace($m['find'], $file->url, $m[0]);
+            }
+        ], $bbcode);
     }
 }

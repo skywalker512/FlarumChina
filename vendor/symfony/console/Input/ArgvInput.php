@@ -44,8 +44,6 @@ class ArgvInput extends Input
     private $parsed;
 
     /**
-     * Constructor.
-     *
      * @param array|null           $argv       An array of parameters from the CLI (in the argv format)
      * @param InputDefinition|null $definition A InputDefinition instance
      */
@@ -330,7 +328,7 @@ class ArgvInput extends Input
                 return $match[1].$self->escapeToken($match[2]);
             }
 
-            if ($token && $token[0] !== '-') {
+            if ($token && '-' !== $token[0]) {
                 return $self->escapeToken($token);
             }
 

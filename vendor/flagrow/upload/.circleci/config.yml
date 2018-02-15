@@ -1,0 +1,60 @@
+version: 2
+
+references:
+    steps: &steps
+        working_directory: ~/repo
+        steps:
+            - checkout
+            - run: apt-get -yqq update
+            - run: apt-get -yqq install git unzip zip libpq-dev libpng-dev
+            - run: docker-php-ext-install pdo_mysql gd
+            - run: curl -sS https://getcomposer.org/installer | php
+            - run: chmod +x composer.phar
+            - run: mv composer.phar /usr/local/bin/composer
+            - run: composer config -g github-oauth.github.com $GITHUB_TOKEN
+            - run: composer install -n --prefer-dist --no-progress -o
+            - run:
+                name: Wait for other docker instances to be up
+                command: sleep 10
+            - run: ./vendor/bin/phpunit -d memory_limit=1G
+
+    mysql_environment: &mysql_environment
+        - MYSQL_DATABASE: flarum
+        - MYSQL_ALLOW_EMPTY_PASSWORD: yes
+
+    mysql: &mysql
+        image: mysql:latest
+        environment: *mysql_environment
+    environment: &environment
+        - DB_DATABASE: flarum
+        - DB_USERNAME: root
+        - DB_PASSWORD: ""
+        - DB_HOST: '127.0.0.1'
+
+jobs:
+    "php-5.6":
+        docker:
+            - image: php:5.6
+              environment: *environment
+            - *mysql
+        <<: *steps
+    "php-7.0":
+        docker:
+            - image: php:7.0
+              environment: *environment
+            - *mysql
+        <<: *steps
+    "php-7.1":
+        docker:
+            - image: php:7.1
+              environment: *environment
+            - *mysql
+        <<: *steps
+
+workflows:
+    version: 2
+    test:
+        jobs:
+            - "php-5.6"
+            - "php-7.0"
+            - "php-7.1"

@@ -3,7 +3,6 @@
     "description": "Markdown toolbar for Flarum",
     "type": "flarum-extension",
     "keywords": ["flarum","smileys"],
-    "version": "0.9",
     "authors": [
         {
             "name": "XEngine",

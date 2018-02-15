@@ -111,7 +111,7 @@ class DownloadHandler
      */
     public static function prependDownloader(Downloader $downloader)
     {
-        Arr::prepend(static::$downloader, $downloader);
+        static::$downloader = Arr::prepend(static::$downloader, $downloader);
     }
 
     /**

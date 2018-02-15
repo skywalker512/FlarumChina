@@ -12,8 +12,8 @@
     "authors": [
         {
             "name": "Daniël Klabbers",
-            "email": "daniel+flarum@klabbers.email",
-            "homepage": "http://hyn.me"
+            "email": "daniel@klabbers.email",
+            "homepage": "http://luceos.com"
         }
     ],
     "support": {
@@ -31,7 +31,8 @@
     "require-dev": {
         "league/flysystem": "^1.0.32",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "techyah/flysystem-ovh": "^1.0"
+        "techyah/flysystem-ovh": "^1.0",
+        "flagrow/steamroller": "dev-master"
     },
     "extra": {
         "flarum-extension": {
@@ -41,11 +42,22 @@
                 "backgroundColor": "#f4f4f4",
                 "color": "#5f4bb6"
             }
+        },
+        "flagrow": {
+            "discuss": "https://discuss.flarum.org/d/4154-flagrow-upload-the-intelligent-file-attachment-extension"
         }
     },
     "autoload": {
         "psr-4": {
             "Flagrow\\Upload\\": "src/"
+        },
+        "files": [
+            "src/Helpers/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Flagrow\\Upload\\Tests\\": "tests/"
         }
     }
 }

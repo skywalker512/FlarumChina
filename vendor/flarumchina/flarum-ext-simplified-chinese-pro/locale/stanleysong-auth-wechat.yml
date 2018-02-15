@@ -1,0 +1,24 @@
+# https://github.com/StanleySong/flarum-ext-auth-wechat/blob/master/locale/cn.yml
+
+stanleysong-auth-wechat:
+
+  ##
+  # UNIQUE KEYS - The following keys are used in only one location each.
+  ##
+
+  # Translations in this namespace are used by the admin interface.
+  admin:
+
+    # These translations are used in the Steam Settings modal dialog.
+    wechat_settings:
+      app_id_label: APP ID
+      app_secret_label: APP Secret
+      app_cburl_label: Callback URL
+      title: Wechat Settings
+
+  # Translations in this namespace are used by the forum user interface.
+  forum:
+
+    # These translations are used in the Log In modal dialog.
+    log_in:
+      with_wechat_button: 微信登录
