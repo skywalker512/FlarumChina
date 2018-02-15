@@ -1,4 +1,4 @@
-![FlarumChina](https://www.flarumchina.org/img/logo.png)
+![Flarum](http://flarum.org/img/logo.png)
 
 **[FlarumChina](https://www.flarumchina.org) 是一个免费的开源的论坛软件** 诞生于[Flarum](http://flarum.org) / PHP / [Mithril.js](http://mithril.js.org). 她是一个:
 
@@ -6,7 +6,7 @@
 * **快速**, 只有 ～130KB js，瞬间加载完成 
 * **可扩展的**, 你可以调整她的使用场景
 
-![screenshot](https://www.flarumchina.org/img/screenshot.png)
+![screenshot](http://flarum.org/img/screenshot.png)
 
 ## 安装
 
@@ -16,7 +16,14 @@
 
 你的服务器必须满足 **PHP 5.6+** 和 **MySQL 5.5+** 的要求.
 
-### 请点击[Releases](https://github.com/skywalker512/FlarumChina/releases)**下载最新版本以完成安装**
+### 使用 Composer 进行安装
+
+```
+composer create-project flarumchina/flarumchina . --stability=beta
+```
+### 使用共享共享主机安装
+
+请点击[Releases](https://github.com/skywalker512/FlarumChina/releases)**下载最新版本以完成安装**
 
 ## 支持
 
@@ -28,5 +35,5 @@ FlarumChina是开源的，我们期待您的帮助建设！请阅读 [Contributi
 
 ## License
 
-Copyright (c) 2015 Toby Zerner. Code released under the [MIT License](https://github.com/skywalker512/FlarumChina/blob/master/LICENSE).
+Copyright (c) 2018 Toby Zerner. Code released under the [MIT License](https://github.com/skywalker512/FlarumChina/blob/master/LICENSE).
 Translated By Zhenhong Hou
