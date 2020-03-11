@@ -16,6 +16,14 @@
 
 或者前往我们的 [交流论坛](https://flarum.atowerlight.cn/t/flarumchina) 以获取 Docker 镜像地址
 
+
+
+## 源码
+
+目前源码是放在 https://gitee.com/FlarumChina/flarum 中，本仓库只用作发布打包文件
+
+
+
 ## License
 
 Flarum is open-source software licensed under the [MIT License](https://github.com/flarum/flarum/blob/master/LICENSE).
